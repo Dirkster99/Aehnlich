@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DiffLib.BinaryFileDiff.AddCopyCollection">
+    <Position X="33.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAgAAAAIIAAAAAIAAAAA=</HashCode>
+      <FileName>BinaryFileDiff\AddCopyCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.BinaryFileDiff.Addition" BaseTypeListCollapsed="true">
+    <Position X="32.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAQAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryFileDiff\Addition.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DiffLib.BinaryFileDiff.BinaryDiff">
+    <Position X="29" Y="0.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="DiffLib.BinaryFileDiff.BinaryDiff.TableEntry">
+        <TypeIdentifier>
+          <NewMemberFileName>BinaryFileDiff\BinaryDiff.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>BAAAgAAAAIAgAQQAIEBAAAhAACEAAAAAAAAAQAAgACA=</HashCode>
+      <FileName>BinaryFileDiff\BinaryDiff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.BinaryFileDiff.BinaryDiffLines">
+    <Position X="31.25" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAABAAAAAQAIAABgCAAAgAAACAAAIBAAAAA=</HashCode>
+      <FileName>BinaryFileDiff\BinaryDiffLines.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.BinaryFileDiff.Copy" BaseTypeListCollapsed="true">
+    <Position X="34.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAARAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>BinaryFileDiff\Copy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DiffLib.Dir.DiffUtility">
+    <Position X="19.25" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAACAAAAEAAAAAAAAADAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dir\DiffUtility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Dir.DirectoryDiff">
+    <Position X="14.75" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAEAgAAQAAAAAkAAgCAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Dir\DirectoryDiff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Dir.DirectoryDiffEntry">
+    <Position X="17.25" Y="0.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAICAAAAAgAQAAIAEAACQAAACUAAAAgAAAAAAAACA=</HashCode>
+      <FileName>Dir\DirectoryDiffEntry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Dir.DirectoryDiffEntryCollection">
+    <Position X="14.75" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dir\DirectoryDiffEntryCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Dir.DirectoryDiffFileFilter">
+    <Position X="22.5" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAIAIAACAAAABAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dir\DirectoryDiffFileFilter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Dir.DirectoryDiffResults">
+    <Position X="25" Y="0.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAgkAAAAJAAAAAAAAAADAAAAAw=</HashCode>
+      <FileName>Dir\DirectoryDiffResults.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Dir.FileSystemInfoComparer" BaseTypeListCollapsed="true">
+    <Position X="17.5" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABABAAAAAAAAAAAAAAABACAAAAQA=</HashCode>
+      <FileName>Dir\FileSystemInfoComparer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DiffLib.Text.DiagonalVector">
+    <Position X="0.5" Y="5.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BAAAEAAAAAAAAAAACAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Text\DiagonalVector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Text.Edit">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAgAEAAAABAAAAAEAAAABAAAAAAgAA=</HashCode>
+      <FileName>Text\Edit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Text.EditScript">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAoAgAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Text\EditScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Text.MyersDiff&lt;T&gt;">
+    <Position X="2.25" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="DiffLib.Text.MyersDiff&lt;T&gt;.Point" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Text\MyersDiff.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIAAACAAAAAsAAYAAAQAAQAAAAAgEoAgACAAKAAAAIA=</HashCode>
+      <FileName>Text\MyersDiff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Text.StringHasher">
+    <Position X="3" Y="5.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAIACAAAAAAEAAAEAAAAAAAAAIAAIAAAAAAAAMA=</HashCode>
+      <FileName>Text\StringHasher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Text.SubArray&lt;T&gt;">
+    <Position X="5.75" Y="5.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAECEAAAABAAAAAAAAAAAAQAAAAgAA=</HashCode>
+      <FileName>Text\SubArray.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiffLib.Text.TextDiff">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAQAAAAAAAAAAAAAAAAAAAAACAAAQAA=</HashCode>
+      <FileName>Text\TextDiff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="DiffLib.Interfaces.IAddCopy">
+    <Position X="34.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IAddCopy.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="DiffLib.Enums.EditType">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAABAAAAAAAAAAAAAAAEAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Enums\EditType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DiffLib.Enums.HashType">
+    <Position X="4.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Enums\HashType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

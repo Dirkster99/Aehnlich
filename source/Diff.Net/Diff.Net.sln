@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diff.Net", "Diff.Net.csproj", "{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menees.Common", "..\..\Libraries\Menees.Common\Menees.Common.csproj", "{7B423D3C-A735-41ED-8FB4-8E196521C64A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menees.Windows.Forms", "..\..\Libraries\Menees.Windows.Forms\Menees.Windows.Forms.csproj", "{1DA61F81-E5F7-434D-877F-76F39D74D187}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menees.Diffs", "..\..\Libraries\Menees.Diffs\Menees.Diffs.csproj", "{669C2D18-50C6-44BE-810E-53371AB25741}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menees.Diffs.Controls", "..\..\Libraries\Menees.Diffs.Controls\Menees.Diffs.Controls.csproj", "{744C0010-59C3-431B-BB6E-622385B53DE1}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 6
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://menees.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Diff.Net.csproj
+		SccLocalPath1 = .
+		SccProjectUniqueName2 = ..\\..\\Libraries\\Menees.Common\\Menees.Common.csproj
+		SccProjectName2 = ../../Libraries/Menees.Common
+		SccLocalPath2 = ..\\..\\Libraries\\Menees.Common
+		SccProjectUniqueName3 = ..\\..\\Libraries\\Menees.Windows.Forms\\Menees.Windows.Forms.csproj
+		SccProjectName3 = ../../Libraries/Menees.Windows.Forms
+		SccLocalPath3 = ..\\..\\Libraries\\Menees.Windows.Forms
+		SccProjectUniqueName4 = ..\\..\\Libraries\\Menees.Diffs\\Menees.Diffs.csproj
+		SccProjectName4 = ../../Libraries/Menees.Diffs
+		SccLocalPath4 = ..\\..\\Libraries\\Menees.Diffs
+		SccProjectUniqueName5 = ..\\..\\Libraries\\Menees.Diffs.Controls\\Menees.Diffs.Controls.csproj
+		SccProjectName5 = ../../Libraries/Menees.Diffs.Controls
+		SccLocalPath5 = ..\\..\\Libraries\\Menees.Diffs.Controls
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B423D3C-A735-41ED-8FB4-8E196521C64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B423D3C-A735-41ED-8FB4-8E196521C64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B423D3C-A735-41ED-8FB4-8E196521C64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B423D3C-A735-41ED-8FB4-8E196521C64A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DA61F81-E5F7-434D-877F-76F39D74D187}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DA61F81-E5F7-434D-877F-76F39D74D187}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DA61F81-E5F7-434D-877F-76F39D74D187}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DA61F81-E5F7-434D-877F-76F39D74D187}.Release|Any CPU.Build.0 = Release|Any CPU
+		{669C2D18-50C6-44BE-810E-53371AB25741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{669C2D18-50C6-44BE-810E-53371AB25741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{669C2D18-50C6-44BE-810E-53371AB25741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{669C2D18-50C6-44BE-810E-53371AB25741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{744C0010-59C3-431B-BB6E-622385B53DE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744C0010-59C3-431B-BB6E-622385B53DE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744C0010-59C3-431B-BB6E-622385B53DE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744C0010-59C3-431B-BB6E-622385B53DE1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

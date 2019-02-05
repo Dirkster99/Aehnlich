@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>Images\DiffDotNet.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Diff.Net</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Diff.Net</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <!-- CodeAnalysisRuleSet>..\..\BuildProcess\SharedFiles\DefaultMeneesRules.ruleset</CodeAnalysisRuleSet -->
+    <!-- AssemblyOriginatorKeyFile>..\..\BuildProcess\SharedFiles\Menees.snk</AssemblyOriginatorKeyFile -->
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enumerations.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CommandLineProcessor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DirDiffDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DirDiffForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileDiffDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileDiffForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interfaces.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OptionsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ShowDiffArgs.cs" />
+    <Compile Include="TextDiffForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CompareOptionsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CompareOptionsControl.Designer.cs">
+      <DependentUpon>CompareOptionsControl.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="DirDiffDialog.resx">
+      <DependentUpon>DirDiffDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DirDiffForm.resx">
+      <DependentUpon>DirDiffForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileDiffDialog.resx">
+      <DependentUpon>FileDiffDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileDiffForm.resx">
+      <DependentUpon>FileDiffForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OptionsDialog.resx">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextDiffForm.resx">
+      <DependentUpon>TextDiffForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CompareOptionsControl.resx">
+      <DependentUpon>CompareOptionsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Diff.Net.docx">
+      <SubType>Designer</SubType>
+    </None>
+    <Compile Include="DirDiffDialog.Designer.cs">
+      <DependentUpon>DirDiffDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DirDiffForm.Designer.cs">
+      <DependentUpon>DirDiffForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileDiffDialog.Designer.cs">
+      <DependentUpon>FileDiffDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileDiffForm.Designer.cs">
+      <DependentUpon>FileDiffForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OptionsDialog.Designer.cs">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextDiffForm.Designer.cs">
+      <DependentUpon>TextDiffForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\Cascade.bmp" />
+    <Content Include="Images\Copy.bmp" />
+    <Content Include="Images\DiffControl.bmp" />
+    <Content Include="Images\DiffDotNet.ico" />
+    <Content Include="Images\DirDiff.bmp" />
+    <Content Include="Images\DirDiffControl.bmp" />
+    <Content Include="Images\DirForm.ico" />
+    <Content Include="Images\Exit.bmp" />
+    <Content Include="Images\FileDiff.bmp" />
+    <Content Include="Images\FileForm.ico" />
+    <Content Include="Images\Find.bmp" />
+    <Content Include="Images\FindNext.bmp" />
+    <Content Include="Images\FindPrev.bmp" />
+    <Content Include="Images\FirstDiff.bmp" />
+    <Content Include="Images\GotoLine.bmp" />
+    <Content Include="Images\Help.bmp" />
+    <Content Include="Images\LastDiff.bmp" />
+    <Content Include="Images\NextDiff.bmp" />
+    <Content Include="Images\Options.bmp" />
+    <Content Include="Images\PrevDiff.bmp" />
+    <Content Include="Images\Recompare.bmp" />
+    <Content Include="Images\ShowDifferences.bmp" />
+    <Content Include="Images\TextDiff.bmp" />
+    <Content Include="Images\TextForm.ico" />
+    <Content Include="Images\TileHorizontally.bmp" />
+    <Content Include="Images\TileVertically.bmp" />
+    <Content Include="Images\View.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DiffLib\DiffLib.csproj">
+      <Project>{c0d1e820-eb48-4b79-bcd6-c2de7cc367f2}</Project>
+      <Name>DiffLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs\Menees.Common\Menees.Common.csproj">
+      <Project>{7b423d3c-a735-41ed-8fb4-8e196521c64a}</Project>
+      <Name>Menees.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs\Menees.Diffs.Controls\Menees.Diffs.Controls.csproj">
+      <Project>{744c0010-59c3-431b-bb6e-622385b53de1}</Project>
+      <Name>Menees.Diffs.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs\Menees.Windows.Forms\Menees.Windows.Forms.csproj">
+      <Project>{1da61f81-e5f7-434d-877f-76f39d74d187}</Project>
+      <Name>Menees.Windows.Forms</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- ItemGroup>
+    <Analyzer Include="..\..\ThirdParty\Analyzers\CodeCracker.Common.dll" />
+    <Analyzer Include="..\..\ThirdParty\Analyzers\CodeCracker.CSharp.dll" />
+    <Analyzer Include="..\..\ThirdParty\Analyzers\StyleCop.Analyzers.dll" />
+  </ItemGroup -->
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <!-- PostBuildEvent>powershell -nologo -command ..\..\..\..\BuildProcess\Scripts\Invoke-VSPostBuildSteps.ps1 $(TargetName) $(TargetExt) $(ConfigurationName) "'$(DevEnvDir)'"</PostBuildEvent -->
+  </PropertyGroup>
+</Project>

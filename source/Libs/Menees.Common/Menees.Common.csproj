@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7B423D3C-A735-41ED-8FB4-8E196521C64A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Menees</RootNamespace>
+    <AssemblyName>Menees.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <!-- CodeAnalysisRuleSet>..\..\BuildProcess\SharedFiles\DefaultMeneesRules.ruleset</CodeAnalysisRuleSet -->
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>Bin\Debug\Menees.Common.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <CodeAnalysisRuleSet>..\..\BuildProcess\SharedFiles\DefaultMeneesRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>Bin\Release\Menees.Common.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\BuildProcess\SharedFiles\Menees.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CollectionUtility.cs" />
+    <Compile Include="Enumerations.cs" />
+    <Compile Include="FileSettingsStore.cs" />
+    <Compile Include="Interfaces.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ReadOnlySet.cs" />
+    <Compile Include="ReadOnlySetDebugView.cs" />
+    <Compile Include="Conditions.cs" />
+    <Compile Include="ApplicationInfo.cs" />
+    <Compile Include="ConvertUtility.cs" />
+    <Compile Include="CsvUtility.cs" />
+    <Compile Include="Diagnostics\WmiRecord.cs" />
+    <Compile Include="Diagnostics\WmiUtility.cs" />
+    <Compile Include="ReflectionUtility.cs" />
+    <Compile Include="RegistrySettingsStore.cs" />
+    <Compile Include="SettingsEventArgs.cs" />
+    <Compile Include="Shell\CommandLine.cs" />
+    <Compile Include="Shell\ConsoleOutputBuffer.cs" />
+    <Compile Include="Diagnostics\Enumerations.cs" />
+    <Compile Include="Diagnostics\GlobalLogContext.cs" />
+    <Compile Include="Diagnostics\Interfaces.cs" />
+    <Compile Include="Diagnostics\StackTraceUtility.cs" />
+    <Compile Include="Diagnostics\ThreadLogContext.cs" />
+    <Compile Include="Disposer.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="FileUtility.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shell\DialogFilterItem.cs" />
+    <Compile Include="Shell\Enumerations.cs" />
+    <Compile Include="Shell\ShellUtility.cs" />
+    <Compile Include="TextUtility.cs" />
+    <Compile Include="UriUtility.cs" />
+    <Compile Include="XmlUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <!-- ItemGroup>
+    <Analyzer Include="..\..\Extensibility\Menees.Analyzers\CurrentRelease\Menees.Analyzers.dll" />
+    <Analyzer Include="..\..\ThirdParty\Analyzers\CodeCracker.Common.dll" />
+    <Analyzer Include="..\..\ThirdParty\Analyzers\CodeCracker.CSharp.dll" />
+    <Analyzer Include="..\..\ThirdParty\Analyzers\Newtonsoft.Json.dll" />
+    <Analyzer Include="..\..\ThirdParty\Analyzers\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\ThirdParty\Analyzers\StyleCop.Analyzers.dll" />
+  </ItemGroup -->
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>REM powershell -nologo -command ..\..\..\..\BuildProcess\Scripts\Invoke-VSPostBuildSteps.ps1 $(TargetName) $(TargetExt) $(ConfigurationName) "'$(DevEnvDir)'"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

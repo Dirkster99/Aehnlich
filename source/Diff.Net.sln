@@ -1,0 +1,55 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menees.Common", "Libs\Menees.Common\Menees.Common.csproj", "{7B423D3C-A735-41ED-8FB4-8E196521C64A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diff.Net", "Diff.Net\Diff.Net.csproj", "{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menees.Diffs.Controls", "Libs\Menees.Diffs.Controls\Menees.Diffs.Controls.csproj", "{744C0010-59C3-431B-BB6E-622385B53DE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menees.Windows.Forms", "Libs\Menees.Windows.Forms\Menees.Windows.Forms.csproj", "{1DA61F81-E5F7-434D-877F-76F39D74D187}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{4061003C-9798-444E-B90A-58771C9607DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiffLib", "DiffLib\DiffLib.csproj", "{C0D1E820-EB48-4B79-BCD6-C2DE7CC367F2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B423D3C-A735-41ED-8FB4-8E196521C64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B423D3C-A735-41ED-8FB4-8E196521C64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B423D3C-A735-41ED-8FB4-8E196521C64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B423D3C-A735-41ED-8FB4-8E196521C64A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3118AEE-39BD-4F4F-AF5C-5A31F142614F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{744C0010-59C3-431B-BB6E-622385B53DE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744C0010-59C3-431B-BB6E-622385B53DE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744C0010-59C3-431B-BB6E-622385B53DE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744C0010-59C3-431B-BB6E-622385B53DE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DA61F81-E5F7-434D-877F-76F39D74D187}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DA61F81-E5F7-434D-877F-76F39D74D187}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DA61F81-E5F7-434D-877F-76F39D74D187}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DA61F81-E5F7-434D-877F-76F39D74D187}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0D1E820-EB48-4B79-BCD6-C2DE7CC367F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0D1E820-EB48-4B79-BCD6-C2DE7CC367F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0D1E820-EB48-4B79-BCD6-C2DE7CC367F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0D1E820-EB48-4B79-BCD6-C2DE7CC367F2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B423D3C-A735-41ED-8FB4-8E196521C64A} = {4061003C-9798-444E-B90A-58771C9607DF}
+		{744C0010-59C3-431B-BB6E-622385B53DE1} = {4061003C-9798-444E-B90A-58771C9607DF}
+		{1DA61F81-E5F7-434D-877F-76F39D74D187} = {4061003C-9798-444E-B90A-58771C9607DF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {744EF1A8-FDA0-494C-A2AA-82D97930ABED}
+	EndGlobalSection
+EndGlobal
