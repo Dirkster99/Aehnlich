@@ -1,11 +1,7 @@
 namespace DiffLib.Text
 {
-	#region Using Directives
-
 	using System;
 	using System.Diagnostics;
-
-	#endregion
 
 	/// <summary>
 	/// Implements a vector from -MAX to MAX
@@ -22,6 +18,7 @@ namespace DiffLib.Text
 		#region Constructors
 
 		public DiagonalVector(int n, int m)
+			: DiagonalVector()
 		{
 			int delta = n - m;
 
@@ -33,6 +30,12 @@ namespace DiffLib.Text
 			this.data = new int[(2 * this.max) + 1];
 		}
 
+	    /// <summary>
+	    /// Hidden standard class constructor.
+	    /// </summary>
+		protected DiagonalVector()
+		{
+		}
 		#endregion
 
 		#region Public Properties

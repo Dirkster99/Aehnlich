@@ -21,8 +21,8 @@ namespace DiffLib.Text
 	{
 		#region Private Data Members
 
-		private IList<T> listA; // Sequence A
-		private IList<T> listB; // Sequence B
+		private IList<T> listA;               // Sequence A
+		private IList<T> listB;               // Sequence B
 		private bool supportChangeEditType;
 		private DiagonalVector vectorForward;
 		private DiagonalVector vectorReverse;
@@ -30,7 +30,9 @@ namespace DiffLib.Text
 		#endregion
 
 		#region Constructors
-
+	    /// <summary>
+	    /// Class constructor.
+	    /// </summary>
 		public MyersDiff(IList<T> listA, IList<T> listB, bool supportChangeEditType)
 		{
 			this.listA = listA;
@@ -44,14 +46,20 @@ namespace DiffLib.Text
 			this.vectorReverse = new DiagonalVector(n, m);
 		}
 
+	    /// <summary>
+	    /// Hidden standard class constructor.
+	    /// </summary>
+		protected MyersDiff()
+		{
+		}
 		#endregion
 
 		#region Public Methods
 
 		/// <summary>
-		/// Returns an EditScript instance that gives all the Edits
-		/// necessary to transform A into B.
+		/// Gets an edit script instance that gives all the Edits necessary to transform A into B.
 		/// </summary>
+		/// <returns>The edit script which is a list of <see cref="Edit"/> objects that describes the transformation.</returns>
 		public EditScript Execute()
 		{
 			List<Point> matchPoints = new List<Point>();
@@ -83,7 +91,7 @@ namespace DiffLib.Text
 		}
 
 		/// <summary>
-		/// Calculates the length that the LCS should be without
+		/// Calculates the length that the Longest Common Subsequence (LCS) should be without
 		/// actually determining the LCS.
 		/// </summary>
 		[SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
@@ -532,11 +540,14 @@ namespace DiffLib.Text
 
 		#region Private Types
 
-		// Declare this so we don't have to reference System.Drawing.dll, which shouldn't be used in Windows services.
+		/// <summary>
+		/// Implements a point object to reference points in 2-D space.
+		///
+		/// We declare this so we don't have to reference System.Drawing.dll,
+		/// which shouldn't be used in non-UI assemblies, such as, Windows services.
+		/// </summary>
 		private struct Point
 		{
-			#region Constructors
-
 			public Point(int x, int y)
 				: this()
 			{
@@ -544,15 +555,8 @@ namespace DiffLib.Text
 				this.Y = y;
 			}
 
-			#endregion
-
-			#region Public Properties
-
 			public int X { get; }
-
 			public int Y { get; }
-
-			#endregion
 		}
 
 		#endregion

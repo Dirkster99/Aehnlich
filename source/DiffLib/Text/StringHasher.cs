@@ -1,12 +1,8 @@
 namespace DiffLib.Text
 {
     using DiffLib.Enums;
-    #region Using Directives
-
     using System.Collections.Generic;
     using System.Text;
-
-    #endregion
 
     /// <summary>
     /// Used to get a hash code for a string.
@@ -63,8 +59,25 @@ namespace DiffLib.Text
 		#endregion
 
 		#region Constructors
-
-		public StringHasher(HashType hashType, bool ignoreCase, bool ignoreWhiteSpace, int leadingCharactersToIgnore)
+	    /// <summary>
+	    /// Class constructor.
+	    /// </summary>
+		/// <param name="hashType">The type of hashing algorithm to associate a given text string
+		/// with an int value.</param>
+		/// <param name="ignoreCase">Whether to ignore the letter case ('A' versus 'a')
+		/// when hashing strings. Strings that contain the same letters in different cases
+		/// are associated with the same hash code.
+		/// Two strings like 'A' and 'a' are associated with the same hash code.</param>
+		/// <param name="ignoreWhiteSpace">Whether to ignore starting and ending white spaces
+		/// when hashing strings. Strings that contain only whitespaces are associated with the same hash code.
+		/// Two strings like '  A' and 'A  ' are associated with the same hash code.</param>
+		/// <param name="leadingCharactersToIgnore">Whether to ignore the first n characters
+		/// when associating a string with a hash code.</param>
+		public StringHasher(HashType hashType,
+		                    bool ignoreCase,
+							bool ignoreWhiteSpace,
+							int leadingCharactersToIgnore)
+			: this()
 		{
 			this.hashType = hashType;
 			this.ignoreCase = ignoreCase;
@@ -77,10 +90,24 @@ namespace DiffLib.Text
 			}
 		}
 
+	    /// <summary>
+	    /// Hidden standard class constructor.
+	    /// </summary>
+		protected StringHasher()
+		{
+		}
 		#endregion
 
 		#region Public Methods
 
+	    /// <summary>
+	    /// Gets a hash code (int value) that can be used to efficiently represent and compare strings
+		/// against each other without having to use the original strings for the comparison algorithm.
+	    /// </summary>
+		/// <param name="line">The text that should be converted into a hash code</param>
+		/// <returns>The hash code that will be used to represent the given text string.
+		/// The returned value depends on the actual option values (Ignore White Space, Hash Type etc)
+		/// configured at construction time in this object.</returns>
 		public int GetHashCode(string line)
 		{
 			if (this.ignoreWhiteSpace)
@@ -122,8 +149,13 @@ namespace DiffLib.Text
 
 		#region Private Methods
 
-		// This uses the CRC32 algorithm.  For more info see:
-		// http://www.efg2.com/Lab/Mathematics/CRC.htm.
+	    /// <summary>
+	    /// This uses the CRC32 algorithm.  For more info see:
+	    /// http://www.efg2.com/Lab/Mathematics/CRC.htm.
+	    /// </summary>
+		/// <param name="line">The text that should be converted into a hash code</param>
+		/// <returns>The hash code that will be used to represent the given text string
+		/// according to the CRC32 algorithm.</returns>
 		private static int GetCrc32(string line)
 		{
 			byte[] bytes = Encoding.Unicode.GetBytes(line);
@@ -141,6 +173,13 @@ namespace DiffLib.Text
 			}
 		}
 
+	    /// <summary>
+	    /// Gets a hash code for each unique text line in the collection of text lines.
+	    /// This will return the same hash code for multiple text lines occuring more than once.
+	    /// </summary>
+		/// <param name="line">The text that should be converted into a hash code</param>
+		/// <returns>The hash code that will be used to represent the given text string.
+		/// Hashing the same text multiple times results in the same hash value being returned.</returns>
 		private int GetUnique(string line)
 		{
 			int result;
@@ -148,6 +187,7 @@ namespace DiffLib.Text
 			if (!this.uniqueTable.TryGetValue(line, out result))
 			{
 				result = this.uniqueTable.Count + 1;
+
 				this.uniqueTable[line] = result;
 			}
 
