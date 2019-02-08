@@ -77,7 +77,6 @@ namespace DiffLib.Text
 		                    bool ignoreCase,
 							bool ignoreWhiteSpace,
 							int leadingCharactersToIgnore)
-			: this()
 		{
 			this.hashType = hashType;
 			this.ignoreCase = ignoreCase;
@@ -88,13 +87,6 @@ namespace DiffLib.Text
 			{
 				this.uniqueTable = new Dictionary<string, int>();
 			}
-		}
-
-	    /// <summary>
-	    /// Hidden standard class constructor.
-	    /// </summary>
-		protected StringHasher()
-		{
 		}
 		#endregion
 

@@ -1,69 +1,65 @@
 namespace DiffLib.Text
 {
-	using System;
-	using System.Diagnostics;
+    using System;
+    using System.Diagnostics;
 
-	/// <summary>
-	/// Implements a vector from -MAX to MAX
-	/// </summary>
-	internal sealed class DiagonalVector
-	{
-		#region Private Data Members
+    /// <summary>
+    /// Implements a vector from -MAX to MAX
+    /// </summary>
+    internal sealed class DiagonalVector
+    {
+        #region Private Data Members
 
-		private int[] data;
-		private int max;
+        private int[] data;
+        private int max;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="m"></param>
+        public DiagonalVector(int n, int m)
+        {
+            int delta = n - m;
 
-		public DiagonalVector(int n, int m)
-			: DiagonalVector()
-		{
-			int delta = n - m;
+            // We have to add Delta to support reverse vectors, which are
+            // centered around the Delta diagonal instead of the 0 diagonal.
+            this.max = n + m + Math.Abs(delta);
 
-			// We have to add Delta to support reverse vectors, which are
-			// centered around the Delta diagonal instead of the 0 diagonal.
-			this.max = n + m + Math.Abs(delta);
+            // Create an array of size 2*MAX+1 to hold -MAX..+MAX.
+            this.data = new int[(2 * this.max) + 1];
+        }
+        #endregion
 
-			// Create an array of size 2*MAX+1 to hold -MAX..+MAX.
-			this.data = new int[(2 * this.max) + 1];
-		}
+        #region Public Properties
 
-	    /// <summary>
-	    /// Hidden standard class constructor.
-	    /// </summary>
-		protected DiagonalVector()
-		{
-		}
-		#endregion
+        public int this[int userIndex]
+        {
+            get
+            {
+                return this.data[this.GetActualIndex(userIndex)];
+            }
 
-		#region Public Properties
+            set
+            {
+                this.data[this.GetActualIndex(userIndex)] = value;
+            }
+        }
 
-		public int this[int userIndex]
-		{
-			get
-			{
-				return this.data[this.GetActualIndex(userIndex)];
-			}
+        #endregion
 
-			set
-			{
-				this.data[this.GetActualIndex(userIndex)] = value;
-			}
-		}
+        #region Private Methods
 
-		#endregion
+        private int GetActualIndex(int userIndex)
+        {
+            int result = userIndex + this.max;
+            Debug.Assert(result >= 0 && result < this.data.Length, "The actual index must be within the actual data array's bounds.");
+            return result;
+        }
 
-		#region Private Methods
-
-		private int GetActualIndex(int userIndex)
-		{
-			int result = userIndex + this.max;
-			Debug.Assert(result >= 0 && result < this.data.Length, "The actual index must be within the actual data array's bounds.");
-			return result;
-		}
-
-		#endregion
-	}
+        #endregion
+    }
 }

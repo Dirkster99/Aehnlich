@@ -37,13 +37,6 @@ namespace DiffLib.Text
 			this.startB = startB;
 			this.length = length;
 		}
-
-	    /// <summary>
-	    /// Hidden standard class constructor.
-	    /// </summary>
-		protected Edit()
-		{
-		}
 		#endregion
 
 		#region Public Properties

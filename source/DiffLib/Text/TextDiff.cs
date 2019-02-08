@@ -59,17 +59,9 @@ namespace DiffLib.Text
 						bool ignoreWhiteSpace,
 						int leadingCharactersToIgnore,
 						bool supportChangeEditType)
-				: this()
 		{
 			this.hasher = new StringHasher(hashType, ignoreCase, ignoreWhiteSpace, leadingCharactersToIgnore);
 			this.supportChangeEditType = supportChangeEditType;
-		}
-
-	    /// <summary>
-	    /// Hidden standard class constructor.
-	    /// </summary>
-		protected TextDiff()
-		{
 		}
 		#endregion
 
