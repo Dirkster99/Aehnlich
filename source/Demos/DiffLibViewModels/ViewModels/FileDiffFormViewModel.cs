@@ -27,6 +27,8 @@
         private bool _IgnoreTextWhitespace;
         private bool _IsBinaryCompare;
         private int _LineDiffHeight;
+
+        private readonly DiffControlViewModel _DiffCtrl;
         #endregion fields
 
         #region ctors
@@ -36,6 +38,7 @@
         public FileDiffFormViewModel()
         {
             Options.OptionsChanged += this.OptionsChanged;
+            _DiffCtrl = new DiffControlViewModel();
         }
         #endregion ctors
 
@@ -317,13 +320,13 @@
             this.IgnoreTextWhitespace = ignoreTextWhitespace;
             this.IsBinaryCompare = isBinaryCompare;
 
-////            this.DiffCtrl.SetData(a, b, script, captionA, captionB,
-////                                  ignoreCase, ignoreTextWhitespace, isBinaryCompare);
+            this._DiffCtrl.SetData(a, b, script, captionA, captionB,
+                                  ignoreCase, ignoreTextWhitespace, isBinaryCompare);
 
             if (Options.LineDiffHeight != 0)
             {
                 this.LineDiffHeight = Options.LineDiffHeight;
-////            this.DiffCtrl.LineDiffHeight = Options.LineDiffHeight;
+                this._DiffCtrl.LineDiffHeight = Options.LineDiffHeight;
             }
 
 ////            this.Show();

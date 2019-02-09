@@ -1,21 +1,11 @@
 ﻿namespace GenericDemo
 {
     using DiffLibViewModels.ViewModels;
+    using GenericDemo.Models;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -42,6 +32,25 @@
                                          fspath + @"\DemoTestFiles\MyersDiff_V1.txt");
 
             this.DataContext = appVM;
+
+            TextLeft.Text =
+                "Line 1\n" +
+                "Line 2\n" +
+                "Line 3\n" +
+                "Line 4\n" +
+                "Line 5\n" +
+                "Line 6\n";
+
+            Dictionary<int, DiffContext> lines = new Dictionary<int, DiffContext>();
+
+            lines.Add(1, DiffContext.Added);
+            lines.Add(2, DiffContext.Deleted);
+            lines.Add(3, DiffContext.Added);
+            lines.Add(5, DiffContext.Added);
+
+            var backgroundRenderer = new DiffLineBackgroundRenderer { Lines = lines };
+
+            TextLeft.TextArea.TextView.BackgroundRenderers.Add(backgroundRenderer);
         }
     }
 }

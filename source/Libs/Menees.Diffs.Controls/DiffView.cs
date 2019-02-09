@@ -809,6 +809,13 @@ namespace Menees.Diffs.Controls
 			this.SetSelectionEnd(endPos.Line, endPos.Column, false);
 		}
 
+        /// <summary>
+        /// Sets the Counterpart property in each line property of each
+        /// <see cref="DiffViewModel"/> to refer to each other. This information
+        /// can be used for finding equivelant from left to right lines[] collection
+        /// and vice versa.
+        /// </summary>
+        /// <param name="counterpartView"></param>
 		public void SetCounterpartLines(DiffView counterpartView)
 		{
 			int numLines = this.LineCount;
@@ -828,12 +835,26 @@ namespace Menees.Diffs.Controls
 			}
 		}
 
-		public void SetData(IList<string> stringList, EditScript script, bool useA)
+        /// <summary>
+        /// Used to setup the ViewA/ViewB view that shows the left and right text views
+        /// with the textual content and imaginary lines.
+        /// each other.
+        /// </summary>
+        /// <param name="lineOne"></param>
+        /// <param name="lineTwo"></param>
+        public void SetData(IList<string> stringList, EditScript script, bool useA)
 		{
 			this.lines = new DiffViewLines(stringList, script, useA);
 			this.UpdateAfterSetData();
 		}
 
+        /// <summary>
+        /// Used to setup the ViewLineDiff view that shows only 2 lines over each other
+        /// representing the currently active line from the left/right side views under
+        /// each other.
+        /// </summary>
+        /// <param name="lineOne"></param>
+        /// <param name="lineTwo"></param>
 		public void SetData(DiffViewLine lineOne, DiffViewLine lineTwo)
 		{
 			this.lines = new DiffViewLines(lineOne, lineTwo);

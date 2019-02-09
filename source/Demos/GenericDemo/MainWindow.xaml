@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:conv="clr-namespace:DiffLibViewModels.Converters;assembly=DiffLibViewModels"
+        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="3">
@@ -43,7 +44,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBox Name="FilePathA_TextBox"
+        <TextBox
+            Name="FilePathA_TextBox"
             Grid.Column="0" Grid.Row="0" Margin="0,3"
             Text="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
         
@@ -53,20 +55,27 @@
             Background="Transparent"
             Width="6" />
 
-            <TextBox Name="FilePathB_TextBox"
-            Grid.Column="2" Grid.Row="0" Margin="0,3"
-            Text="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox
+                Name="FilePathB_TextBox"
+                Grid.Column="2" Grid.Row="0" Margin="0,3"
+                Text="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
 
-        <!-- Text Content -->
-        <TextBox
-            Grid.Column="0" Grid.Row="1"
-            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-            Text="" />
+            <!-- Text Content -->
+            <avalonedit:TextEditor
+                Name="TextLeft"
+                Grid.Column="0" Grid.Row="1"
+                IsReadOnly="True"
+                FontFamily="Consolas"
+                FontSize="12pt"
+                HorizontalScrollBarVisibility="Auto"/>
 
-        <TextBox
-            Grid.Column="2" Grid.Row="1"
-            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-            Text="" />
+            <avalonedit:TextEditor
+                Name="TextRight"
+                Grid.Column="2" Grid.Row="1"
+                IsReadOnly="True"
+                FontFamily="Consolas"
+                FontSize="12pt"
+                HorizontalScrollBarVisibility="Auto"/>
         </Grid>
     </Grid>
 </Window>

@@ -88,6 +88,10 @@ namespace Menees.Diffs.Controls
 			}
 		}
 
+        /// <summary>
+        /// Gets/sets the height of the bottom panel view that shows diff
+        /// of the currently selected line with a 2 line view.
+        /// </summary>
 		[DefaultValue(38)]
 		public int LineDiffHeight
 		{
@@ -357,11 +361,14 @@ namespace Menees.Diffs.Controls
 			this.ViewA.SetData(listA, script, true);
 			this.ViewB.SetData(listB, script, false);
 			Debug.Assert(this.ViewA.LineCount == this.ViewB.LineCount, "Both DiffView's LineCounts must be the same");
+
+            // Sets the similarity value (0% - 100%) between 2 things shown in toolbar
 			this.lblSimilarity.Text = string.Format("{0:P}", script.Similarity);
 
 			this.ViewA.SetCounterpartLines(this.ViewB);
 			this.Overview.DiffView = this.ViewA;
 
+            // Show left and right file name labels over each ViewA and ViewB
 			bool showNames = !string.IsNullOrEmpty(nameA) || !string.IsNullOrEmpty(nameB);
 			this.edtLeft.Visible = showNames;
 			this.edtRight.Visible = showNames;

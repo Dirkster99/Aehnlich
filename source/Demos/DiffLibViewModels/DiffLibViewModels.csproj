@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\MultiParToParConverter.cs" />
+    <Compile Include="Enums\ChangeDiffOptions.cs" />
     <Compile Include="Enums\CompareType.cs" />
     <Compile Include="Enums\DiffType.cs" />
     <Compile Include="Interfaces\ISettingsNode.cs" />
@@ -53,6 +54,10 @@
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
     <Compile Include="ViewModels\Base\ViewModelBase.cs" />
+    <Compile Include="ViewModels\DiffControlViewModel.cs" />
+    <Compile Include="ViewModels\DiffViewLine.cs" />
+    <Compile Include="ViewModels\DiffViewLines.cs" />
+    <Compile Include="ViewModels\DiffViewModel.cs" />
     <Compile Include="ViewModels\FileDiffFormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
