@@ -33,7 +33,7 @@
 
             this.DataContext = appVM;
 
-            TextLeft.Text =
+            TextTest.Text =
                 "Line 1\n" +
                 "Line 2\n" +
                 "Line 3\n" +
@@ -50,7 +50,7 @@
 
             var backgroundRenderer = new DiffLineBackgroundRenderer { Lines = lines };
 
-            TextLeft.TextArea.TextView.BackgroundRenderers.Add(backgroundRenderer);
+            TextTest.TextArea.TextView.BackgroundRenderers.Add(backgroundRenderer);
         }
     }
 }

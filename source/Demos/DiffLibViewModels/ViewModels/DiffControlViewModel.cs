@@ -31,6 +31,18 @@ namespace DiffLibViewModels.ViewModels
             _ViewB = new DiffViewModel();
             _ViewLineDiff = new DiffViewModel();
         }
+        #endregion ctors
+
+        #region properties
+        public DiffViewModel ViewA
+        {
+            get { return _ViewA; }
+        }
+
+        public DiffViewModel ViewB
+        {
+            get { return _ViewB; }
+        }
 
         /// <summary>
         /// Gets/sets the height of the bottom panel view that shows diff
@@ -135,9 +147,6 @@ namespace DiffLibViewModels.ViewModels
             }
         }
         #endregion Left and Right File Name Labels
-        #endregion ctors
-
-        #region properties
 
         #endregion properties
 

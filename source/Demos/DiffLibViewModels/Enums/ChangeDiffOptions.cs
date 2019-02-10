@@ -1,7 +1,7 @@
 ﻿namespace DiffLibViewModels.Enums
 {
     [System.Flags]
-    internal enum ChangeDiffOptions
+    public enum ChangeDiffOptions
     {
         None = 0,
         IgnoreCase = 1,

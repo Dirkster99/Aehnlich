@@ -10,7 +10,7 @@
         private string _FilePathB;
         private ICommand _CompareFilesCommand;
 
-        private FileDiffFormViewModel DiffForm;
+        private FileDiffFormViewModel _DiffForm;
         #endregion fields
 
         #region ctors
@@ -48,12 +48,26 @@
                         if (string.IsNullOrEmpty(fileA) || string.IsNullOrEmpty(fileB))
                             return;
 
-                        DiffForm = new FileDiffFormViewModel();
-                        DiffForm.ShowDifferences(new Models.ShowDiffArgs(fileA, fileB, Enums.DiffType.File));
+                        _DiffForm = new FileDiffFormViewModel();
+                        _DiffForm.ShowDifferences(new Models.ShowDiffArgs(fileA, fileB, Enums.DiffType.File));
+                        NotifyPropertyChanged(() => DiffForm);
                     });
                 }
 
                 return _CompareFilesCommand;
+            }
+        }
+
+        public FileDiffFormViewModel DiffForm
+        {
+            get { return _DiffForm; }
+            protected set
+            {
+                if (_DiffForm != value)
+                {
+                    _DiffForm = value;
+                    NotifyPropertyChanged(() => DiffForm);
+                }
             }
         }
 

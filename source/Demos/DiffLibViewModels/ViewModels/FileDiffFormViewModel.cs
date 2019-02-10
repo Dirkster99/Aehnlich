@@ -47,6 +47,11 @@
         #endregion events
 
         #region properties
+        public DiffControlViewModel DiffCtrl
+        {
+            get { return _DiffCtrl; }
+        }
+
         public bool ShowWhiteSpaceInMainDiff
         {
             get
@@ -328,6 +333,8 @@
                 this.LineDiffHeight = Options.LineDiffHeight;
                 this._DiffCtrl.LineDiffHeight = Options.LineDiffHeight;
             }
+
+            NotifyPropertyChanged(() => DiffCtrl);
 
 ////            this.Show();
 

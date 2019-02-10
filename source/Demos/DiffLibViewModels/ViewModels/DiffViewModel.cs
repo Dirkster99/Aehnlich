@@ -2,11 +2,12 @@
 {
     using DiffLib.Text;
     using DiffLibViewModels.Enums;
+    using ICSharpCode.AvalonEdit.Document;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
 
-    internal class DiffViewModel : Base.ViewModelBase
+    public class DiffViewModel : Base.ViewModelBase
     {
         #region fields
         private ChangeDiffOptions _ChangeDiffOptions;
@@ -20,6 +21,34 @@
         #endregion ctors
 
         #region properties
+        private TextDocument _document = null;
+        public TextDocument Document
+        {
+            get { return this._document; }
+            set
+            {
+                if (this._document != value)
+                {
+                    this._document = value;
+                    NotifyPropertyChanged(() => Document);
+                }
+            }
+        }
+
+        private bool _isDirty = false;
+        public bool IsDirty
+        {
+            get { return _isDirty; }
+            set
+            {
+                if (_isDirty != value)
+                {
+                    _isDirty = value;
+                    NotifyPropertyChanged(() => IsDirty);
+                }
+            }
+        }
+
         public ChangeDiffOptions ChangeDiffOptions
         {
             get
@@ -53,7 +82,21 @@
         public void SetData(IList<string> stringList, EditScript script, bool useA)
         {
             this.lines = new DiffViewLines(stringList, script, useA);
+            Document = new TextDocument(GetDocumentFromRawLines());
+
             this.UpdateAfterSetData();
+        }
+
+        private string GetDocumentFromRawLines()
+        {
+            string ret = string.Empty;
+
+            foreach (var item in lines)
+            {
+                ret += item.Text + '\n';
+            }
+
+            return ret;
         }
 
         /// <summary>
@@ -63,7 +106,7 @@
         /// </summary>
         /// <param name="lineOne"></param>
         /// <param name="lineTwo"></param>
-		public void SetData(DiffViewLine lineOne, DiffViewLine lineTwo)
+		internal void SetData(DiffViewLine lineOne, DiffViewLine lineTwo)
         {
             this.lines = new DiffViewLines(lineOne, lineTwo);
             this.UpdateAfterSetData();
