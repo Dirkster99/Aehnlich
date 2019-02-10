@@ -10,8 +10,8 @@ namespace DiffLib.Text
     {
         #region Private Data Members
 
-        private int[] data;
-        private int max;
+        private readonly int[] data;
+        private readonly int max;
 
         #endregion
 

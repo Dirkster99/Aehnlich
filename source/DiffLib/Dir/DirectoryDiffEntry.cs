@@ -9,11 +9,11 @@ namespace DiffLib.Dir
 		#region Private Data Members
 
 		private bool different;
-		private bool inA;
-		private bool inB;
-		private bool isFile;
+		private readonly bool inA;
+		private readonly bool inB;
+		private readonly bool isFile;
 		private string error;
-		private string name;
+		private readonly string name;
 		private DirectoryDiffEntryCollection subentries;
 
 		#endregion

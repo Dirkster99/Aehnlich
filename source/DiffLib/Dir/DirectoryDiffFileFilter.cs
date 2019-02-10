@@ -12,9 +12,9 @@ namespace DiffLib.Dir
 	{
 		#region Private Data Members
 
-		private string concatenatedFilters;
-		private string[] individualFilters;
-		private bool include;
+		private readonly string concatenatedFilters;
+		private readonly string[] individualFilters;
+		private readonly bool include;
 
 		#endregion
 

@@ -267,10 +267,12 @@ namespace DiffLib.BinaryFileDiff
 			TableEntry result = table[index];
 			if (result == null)
 			{
-				result = new TableEntry();
-				result.File = file;
-				result.Offset = pos;
-				table[index] = result;
+                result = new TableEntry
+                {
+                    File = file,
+                    Offset = pos
+                };
+                table[index] = result;
 			}
 
 			return result;

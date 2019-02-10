@@ -14,7 +14,7 @@ namespace DiffLibViewModels.ViewModels
         private readonly DiffViewModel _ViewLineDiff;
 
         private int _LineDiffHeight = 38;
-        private string _lblSimilarity_Text;
+        private string _Similarity_Text;
         private bool _edtLeft_Right_Visible;
         private string _edtRight_Text;
         private string _edtLeft_Text;
@@ -68,19 +68,19 @@ namespace DiffLibViewModels.ViewModels
         /// <summary>
         /// Gets the similarity value (0% - 100%) between 2 things shown in toolbar
         /// </summary>
-        public string lblSimilarity_Text
+        public string Similarity_Text
         {
             get
             {
-                return _lblSimilarity_Text;
+                return _Similarity_Text;
             }
 
             internal set
             {
-                if (_lblSimilarity_Text != value)
+                if (_Similarity_Text != value)
                 {
-                    _lblSimilarity_Text = value;
-                    NotifyPropertyChanged(() => lblSimilarity_Text);
+                    _Similarity_Text = value;
+                    NotifyPropertyChanged(() => Similarity_Text);
                 }
             }
         }
@@ -197,7 +197,7 @@ namespace DiffLibViewModels.ViewModels
             Debug.Assert(this._ViewA.LineCount == this._ViewB.LineCount, "Both DiffView's LineCounts must be the same");
 
             // Sets the similarity value (0% - 100%) between 2 things shown in toolbar
-            this.lblSimilarity_Text = string.Format("{0:P}", script.Similarity);
+            this.Similarity_Text = string.Format("{0:P}", script.Similarity);
 
             this._ViewA.SetCounterpartLines(this._ViewB);
 ////            this.Overview.DiffView = this.ViewA;

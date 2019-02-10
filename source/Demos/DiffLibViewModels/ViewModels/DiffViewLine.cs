@@ -23,7 +23,7 @@
         private EditScript changeEditScript;
         private int? number;
         private string text;
-        private EditType editType;
+        private readonly EditType editType;
 
         #endregion
 
@@ -146,7 +146,7 @@
         {
             #region Private Data Members
 
-            private string text;
+            private readonly string text;
 
             #endregion
 

@@ -6,7 +6,7 @@ namespace DiffLib.BinaryFileDiff
 	{
 		#region Private Data Members
 
-		private byte[] bytes;
+		private readonly byte[] bytes;
 
 		#endregion
 

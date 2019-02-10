@@ -14,7 +14,7 @@
         static readonly Brush BlankBackground;
 
         static readonly Pen BorderlessPen;
-        private Dictionary<int, DiffContext> _LineDiffs;
+        private readonly DiffView _DiffView;
         #endregion fields
 
         static DiffLineBackgroundRenderer2()
@@ -35,25 +35,25 @@
             BorderlessPen.Freeze();
         }
 
-        public DiffLineBackgroundRenderer2(Dictionary<int, DiffContext> lineDiffs)
+        public DiffLineBackgroundRenderer2(DiffView diffView)
         {
-            this._LineDiffs = lineDiffs;
+            this._DiffView = diffView;
         }
 
         public void Draw(TextView textView, DrawingContext drawingContext)
         {
-            if (_LineDiffs == null)
+            if (_DiffView == null)
                 return;
 
             foreach (var v in textView.VisualLines)
             {
                 var linenum = v.FirstDocumentLine.LineNumber - 1;
-                if (linenum >= _LineDiffs.Count)
+                if (linenum >= _DiffView.LineDiffs.Count)
                     continue;
 
                 // Find a diff context for a given line
                 DiffContext context;
-                if (_LineDiffs.TryGetValue(linenum, out context) == false)
+                if (_DiffView.LineDiffs.TryGetValue(linenum, out context) == false)
                     continue;
 
                 var brush = default(Brush);
@@ -81,10 +81,5 @@
         }
 
         public KnownLayer Layer { get { return KnownLayer.Background; } }
-
-        internal void ResetListValues(Dictionary<int, DiffContext> lineDiffs)
-        {
-            _LineDiffs = lineDiffs;
-        }
     }
 }

@@ -10,11 +10,11 @@ namespace DiffLib.Dir
 	{
 		#region Private Data Members
 
-		private DirectoryInfo directoryA;
-		private DirectoryInfo directoryB;
-		private bool recursive;
-		private DirectoryDiffEntryCollection entries;
-		private DirectoryDiffFileFilter filter;
+		private readonly DirectoryInfo directoryA;
+		private readonly DirectoryInfo directoryB;
+		private readonly bool recursive;
+		private readonly DirectoryDiffEntryCollection entries;
+		private readonly DirectoryDiffFileFilter filter;
 
 		#endregion
 

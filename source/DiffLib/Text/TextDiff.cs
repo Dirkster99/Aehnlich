@@ -12,8 +12,8 @@ namespace DiffLib.Text
 	{
 		#region Private Data Members
 
-		private bool supportChangeEditType;
-		private StringHasher hasher;
+		private readonly bool supportChangeEditType;
+		private readonly StringHasher hasher;
 
 		#endregion
 

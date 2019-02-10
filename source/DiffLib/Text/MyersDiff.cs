@@ -21,11 +21,11 @@ namespace DiffLib.Text
 	{
 		#region Private Data Members
 
-		private IList<T> listA;               // Sequence A
-		private IList<T> listB;               // Sequence B
-		private bool supportChangeEditType;
-		private DiagonalVector vectorForward;
-		private DiagonalVector vectorReverse;
+		private readonly IList<T> listA;               // Sequence A
+		private readonly IList<T> listB;               // Sequence B
+		private readonly bool supportChangeEditType;
+		private readonly DiagonalVector vectorForward;
+		private readonly DiagonalVector vectorReverse;
 
 		#endregion
 

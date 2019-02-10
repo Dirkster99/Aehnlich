@@ -2,7 +2,6 @@
 {
     using DiffViewLib.Enums;
     using ICSharpCode.AvalonEdit;
-    using System;
     using System.Collections.Generic;
     using System.Windows;
 
@@ -14,21 +13,7 @@
         #region fields
         public static readonly DependencyProperty LineDiffsProperty =
             DependencyProperty.Register("LineDiffs", typeof(Dictionary<int, DiffContext>),
-                typeof(DiffView), new PropertyMetadata(null, OnLineDiffsChanged));
-
-        private static void OnLineDiffsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var ctrl = d as DiffView;
-            if (ctrl != null)
-            {
-                ctrl.ResetLineDiffs();
-            }
-        }
-
-        internal void ResetLineDiffs()
-        {
-            _DiffBackgroundRenderer.ResetListValues(LineDiffs);
-        }
+                typeof(DiffView), new PropertyMetadata(null));
 
         private readonly DiffLineBackgroundRenderer2 _DiffBackgroundRenderer;
         #endregion fields
@@ -50,7 +35,7 @@
         public DiffView()
             : base()
         {
-            _DiffBackgroundRenderer = new DiffLineBackgroundRenderer2(LineDiffs);
+            _DiffBackgroundRenderer = new DiffLineBackgroundRenderer2(this);
             this.TextArea.TextView.BackgroundRenderers.Add(_DiffBackgroundRenderer);
         }
         #endregion ctors

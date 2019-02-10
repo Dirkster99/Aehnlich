@@ -42,10 +42,6 @@
         }
         #endregion ctors
 
-        #region events
-
-        #endregion events
-
         #region properties
         public DiffControlViewModel DiffCtrl
         {
@@ -353,8 +349,11 @@
                 using (FileStream fileA = File.OpenRead(fileNameA))
                 using (FileStream fileB = File.OpenRead(fileNameB))
                 {
-                    BinaryDiff diff = new BinaryDiff();
-                    diff.FootprintLength = Options.BinaryFootprintLength;
+                    BinaryDiff diff = new BinaryDiff
+                    {
+                        FootprintLength = Options.BinaryFootprintLength
+                    };
+
                     AddCopyCollection addCopy = diff.Execute(fileA, fileB);
 
                     BinaryDiffLines lines = new BinaryDiffLines(fileA, addCopy, Options.BinaryFootprintLength);

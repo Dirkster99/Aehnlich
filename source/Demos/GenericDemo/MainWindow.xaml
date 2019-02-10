@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        
         xmlns:conv="clr-namespace:DiffLibViewModels.Converters;assembly=DiffLibViewModels"
-        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:ctrl="clr-namespace:DiffViewLib;assembly=DiffViewLib"
         
         mc:Ignorable="d"
@@ -21,10 +21,13 @@
         <Grid Margin="0,0,0,3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Button Content="Compare"
+                    Padding="3"
                     Command="{Binding CompareFilesCommand}"
+                    Margin="3"
                     >
                 <Button.CommandParameter>
                     <MultiBinding Converter="{StaticResource MultiParToParConverter}">
@@ -33,6 +36,12 @@
                     </MultiBinding>
                 </Button.CommandParameter>
             </Button>
+
+            <TextBlock 
+                Grid.Column="1" Margin="3" VerticalAlignment="Center"
+                Text="{Binding DiffForm.DiffCtrl.Similarity_Text}"
+                ToolTip="Similarity"
+                />
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -72,6 +81,7 @@
                 LineDiffs="{Binding DocumentLineDiffs}"
 				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
+                ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
 
                 Grid.Column="0" Grid.Row="1"
                 FontFamily="Consolas"
@@ -85,6 +95,7 @@
                 LineDiffs="{Binding DocumentLineDiffs}"
 				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
+                ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
 
                 Grid.Column="2" Grid.Row="1"
                 FontFamily="Consolas"

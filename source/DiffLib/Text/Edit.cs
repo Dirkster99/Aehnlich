@@ -12,8 +12,8 @@ namespace DiffLib.Text
 	{
 		#region Private Data Members
 
-		private EditType editType;
-		private int length; // Length of the Delete, Insert or Change in the "A" or "B" sequence
+		private readonly EditType editType;
+		private readonly int length; // Length of the Delete, Insert or Change in the "A" or "B" sequence
 		private int startA;	// Where to Delete, Insert, or Change in the "A" sequence
 		private int startB;	// Where to Insert or Change in the "B" sequence
 

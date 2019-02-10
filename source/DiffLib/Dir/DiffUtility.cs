@@ -91,14 +91,16 @@ namespace DiffLib.Dir
 
 		public static IList<string> GetXmlTextLines(XmlReader reader)
 		{
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.CheckCharacters = false;
-			settings.CloseOutput = true;
-			settings.Indent = true;
-			settings.IndentChars = "\t";
-			settings.NewLineOnAttributes = true;
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                CheckCharacters = false,
+                CloseOutput = true,
+                Indent = true,
+                IndentChars = "\t",
+                NewLineOnAttributes = true
+            };
 
-			StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 			using (XmlWriter writer = XmlWriter.Create(sb, settings))
 			{
 				writer.WriteNode(reader, false);
@@ -167,16 +169,18 @@ namespace DiffLib.Dir
 
 		private static IList<string> GetXmlTextLines(TextReader textReader, bool ignoreInsignificantWhitespace)
 		{
-			XmlReaderSettings settings = new XmlReaderSettings();
-			settings.CheckCharacters = false;
-			settings.CloseInput = true;
-			settings.DtdProcessing = DtdProcessing.Ignore;
-			settings.IgnoreWhitespace = ignoreInsignificantWhitespace;
-			settings.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.None;
-			settings.ValidationType = ValidationType.None;
-			settings.XmlResolver = null;
+            XmlReaderSettings settings = new XmlReaderSettings
+            {
+                CheckCharacters = false,
+                CloseInput = true,
+                DtdProcessing = DtdProcessing.Ignore,
+                IgnoreWhitespace = ignoreInsignificantWhitespace,
+                ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
+                XmlResolver = null
+            };
 
-			using (XmlReader xmlReader = XmlReader.Create(textReader, settings))
+            using (XmlReader xmlReader = XmlReader.Create(textReader, settings))
 			{
 				IList<string> result = GetXmlTextLines(xmlReader);
 				return result;

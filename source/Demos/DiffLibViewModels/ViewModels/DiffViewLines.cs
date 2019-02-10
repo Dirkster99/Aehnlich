@@ -10,8 +10,8 @@
     {
         #region Private Data Members
 
-        private int[] diffEndLines;
-        private int[] diffStartLines;
+        private readonly int[] diffEndLines;
+        private readonly int[] diffStartLines;
         private int maxLineNumber = 1;
 
         #endregion

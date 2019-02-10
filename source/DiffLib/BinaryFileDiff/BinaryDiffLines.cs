@@ -24,11 +24,11 @@ namespace DiffLib.BinaryFileDiff
 
 		#region Private Data Members
 
-		private IList<string> baseLines = new List<string>();
-		private int basePosition;
-		private int bytesPerLine;
-		private IList<string> versionLines = new List<string>();
-		private int versionPosition;
+		private readonly IList<string> baseLines = new List<string>();
+		private readonly int basePosition;
+		private readonly int bytesPerLine;
+		private readonly IList<string> versionLines = new List<string>();
+		private readonly int versionPosition;
 
 		#endregion
 

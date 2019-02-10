@@ -11,13 +11,13 @@ namespace DiffLib.Dir
 	{
 		#region Private Data Members
 
-		private bool ignoreDirectoryComparison;
-		private bool recursive;
-		private bool showDifferent;
-		private bool showOnlyInA;
-		private bool showOnlyInB;
-		private bool showSame;
-		private DirectoryDiffFileFilter filter;
+		private readonly bool ignoreDirectoryComparison;
+		private readonly bool recursive;
+		private readonly bool showDifferent;
+		private readonly bool showOnlyInA;
+		private readonly bool showOnlyInB;
+		private readonly bool showSame;
+		private readonly DirectoryDiffFileFilter filter;
 
 		#endregion
 
