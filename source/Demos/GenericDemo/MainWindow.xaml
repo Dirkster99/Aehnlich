@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:conv="clr-namespace:DiffLibViewModels.Converters;assembly=DiffLibViewModels"
         xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:ctrl="clr-namespace:DiffViewLib;assembly=DiffViewLib"
+        
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="3">
@@ -42,7 +44,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <TextBox
@@ -64,10 +65,11 @@
             <!-- Text Content
                 SyntaxHighlighting="{Binding HighlightDef}"
             -->
-            <avalonedit:TextEditor
+            <ctrl:DiffView
                 Name="TextLeft"
                 DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
                 Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
+                LineDiffs="{Binding DocumentLineDiffs}"
 				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
 
@@ -76,10 +78,11 @@
                 FontSize="12pt"
                 HorizontalScrollBarVisibility="Auto"/>
 
-            <avalonedit:TextEditor
+            <ctrl:DiffView
                 Name="TextRight"
                 DataContext="{Binding DiffForm.DiffCtrl.ViewB}"
                 Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
+                LineDiffs="{Binding DocumentLineDiffs}"
 				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
 
@@ -87,16 +90,6 @@
                 FontFamily="Consolas"
                 FontSize="12pt"
                 HorizontalScrollBarVisibility="Auto"/>
-
-            <avalonedit:TextEditor
-                Name="TextTest"
-                IsReadOnly="True"
-
-                Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3"
-                FontFamily="Consolas"
-                FontSize="12pt"
-                HorizontalScrollBarVisibility="Auto"/>
-
         </Grid>
     </Grid>
 </Window>

@@ -1,9 +1,7 @@
 ﻿namespace GenericDemo
 {
     using DiffLibViewModels.ViewModels;
-    using GenericDemo.Models;
     using System;
-    using System.Collections.Generic;
     using System.Reflection;
     using System.Windows;
 
@@ -32,25 +30,6 @@
                                          fspath + @"\DemoTestFiles\MyersDiff_V1.txt");
 
             this.DataContext = appVM;
-
-            TextTest.Text =
-                "Line 1\n" +
-                "Line 2\n" +
-                "Line 3\n" +
-                "Line 4\n" +
-                "Line 5\n" +
-                "Line 6\n";
-
-            Dictionary<int, DiffContext> lines = new Dictionary<int, DiffContext>();
-
-            lines.Add(1, DiffContext.Added);
-            lines.Add(2, DiffContext.Deleted);
-            lines.Add(3, DiffContext.Added);
-            lines.Add(5, DiffContext.Added);
-
-            var backgroundRenderer = new DiffLineBackgroundRenderer { Lines = lines };
-
-            TextTest.TextArea.TextView.BackgroundRenderers.Add(backgroundRenderer);
         }
     }
 }

@@ -68,6 +68,10 @@
       <Project>{c0d1e820-eb48-4b79-bcd6-c2de7cc367f2}</Project>
       <Name>DiffLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DiffViewLib\DiffViewLib.csproj">
+      <Project>{342915ec-e1ca-4aad-bddb-810ee65e4233}</Project>
+      <Name>DiffViewLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

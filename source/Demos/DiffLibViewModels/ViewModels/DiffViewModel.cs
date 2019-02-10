@@ -2,6 +2,7 @@
 {
     using DiffLib.Text;
     using DiffLibViewModels.Enums;
+    using DiffViewLib.Enums;
     using ICSharpCode.AvalonEdit.Document;
     using System;
     using System.Collections.Generic;
@@ -12,6 +13,10 @@
         #region fields
         private ChangeDiffOptions _ChangeDiffOptions;
         private DiffViewLines lines;
+
+        private TextDocument _document = null;
+        private bool _isDirty = false;
+        private Dictionary<int, DiffContext> _DocumentLineDiffs;
         #endregion fields
 
         #region ctors
@@ -21,7 +26,6 @@
         #endregion ctors
 
         #region properties
-        private TextDocument _document = null;
         public TextDocument Document
         {
             get { return this._document; }
@@ -35,7 +39,19 @@
             }
         }
 
-        private bool _isDirty = false;
+        public Dictionary<int, DiffContext> DocumentLineDiffs
+        {
+            get { return this._DocumentLineDiffs; }
+            protected set
+            {
+                if (this._DocumentLineDiffs != value)
+                {
+                    this._DocumentLineDiffs = value;
+                    NotifyPropertyChanged(() => DocumentLineDiffs);
+                }
+            }
+        }
+
         public bool IsDirty
         {
             get { return _isDirty; }
@@ -82,17 +98,47 @@
         public void SetData(IList<string> stringList, EditScript script, bool useA)
         {
             this.lines = new DiffViewLines(stringList, script, useA);
-            Document = new TextDocument(GetDocumentFromRawLines());
+
+            Dictionary<int, DiffContext> documentLineDiffs;
+            string text = GetDocumentFromRawLines(out documentLineDiffs);
+
+            DocumentLineDiffs = documentLineDiffs;
+            Document = new TextDocument(text);
+
+            NotifyPropertyChanged(() => DocumentLineDiffs);
+            NotifyPropertyChanged(() => Document);
 
             this.UpdateAfterSetData();
         }
 
-        private string GetDocumentFromRawLines()
+        private string GetDocumentFromRawLines(out Dictionary<int, DiffContext> documentLineDiffs)
         {
             string ret = string.Empty;
 
+            documentLineDiffs = new Dictionary<int, DiffContext>();
+            int line = 0;
+
             foreach (var item in lines)
             {
+                DiffContext lineContext = DiffContext.Blank;
+                switch (item.EditType)
+                {
+                    case DiffLib.Enums.EditType.Delete:
+                        lineContext = DiffContext.Deleted;
+                        break;
+                    case DiffLib.Enums.EditType.Insert:
+                        lineContext = DiffContext.Added;
+                        break;
+                    case DiffLib.Enums.EditType.Change:
+                        lineContext = DiffContext.Context;
+                        break;
+
+                    case DiffLib.Enums.EditType.None:
+                    default:
+                        break;
+                }
+
+                documentLineDiffs.Add(line++, lineContext);
                 ret += item.Text + '\n';
             }
 

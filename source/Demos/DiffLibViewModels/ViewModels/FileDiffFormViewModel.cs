@@ -336,8 +336,6 @@
 
             NotifyPropertyChanged(() => DiffCtrl);
 
-////            this.Show();
-
             this.currentDiffArgs = e;
         }
 
