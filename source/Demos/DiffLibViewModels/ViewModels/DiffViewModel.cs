@@ -93,7 +93,7 @@
             }
         }
 
-        [Browsable(false)]
+        [Browsable(true)]
         public int LineCount => this.lines != null ? this.lines.Count : 0;
         #endregion properties
 
@@ -109,6 +109,7 @@
         public void SetData(IList<string> stringList, EditScript script, bool useA)
         {
             this.lines = new DiffViewLines(stringList, script, useA);
+            NotifyPropertyChanged(() => LineCount);
 
             Dictionary<int, DiffContext> documentLineDiffs;
             string text = GetDocumentFromRawLines(out documentLineDiffs);

@@ -10,8 +10,9 @@
     {
         #region fields
         static readonly Brush AddedBackground;
-        static readonly Brush DeletedBackground;
         static readonly Brush BlankBackground;
+        static readonly Brush DeletedBackground;
+        static readonly Brush ChangedBackground;
 
         static readonly Pen BorderlessPen;
         private readonly DiffView _DiffView;
@@ -19,10 +20,13 @@
 
         static DiffLineBackgroundRenderer()
         {
-            AddedBackground = new SolidColorBrush(Color.FromRgb(0xdd, 0xff, 0xdd));
+            AddedBackground = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xFF, 0x00));
             AddedBackground.Freeze();
 
-            DeletedBackground = new SolidColorBrush(Color.FromRgb(0xff, 0xdd, 0xdd));
+            ChangedBackground = new SolidColorBrush(Color.FromArgb(0x40, 0xFF, 0x00, 0x00));
+            AddedBackground.Freeze();
+
+            DeletedBackground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0x00, 0x00));
             DeletedBackground.Freeze();
 
             BlankBackground = new SolidColorBrush(Color.FromRgb(0xfa, 0xfa, 0xfa));
@@ -65,6 +69,10 @@
 
                     case DiffContext.Deleted:
                         brush = DeletedBackground;
+                        break;
+
+                    case DiffContext.Context:
+                        brush = ChangedBackground;
                         break;
 
 ///                    case DiffContext.Blank:

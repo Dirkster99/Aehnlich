@@ -4,69 +4,39 @@
     >
 
     <!-- VerticalSlideThumb (Template and Style) -->
-    <ControlTemplate x:Key="VerticalSlideThumbTemplate" TargetType="{x:Type Thumb}">
-        <Canvas SnapsToDevicePixels="true"
-                Background="Transparent"
-                >
-            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Center"
-                  Width="27">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="3" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Path x:Name="LeftArrow" Grid.Column="0"
-                      Stretch="Uniform"
-                      StrokeThickness="0"
-                      Fill="{DynamicResource {x:Static reskeys:ResourceKeys.VerticalSLideThumbForegroundBrushKey}}"
-                      Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z "
-                      RenderTransformOrigin="0.5,0.5" 
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch">
-                    <Path.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform />
-                            <SkewTransform />
-                            <RotateTransform />
-                            <TranslateTransform Y="-8" X="-3" />
-                        </TransformGroup>
-                    </Path.RenderTransform>
-                </Path>
-                <Path x:Name="RightArrow" Grid.Column="2"
-                      Stretch="Uniform"
-                      StrokeThickness="0"
-                      Fill="{DynamicResource {x:Static reskeys:ResourceKeys.VerticalSLideThumbForegroundBrushKey}}"
-                      Data="F1 M 276.761,316L 262.619,307.835L 262.619,324.165L 276.761,316 Z "
-                      RenderTransformOrigin="0.5,0.5"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch">
-                    <Path.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform />
-                            <SkewTransform />
-                            <RotateTransform Angle="-180" />
-                            <TranslateTransform Y="-8" X="3" />
-                        </TransformGroup>
-                    </Path.RenderTransform>
-                </Path>
-            </Grid>
-        </Canvas>
-        <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="RightArrow" Property="Stroke" Value="{DynamicResource {x:Static reskeys:ResourceKeys.VerticalSLideThumbMouseOverBrushKey}}" />
-                <Setter TargetName="LeftArrow" Property="Stroke" Value="{DynamicResource {x:Static reskeys:ResourceKeys.VerticalSLideThumbMouseOverBrushKey}}" />
-                <Setter TargetName="RightArrow" Property="Fill" Value="{DynamicResource {x:Static reskeys:ResourceKeys.VerticalSLideThumbMouseOverBrushKey}}" />
-                <Setter TargetName="LeftArrow" Property="Fill" Value="{DynamicResource {x:Static reskeys:ResourceKeys.VerticalSLideThumbMouseOverBrushKey}}" />
-            </Trigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
-
     <Style x:Key="VerticalSlideThumbStyle" TargetType="{x:Type Thumb}">
         <Setter Property="Focusable" Value="false" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="Foreground" Value="Gray" />
-        <Setter Property="Template" Value="{StaticResource VerticalSlideThumbTemplate}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Canvas SnapsToDevicePixels="true" Background="Transparent">
+                        <Grid
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Center"
+                            Width="{TemplateBinding ActualWidth}"
+                            Height="27">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Fill="{DynamicResource {x:Static reskeys:ResourceKeys.VerticalSLideThumbForegroundBrushKey}}"
+                                       Width="{TemplateBinding Width}"
+                                       Height="{TemplateBinding Height}"
+                                       Name="ThumbWindow"
+                                       />
+                        </Grid>
+                    </Canvas>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ThumbWindow" Property="Stroke" Value="{DynamicResource {x:Static reskeys:ResourceKeys.VerticalSLideThumbMouseOverBorderBrushKey}}" />
+                            <Setter TargetName="ThumbWindow" Property="Fill" Value="{DynamicResource {x:Static reskeys:ResourceKeys.VerticalSLideThumbMouseOverBrushKey}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

@@ -24,6 +24,8 @@
         /// </summary>
         public static readonly ComponentResourceKey VerticalSLideThumbMouseOverBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "VerticalSLideThumbMouseOverBrushKey");
 
+        public static readonly ComponentResourceKey VerticalSLideThumbMouseOverBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "VerticalSLideThumbMouseOverBorderBrushKey");
+
         /// <summary>
         /// Styles the foreground color of the thumb of the vertical color spectrum slider.
         /// </summary>

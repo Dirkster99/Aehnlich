@@ -26,6 +26,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Button Content="Compare"
@@ -46,17 +47,26 @@
                 Text="{Binding DiffForm.DiffCtrl.Similarity_Text}"
                 ToolTip="Similarity"
                 />
+            
+            <TextBlock
+                Grid.Column="2" Margin="3" VerticalAlignment="Center"
+                Text="{Binding DiffForm.NumberOfLines}"
+                ToolTip="Max Lines"
+                />
         </Grid>
 
         <Grid Grid.Column="0" Grid.Row="1">
-            <ctrl:Overview Margin="9,3"
+            <ctrl:Overview Margin="9,9"
                            Name="OverviewSlider"
-                           ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
-                           Minimum="0"
-                           Maximum="{Binding DiffForm.NumberOfLines}"
+                           ValueChanged="OverviewSlider_ValueChanged"
                            DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
                            ItemsSource="{Binding DocLineDiffs}"
-                           />
+                           >
+                <!-- DiffForm.NumberOfLines -->
+                <!--ctrl:Overview.ToolTip>
+                    <TextBlock Text="{Binding DiffForm.NumberOfLines}"/>
+                </ctrl:Overview.ToolTip-->
+            </ctrl:Overview>
         </Grid>
         
         <Grid Grid.Column="1" Grid.Row="1">
@@ -94,6 +104,7 @@
                 Name="TextLeft"
                 DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
                 Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
+                ShowLineNumbers="True"
                 LineDiffs="{Binding DocumentLineDiffs}"
 				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
@@ -102,12 +113,15 @@
                 Grid.Column="0" Grid.Row="1"
                 FontFamily="Consolas"
                 FontSize="12pt"
-                HorizontalScrollBarVisibility="Auto"/>
+                HorizontalScrollBarVisibility="Visible"
+                VerticalScrollBarVisibility="Visible"
+                />
 
             <ctrl:DiffView
                 Name="TextRight"
                 DataContext="{Binding DiffForm.DiffCtrl.ViewB}"
                 Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
+                ShowLineNumbers="True"
                 LineDiffs="{Binding DocumentLineDiffs}"
 				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
@@ -116,7 +130,9 @@
                 Grid.Column="2" Grid.Row="1"
                 FontFamily="Consolas"
                 FontSize="12pt"
-                HorizontalScrollBarVisibility="Auto"/>
+                HorizontalScrollBarVisibility="Visible"
+                VerticalScrollBarVisibility="Visible"
+                />
         </Grid>
     </Grid>
 </Window>
