@@ -28,6 +28,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Button Content="Compare"
@@ -58,6 +60,18 @@
             <TextBlock
                 Grid.Column="3" Margin="3" VerticalAlignment="Center"
                 Text="{Binding ElementName=OverviewSlider,Path=Value}"
+                ToolTip="Value"
+                />
+
+            <TextBlock
+                Grid.Column="4" Margin="3" VerticalAlignment="Center"
+                Text="{Binding ElementName=OverviewSlider,Path=Minimum}"
+                ToolTip="Value"
+                />
+
+            <TextBlock
+                Grid.Column="5" Margin="3" VerticalAlignment="Center"
+                Text="{Binding ElementName=OverviewSlider,Path=Maximum}"
                 ToolTip="Value"
                 />
         </Grid>

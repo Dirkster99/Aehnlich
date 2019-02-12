@@ -58,9 +58,9 @@
 
                 OverviewSlider.NumberOfTextLinesInViewPort = (lline - fline);
 
-////                int middleLine = ((lline - fline) > 0 ? fline + (int)((float)(lline - fline) / 2) : fline);
+                ////                int middleLine = ((lline - fline) > 0 ? fline + (int)((float)(lline - fline) / 2) : fline);
 
-////                Console.WriteLine("fline {0} lline {1} Middle Line {2}", fline, lline, middleLine);
+                ////                Console.WriteLine("fline {0} lline {1} Middle Line {2}", fline, lline, middleLine);
 
                 // Get value of first visible line and set it in Overview slider
                 OverviewSlider.Value = fline;

@@ -119,7 +119,7 @@
                 return;
 
             this.Minimum = 1;
-            this.Maximum = newList.Count();
+            this.Maximum = newList.Count() - NumberOfTextLinesInViewPort;
 
             int width = (int)this._PART_ViewPortContainer.ActualWidth;
 			int height = (int)this._PART_ViewPortContainer.ActualHeight;
@@ -259,8 +259,12 @@
         {
             int lines = (int)newValue;
             int height = (int)this._PART_ViewPortContainer.ActualHeight;
+            int countLines = GetItemsCount();
 
-            ThumbHeight = GetPixelLineHeightF(lines, GetItemsCount(), height);
+            ThumbHeight = GetPixelLineHeightF(lines, countLines, height);
+
+            this.Minimum = 1;
+            this.Maximum = countLines - NumberOfTextLinesInViewPort;
         }
         #endregion ItemsSourceChanged
         #endregion methods
