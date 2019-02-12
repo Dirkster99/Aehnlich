@@ -63,6 +63,7 @@
     <Compile Include="ViewModels\DiffViewLines.cs" />
     <Compile Include="ViewModels\DiffViewModel.cs" />
     <Compile Include="ViewModels\FileDiffFormViewModel.cs" />
+    <Compile Include="ViewModels\ObservableRangeCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DiffLib\DiffLib.csproj">

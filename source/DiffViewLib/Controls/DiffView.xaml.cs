@@ -1,4 +1,4 @@
-﻿namespace DiffViewLib
+﻿namespace DiffViewLib.Controls
 {
     using DiffViewLib.Enums;
     using ICSharpCode.AvalonEdit;
@@ -15,7 +15,7 @@
             DependencyProperty.Register("LineDiffs", typeof(Dictionary<int, DiffContext>),
                 typeof(DiffView), new PropertyMetadata(null));
 
-        private readonly DiffLineBackgroundRenderer2 _DiffBackgroundRenderer;
+        private readonly DiffLineBackgroundRenderer _DiffBackgroundRenderer;
         #endregion fields
 
         #region ctors
@@ -35,7 +35,7 @@
         public DiffView()
             : base()
         {
-            _DiffBackgroundRenderer = new DiffLineBackgroundRenderer2(this);
+            _DiffBackgroundRenderer = new DiffLineBackgroundRenderer(this);
             this.TextArea.TextView.BackgroundRenderers.Add(_DiffBackgroundRenderer);
         }
         #endregion ctors

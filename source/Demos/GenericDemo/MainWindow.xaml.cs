@@ -2,6 +2,7 @@
 {
     using DiffLibViewModels.ViewModels;
     using System;
+    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
@@ -45,6 +46,17 @@
 
             textToSync.ScrollToVerticalOffset(e.VerticalOffset);
             textToSync.ScrollToHorizontalOffset(e.HorizontalOffset);
+
+            if (textToSync.TextArea.TextView.IsVisible)
+            {
+                if (textToSync.TextArea.TextView.VisualLines.Any())
+                {
+                    var vline = textToSync.TextArea.TextView.VisualLines.First();
+
+                    // Get value of first visible line and set it in Overview slider
+                    OverviewSlider.Value = vline.FirstDocumentLine.LineNumber - 1;
+                }
+            }
         }
     }
 }

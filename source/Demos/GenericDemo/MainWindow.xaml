@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         
         xmlns:conv="clr-namespace:DiffLibViewModels.Converters;assembly=DiffLibViewModels"
-        xmlns:ctrl="clr-namespace:DiffViewLib;assembly=DiffViewLib"
+        xmlns:ctrl="clr-namespace:DiffViewLib.Controls;assembly=DiffViewLib"
         
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -13,12 +13,16 @@
         <Grid.Resources>
             <conv:MultiParToParConverter x:Key="MultiParToParConverter"/>
         </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Margin="0,0,0,3">
+        <Grid Margin="0,0,0,3" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -43,7 +47,19 @@
                 ToolTip="Similarity"
                 />
         </Grid>
-        <Grid Grid.Row="1">
+
+        <Grid Grid.Column="0" Grid.Row="1">
+            <ctrl:Overview Margin="9,3"
+                           Name="OverviewSlider"
+                           ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
+                           Minimum="0"
+                           Maximum="{Binding DiffForm.NumberOfLines}"
+                           DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
+                           ItemsSource="{Binding DocLineDiffs}"
+                           />
+        </Grid>
+        
+        <Grid Grid.Column="1" Grid.Row="1">
             <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>

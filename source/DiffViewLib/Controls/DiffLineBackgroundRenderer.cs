@@ -1,12 +1,12 @@
 ﻿namespace DiffViewLib
 {
-    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
+    using DiffViewLib.Controls;
     using DiffViewLib.Enums;
     using ICSharpCode.AvalonEdit.Rendering;
 
-    public class DiffLineBackgroundRenderer2 : IBackgroundRenderer
+    public class DiffLineBackgroundRenderer : IBackgroundRenderer
     {
         #region fields
         static readonly Brush AddedBackground;
@@ -17,7 +17,7 @@
         private readonly DiffView _DiffView;
         #endregion fields
 
-        static DiffLineBackgroundRenderer2()
+        static DiffLineBackgroundRenderer()
         {
             AddedBackground = new SolidColorBrush(Color.FromRgb(0xdd, 0xff, 0xdd));
             AddedBackground.Freeze();
@@ -35,7 +35,7 @@
             BorderlessPen.Freeze();
         }
 
-        public DiffLineBackgroundRenderer2(DiffView diffView)
+        public DiffLineBackgroundRenderer(DiffView diffView)
         {
             this._DiffView = diffView;
         }
@@ -67,15 +67,18 @@
                         brush = DeletedBackground;
                         break;
 
-                    case DiffContext.Blank:
-                        brush = BlankBackground;
-                        break;
+///                    case DiffContext.Blank:
+///                        brush = BlankBackground;
+///                        break;
                 }
 
-                foreach (var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, 1000))
+                if (brush != default(Brush))
                 {
-                    drawingContext.DrawRectangle(brush, BorderlessPen,
-                        new Rect(0, rc.Top, textView.ActualWidth, rc.Height));
+                    foreach (var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, 1000))
+                    {
+                        drawingContext.DrawRectangle(brush, BorderlessPen,
+                            new Rect(0, rc.Top, textView.ActualWidth, rc.Height));
+                    }
                 }
             }
         }

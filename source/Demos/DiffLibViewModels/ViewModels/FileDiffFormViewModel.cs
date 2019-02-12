@@ -27,6 +27,7 @@
         private bool _IgnoreTextWhitespace;
         private bool _IsBinaryCompare;
         private int _LineDiffHeight;
+        private int _NumberOfLines;
 
         private readonly DiffControlViewModel _DiffCtrl;
         #endregion fields
@@ -266,6 +267,23 @@
                 }
             }
         }
+
+        public int NumberOfLines
+        {
+            get
+            {
+                return _NumberOfLines;
+            }
+
+            protected set
+            {
+                if (_NumberOfLines != value)
+                {
+                    _NumberOfLines = value;
+                    NotifyPropertyChanged(() => NumberOfLines);
+                }
+            }
+        }
         #endregion properties
 
         #region methods
@@ -330,6 +348,7 @@
                 this._DiffCtrl.LineDiffHeight = Options.LineDiffHeight;
             }
 
+            NumberOfLines = ListA.Count;
             NotifyPropertyChanged(() => DiffCtrl);
 
             this.currentDiffArgs = e;

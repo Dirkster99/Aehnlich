@@ -16,12 +16,15 @@
 
         private TextDocument _document = null;
         private bool _isDirty = false;
+
         private Dictionary<int, DiffContext> _DocumentLineDiffs;
+        private readonly ObservableRangeCollection<DiffContext> _DocLineDiffs;
         #endregion fields
 
         #region ctors
         public DiffViewModel()
         {
+            _DocLineDiffs = new ObservableRangeCollection<DiffContext>();
         }
         #endregion ctors
 
@@ -36,6 +39,14 @@
                     this._document = value;
                     NotifyPropertyChanged(() => Document);
                 }
+            }
+        }
+
+        public IEnumerable<DiffContext> DocLineDiffs
+        {
+            get
+            {
+                return _DocLineDiffs;
             }
         }
 
@@ -116,6 +127,7 @@
             string ret = string.Empty;
 
             documentLineDiffs = new Dictionary<int, DiffContext>();
+            _DocLineDiffs.Clear();
             int line = 0;
 
             foreach (var item in lines)
@@ -138,6 +150,7 @@
                         break;
                 }
 
+                _DocLineDiffs.Add(lineContext);
                 documentLineDiffs.Add(line++, lineContext);
                 ret += item.Text + '\n';
             }
