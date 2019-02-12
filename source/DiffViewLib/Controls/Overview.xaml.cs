@@ -118,12 +118,11 @@
             if (_PART_ViewPortContainer.IsVisible == false)
                 return;
 
-            this.Minimum = 1;
-            this.Maximum = newList.Count() - NumberOfTextLinesInViewPort;
+            int numLines = newList.Count();
+            UpdateMaximumMinimum(numLines);
 
             int width = (int)this._PART_ViewPortContainer.ActualWidth;
 			int height = (int)this._PART_ViewPortContainer.ActualHeight;
-            var thickness = new Thickness(0);
 
             if (width <= 0 || height <= 0)
                 return;
@@ -141,8 +140,6 @@
                 // Clear the WriteableBitmap with control background color
                 writeableBmp.Clear(controlBackgroundColor);
             }
-
-            int numLines = newList.Count();
 
             if (numLines == 0)
                 return;
@@ -262,9 +259,13 @@
             int countLines = GetItemsCount();
 
             ThumbHeight = GetPixelLineHeightF(lines, countLines, height);
+            UpdateMaximumMinimum(countLines);
+        }
 
-            this.Minimum = 1;
-            this.Maximum = countLines - NumberOfTextLinesInViewPort;
+        private void UpdateMaximumMinimum(int countLines)
+        {
+            this.Minimum = 0;
+            this.Maximum = countLines - NumberOfTextLinesInViewPort + 1;
         }
         #endregion ItemsSourceChanged
         #endregion methods

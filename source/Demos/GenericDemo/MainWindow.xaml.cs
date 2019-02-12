@@ -34,6 +34,10 @@
             this.DataContext = appVM;
         }
 
+        private bool IgnoreNextSliderValueChange = false;
+        private bool IgnoreNextTextSyncValueChange = false;
+        object lockObject = new object();
+
         /// <summary>
         /// Implements scrollviewer synchronization
         /// https://stackoverflow.com/questions/20864503/synchronizing-two-rich-text-box-scroll-bars-in-wpf
@@ -56,14 +60,21 @@
                 int fline = firstline.FirstDocumentLine.LineNumber;
                 int lline = lastline.LastDocumentLine.LineNumber;
 
-                OverviewSlider.NumberOfTextLinesInViewPort = (lline - fline);
+                OverviewSlider.NumberOfTextLinesInViewPort = (lline - fline) - 1;
 
-                ////                int middleLine = ((lline - fline) > 0 ? fline + (int)((float)(lline - fline) / 2) : fline);
+                lock (lockObject)
+                {
+                    if (IgnoreNextTextSyncValueChange == true)
+                    {
+                        IgnoreNextTextSyncValueChange = false;
+                        return;
+                    }
 
-                ////                Console.WriteLine("fline {0} lline {1} Middle Line {2}", fline, lline, middleLine);
+                    IgnoreNextSliderValueChange = true;
 
-                // Get value of first visible line and set it in Overview slider
-                OverviewSlider.Value = fline;
+                    // Get value of first visible line and set it in Overview slider
+                    OverviewSlider.Value = fline;
+                }
             }
         }
 
@@ -80,18 +91,20 @@
             {
                 if (TextRight.TextArea.TextView.VisualLines.Any())
                 {
-////                    var firstline = TextRight.TextArea.TextView.VisualLines.First();
-////                    var lastline = TextRight.TextArea.TextView.VisualLines.Last();
-////
-////                    int fline = firstline.FirstDocumentLine.LineNumber;
-////                    int lline = lastline.LastDocumentLine.LineNumber;
-////
-////                    int windowMiddleLineOffset = ((lline - fline) > 0 ? fline + (int)((float)(lline - fline) / 2) : 0);
-////
-////                    Console.WriteLine("line {0} fline {1} lline {2} windowMiddleLineOffset {3}", line, fline, lline, windowMiddleLineOffset);
+                    lock (lockObject)
+                    {
+                        if (IgnoreNextSliderValueChange == true)
+                        {
+                            IgnoreNextSliderValueChange = false;
+                            return;
+                        }
 
-                    double vertOffset = (TextRight.TextArea.TextView.DefaultLineHeight) * line;
-                    TextRight.ScrollToVerticalOffset(vertOffset);
+                        IgnoreNextTextSyncValueChange = true;
+
+                        double vertOffset = (TextRight.TextArea.TextView.DefaultLineHeight) * line;
+                        TextRight.ScrollToVerticalOffset(vertOffset);
+                        TextLeft.ScrollToVerticalOffset(vertOffset);
+                    }
                 }
             }
         }
