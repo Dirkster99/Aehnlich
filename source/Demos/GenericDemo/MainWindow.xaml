@@ -27,6 +27,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Button Content="Compare"
@@ -50,8 +51,14 @@
             
             <TextBlock
                 Grid.Column="2" Margin="3" VerticalAlignment="Center"
-                Text="{Binding DiffForm.NumberOfLines}"
-                ToolTip="Max Lines"
+                Text="{Binding ElementName=OverviewSlider,Path=NumberOfTextLinesInViewPort}"
+                ToolTip="NumberOfTextLinesInViewPort"
+                />
+
+            <TextBlock
+                Grid.Column="3" Margin="3" VerticalAlignment="Center"
+                Text="{Binding ElementName=OverviewSlider,Path=Value}"
+                ToolTip="Value"
                 />
         </Grid>
 

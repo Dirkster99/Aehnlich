@@ -51,10 +51,12 @@
             if (sourceToSync.TextArea.TextView.VisualLines.Any())
             {
                 var firstline = sourceToSync.TextArea.TextView.VisualLines.First();
-////                var lastline = sourceToSync.TextArea.TextView.VisualLines.Last();
+                var lastline = sourceToSync.TextArea.TextView.VisualLines.Last();
 
-                int fline = firstline.FirstDocumentLine.LineNumber - 1;
-////                int lline = lastline.LastDocumentLine.LineNumber - 1;
+                int fline = firstline.FirstDocumentLine.LineNumber;
+                int lline = lastline.LastDocumentLine.LineNumber;
+
+                OverviewSlider.NumberOfTextLinesInViewPort = (lline - fline);
 
 ////                int middleLine = ((lline - fline) > 0 ? fline + (int)((float)(lline - fline) / 2) : fline);
 
