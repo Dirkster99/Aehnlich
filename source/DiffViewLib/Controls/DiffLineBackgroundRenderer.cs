@@ -9,10 +9,10 @@
     public class DiffLineBackgroundRenderer : IBackgroundRenderer
     {
         #region fields
-        static readonly Brush AddedBackground;
-        static readonly Brush BlankBackground;
-        static readonly Brush DeletedBackground;
-        static readonly Brush ChangedBackground;
+        static Brush AddedBackground;
+        static Brush BlankBackground;
+        static Brush DeletedBackground;
+        static Brush ChangedBackground;
 
         static readonly Pen BorderlessPen;
         private readonly DiffView _DiffView;
@@ -20,17 +20,17 @@
 
         static DiffLineBackgroundRenderer()
         {
-            AddedBackground = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xFF, 0x00));
-            AddedBackground.Freeze();
-
-            ChangedBackground = new SolidColorBrush(Color.FromArgb(0x40, 0xFF, 0x00, 0x00));
-            AddedBackground.Freeze();
-
-            DeletedBackground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0x00, 0x00));
-            DeletedBackground.Freeze();
-
-            BlankBackground = new SolidColorBrush(Color.FromRgb(0xfa, 0xfa, 0xfa));
-            BlankBackground.Freeze();
+////            AddedBackground = new SolidColorBrush(Color.FromArgb(0x40, 0x00, 0x7a, 0xcc));
+////            AddedBackground.Freeze();
+////
+////            ChangedBackground = new SolidColorBrush(Color.FromArgb(0x40, 0x20, 0xFF, 0x20));
+////            AddedBackground.Freeze();
+////
+////            DeletedBackground = new SolidColorBrush(Color.FromArgb(0x40, 0xFF, 0x20, 0x20));
+////            DeletedBackground.Freeze();
+////
+////            BlankBackground = default(Brush);
+////            BlankBackground.Freeze();
 
             var transparentBrush = new SolidColorBrush(Colors.Transparent);
             transparentBrush.Freeze();
@@ -42,11 +42,21 @@
         public DiffLineBackgroundRenderer(DiffView diffView)
         {
             this._DiffView = diffView;
+
+            AddedBackground = GetBrush4Color(_DiffView.ColorBackgroundAdded);
+            DeletedBackground = GetBrush4Color(_DiffView.ColorBackgroundDeleted);
+            ChangedBackground = GetBrush4Color(_DiffView.ColorBackgroundContext);
+            BlankBackground = GetBrush4Color(_DiffView.ColorBackgroundBlank);
         }
+
+        public KnownLayer Layer { get { return KnownLayer.Background; } }
 
         public void Draw(TextView textView, DrawingContext drawingContext)
         {
             if (_DiffView == null)
+                return;
+
+            if (_DiffView.LineDiffs == null)
                 return;
 
             foreach (var v in textView.VisualLines)
@@ -75,9 +85,9 @@
                         brush = ChangedBackground;
                         break;
 
-///                    case DiffContext.Blank:
-///                        brush = BlankBackground;
-///                        break;
+                    case DiffContext.Blank:
+                        brush = BlankBackground;
+                        break;
                 }
 
                 if (brush != default(Brush))
@@ -91,6 +101,15 @@
             }
         }
 
-        public KnownLayer Layer { get { return KnownLayer.Background; } }
+        private Brush GetBrush4Color(Color thisColor)
+        {
+            if (thisColor == default(Color))
+                return default(Brush);
+
+            var brush = new SolidColorBrush(thisColor);
+            brush.Freeze();
+
+            return brush;
+        }
     }
 }

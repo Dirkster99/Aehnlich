@@ -12,13 +12,14 @@
     {
         #region fields
         private ChangeDiffOptions _ChangeDiffOptions;
-        private DiffViewLines lines;
 
+        private DiffViewLines _lines;
         private TextDocument _document = null;
-        private bool _isDirty = false;
 
         private Dictionary<int, DiffContext> _DocumentLineDiffs;
         private readonly ObservableRangeCollection<DiffContext> _DocLineDiffs;
+
+        private bool _isDirty = false;
         #endregion fields
 
         #region ctors
@@ -42,7 +43,7 @@
             }
         }
 
-        public IEnumerable<DiffContext> DocLineDiffs
+        public IReadOnlyList<DiffContext> DocLineDiffs
         {
             get
             {
@@ -94,7 +95,7 @@
         }
 
         [Browsable(true)]
-        public int LineCount => this.lines != null ? this.lines.Count : 0;
+        public int LineCount => this._lines != null ? this._lines.Count : 0;
         #endregion properties
 
         #region methods
@@ -108,7 +109,7 @@
         /// <param name="lineTwo"></param>
         public void SetData(IList<string> stringList, EditScript script, bool useA)
         {
-            this.lines = new DiffViewLines(stringList, script, useA);
+            this._lines = new DiffViewLines(stringList, script, useA);
             NotifyPropertyChanged(() => LineCount);
 
             Dictionary<int, DiffContext> documentLineDiffs;
@@ -131,25 +132,9 @@
             _DocLineDiffs.Clear();
             int line = 0;
 
-            foreach (var item in lines)
+            foreach (var item in _lines)
             {
-                DiffContext lineContext = DiffContext.Blank;
-                switch (item.EditType)
-                {
-                    case DiffLib.Enums.EditType.Delete:
-                        lineContext = DiffContext.Deleted;
-                        break;
-                    case DiffLib.Enums.EditType.Insert:
-                        lineContext = DiffContext.Added;
-                        break;
-                    case DiffLib.Enums.EditType.Change:
-                        lineContext = DiffContext.Context;
-                        break;
-
-                    case DiffLib.Enums.EditType.None:
-                    default:
-                        break;
-                }
+                var lineContext = TranslateLineContext(item);
 
                 _DocLineDiffs.Add(lineContext);
                 documentLineDiffs.Add(line++, lineContext);
@@ -159,6 +144,29 @@
             return ret;
         }
 
+        private DiffContext TranslateLineContext(DiffViewLine item)
+        {
+            DiffContext lineContext = DiffContext.Blank;
+            switch (item.EditType)
+            {
+                case DiffLib.Enums.EditType.Delete:
+                    lineContext = DiffContext.Deleted;
+                    break;
+                case DiffLib.Enums.EditType.Insert:
+                    lineContext = DiffContext.Added;
+                    break;
+                case DiffLib.Enums.EditType.Change:
+                    lineContext = DiffContext.Context;
+                    break;
+
+                case DiffLib.Enums.EditType.None:
+                default:
+                    break;
+            }
+
+            return lineContext;
+        }
+
         /// <summary>
         /// Used to setup the ViewLineDiff view that shows only 2 lines over each other
         /// representing the currently active line from the left/right side views under
@@ -166,9 +174,28 @@
         /// </summary>
         /// <param name="lineOne"></param>
         /// <param name="lineTwo"></param>
-		internal void SetData(DiffViewLine lineOne, DiffViewLine lineTwo)
+        internal void SetData(DiffViewLine lineOne, DiffViewLine lineTwo)
         {
-            this.lines = new DiffViewLines(lineOne, lineTwo);
+            this._lines = new DiffViewLines(lineOne, lineTwo);
+
+            Dictionary<int, DiffContext> documentLineDiffs = new Dictionary<int, DiffContext>();
+            string text = string.Empty;
+
+            if (lineOne != null && lineTwo != null)
+            {
+                documentLineDiffs.Add(0, TranslateLineContext(lineOne));
+                text += lineOne.Text + '\n';
+
+                documentLineDiffs.Add(1, TranslateLineContext(lineOne));
+                text += lineTwo.Text + "\n";
+            }
+
+            DocumentLineDiffs = documentLineDiffs;
+            Document = new TextDocument(text);
+
+            NotifyPropertyChanged(() => DocumentLineDiffs);
+            NotifyPropertyChanged(() => Document);
+
             this.UpdateAfterSetData();
         }
 
@@ -189,8 +216,8 @@
 
             for (int i = 0; i < numLines; i++)
             {
-                DiffViewLine line = this.lines[i];
-                DiffViewLine counterpart = counterpartView.lines[i];
+                DiffViewLine line = this._lines[i];
+                DiffViewLine counterpart = counterpartView._lines[i];
 
                 // Make the counterpart lines refer to each other.
                 line.Counterpart = counterpart;
@@ -233,6 +260,14 @@
 ////            }
 ////
 ////            this.FireSelectionChanged();
+        }
+
+        internal DiffViewLine GetLine(int line)
+        {
+            if (line >= this.LineCount)
+                return null;
+
+            return _lines[line];
         }
         #endregion methods
     }

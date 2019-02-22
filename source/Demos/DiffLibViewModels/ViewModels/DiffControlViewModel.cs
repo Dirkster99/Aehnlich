@@ -18,7 +18,9 @@ namespace DiffLibViewModels.ViewModels
         private bool _edtLeft_Right_Visible;
         private string _edtRight_Text;
         private string _edtLeft_Text;
-////        private int currentDiffLine = -1;
+        private int currentDiffLine = -1;
+
+        ////        private int currentDiffLine = -1;
         #endregion fields
 
         #region ctors
@@ -42,6 +44,11 @@ namespace DiffLibViewModels.ViewModels
         public DiffViewModel ViewB
         {
             get { return _ViewB; }
+        }
+
+        public DiffViewModel ViewLineDiff
+        {
+            get { return _ViewLineDiff; }
         }
 
         /// <summary>
@@ -213,10 +220,42 @@ namespace DiffLibViewModels.ViewModels
             }
 
 ////            this.UpdateButtons();
-////            this.currentDiffLine = -1;
-////            this.UpdateLineDiff();
+            this.currentDiffLine = -1;
+            this.UpdateLineDiff();
 
 ////            this.ActiveControl = this.ViewA;
+        }
+
+        private void UpdateLineDiff()
+        {
+            // Determine current cursor position in line n
+            int line = 0; // (this.ActiveView == this.ViewA) ? this.ViewA.Position.Line : this.ViewB.Position.Line;
+            if (line == this.currentDiffLine)
+            {
+                return;
+            }
+
+            this.currentDiffLine = line;
+
+            DiffViewLine lineOne = null;
+            DiffViewLine lineTwo = null;
+            if (line < this.ViewA.LineCount)
+            {
+                lineOne = this.ViewA.GetLine(line);
+            }
+
+            // Normally, ViewA.LineCount == ViewB.LineCount, but during
+            // SetData they'll be mismatched momentarily as each view
+            // rebuilds its lines.
+            if (line < this.ViewB.LineCount)
+            {
+                lineTwo = this.ViewB.GetLine(line);
+            }
+
+            if (lineOne != null && lineTwo != null)
+            {
+                this._ViewLineDiff.SetData(lineOne, lineTwo);
+            }
         }
         #endregion methods
     }

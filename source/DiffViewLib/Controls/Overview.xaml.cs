@@ -31,10 +31,60 @@
         /// </summary>
         public static readonly DependencyProperty ThumbHeightProperty =
             DependencyProperty.Register("ThumbHeight", typeof(double),
-                typeof(Overview), new PropertyMetadata(27.0d));
+                typeof(Overview), new PropertyMetadata(0.0d));
 
-        private const string PART_ViewPortContainer = "PART_ViewPortContainer";
-        private const string PART_ImageViewport = "PART_ImageViewport";
+        /// <summary>
+        /// Implements the backing store of the <see cref="NumberOfTextLinesInViewPort"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty NumberOfTextLinesInViewPortProperty =
+            DependencyProperty.Register("NumberOfTextLinesInViewPort", typeof(int),
+                typeof(Overview), new PropertyMetadata(0, OnViewPortLinesChanged));
+
+        #region Diff Color Definitions
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundBlank"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundBlankProperty =
+            DependencyProperty.Register("ColorBackgroundBlank", typeof(Color),
+                typeof(Overview), new PropertyMetadata(default(Color), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundAdded"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundAddedProperty =
+            DependencyProperty.Register("ColorBackgroundAdded", typeof(Color),
+                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0x00, 0xba, 0xff), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundDeleted"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundDeletedProperty =
+            DependencyProperty.Register("ColorBackgroundDeleted", typeof(Color),
+                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0xFF, 0x80, 0x80), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundContext"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundContextProperty =
+            DependencyProperty.Register("ColorBackgroundContext", typeof(Color),
+                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80), OnColorChanged));
+        #endregion Diff Color Definitions
+
+        /// <summary>
+        /// Defines the name of the grid that contains the overview image that is rendered from the
+        /// available diff information.
+        /// </summary>
+        public const string PART_ViewPortContainer = "PART_ViewPortContainer";
+
+        /// <summary>
+        /// Defines the name of <see cref="Image"/> control that contains the overview diff image.
+        /// </summary>
+        public const string PART_ImageViewport = "PART_ImageViewport";
 
         private Grid _PART_ViewPortContainer;
         private Image _PART_ImageViewport;
@@ -65,18 +115,15 @@
             set { SetValue(ItemsSourceProperty, value); }
         }
 
-
-
+        /// <summary>
+        /// Gets/sets the number of (text) lines that are currently visible in
+        /// the viewport of the (text) diff control.
+        /// </summary>
         public int NumberOfTextLinesInViewPort
         {
             get { return (int)GetValue(NumberOfTextLinesInViewPortProperty); }
             set { SetValue(NumberOfTextLinesInViewPortProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for NumberOfTextLinesInViewPort.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty NumberOfTextLinesInViewPortProperty =
-            DependencyProperty.Register("NumberOfTextLinesInViewPort", typeof(int),
-                typeof(Overview), new PropertyMetadata(10, OnViewPortLinesChanged));
 
         /// <summary>
         /// Gets the height of the <see cref="Slider"/> thumb used to slide the
@@ -87,9 +134,56 @@
             get { return (double)GetValue(ThumbHeightProperty); }
             protected set { SetValue(ThumbHeightProperty, value); }
         }
+
+        #region Diff Color definitions
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies changed context (2 lines appear to be similar enough to align them
+        /// but still mark them as different).
+        /// </summary>
+        public Color ColorBackgroundContext
+        {
+            get { return (Color)GetValue(ColorBackgroundContextProperty); }
+            set { SetValue(ColorBackgroundContextProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies an element that is missing in one of the two (text) lines being compared.
+        /// </summary>
+        public Color ColorBackgroundDeleted
+        {
+            get { return (Color)GetValue(ColorBackgroundDeletedProperty); }
+            set { SetValue(ColorBackgroundDeletedProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies an element that is added in one of the two (text) lines being compared.
+        /// </summary>
+        public Color ColorBackgroundAdded
+        {
+            get { return (Color)GetValue(ColorBackgroundAddedProperty); }
+            set { SetValue(ColorBackgroundAddedProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies 2 blank lines in both of the two (text) lines being compared.
+        /// 
+        /// Normally, there should be no drawing required for this which is why the
+        /// default is <see cref="Default(Color)"/> - but sometimes it may be useful
+        /// to color these lines which is why we have this property here.
+        /// </summary>
+        public Color ColorBackgroundBlank
+        {
+            get { return (Color)GetValue(ColorBackgroundBlankProperty); }
+            set { SetValue(ColorBackgroundBlankProperty, value); }
+        }
+        #endregion Diff Color Definitions
         #endregion properties
 
-        #region Base Class Overrides
+        #region methods
         /// <summary>
         /// Is called when the control is loaded to
         /// build the visual tree for the <see cref="Overview"/> control.
@@ -100,18 +194,31 @@
 
             _PART_ViewPortContainer = GetTemplateChild(PART_ViewPortContainer) as Grid;
             _PART_ImageViewport = GetTemplateChild(PART_ImageViewport) as Image;
+        }
+
+        /// <summary>
+        /// Raises the <see cref="System.Windows.FrameworkElement.SizeChanged"/> event,
+        /// using the specified information as part of the eventual event data.
+        /// </summary>
+        /// <param name="sizeInfo">Details of the old and new size involved in the change.</param>
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
 
             CreateBitmap(ItemsSource as IList<DiffContext>);
         }
-        #endregion //Base Class Overrides
 
-        #region methods
-
+        /// <summary>
+        /// Creates the overview bitmap image whenever the layout or compared lines model
+        /// has been changed.
+        /// </summary>
+        /// <param name="newList"></param>
         private void CreateBitmap(IEnumerable<DiffContext> newList)
         {
             if (_PART_ViewPortContainer == null || _PART_ImageViewport == null || newList == null)
             {
                 this.Minimum = this.Maximum = 0;
+                OnViewPortLinesChanged(0);       // Initialize with 0 lines to hide the thumb control
                 return;
             }
 
@@ -119,7 +226,7 @@
                 return;
 
             int numLines = newList.Count();
-            UpdateMaximumMinimum(numLines);
+            UpdateMinMaxSliderBounds(numLines);
 
             int width = (int)this._PART_ViewPortContainer.ActualWidth;
 			int height = (int)this._PART_ViewPortContainer.ActualHeight;
@@ -132,7 +239,11 @@
 
             _PART_ImageViewport.Source = writeableBmp;
 
-            Color controlBackgroundColor = Colors.White;
+            Color controlBackgroundColor;
+            if (Background is SolidColorBrush)
+                controlBackgroundColor = ((SolidColorBrush)Background).Color;
+            else
+                controlBackgroundColor = Color.FromRgb(0xff, 0xff, 0xff);
 
             // Clear Bitmap here
             using (writeableBmp.GetBitmapContext())
@@ -147,7 +258,7 @@
             const float GutterWidth = 1.0F;
 
             // Make sure each line is at least 1 pixel high
-            float lineHeight = (float)Math.Max(1.0, this.GetPixelLineHeightF(1, numLines, height));
+            float lineHeight = (float)Math.Max(1.0, this.GetPixelLineHeight(1, numLines, height));
 
             using (writeableBmp.GetBitmapContext())
             {
@@ -156,25 +267,28 @@
                 {
                     if (line != DiffContext.Blank)
                     {
-                        float y = this.GetPixelLineHeightF(i, numLines, height);
-                        float fullFillWidth = width - (2 * GutterWidth);
+                        double y = this.GetPixelLineHeight(i, numLines, height);
+                        double fullFillWidth = width - (2 * GutterWidth);
 
                         var color = default(Color);
                         switch (line)
                         {
                             case DiffContext.Context:
-                                color = Color.FromArgb(0x40, 0xFF, 0, 0);
+                                color = ColorBackgroundContext;
                                 break;
 
                             case DiffContext.Deleted:
-                                color = Color.FromArgb(0xFF, 0xFF, 0, 0);
+                                color = ColorBackgroundDeleted;
                                 break;
 
                             case DiffContext.Added:
-                                color = Color.FromArgb(0xFF, 0, 0xFF, 0);
+                                color = ColorBackgroundAdded;
                                 break;
 
                             case DiffContext.Blank:
+                                color = ColorBackgroundBlank;
+                                break;
+
                             default:
                                 break;
                         }
@@ -193,51 +307,91 @@
             }
         }
 
-		private float GetPixelLineHeightF(int lines, int lineCount, int clientSize_Height)
+		private double GetPixelLineHeight(int lines, int lineCount, double clientSize_Height)
 		{
-			float result = 0;
+            double result = 0;
 
 			if (lineCount > 0)
-			{
-				result = clientSize_Height * (lines / (float)lineCount);
-			}
+				result = clientSize_Height * (lines / (double)lineCount);
 
 			return result;
 		}
 
-        #region ItemsSourceChanged
+        #region Dependency Property Changed
+        #region static handlers
+        /// <summary>
+        /// Is invoked when the <see cref="ItemsSource"/> dependency property has been changed.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((Overview)d).ItemsSourceChanged(e.NewValue);
         }
 
+        /// <summary>
+        /// Is invoked when the <see cref="NumberOfTextLinesInViewPort"/> dependency property has been changed.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        private static void OnViewPortLinesChanged(DependencyObject d,
+                                                   DependencyPropertyChangedEventArgs e)
+        {
+            ((Overview)d).OnViewPortLinesChanged((int)e.NewValue);
+        }
+
+        /// <summary>
+        /// Is invoked if one of the color definitions for deleted, added, changed, or blank
+        /// lines has been changed.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((Overview)d).OnColorChanged(e.NewValue);
+        }
+        #endregion static handlers
+
+        /// <summary>
+        /// Recreates the complete drawing if one of the color definitions has been changed.
+        /// </summary>
+        /// <param name="newValue"></param>
+        private void OnColorChanged(object newValue)
+        {
+            CreateBitmap(ItemsSource as IList<DiffContext>);
+        }
+
+        /// <summary>
+        /// Is invoked when the collection bound on the <see cref="ItemsSource"/> dependency
+        /// property has changed.
+        /// </summary>
+        /// <param name="newValue"></param>
         private void ItemsSourceChanged(object newValue)
         {
-            IList<DiffContext> newList = newValue as IList<DiffContext>;
+            IReadOnlyList<DiffContext> newList = newValue as IReadOnlyList<DiffContext>;
 
             if (newList != null)
             {
-                System.Diagnostics.Debug.WriteLine("Overview items list changed {0}", newList.Count());
+                //System.Diagnostics.Debug.WriteLine("Overview items list changed {0}", newList.Count());
                 CreateBitmap(newList);
                 OnViewPortLinesChanged(NumberOfTextLinesInViewPort);
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Overview items list changed to null");
-                this.Minimum = this.Maximum = 0;
+                //System.Diagnostics.Debug.WriteLine("Overview items list changed to null");
+                UpdateMinMaxSliderBounds(0);
             }
         }
+        #endregion  Dependency Property Changed
 
-
-        private static void OnViewPortLinesChanged(DependencyObject d,
-                                                   DependencyPropertyChangedEventArgs e)
-        {
-            ((Overview)d).OnViewPortLinesChanged(e.NewValue);
-        }
-
+        /// <summary>
+        /// Gets the number of items currently bound in the <see cref="ItemsSource"/>
+        /// dependency property.
+        /// </summary>
+        /// <returns></returns>
         private int GetItemsCount()
         {
-            var list = ItemsSource as IList<DiffContext>;
+            var list = ItemsSource as IReadOnlyList<DiffContext>;
             if (list != null)
             {
                 return list.Count;
@@ -252,22 +406,50 @@
             return 0;
         }
 
-        private void OnViewPortLinesChanged(object newValue)
+        /// <summary>
+        /// Is invoked when the number of visible items in the (text) diff view
+        /// control has changed.
+        /// </summary>
+        /// <param name="lines">The number of items currently
+        /// visible in the (text) diff view.</param>
+        private void OnViewPortLinesChanged(int lines)
         {
-            int lines = (int)newValue;
-            int height = (int)this._PART_ViewPortContainer.ActualHeight;
+            double height = this._PART_ViewPortContainer.ActualHeight;
             int countLines = GetItemsCount();
 
-            ThumbHeight = GetPixelLineHeightF(lines, countLines, height);
-            UpdateMaximumMinimum(countLines);
+            double thumbHeight = 0;
+
+            // spare the computation if text viewport is larger than the available text
+            if ((lines + 1) < countLines)
+            {
+                thumbHeight = GetPixelLineHeight(lines, countLines, height);
+
+                // Larger thumb than image means there is nothing to scroll here
+                // so we make thumb invisible by setting its height to 0
+                if (thumbHeight > this._PART_ImageViewport.ActualHeight)
+                    thumbHeight = 0;
+            }
+
+            ThumbHeight = thumbHeight;
+
+            UpdateMinMaxSliderBounds(countLines);
         }
 
-        private void UpdateMaximumMinimum(int countLines)
+        /// <summary>
+        /// Updates the maximum and minimum value of the slider to reflect the
+        /// bounds between which we can change the current value.
+        /// </summary>
+        /// <param name="countLines"></param>
+        private void UpdateMinMaxSliderBounds(int countLines)
         {
             this.Minimum = 0;
-            this.Maximum = countLines - NumberOfTextLinesInViewPort + 1;
+
+            // Adding plus 1 to ensure that scrolling down always makes the last line fully visible
+            if (countLines > 0)
+                this.Maximum = countLines - NumberOfTextLinesInViewPort + 1;
+            else
+                this.Maximum = 0;
         }
-        #endregion ItemsSourceChanged
         #endregion methods
     }
 }

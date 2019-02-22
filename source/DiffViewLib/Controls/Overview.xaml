@@ -32,9 +32,12 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Background="Transparent"
                                 Margin="0,0,0,0">
-                            <Border x:Name="PART_TrackBackground" MinWidth="24">
+                            <Border MinWidth="12">
                                 <Grid x:Name="PART_ViewPortContainer" Margin="3">
-                                    <Image x:Name="PART_ImageViewport" />
+                                    <Image x:Name="PART_ImageViewport"
+                                           VerticalAlignment="Top"
+                                           HorizontalAlignment="Stretch"
+                                           />
                                 </Grid>
                             </Border>
                         </Border>

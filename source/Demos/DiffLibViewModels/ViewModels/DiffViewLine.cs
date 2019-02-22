@@ -1,6 +1,6 @@
 ﻿namespace DiffLibViewModels.ViewModels
 {
-    using DiffLib.BinaryFileDiff;
+    using DiffLib.Binaries;
     using DiffLib.Enums;
     using DiffLib.Text;
     using DiffLibViewModels.Enums;

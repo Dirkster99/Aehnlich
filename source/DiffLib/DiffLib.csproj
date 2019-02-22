@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -37,15 +41,14 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinaryFileDiff\AddCopyCollection.cs" />
-    <Compile Include="BinaryFileDiff\Addition.cs" />
-    <Compile Include="BinaryFileDiff\BinaryDiff.cs" />
-    <Compile Include="BinaryFileDiff\BinaryDiffLines.cs" />
-    <Compile Include="BinaryFileDiff\Copy.cs" />
+    <Compile Include="Binaries\AddCopyCollection.cs" />
+    <Compile Include="Binaries\Addition.cs" />
+    <Compile Include="Binaries\BinaryDiff.cs" />
+    <Compile Include="Binaries\BinaryDiffLines.cs" />
+    <Compile Include="Binaries\Copy.cs" />
     <Compile Include="Dir\DiffUtility.cs" />
     <Compile Include="Dir\DirectoryDiff.cs" />
     <Compile Include="Dir\DirectoryDiffEntry.cs" />

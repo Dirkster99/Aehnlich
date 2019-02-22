@@ -14,10 +14,11 @@
             <conv:MultiParToParConverter x:Key="MultiParToParConverter"/>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -50,7 +51,7 @@
                 Text="{Binding DiffForm.DiffCtrl.Similarity_Text}"
                 ToolTip="Similarity"
                 />
-            
+
             <TextBlock
                 Grid.Column="2" Margin="3" VerticalAlignment="Center"
                 Text="{Binding ElementName=OverviewSlider,Path=NumberOfTextLinesInViewPort}"
@@ -77,7 +78,20 @@
         </Grid>
 
         <Grid Grid.Column="0" Grid.Row="1">
-            <ctrl:Overview Margin="9,9"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <ctrl:Overview Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="3"
+                           Width="30"
                            Name="OverviewSlider"
                            ValueChanged="OverviewSlider_ValueChanged"
                            DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
@@ -88,41 +102,28 @@
                     <TextBlock Text="{Binding DiffForm.NumberOfLines}"/>
                 </ctrl:Overview.ToolTip-->
             </ctrl:Overview>
-        </Grid>
-        
-        <Grid Grid.Column="1" Grid.Row="1">
-            <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+            <TextBox
+                Name="FilePathA_TextBox"
+                Grid.Column="1" Grid.Row="0" Margin="0,3"
+                Text="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
 
-        <TextBox
-            Name="FilePathA_TextBox"
-            Grid.Column="0" Grid.Row="0" Margin="0,3"
-            Text="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
-        
-        <GridSplitter
-            Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
-            HorizontalAlignment="Stretch"
-            Background="Transparent"
-            Width="6" />
+            <GridSplitter
+                Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
+                HorizontalAlignment="Stretch"
+                Background="Transparent"
+                Width="6" />
 
             <TextBox
                 Name="FilePathB_TextBox"
-                Grid.Column="2" Grid.Row="0" Margin="0,3"
+                Grid.Column="3" Grid.Row="0" Margin="0,3"
                 Text="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
 
             <!-- Text Content
                 SyntaxHighlighting="{Binding HighlightDef}"
             -->
             <ctrl:DiffView
-                Name="TextLeft"
+                Name="TextLeft" Grid.Column="1" Grid.Row="1" Margin="3"
                 DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
                 Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
                 ShowLineNumbers="True"
@@ -131,7 +132,6 @@
                 IsReadOnly="True"
                 ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
 
-                Grid.Column="0" Grid.Row="1"
                 FontFamily="Consolas"
                 FontSize="12pt"
                 HorizontalScrollBarVisibility="Visible"
@@ -139,7 +139,7 @@
                 />
 
             <ctrl:DiffView
-                Name="TextRight"
+                Name="TextRight" Grid.Column="3" Grid.Row="1" Margin="3"
                 DataContext="{Binding DiffForm.DiffCtrl.ViewB}"
                 Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
                 ShowLineNumbers="True"
@@ -148,12 +148,34 @@
                 IsReadOnly="True"
                 ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
 
-                Grid.Column="2" Grid.Row="1"
                 FontFamily="Consolas"
                 FontSize="12pt"
                 HorizontalScrollBarVisibility="Visible"
                 VerticalScrollBarVisibility="Visible"
                 />
         </Grid>
+
+        <GridSplitter
+                Grid.Column="0" Grid.Row="2"
+                HorizontalAlignment="Stretch"
+                Background="Transparent"
+                Height="6" />
+
+        <!-- ViewLineDiff -->
+        <ctrl:DiffView
+                Grid.Column="0" Grid.Row="3" Margin="3"
+                DataContext="{Binding DiffForm.DiffCtrl.ViewLineDiff}"
+                Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
+                ShowLineNumbers="False"
+                LineDiffs="{Binding DocumentLineDiffs}"
+				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                IsReadOnly="True"
+
+                FontFamily="Consolas"
+                FontSize="12pt"
+                HorizontalScrollBarVisibility="Visible"
+                VerticalScrollBarVisibility="Visible"
+                />
+
     </Grid>
 </Window>

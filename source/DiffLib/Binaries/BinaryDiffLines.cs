@@ -1,4 +1,4 @@
-namespace DiffLib.BinaryFileDiff
+namespace DiffLib.Binaries
 {
     using DiffLib.Interfaces;
     using System;
