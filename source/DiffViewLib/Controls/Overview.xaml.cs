@@ -272,7 +272,7 @@
             if (numLines == 0)
                 return;
 
-            const float GutterWidth = 1.0F;
+            const float GutterWidth = 0.0F;
 
             // Make sure each line is at least 1 pixel high
             float lineHeight = (float)Math.Max(1.0, this.GetPixelLineHeight(1, numLines, height));

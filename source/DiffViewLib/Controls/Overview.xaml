@@ -31,9 +31,9 @@
                         <Border BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Background="Transparent"
-                                Margin="0,0,0,0">
+                                Margin="0">
                             <Border MinWidth="12">
-                                <Grid x:Name="PART_ViewPortContainer" Margin="3">
+                                <Grid x:Name="PART_ViewPortContainer">
                                     <Image x:Name="PART_ImageViewport"
                                            VerticalAlignment="Top"
                                            HorizontalAlignment="Stretch"

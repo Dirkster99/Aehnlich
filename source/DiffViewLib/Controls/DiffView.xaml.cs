@@ -2,13 +2,16 @@
 {
     using DiffViewLib.Enums;
     using ICSharpCode.AvalonEdit;
+    using ICSharpCode.AvalonEdit.Rendering;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
 
     /// <summary>
-    /// 
+    /// Implements a <see cref="TextEditor"/> based view that can be used to highlight
+    /// text difference through line background coloring.
     /// </summary>
     public class DiffView : TextEditor
     {
@@ -53,6 +56,32 @@
             DependencyProperty.Register("ColorBackgroundContext", typeof(Color),
                 typeof(TextEditor), new PropertyMetadata(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80), OnColorChanged));
         #endregion Diff Color Definitions
+
+        #region EditorScrollOffsetXY
+        /// <summary>
+        /// Current editor view scroll X position
+        /// </summary>
+        public static readonly DependencyProperty EditorScrollOffsetXProperty =
+            DependencyProperty.Register("EditorScrollOffsetX", typeof(double),
+                typeof(DiffView), new UIPropertyMetadata(0.0d));
+
+        /// <summary>
+        /// Current editor view scroll Y position
+        /// </summary>
+        public static readonly DependencyProperty EditorScrollOffsetYProperty =
+            DependencyProperty.Register("EditorScrollOffsetY", typeof(double),
+                typeof(DiffView), new UIPropertyMetadata(0.0d));
+        #endregion EditorScrollOffsetXY
+
+        #region CaretPosition
+        private static readonly DependencyProperty ColumnProperty =
+            DependencyProperty.Register("Column", typeof(int),
+                typeof(DiffView), new UIPropertyMetadata(1));
+
+        private static readonly DependencyProperty LineProperty =
+            DependencyProperty.Register("Line", typeof(int),
+                typeof(DiffView), new UIPropertyMetadata(1));
+        #endregion CaretPosition
 
         private readonly DiffLineBackgroundRenderer _DiffBackgroundRenderer;
         #endregion fields
@@ -138,9 +167,88 @@
             set { SetValue(ColorBackgroundBlankProperty, value); }
         }
         #endregion Diff Color Definitions
+
+        #region EditorScrollOffsetXY
+        /// <summary>
+        /// Get/set dependency property to scroll editor by an offset in X direction.
+        /// </summary>
+        public double EditorScrollOffsetX
+        {
+            get
+            {
+                return (double)GetValue(EditorScrollOffsetXProperty);
+            }
+
+            set
+            {
+                SetValue(EditorScrollOffsetXProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Get/set dependency property to scroll editor by an offset in Y direction.
+        /// </summary>
+        public double EditorScrollOffsetY
+        {
+            get
+            {
+                return (double)GetValue(EditorScrollOffsetYProperty);
+            }
+
+            set
+            {
+                SetValue(EditorScrollOffsetYProperty, value);
+            }
+        }
+        #endregion EditorScrollOffsetXY
+
+        #region CaretPosition
+        /// <summary>
+        /// Get/set the current column of the editor caret.
+        /// </summary>
+        public int Column
+        {
+            get
+            {
+                return (int)GetValue(ColumnProperty);
+            }
+
+            set
+            {
+                SetValue(ColumnProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Get/set the current line of the editor caret.
+        /// </summary>
+        public int Line
+        {
+            get
+            {
+                return (int)GetValue(LineProperty);
+            }
+
+            set
+            {
+                SetValue(LineProperty, value);
+            }
+        }
+        #endregion CaretPosition
         #endregion properties
 
         #region methods
+        /// <summary>
+        /// Is called after the template was applied.
+        /// </summary>
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            this.Loaded += new RoutedEventHandler(this.OnLoaded);
+            this.Unloaded += new RoutedEventHandler(this.OnUnloaded);
+        }
+
         #region static handlers
         private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -158,6 +266,60 @@
         }
         #endregion static handlers
 
+        /// <summary>
+        /// Hock event handlers and restore editor states (if any) or defaults
+        /// when the control is fully loaded.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="args"></param>
+        private void OnLoaded(object obj, RoutedEventArgs args)
+        {
+            try
+            {
+                this.Focus();
+                this.ForceCursor = true;
+
+                // Restore cursor position for CTRL-TAB Support http://avalondock.codeplex.com/workitem/15079
+                this.ScrollToHorizontalOffset(this.EditorScrollOffsetX);
+                this.ScrollToVerticalOffset(this.EditorScrollOffsetY);
+
+                this.TextArea.Caret.PositionChanged += Caret_PositionChanged;
+            }
+            catch
+            {
+            }
+        }
+
+        /// <summary>
+        /// Unhock event handlers and save editor states (to be recovered later)
+        /// when the control is unloaded.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="args"></param>
+        private void OnUnloaded(object obj, RoutedEventArgs args)
+        {
+            // http://stackoverflow.com/questions/11863273/avalonedit-how-to-get-the-top-visible-line
+            this.EditorScrollOffsetX = this.TextArea.TextView.ScrollOffset.X;
+            this.EditorScrollOffsetY = this.TextArea.TextView.ScrollOffset.Y;
+        }
+
+        /// <summary>
+        /// Update Column and Line position properties when caret position is changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Caret_PositionChanged(object sender, EventArgs e)
+        {
+            this.TextArea.TextView.InvalidateLayer(KnownLayer.Background); //Update current line highlighting
+
+            if (this.TextArea != null)
+            {
+                this.Column = this.TextArea.Caret.Column;
+                this.Line = this.TextArea.Caret.Line;
+            }
+            else
+                this.Column = this.Line = 0;
+        }
         /// <summary>
         /// Is invoked when the collection bound on the <see cref="ItemsSource"/> dependency
         /// property has changed.
