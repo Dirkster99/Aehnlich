@@ -61,7 +61,7 @@
     <Compile Include="ViewModels\DiffControlViewModel.cs" />
     <Compile Include="ViewModels\DiffViewLine.cs" />
     <Compile Include="ViewModels\DiffViewLines.cs" />
-    <Compile Include="ViewModels\DiffViewModel.cs" />
+    <Compile Include="ViewModels\DiffDocViewModel.cs" />
     <Compile Include="ViewModels\FileDiffFormViewModel.cs" />
     <Compile Include="ViewModels\ObservableRangeCollection.cs" />
   </ItemGroup>

@@ -130,7 +130,10 @@
                 ShowLineNumbers="True"
 				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
+                
                 ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
+                Column="{Binding Column, Mode=OneWayToSource}"
+                Line="{Binding Line, Mode=OneWayToSource}"
 
                 FontFamily="Consolas"
                 FontSize="12pt"
@@ -146,7 +149,10 @@
                 ShowLineNumbers="True"
 				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
+                
                 ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
+                Column="{Binding Column, Mode=OneWayToSource}"
+                Line="{Binding Line, Mode=OneWayToSource}"
 
                 FontFamily="Consolas"
                 FontSize="12pt"
@@ -170,6 +176,9 @@
                 ShowLineNumbers="False"
 				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
+            
+                Column="{Binding Column, Mode=OneWayToSource}"
+                Line="{Binding Line, Mode=OneWayToSource}"
 
                 FontFamily="Consolas"
                 FontSize="12pt"

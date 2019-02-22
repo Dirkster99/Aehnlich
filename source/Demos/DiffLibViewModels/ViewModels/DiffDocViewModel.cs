@@ -6,9 +6,8 @@
     using ICSharpCode.AvalonEdit.Document;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
 
-    public class DiffViewModel : Base.ViewModelBase
+    public class DiffDocViewModel : Base.ViewModelBase
     {
         #region fields
         private ChangeDiffOptions _ChangeDiffOptions;
@@ -19,12 +18,18 @@
         private readonly ObservableRangeCollection<DiffContext> _DocLineDiffs;
 
         private bool _isDirty = false;
+        private int _Column;
+        private int _Line;
         #endregion fields
 
         #region ctors
-        public DiffViewModel()
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        public DiffDocViewModel()
         {
             _DocLineDiffs = new ObservableRangeCollection<DiffContext>();
+            _Line = _Column = 0;
         }
         #endregion ctors
 
@@ -42,6 +47,42 @@
             }
         }
 
+        #region Caret Position
+        public int Column
+        {
+            get
+            {
+                return _Column;
+            }
+
+            set
+            {
+                if (_Column != value)
+                {
+                    _Column = value;
+                    NotifyPropertyChanged(() => Column);
+                }
+            }
+        }
+
+        public int Line
+        {
+            get
+            {
+                return _Line;
+            }
+
+            set
+            {
+                if (_Line != value)
+                {
+                    _Line = value;
+                    NotifyPropertyChanged(() => Line);
+                }
+            }
+        }
+        #endregion Caret Position
+
         public IReadOnlyList<DiffContext> DocLineDiffs
         {
             get
@@ -49,6 +90,8 @@
                 return _DocLineDiffs;
             }
         }
+
+        public int LineCount => this._lines != null ? this._lines.Count : 0;
 
         public bool IsDirty
         {
@@ -79,9 +122,6 @@
                 }
             }
         }
-
-        [Browsable(true)]
-        public int LineCount => this._lines != null ? this._lines.Count : 0;
         #endregion properties
 
         #region methods
@@ -185,12 +225,12 @@
 
         /// <summary>
         /// Sets the Counterpart property in each line property of each
-        /// <see cref="DiffViewModel"/> to refer to each other. This information
+        /// <see cref="DiffDocViewModel"/> to refer to each other. This information
         /// can be used for finding equivelant from left to right lines[] collection
         /// and vice versa.
         /// </summary>
         /// <param name="counterpartView"></param>
-        public void SetCounterpartLines(DiffViewModel counterpartView)
+        public void SetCounterpartLines(DiffDocViewModel counterpartView)
         {
             int numLines = this.LineCount;
             if (numLines != counterpartView.LineCount)

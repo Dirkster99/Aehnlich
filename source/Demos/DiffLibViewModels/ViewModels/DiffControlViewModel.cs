@@ -9,9 +9,9 @@ namespace DiffLibViewModels.ViewModels
     public class DiffControlViewModel : Base.ViewModelBase
     {
         #region fields
-        private readonly DiffViewModel _ViewA;
-        private readonly DiffViewModel _ViewB;
-        private readonly DiffViewModel _ViewLineDiff;
+        private readonly DiffDocViewModel _ViewA;
+        private readonly DiffDocViewModel _ViewB;
+        private readonly DiffDocViewModel _ViewLineDiff;
 
         private int _LineDiffHeight = 38;
         private string _Similarity_Text;
@@ -29,24 +29,24 @@ namespace DiffLibViewModels.ViewModels
         /// </summary>
         public DiffControlViewModel()
         {
-            _ViewA = new DiffViewModel();
-            _ViewB = new DiffViewModel();
-            _ViewLineDiff = new DiffViewModel();
+            _ViewA = new DiffDocViewModel();
+            _ViewB = new DiffDocViewModel();
+            _ViewLineDiff = new DiffDocViewModel();
         }
         #endregion ctors
 
         #region properties
-        public DiffViewModel ViewA
+        public DiffDocViewModel ViewA
         {
             get { return _ViewA; }
         }
 
-        public DiffViewModel ViewB
+        public DiffDocViewModel ViewB
         {
             get { return _ViewB; }
         }
 
-        public DiffViewModel ViewLineDiff
+        public DiffDocViewModel ViewLineDiff
         {
             get { return _ViewLineDiff; }
         }
