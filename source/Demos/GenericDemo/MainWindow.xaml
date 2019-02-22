@@ -6,12 +6,14 @@
         
         xmlns:conv="clr-namespace:DiffLibViewModels.Converters;assembly=DiffLibViewModels"
         xmlns:ctrl="clr-namespace:DiffViewLib.Controls;assembly=DiffViewLib"
+        xmlns:icon_src="clr-namespace:DiffViewLib.Themes;assembly=DiffViewLib"
         
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="3">
         <Grid.Resources>
             <conv:MultiParToParConverter x:Key="MultiParToParConverter"/>
+            <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -27,54 +29,82 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="Compare"
+            <ToolBar Grid.Column="0" VerticalAlignment="Center"
+                     Background="Transparent"
+                     ToolBarTray.IsLocked="True"
+                     >
+                <Button
                     Padding="3"
                     Command="{Binding CompareFilesCommand}"
-                    Margin="3"
+                    ToolTip="Refresh"
+                    Margin="3" HorizontalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
                     >
-                <Button.CommandParameter>
-                    <MultiBinding Converter="{StaticResource MultiParToParConverter}">
-                        <Binding ElementName="FilePathA_TextBox" Path="Text" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
-                        <Binding ElementName="FilePathB_TextBox" Path="Text" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
-                    </MultiBinding>
-                </Button.CommandParameter>
-            </Button>
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource MultiParToParConverter}">
+                            <Binding ElementName="FilePathA_TextBox" Path="Text" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                            <Binding ElementName="FilePathB_TextBox" Path="Text" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                    <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_RefreshKey}}"/>
+                    </Button.Background>
+                </Button>
 
-            <TextBlock 
-                Grid.Column="1" Margin="3" VerticalAlignment="Center"
-                Text="{Binding DiffForm.DiffCtrl.Similarity_Text}"
-                ToolTip="Similarity"
+                <TextBlock
+                    DataContext="{Binding DiffForm.DiffCtrl}"
+                    Text="{Binding Similarity_Text}"
+                    Margin="3,0" VerticalAlignment="Center"
+                    ToolTip="Similarity"
                 />
 
-            <TextBlock
-                Grid.Column="2" Margin="3" VerticalAlignment="Center"
-                Text="{Binding ElementName=OverviewSlider,Path=NumberOfTextLinesInViewPort}"
-                ToolTip="NumberOfTextLinesInViewPort"
+                <Separator Margin="0,0,3,0"
+                           Visibility="{Binding DiffForm.DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                           />
+
+                <!-- IsDiffDataAvailable -->
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            DataContext="{Binding DiffForm.DiffCtrl}"
+                            Visibility="{Binding IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                            >
+
+                    <TextBlock Margin="3,0" Text="Ln:"><TextBlock Text="{Binding SynchronizedLine,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/></TextBlock>
+                    <TextBlock Margin="0,0,3,0" Text=", Col:"><TextBlock Text="{Binding SynchronizedColumn,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/></TextBlock>
+                    
+                </StackPanel>
+            </ToolBar>
+
+            <!-- Debugging Values -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed">
+                <TextBlock
+                    Margin="3" VerticalAlignment="Center"
+                    Text="{Binding ElementName=OverviewSlider,Path=NumberOfTextLinesInViewPort}"
+                    ToolTip="NumberOfTextLinesInViewPort"
                 />
 
-            <TextBlock
-                Grid.Column="3" Margin="3" VerticalAlignment="Center"
-                Text="{Binding ElementName=OverviewSlider,Path=Value}"
-                ToolTip="Value"
+                <TextBlock
+                    Margin="3" VerticalAlignment="Center"
+                    Text="{Binding ElementName=OverviewSlider,Path=Value}"
+                    ToolTip="Value"
                 />
 
-            <TextBlock
-                Grid.Column="4" Margin="3" VerticalAlignment="Center"
-                Text="{Binding ElementName=OverviewSlider,Path=Minimum}"
-                ToolTip="Value"
+                <TextBlock
+                    Margin="3" VerticalAlignment="Center"
+                    Text="{Binding ElementName=OverviewSlider,Path=Minimum}"
+                    ToolTip="Minimum"
                 />
 
-            <TextBlock
-                Grid.Column="5" Margin="3" VerticalAlignment="Center"
-                Text="{Binding ElementName=OverviewSlider,Path=Maximum}"
-                ToolTip="Value"
+                <TextBlock
+                    Margin="3" VerticalAlignment="Center"
+                    Text="{Binding ElementName=OverviewSlider,Path=Maximum}"
+                    ToolTip="Maximum"
                 />
+
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Column="0" Grid.Row="1">
@@ -132,8 +162,8 @@
                 IsReadOnly="True"
                 
                 ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
-                Column="{Binding Column, Mode=OneWayToSource}"
-                Line="{Binding Line, Mode=OneWayToSource}"
+                Column="{Binding Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                Line="{Binding Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
 
                 FontFamily="Consolas"
                 FontSize="12pt"
@@ -151,8 +181,8 @@
                 IsReadOnly="True"
                 
                 ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
-                Column="{Binding Column, Mode=OneWayToSource}"
-                Line="{Binding Line, Mode=OneWayToSource}"
+                Column="{Binding Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                Line="{Binding Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
 
                 FontFamily="Consolas"
                 FontSize="12pt"

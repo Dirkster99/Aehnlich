@@ -9,6 +9,8 @@
     using DiffViewLib.Enums;
     using System.Windows.Media.Imaging;
     using System.Windows.Media;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
 
     /// <summary>
     /// Implements the Overview control that contains the marker items that can be used
@@ -96,6 +98,7 @@
         private Grid _PART_ViewPortContainer;
         private Image _PART_ImageViewport;
         private WriteableBitmap writeableBmp;
+        private INotifyCollectionChanged _observeableDiffContext;
         #endregion fields
 
         #region Constructors
@@ -396,8 +399,36 @@
         /// <param name="newValue"></param>
         private void ItemsSourceChanged(object newValue)
         {
-            IReadOnlyList<DiffContext> newList = newValue as IReadOnlyList<DiffContext>;
+            // Get observable events should they be available
+            if (_observeableDiffContext != null)
+            {
+                _observeableDiffContext.CollectionChanged -= Observeable_CollectionChanged;
+                _observeableDiffContext = null;
+            }
 
+            var observeable = newValue as INotifyCollectionChanged;
+            if (observeable != null)
+                observeable.CollectionChanged += Observeable_CollectionChanged;
+
+            _observeableDiffContext = observeable;
+
+            IReadOnlyList<DiffContext> newList = newValue as IReadOnlyList<DiffContext>;
+            if (newList != null)
+            {
+                //System.Diagnostics.Debug.WriteLine("Overview items list changed {0}", newList.Count());
+                CreateBitmap(newList);
+                OnViewPortLinesChanged(NumberOfTextLinesInViewPort);
+            }
+            else
+            {
+                //System.Diagnostics.Debug.WriteLine("Overview items list changed to null");
+                UpdateMinMaxSliderBounds(0);
+            }
+        }
+
+        private void Observeable_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            IReadOnlyList<DiffContext> newList = ItemsSource as IReadOnlyList<DiffContext>;
             if (newList != null)
             {
                 //System.Diagnostics.Debug.WriteLine("Overview items list changed {0}", newList.Count());

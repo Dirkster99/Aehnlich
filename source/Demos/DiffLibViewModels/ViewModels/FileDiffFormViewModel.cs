@@ -29,7 +29,7 @@
         private int _LineDiffHeight;
         private int _NumberOfLines;
 
-        private readonly DiffControlViewModel _DiffCtrl;
+        private readonly DiffDocViewModel _DiffCtrl;
         #endregion fields
 
         #region ctors
@@ -39,12 +39,12 @@
         public FileDiffFormViewModel()
         {
             Options.OptionsChanged += this.OptionsChanged;
-            _DiffCtrl = new DiffControlViewModel();
+            _DiffCtrl = new DiffDocViewModel();
         }
         #endregion ctors
 
         #region properties
-        public DiffControlViewModel DiffCtrl
+        public DiffDocViewModel DiffCtrl
         {
             get { return _DiffCtrl; }
         }

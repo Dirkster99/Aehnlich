@@ -10,11 +10,12 @@
         private string _FilePathB;
         private ICommand _CompareFilesCommand;
 
-        private FileDiffFormViewModel _DiffForm;
+        private readonly FileDiffFormViewModel _DiffForm;
         #endregion fields
 
         #region ctors
         public AppViewModel(string fileA, string fileB)
+            : this()
         {
             _FilePathA = fileA;
             _FilePathB = fileB;
@@ -22,6 +23,7 @@
 
         public AppViewModel()
         {
+            _DiffForm = new FileDiffFormViewModel();
         }
         #endregion ctors
 
@@ -48,7 +50,6 @@
                         if (string.IsNullOrEmpty(fileA) || string.IsNullOrEmpty(fileB))
                             return;
 
-                        _DiffForm = new FileDiffFormViewModel();
                         _DiffForm.ShowDifferences(new Models.ShowDiffArgs(fileA, fileB, Enums.DiffType.File));
                         NotifyPropertyChanged(() => DiffForm);
                     });
@@ -61,14 +62,6 @@
         public FileDiffFormViewModel DiffForm
         {
             get { return _DiffForm; }
-            protected set
-            {
-                if (_DiffForm != value)
-                {
-                    _DiffForm = value;
-                    NotifyPropertyChanged(() => DiffForm);
-                }
-            }
         }
 
         public string FilePathA

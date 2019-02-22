@@ -6,6 +6,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.Windows;
     using System.Windows.Media;
 
@@ -84,6 +85,7 @@
         #endregion CaretPosition
 
         private readonly DiffLineBackgroundRenderer _DiffBackgroundRenderer;
+        private INotifyCollectionChanged _observeableDiffContext;
         #endregion fields
 
         #region ctors
@@ -329,12 +331,30 @@
         {
             IReadOnlyList<DiffContext> newList = newValue as IReadOnlyList<DiffContext>;
 
-            // ToDo Update UI
+            // Get observable events should they be available
+            if (_observeableDiffContext != null)
+            {
+                _observeableDiffContext.CollectionChanged -= Observeable_CollectionChanged;
+                _observeableDiffContext = null;
+            }
+
+            var observeable = newValue as INotifyCollectionChanged;
+            if (observeable != null)
+                observeable.CollectionChanged += Observeable_CollectionChanged;
+
+            _observeableDiffContext = observeable;
+
+            this.InvalidateVisual();
+        }
+
+        private void Observeable_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.InvalidateVisual();
         }
 
         private void OnColorChanged(object newValue)
         {
-            // ToDo Update UI
+            this.InvalidateVisual();
         }
         #endregion methods
     }

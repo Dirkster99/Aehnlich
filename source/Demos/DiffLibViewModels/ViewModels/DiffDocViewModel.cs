@@ -1,297 +1,399 @@
 ﻿namespace DiffLibViewModels.ViewModels
 {
-    using DiffLib.Text;
-    using DiffLibViewModels.Enums;
-    using DiffViewLib.Enums;
-    using ICSharpCode.AvalonEdit.Document;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using DiffLib.Text;
+    using DiffLibViewModels.Enums;
+    using DiffLibViewModels.Events;
 
     public class DiffDocViewModel : Base.ViewModelBase
     {
         #region fields
-        private ChangeDiffOptions _ChangeDiffOptions;
+        private readonly DiffSideViewModel _ViewA;
+        private readonly DiffSideViewModel _ViewB;
+        private readonly DiffSideViewModel _ViewLineDiff;
 
-        private DiffViewLines _lines;
-        private TextDocument _document = null;
+        private int _LineDiffHeight = 38;
+        private string _Similarity_Text;
+        private bool _edtLeft_Right_Visible;
+        private string _edtRight_Text;
+        private string _edtLeft_Text;
+        private int currentDiffLine = -1;
+        private int _SynchronizedLine = 1;
+        private int _SynchronizedColumn = 0;
 
-        private readonly ObservableRangeCollection<DiffContext> _DocLineDiffs;
-
-        private bool _isDirty = false;
-        private int _Column;
-        private int _Line;
+        ////        private int currentDiffLine = -1;
         #endregion fields
 
         #region ctors
         /// <summary>
-        /// Class constructor
+        /// class constructor
         /// </summary>
         public DiffDocViewModel()
         {
-            _DocLineDiffs = new ObservableRangeCollection<DiffContext>();
-            _Line = _Column = 0;
+            _ViewA = new DiffSideViewModel();
+            _ViewB = new DiffSideViewModel();
+            _ViewLineDiff = new DiffSideViewModel();
+
+            _ViewA.CaretPositionChanged += OnViewACaretPositionChanged;
+            _ViewB.CaretPositionChanged += OnViewBCaretPositionChanged;
         }
         #endregion ctors
 
         #region properties
-        public TextDocument Document
+        public DiffSideViewModel ViewA
         {
-            get { return this._document; }
-            set
+            get { return _ViewA; }
+        }
+
+        public DiffSideViewModel ViewB
+        {
+            get { return _ViewB; }
+        }
+
+        /// <summary>
+        /// Gets whether both viewmodels ViewA or ViewB hold more than
+        /// no line to compare (enabling comparison functions makes no sense if this is false).
+        /// </summary>
+        public bool IsDiffDataAvailable
+        {
+            get
             {
-                if (this._document != value)
-                {
-                    this._document = value;
-                    NotifyPropertyChanged(() => Document);
-                }
+                return _ViewA.LineCount > 0 || _ViewB.LineCount > 0;
             }
         }
 
         #region Caret Position
-        public int Column
+        public int SynchronizedColumn
         {
             get
             {
-                return _Column;
+                return _SynchronizedColumn;
             }
 
             set
             {
-                if (_Column != value)
+                if (_SynchronizedColumn != value)
                 {
-                    _Column = value;
-                    NotifyPropertyChanged(() => Column);
+                    _SynchronizedColumn = value;
+                    NotifyPropertyChanged(() => SynchronizedColumn);
                 }
             }
         }
 
-        public int Line
+        public int SynchronizedLine
         {
             get
             {
-                return _Line;
+                return _SynchronizedLine;
             }
 
             set
             {
-                if (_Line != value)
+                if (_SynchronizedLine != value)
                 {
-                    _Line = value;
-                    NotifyPropertyChanged(() => Line);
+                    _SynchronizedLine = value;
+                    NotifyPropertyChanged(() => SynchronizedLine);
                 }
             }
         }
         #endregion Caret Position
 
-        public IReadOnlyList<DiffContext> DocLineDiffs
+        /// <summary>
+        /// Gets the similarity value (0% - 100%) between 2 things shown in toolbar
+        /// </summary>
+        public string Similarity_Text
         {
             get
             {
-                return _DocLineDiffs;
-            }
-        }
-
-        public int LineCount => this._lines != null ? this._lines.Count : 0;
-
-        public bool IsDirty
-        {
-            get { return _isDirty; }
-            set
-            {
-                if (_isDirty != value)
-                {
-                    _isDirty = value;
-                    NotifyPropertyChanged(() => IsDirty);
-                }
-            }
-        }
-
-        public ChangeDiffOptions ChangeDiffOptions
-        {
-            get
-            {
-                return _ChangeDiffOptions;
+                return _Similarity_Text;
             }
 
             internal set
             {
-                if (_ChangeDiffOptions != value)
+                if (_Similarity_Text != value)
                 {
-                    _ChangeDiffOptions = value;
-                    NotifyPropertyChanged(() => ChangeDiffOptions);
+                    _Similarity_Text = value;
+                    NotifyPropertyChanged(() => Similarity_Text);
+                }
+            }
+        }
+
+        #region Left and Right File Name Labels
+        /// <summary>
+        /// Gets whether left and right file name labels over each ViewA and ViewB
+        /// are visible or not.
+        /// </summary>
+        public bool edtLeft_Right_Visible
+        {
+            get
+            {
+                return _edtLeft_Right_Visible;
+            }
+
+            internal set
+            {
+                if (_edtLeft_Right_Visible != value)
+                {
+                    _edtLeft_Right_Visible = value;
+                    NotifyPropertyChanged(() => edtLeft_Right_Visible);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the left text label (file name) displayed over the left diff view (ViewA).
+        /// </summary>
+        public string edtLeft_Text
+        {
+            get
+            {
+                return _edtLeft_Text;
+            }
+
+            internal set
+            {
+                if (_edtLeft_Text != value)
+                {
+                    _edtLeft_Text = value;
+                    NotifyPropertyChanged(() => edtLeft_Text);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the right text label (file name) displayed over the right diff view (ViewA).
+        /// </summary>
+        public string edtRight_Text
+        {
+            get
+            {
+                return _edtRight_Text;
+            }
+
+            internal set
+            {
+                if (_edtRight_Text != value)
+                {
+                    _edtRight_Text = value;
+                    NotifyPropertyChanged(() => edtRight_Text);
+                }
+            }
+        }
+        #endregion Left and Right File Name Labels
+
+        public DiffSideViewModel ViewLineDiff
+        {
+            get { return _ViewLineDiff; }
+        }
+
+        /// <summary>
+        /// Gets/sets the height of the bottom panel view that shows diff
+        /// of the currently selected line with a 2 line view.
+        /// </summary>
+        public int LineDiffHeight
+        {
+            get
+            {
+                return _LineDiffHeight;
+            }
+
+            internal set
+            {
+                if (_LineDiffHeight != value)
+                {
+                    _LineDiffHeight = value;
+                    NotifyPropertyChanged(() => LineDiffHeight);
                 }
             }
         }
         #endregion properties
 
         #region methods
-
         /// <summary>
-        /// Used to setup the ViewA/ViewB view that shows the left and right text views
-        /// with the textual content and imaginary lines.
-        /// each other.
+        /// Sets up the left and right diff viewmodels which contain line by line information
+        /// with reference to textual contents and whether it should be handled as insertion,
+        /// deletion, change, or no change when comparing left side (ViewA) with right side (ViewB).
         /// </summary>
-        /// <param name="lineOne"></param>
-        /// <param name="lineTwo"></param>
-        public void SetData(IList<string> stringList, EditScript script, bool useA)
+        /// <param name="listA"></param>
+        /// <param name="listB"></param>
+        /// <param name="script"></param>
+        /// <param name="nameA"></param>
+        /// <param name="nameB"></param>
+        /// <param name="changeDiffIgnoreCase"></param>
+        /// <param name="changeDiffIgnoreWhiteSpace"></param>
+        /// <param name="changeDiffTreatAsBinaryLines"></param>
+        internal void SetData(IList<string> listA, IList<string> listB, EditScript script,
+                              string nameA, string nameB,
+                              bool changeDiffIgnoreCase,
+                              bool changeDiffIgnoreWhiteSpace,
+                              bool changeDiffTreatAsBinaryLines)
         {
-            this._lines = new DiffViewLines(stringList, script, useA);
-            NotifyPropertyChanged(() => LineCount);
-
-            IList<DiffContext> lineDiffs;
-            string text = GetDocumentFromRawLines(out lineDiffs);
-
-            _DocLineDiffs.Clear();
-            _DocLineDiffs.AddRange(lineDiffs);
-
-            Document = new TextDocument(text);
-
-            NotifyPropertyChanged(() => Document);
-
-            this.UpdateAfterSetData();
-        }
-
-        private string GetDocumentFromRawLines(out IList<DiffContext> documentLineDiffs)
-        {
-            string ret = string.Empty;
-
-            documentLineDiffs = new List<DiffContext>();
-
-            foreach (var item in _lines)
+            ChangeDiffOptions changeDiffOptions = ChangeDiffOptions.None;
+            if (changeDiffTreatAsBinaryLines)
             {
-                documentLineDiffs.Add(TranslateLineContext(item));
-                ret += item.Text + '\n';
+                changeDiffOptions |= ChangeDiffOptions.IgnoreBinaryPrefix;
+            }
+            else
+            {
+                if (changeDiffIgnoreCase)
+                {
+                    changeDiffOptions |= ChangeDiffOptions.IgnoreCase;
+                }
+
+                if (changeDiffIgnoreWhiteSpace)
+                {
+                    changeDiffOptions |= ChangeDiffOptions.IgnoreWhitespace;
+                }
             }
 
-            return ret;
-        }
+            _ViewA.ChangeDiffOptions = changeDiffOptions;
+            _ViewB.ChangeDiffOptions = changeDiffOptions;
+            _ViewLineDiff.ChangeDiffOptions = changeDiffOptions;
 
-        private DiffContext TranslateLineContext(DiffViewLine item)
-        {
-            DiffContext lineContext = DiffContext.Blank;
-            switch (item.EditType)
+            _ViewA.SetData(listA, script, true);
+            _ViewB.SetData(listB, script, false);
+            NotifyPropertyChanged(() => this.IsDiffDataAvailable);
+
+            Debug.Assert(this._ViewA.LineCount == this._ViewB.LineCount, "Both DiffView's LineCounts must be the same");
+
+            // Sets the similarity value (0% - 100%) between 2 things shown in toolbar
+            this.Similarity_Text = string.Format("{0:P}", script.Similarity);
+
+            this._ViewA.SetCounterpartLines(this._ViewB);
+////            this.Overview.DiffView = this.ViewA;
+
+            // Show left and right file name labels over each ViewA and ViewB
+            bool showNames = !string.IsNullOrEmpty(nameA) || !string.IsNullOrEmpty(nameB);
+            this.edtLeft_Right_Visible = showNames;
+////            this.edtRight.Visible = showNames;
+            if (showNames)
             {
-                case DiffLib.Enums.EditType.Delete:
-                    lineContext = DiffContext.Deleted;
-                    break;
-                case DiffLib.Enums.EditType.Insert:
-                    lineContext = DiffContext.Added;
-                    break;
-                case DiffLib.Enums.EditType.Change:
-                    lineContext = DiffContext.Context;
-                    break;
-
-                case DiffLib.Enums.EditType.None:
-                default:
-                    break;
+                this.edtLeft_Text = nameA;
+                this.edtRight_Text = nameB;
             }
 
-            return lineContext;
+////            this.UpdateButtons();
+            this.currentDiffLine = -1;
+            this.UpdateLineDiff();
+
+////            this.ActiveControl = this.ViewA;
         }
 
-        /// <summary>
-        /// Used to setup the ViewLineDiff view that shows only 2 lines over each other
-        /// representing the currently active line from the left/right side views under
-        /// each other.
-        /// </summary>
-        /// <param name="lineOne"></param>
-        /// <param name="lineTwo"></param>
-        internal void SetData(DiffViewLine lineOne, DiffViewLine lineTwo)
+        private void UpdateLineDiff()
         {
-            _lines = new DiffViewLines(lineOne, lineTwo);
-            var documentLineDiffs = new List<DiffContext>();
+            // Determine current cursor position in line n
+            int line = Math.Max(0, SynchronizedLine - 1);
+            if (line == this.currentDiffLine)
+            {
+                return;
+            }
 
-            string text = string.Empty;
+            this.currentDiffLine = line;
+
+            DiffViewLine lineOne = null;
+            DiffViewLine lineTwo = null;
+            if (line < this.ViewA.LineCount)
+            {
+                lineOne = this.ViewA.GetLine(line);
+            }
+
+            // Normally, ViewA.LineCount == ViewB.LineCount, but during
+            // SetData they'll be mismatched momentarily as each view
+            // rebuilds its lines.
+            if (line < this.ViewB.LineCount)
+            {
+                lineTwo = this.ViewB.GetLine(line);
+            }
 
             if (lineOne != null && lineTwo != null)
             {
-                _DocLineDiffs.Add(TranslateLineContext(lineOne));
-                documentLineDiffs.Add(TranslateLineContext(lineOne));
-                text += lineOne.Text + '\n';
-
-                _DocLineDiffs.Add(TranslateLineContext(lineTwo));
-                documentLineDiffs.Add(TranslateLineContext(lineTwo));
-                text += lineTwo.Text + "\n";
+                this._ViewLineDiff.SetData(lineOne, lineTwo);
             }
-
-            _DocLineDiffs.Clear();
-            _DocLineDiffs.AddRange(documentLineDiffs);
-
-            Document = new TextDocument(text);
-            NotifyPropertyChanged(() => Document);
-
-            this.UpdateAfterSetData();
         }
 
         /// <summary>
-        /// Sets the Counterpart property in each line property of each
-        /// <see cref="DiffDocViewModel"/> to refer to each other. This information
-        /// can be used for finding equivelant from left to right lines[] collection
-        /// and vice versa.
+        /// Is invoked when the cursor position in view B has been changed.
         /// </summary>
-        /// <param name="counterpartView"></param>
-        public void SetCounterpartLines(DiffDocViewModel counterpartView)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnViewACaretPositionChanged(object sender, CaretPositionChangedEvent e)
         {
-            int numLines = this.LineCount;
-            if (numLines != counterpartView.LineCount)
+            switch (e.ChangeType)
             {
-                throw new ArgumentException("The counterpart view has a different number of view lines.", nameof(counterpartView));
+                case CaretChangeType.ColumnAndLine:
+                    SynchronizedLine = e.Line;
+                    SynchronizedColumn = e.Column;
+                    break;
+                case CaretChangeType.Column:
+                    SynchronizedColumn = e.Column;
+                    break;
+                case CaretChangeType.Line:
+                    SynchronizedLine = e.Line;
+                    break;
+                default:
+                    throw new NotImplementedException(e.ChangeType.ToString());
             }
 
-            for (int i = 0; i < numLines; i++)
+            if (e.ChangeType == CaretChangeType.Line || e.ChangeType == CaretChangeType.ColumnAndLine)
             {
-                DiffViewLine line = this._lines[i];
-                DiffViewLine counterpart = counterpartView._lines[i];
-
-                // Make the counterpart lines refer to each other.
-                line.Counterpart = counterpart;
-                counterpart.Counterpart = line;
+                UpdateLineDiff();
+                UpdateOtherView(e, ViewB);
             }
         }
 
-        private void UpdateAfterSetData()
+        /// <summary>
+        /// Is invoked when the cursor position in view A has been changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnViewBCaretPositionChanged(object sender, CaretPositionChangedEvent e)
         {
-            // Reset the position before we start calculating things
-////            this.position = new DiffViewPosition(0, 0);
-////            this.selectionStart = DiffViewPosition.Empty;
-////
-////            // We have to call this to recalc the gutter width
-////            this.UpdateTextMetrics(false);
-////
-////            // We have to call this to setup the scroll bars
-////            this.SetupScrollBars();
-////
-////            // Reset the scroll position
-////            this.VScrollPos = 0;
-////            this.HScrollPos = 0;
-////
-////            // Update the caret
-////            this.UpdateCaret();
-////
-////            // Force a repaint
-////            this.Invalidate();
-////
-////            // Fire the LinesChanged event
-////            if (this.LinesChanged != null)
-////            {
-////                this.LinesChanged(this, EventArgs.Empty);
-////            }
-////
-////            // Fire the position changed event
-////            if (this.PositionChanged != null)
-////            {
-////                this.PositionChanged(this, EventArgs.Empty);
-////            }
-////
-////            this.FireSelectionChanged();
+            switch (e.ChangeType)
+            {
+                case CaretChangeType.ColumnAndLine:
+                    SynchronizedLine = e.Line;
+                    SynchronizedColumn = e.Column;
+                    break;
+                case CaretChangeType.Column:
+                    SynchronizedColumn = e.Column;
+                    break;
+                case CaretChangeType.Line:
+                    SynchronizedLine = e.Line;
+                    break;
+                default:
+                    throw new NotImplementedException(e.ChangeType.ToString());
+            }
+
+            if (e.ChangeType == CaretChangeType.Line || e.ChangeType == CaretChangeType.ColumnAndLine)
+            {
+                UpdateLineDiff();
+                UpdateOtherView(e, ViewA);
+            }
         }
 
-        internal DiffViewLine GetLine(int line)
+        private void UpdateOtherView(CaretPositionChangedEvent e,
+                                     DiffSideViewModel otherView)
         {
-            if (line >= this.LineCount)
-                return null;
-
-            return _lines[line];
+            if (otherView != null)
+            {
+                switch (e.ChangeType)
+                {
+                    case CaretChangeType.ColumnAndLine:
+                        otherView.Line = e.Line;
+                        otherView.Column = e.Column;
+                        break;
+                    case CaretChangeType.Column:
+                        otherView.Column = e.Column;
+                        break;
+                    case CaretChangeType.Line:
+                        otherView.Line = e.Line;
+                        break;
+                    default:
+                        throw new NotImplementedException(e.ChangeType.ToString());
+                }
+            }
         }
         #endregion methods
     }

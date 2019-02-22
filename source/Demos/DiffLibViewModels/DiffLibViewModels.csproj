@@ -47,10 +47,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\BoolToVisibilityPropConverter.cs" />
     <Compile Include="Converters\MultiParToParConverter.cs" />
     <Compile Include="Enums\ChangeDiffOptions.cs" />
     <Compile Include="Enums\CompareType.cs" />
     <Compile Include="Enums\DiffType.cs" />
+    <Compile Include="Events\CaretPositionChangedEvent.cs" />
     <Compile Include="Interfaces\ISettingsNode.cs" />
     <Compile Include="Models\Options.cs" />
     <Compile Include="Models\ShowDiffArgs.cs" />
@@ -58,10 +60,10 @@
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
     <Compile Include="ViewModels\Base\ViewModelBase.cs" />
-    <Compile Include="ViewModels\DiffControlViewModel.cs" />
+    <Compile Include="ViewModels\DiffDocViewModel.cs" />
     <Compile Include="ViewModels\DiffViewLine.cs" />
     <Compile Include="ViewModels\DiffViewLines.cs" />
-    <Compile Include="ViewModels\DiffDocViewModel.cs" />
+    <Compile Include="ViewModels\DiffSideViewModel.cs" />
     <Compile Include="ViewModels\FileDiffFormViewModel.cs" />
     <Compile Include="ViewModels\ObservableRangeCollection.cs" />
   </ItemGroup>
@@ -78,5 +80,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
