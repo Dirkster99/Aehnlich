@@ -1,5 +1,6 @@
 ﻿namespace DiffViewLib
 {
+    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
     using DiffViewLib.Controls;
@@ -56,19 +57,22 @@
             if (_DiffView == null)
                 return;
 
-            if (_DiffView.LineDiffs == null)
+            var srcLineDiffs = _DiffView.ItemsSource as IReadOnlyList<DiffContext>;
+
+            if (srcLineDiffs == null)
                 return;
 
             foreach (var v in textView.VisualLines)
             {
                 var linenum = v.FirstDocumentLine.LineNumber - 1;
-                if (linenum >= _DiffView.LineDiffs.Count)
+                if (linenum >= srcLineDiffs.Count)
                     continue;
 
                 // Find a diff context for a given line
-                DiffContext context;
-                if (_DiffView.LineDiffs.TryGetValue(linenum, out context) == false)
+                if (srcLineDiffs.Count <= linenum)
                     continue;
+
+                DiffContext context = srcLineDiffs[linenum];
 
                 var brush = default(Brush);
                 switch (context)

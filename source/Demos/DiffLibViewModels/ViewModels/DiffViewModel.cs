@@ -16,7 +16,6 @@
         private DiffViewLines _lines;
         private TextDocument _document = null;
 
-        private Dictionary<int, DiffContext> _DocumentLineDiffs;
         private readonly ObservableRangeCollection<DiffContext> _DocLineDiffs;
 
         private bool _isDirty = false;
@@ -48,19 +47,6 @@
             get
             {
                 return _DocLineDiffs;
-            }
-        }
-
-        public Dictionary<int, DiffContext> DocumentLineDiffs
-        {
-            get { return this._DocumentLineDiffs; }
-            protected set
-            {
-                if (this._DocumentLineDiffs != value)
-                {
-                    this._DocumentLineDiffs = value;
-                    NotifyPropertyChanged(() => DocumentLineDiffs);
-                }
             }
         }
 
@@ -112,32 +98,28 @@
             this._lines = new DiffViewLines(stringList, script, useA);
             NotifyPropertyChanged(() => LineCount);
 
-            Dictionary<int, DiffContext> documentLineDiffs;
-            string text = GetDocumentFromRawLines(out documentLineDiffs);
+            IList<DiffContext> lineDiffs;
+            string text = GetDocumentFromRawLines(out lineDiffs);
 
-            DocumentLineDiffs = documentLineDiffs;
+            _DocLineDiffs.Clear();
+            _DocLineDiffs.AddRange(lineDiffs);
+
             Document = new TextDocument(text);
 
-            NotifyPropertyChanged(() => DocumentLineDiffs);
             NotifyPropertyChanged(() => Document);
 
             this.UpdateAfterSetData();
         }
 
-        private string GetDocumentFromRawLines(out Dictionary<int, DiffContext> documentLineDiffs)
+        private string GetDocumentFromRawLines(out IList<DiffContext> documentLineDiffs)
         {
             string ret = string.Empty;
 
-            documentLineDiffs = new Dictionary<int, DiffContext>();
-            _DocLineDiffs.Clear();
-            int line = 0;
+            documentLineDiffs = new List<DiffContext>();
 
             foreach (var item in _lines)
             {
-                var lineContext = TranslateLineContext(item);
-
-                _DocLineDiffs.Add(lineContext);
-                documentLineDiffs.Add(line++, lineContext);
+                documentLineDiffs.Add(TranslateLineContext(item));
                 ret += item.Text + '\n';
             }
 
@@ -176,24 +158,26 @@
         /// <param name="lineTwo"></param>
         internal void SetData(DiffViewLine lineOne, DiffViewLine lineTwo)
         {
-            this._lines = new DiffViewLines(lineOne, lineTwo);
+            _lines = new DiffViewLines(lineOne, lineTwo);
+            var documentLineDiffs = new List<DiffContext>();
 
-            Dictionary<int, DiffContext> documentLineDiffs = new Dictionary<int, DiffContext>();
             string text = string.Empty;
 
             if (lineOne != null && lineTwo != null)
             {
-                documentLineDiffs.Add(0, TranslateLineContext(lineOne));
+                _DocLineDiffs.Add(TranslateLineContext(lineOne));
+                documentLineDiffs.Add(TranslateLineContext(lineOne));
                 text += lineOne.Text + '\n';
 
-                documentLineDiffs.Add(1, TranslateLineContext(lineOne));
+                _DocLineDiffs.Add(TranslateLineContext(lineTwo));
+                documentLineDiffs.Add(TranslateLineContext(lineTwo));
                 text += lineTwo.Text + "\n";
             }
 
-            DocumentLineDiffs = documentLineDiffs;
-            Document = new TextDocument(text);
+            _DocLineDiffs.Clear();
+            _DocLineDiffs.AddRange(documentLineDiffs);
 
-            NotifyPropertyChanged(() => DocumentLineDiffs);
+            Document = new TextDocument(text);
             NotifyPropertyChanged(() => Document);
 
             this.UpdateAfterSetData();

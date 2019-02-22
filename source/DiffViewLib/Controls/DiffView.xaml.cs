@@ -2,6 +2,7 @@
 {
     using DiffViewLib.Enums;
     using ICSharpCode.AvalonEdit;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
@@ -12,9 +13,12 @@
     public class DiffView : TextEditor
     {
         #region fields
-        public static readonly DependencyProperty LineDiffsProperty =
-            DependencyProperty.Register("LineDiffs", typeof(Dictionary<int, DiffContext>),
-                typeof(DiffView), new PropertyMetadata(null));
+        /// <summary>
+        /// Implements the backing store of the <see cref="ItemsSource"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ItemsSourceProperty =
+            DependencyProperty.Register("ItemsSource", typeof(IEnumerable),
+                typeof(DiffView), new PropertyMetadata(new PropertyChangedCallback(ItemsSourceChanged)));
 
         #region Diff Color Definitions
         /// <summary>
@@ -76,10 +80,16 @@
         #endregion ctors
 
         #region properties
-        public Dictionary<int, DiffContext> LineDiffs
+        /// <summary>
+        /// Gets/sets a source of items that can be used to populate marker elements
+        /// on the overview bar. This should ideally be an ObservableCollection{T} or
+        /// at least an <see cref="IList{T}"/> where T is a <see cref="DiffContext"/>
+        /// for a particular line in the merged text views.
+        /// </summary>
+        public IEnumerable ItemsSource
         {
-            get { return (Dictionary<int, DiffContext>)GetValue(LineDiffsProperty); }
-            set { SetValue(LineDiffsProperty, value); }
+            get { return (IEnumerable)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty, value); }
         }
 
         #region Diff Color definitions
@@ -131,14 +141,38 @@
         #endregion properties
 
         #region methods
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-        }
-
+        #region static handlers
         private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            ((DiffView)d).OnColorChanged(e.NewValue);
+        }
 
+        /// <summary>
+        /// Is invoked when the <see cref="ItemsSource"/> dependency property has been changed.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DiffView)d).ItemsSourceChanged(e.NewValue);
+        }
+        #endregion static handlers
+
+        /// <summary>
+        /// Is invoked when the collection bound on the <see cref="ItemsSource"/> dependency
+        /// property has changed.
+        /// </summary>
+        /// <param name="newValue"></param>
+        private void ItemsSourceChanged(object newValue)
+        {
+            IReadOnlyList<DiffContext> newList = newValue as IReadOnlyList<DiffContext>;
+
+            // ToDo Update UI
+        }
+
+        private void OnColorChanged(object newValue)
+        {
+            // ToDo Update UI
         }
         #endregion methods
     }
