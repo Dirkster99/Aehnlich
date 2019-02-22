@@ -34,6 +34,13 @@
                 typeof(Overview), new PropertyMetadata(0.0d));
 
         /// <summary>
+        /// Implements the backing store of the <see cref="MinThumbHeight"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty MinThumbHeightProperty =
+            DependencyProperty.Register("MinThumbHeight", typeof(double),
+                typeof(Overview), new PropertyMetadata(12.0d, OnBitmapParameterChanged));
+
+        /// <summary>
         /// Implements the backing store of the <see cref="NumberOfTextLinesInViewPort"/>
         /// dependency property.
         /// </summary>
@@ -48,7 +55,7 @@
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundBlankProperty =
             DependencyProperty.Register("ColorBackgroundBlank", typeof(Color),
-                typeof(Overview), new PropertyMetadata(default(Color), OnColorChanged));
+                typeof(Overview), new PropertyMetadata(default(Color), OnBitmapParameterChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundAdded"/>
@@ -56,7 +63,7 @@
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundAddedProperty =
             DependencyProperty.Register("ColorBackgroundAdded", typeof(Color),
-                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0x00, 0xba, 0xff), OnColorChanged));
+                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0x00, 0xba, 0xff), OnBitmapParameterChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundDeleted"/>
@@ -64,7 +71,7 @@
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundDeletedProperty =
             DependencyProperty.Register("ColorBackgroundDeleted", typeof(Color),
-                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0xFF, 0x80, 0x80), OnColorChanged));
+                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0xFF, 0x80, 0x80), OnBitmapParameterChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundContext"/>
@@ -72,7 +79,7 @@
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundContextProperty =
             DependencyProperty.Register("ColorBackgroundContext", typeof(Color),
-                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80), OnColorChanged));
+                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80), OnBitmapParameterChanged));
         #endregion Diff Color Definitions
 
         /// <summary>
@@ -133,6 +140,16 @@
         {
             get { return (double)GetValue(ThumbHeightProperty); }
             protected set { SetValue(ThumbHeightProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the minimum height of the <see cref="Slider"/> thumb used to slide the
+        /// currently visible window to a particular location in the <see cref="Overview"/> control.
+        /// </summary>
+        public double MinThumbHeight
+        {
+            get { return (double)GetValue(MinThumbHeightProperty); }
+            set { SetValue(MinThumbHeightProperty, value); }
         }
 
         #region Diff Color definitions
@@ -341,22 +358,33 @@
         }
 
         /// <summary>
-        /// Is invoked if one of the color definitions for deleted, added, changed, or blank
-        /// lines has been changed.
+        /// Is invoked if one of the drawing parameters:
+        /// 1> color definitions for deleted, added, changed, or blank line
+        /// 2> minimum thumb height
+        /// 
+        /// has been changed.
+        /// 
+        /// This re-creates the complete drawing if one of the color definitions has been changed.
         /// </summary>
         /// <param name="d"></param>
         /// <param name="e"></param>
-        private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnBitmapParameterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((Overview)d).OnColorChanged(e.NewValue);
+            ((Overview)d).OnBitmapParameterChanged(e.NewValue);
         }
         #endregion static handlers
 
         /// <summary>
-        /// Recreates the complete drawing if one of the color definitions has been changed.
+        /// Is invoked if one of the drawing parameters:
+        /// 1> color definitions for deleted, added, changed, or blank line
+        /// 2> minimum thumb height
+        /// 
+        /// has been changed.
+        /// 
+        /// This re-creates the complete drawing if one of the color definitions has been changed.
         /// </summary>
         /// <param name="newValue"></param>
-        private void OnColorChanged(object newValue)
+        private void OnBitmapParameterChanged(object newValue)
         {
             CreateBitmap(ItemsSource as IList<DiffContext>);
         }
@@ -418,6 +446,7 @@
             int countLines = GetItemsCount();
 
             double thumbHeight = 0;
+            bool isThumbVisible = false;
 
             // spare the computation if text viewport is larger than the available text
             if ((lines + 1) < countLines)
@@ -427,10 +456,23 @@
                 // Larger thumb than image means there is nothing to scroll here
                 // so we make thumb invisible by setting its height to 0
                 if (thumbHeight > this._PART_ImageViewport.ActualHeight)
+                {
                     thumbHeight = 0;
+                    isThumbVisible = false;
+                }
+                else
+                    isThumbVisible = true;
             }
 
-            ThumbHeight = thumbHeight;
+            if (isThumbVisible == false)
+                ThumbHeight = 0;
+            else
+            {
+                if (thumbHeight < MinThumbHeight)
+                    ThumbHeight = MinThumbHeight;
+                else
+                    ThumbHeight = thumbHeight;
+            }
 
             UpdateMinMaxSliderBounds(countLines);
         }
