@@ -27,7 +27,6 @@
             UriBuilder uri = new UriBuilder(codeBase);
             string path = Uri.UnescapeDataString(uri.Path);
             var fspath = System.IO.Path.GetDirectoryName(path);
-
             
             //var appVM = new AppViewModel(fspath + @"\DemoTestFiles\ClassTemplate.txt",
             //                             fspath + @"\DemoTestFiles\Empty.txt");
