@@ -14,7 +14,6 @@
     /// <typeparam name="T"></typeparam> 
     public class ObservableRangeCollection<T> : ObservableCollection<T>
     {
-
         /// <summary> 
         /// Initializes a new instance of the System.Collections.ObjectModel.ObservableCollection(Of T) class. 
         /// </summary> 
@@ -81,7 +80,6 @@
 
             if (notificationMode == NotifyCollectionChangedAction.Reset)
             {
-
                 foreach (var i in collection)
                     Items.Remove(i);
 
@@ -121,6 +119,5 @@
             Items.Clear();
             AddRange(collection, NotifyCollectionChangedAction.Reset);
         }
-
     }
 }

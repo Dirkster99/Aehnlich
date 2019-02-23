@@ -103,7 +103,6 @@
             Assert.IsTrue(editScript[1].StartA == 0 && editScript[1].StartB == 0);
         }
 
-
         [TestMethod]
         public void MatchOneLineTests()
         {
