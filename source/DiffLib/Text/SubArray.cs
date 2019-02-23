@@ -15,9 +15,9 @@ namespace DiffLib.Text
 	{
 		#region Private Data Members
 
-		private IList<T> data;
+		private readonly IList<T> data;
 		private readonly int length; // Stores the length of this subarray
-		private int offset; // Stores the 0-based offset into this.arData where this subarray should start
+		private readonly int offset; // Stores the 0-based offset into this.arData where this subarray should start
 
 		#endregion
 

@@ -21,8 +21,8 @@
         #region Private Data Members
 
         private EditScript changeEditScript;
-        private int? number;
-        private string text;
+        private readonly int? number;
+        private readonly string text;
         private readonly EditType editType;
 
         #endregion

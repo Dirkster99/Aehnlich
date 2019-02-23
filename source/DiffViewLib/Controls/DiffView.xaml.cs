@@ -289,6 +289,7 @@
             }
             catch
             {
+                // catch this to make sure initialization can continue...
             }
         }
 

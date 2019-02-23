@@ -185,7 +185,10 @@ namespace DiffLib.Dir
 			}
 		}
 
-		private void Execute(DirectoryInfo directoryA, DirectoryInfo directoryB, DirectoryDiffEntry entry, bool checkIfFilesAreDifferent)
+		private void Execute(DirectoryInfo directoryA,
+                             DirectoryInfo directoryB,
+                             DirectoryDiffEntry entry,
+                             bool checkIfFilesAreDifferent)
 		{
 			// Get the arrays of files
 			FileInfo[] filesA, filesB;
