@@ -60,7 +60,7 @@ namespace DiffLib.Dir
 			FileInfo previousFile = null;
 			for (int i = 0; i < files.Count; /*Incremented in the loop*/)
 			{
-				FileInfo currentFile = (FileInfo)files[i];
+				FileInfo currentFile = files[i];
 				if (previousFile != null && FileSystemInfoComparer.Comparer.Compare(currentFile, previousFile) == 0)
 				{
 					files.RemoveAt(i);

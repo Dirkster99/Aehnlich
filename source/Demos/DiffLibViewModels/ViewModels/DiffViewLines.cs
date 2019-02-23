@@ -32,7 +32,7 @@
                 Edit edit = script[e];
 
                 // Get the starting line for this Edit
-                int startingLine = -1;
+                int startingLine;
                 bool dummyLine = false;
                 if (useA)
                 {

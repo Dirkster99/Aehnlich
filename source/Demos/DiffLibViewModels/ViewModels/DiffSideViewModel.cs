@@ -8,6 +8,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Text;
 
     public class DiffSideViewModel : Base.ViewModelBase
     {
@@ -31,7 +32,8 @@
         public DiffSideViewModel()
         {
             _DocLineDiffs = new ObservableRangeCollection<DiffContext>();
-            _Line = _Column = 0;
+            _Line = 0;
+            _Column = 0;
         }
         #endregion ctors
 
@@ -163,17 +165,16 @@
 
         private string GetDocumentFromRawLines(out IList<DiffContext> documentLineDiffs)
         {
-            string ret = string.Empty;
-
             documentLineDiffs = new List<DiffContext>();
+            StringBuilder ret = new StringBuilder();
 
             foreach (var item in _lines)
             {
                 documentLineDiffs.Add(TranslateLineContext(item));
-                ret += item.Text + '\n';
+                ret.Append(item.Text + '\n');
             }
 
-            return ret;
+            return ret.ToString();
         }
 
         private DiffContext TranslateLineContext(DiffViewLine item)

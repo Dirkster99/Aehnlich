@@ -320,8 +320,12 @@
                 this.Line = this.TextArea.Caret.Line;
             }
             else
-                this.Column = this.Line = 0;
+            {
+                this.Column = 0;
+                this.Line = 0;
+            }
         }
+
         /// <summary>
         /// Is invoked when the collection bound on the <see cref="ItemsSource"/> dependency
         /// property has changed.
@@ -329,8 +333,6 @@
         /// <param name="newValue"></param>
         private void ItemsSourceChanged(object newValue)
         {
-            IReadOnlyList<DiffContext> newList = newValue as IReadOnlyList<DiffContext>;
-
             // Get observable events should they be available
             if (_observeableDiffContext != null)
             {

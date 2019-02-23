@@ -92,6 +92,8 @@
                     case DiffContext.Blank:
                         brush = BlankBackground;
                         break;
+                    default:
+                        throw new System.ArgumentException(context.ToString());
                 }
 
                 if (brush != default(Brush))

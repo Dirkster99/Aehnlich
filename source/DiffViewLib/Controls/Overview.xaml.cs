@@ -236,7 +236,8 @@
         {
             if (_PART_ViewPortContainer == null || _PART_ImageViewport == null || newList == null)
             {
-                this.Minimum = this.Maximum = 0;
+                this.Minimum = 0;
+                this.Maximum = 0;
                 OnViewPortLinesChanged(0);       // Initialize with 0 lines to hide the thumb control
                 return;
             }
