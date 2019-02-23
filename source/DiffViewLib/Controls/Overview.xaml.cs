@@ -9,7 +9,6 @@
     using DiffViewLib.Enums;
     using System.Windows.Media.Imaging;
     using System.Windows.Media;
-    using System.Collections.ObjectModel;
     using System.Collections.Specialized;
 
     /// <summary>
@@ -249,11 +248,17 @@
             UpdateMinMaxSliderBounds(numLines);
 
             int width = (int)this._PART_ViewPortContainer.ActualWidth;
-			int height = (int)this._PART_ViewPortContainer.ActualHeight;
+            int height = (int)this._PART_ViewPortContainer.ActualHeight;
 
             if (width <= 0 || height <= 0)
                 return;
 
+            DrawBitMap(newList, numLines, width, height);
+        }
+
+        private void DrawBitMap(IEnumerable<DiffContext> newList,
+                                int numLines, int width, int height)
+        {
             // Init WriteableBitmap
             writeableBmp = BitmapFactory.New(width, height);
 
@@ -270,18 +275,15 @@
             {
                 // Clear the WriteableBitmap with control background color
                 writeableBmp.Clear(controlBackgroundColor);
-            }
 
-            if (numLines == 0)
-                return;
+                if (numLines == 0)
+                    return;
 
-            const float GutterWidth = 0.0F;
+                const float GutterWidth = 0.0F;
 
-            // Make sure each line is at least 1 pixel high
-            float lineHeight = (float)Math.Max(1.0, this.GetPixelLineHeight(1, numLines, height));
+                // Make sure each line is at least 1 pixel high
+                float lineHeight = (float)Math.Max(1.0, this.GetPixelLineHeight(1, numLines, height));
 
-            using (writeableBmp.GetBitmapContext())
-            {
                 int i = 0;
                 foreach (var line in newList)
                 {
@@ -327,7 +329,7 @@
             }
         }
 
-		private double GetPixelLineHeight(int lines, int lineCount, double clientSize_Height)
+        private double GetPixelLineHeight(int lines, int lineCount, double clientSize_Height)
 		{
             double result = 0;
 
