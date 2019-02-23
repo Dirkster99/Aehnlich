@@ -94,7 +94,7 @@ namespace DiffLib.Dir
 					FileInfo fileA = allFiles[a];
 					if (e < numExcludes)
 					{
-						FileInfo fileE = (FileInfo)files[e];
+						FileInfo fileE = files[e];
 						compareResult = FileSystemInfoComparer.Comparer.Compare(fileA, fileE);
 					}
 

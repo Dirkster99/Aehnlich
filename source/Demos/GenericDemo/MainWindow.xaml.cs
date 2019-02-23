@@ -12,13 +12,25 @@
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region fields
+        private bool IgnoreNextSliderValueChange;
+        private bool IgnoreNextTextSyncValueChange;
+        object lockObject = new object();
+        #endregion fields
+
+        #region ctors
+        /// <summary>
+        /// class constructor
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
 
             Loaded += MainWindow_Loaded;
         }
+        #endregion ctors
 
+        #region methods
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= MainWindow_Loaded;
@@ -36,10 +48,6 @@
 
             this.DataContext = appVM;
         }
-
-        private bool IgnoreNextSliderValueChange = false;
-        private bool IgnoreNextTextSyncValueChange = false;
-        object lockObject = new object();
 
         /// <summary>
         /// Implements scrollviewer synchronization
@@ -111,5 +119,6 @@
                 }
             }
         }
+        #endregion methods
     }
 }
