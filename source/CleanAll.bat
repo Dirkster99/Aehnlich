@@ -6,11 +6,11 @@ ECHO.
 ECHO This script deletes all temporary build files in the .vs folder and the
 ECHO BIN and OBJ folders contained in the following projects
 ECHO.
-ECHO DiffLib
-ECHO DiffLib_UnitTests
-ECHO DiffViewLib
-ECHO Demos\DiffLibViewModels
-ECHO Demos\GenericDemo
+ECHO AehnlichLib
+ECHO AehnlichLib_UnitTests
+ECHO AehnlichViewLib
+ECHO Demos\AehnlichLibViewModels
+ECHO Demos\AehnlichDemo
 ECHO.
 REM Ask the user if hes really sure to continue beyond this point XXXXXXXX
 set /p choice=Are you sure to continue (Y/N)?
@@ -26,34 +26,34 @@ ECHO.
 RMDIR /S /Q .vs
 
 ECHO.
-ECHO Deleting BIN and OBJ Folders in Diff.Net
+ECHO Deleting BIN and OBJ Folders in AehnlichLib
 ECHO.
-RMDIR /S /Q "DiffLib\bin"
-RMDIR /S /Q "DiffLib\obj"
+RMDIR /S /Q "AehnlichLib\bin"
+RMDIR /S /Q "AehnlichLib\obj"
 
 ECHO.
-ECHO Deleting BIN and OBJ Folders in Libs/Menees.Diffs
+ECHO Deleting BIN and OBJ Folders in AehnlichLib_UnitTests
 ECHO.
-RMDIR /S /Q "DiffLib_UnitTests\bin"
-RMDIR /S /Q "DiffLib_UnitTests\obj"
+RMDIR /S /Q "AehnlichLib_UnitTests\bin"
+RMDIR /S /Q "AehnlichLib_UnitTests\obj"
 
 ECHO.
-ECHO Deleting BIN and OBJ Folders in Libs/Menees.Common
+ECHO Deleting BIN and OBJ Folders in AehnlichViewLib
 ECHO.
-RMDIR /S /Q "DiffViewLib\bin"
-RMDIR /S /Q "DiffViewLib\obj"
+RMDIR /S /Q "AehnlichViewLib\bin"
+RMDIR /S /Q "AehnlichViewLib\obj"
 
 ECHO.
-ECHO Deleting BIN and OBJ Folders in Libs/Menees.Diffs.Controls
+ECHO Deleting BIN and OBJ Folders in Demos/AehnlichLibViewModels
 ECHO.
-RMDIR /S /Q "Demos\DiffLibViewModels\bin"
-RMDIR /S /Q "Demos\DiffLibViewModels\obj"
+RMDIR /S /Q "Demos\AehnlichLibViewModels\bin"
+RMDIR /S /Q "Demos\AehnlichLibViewModels\obj"
 
 ECHO.
 ECHO Deleting BIN and OBJ Folders in Demos\GenericDemo
 ECHO.
-RMDIR /S /Q "Demos\GenericDemo\bin"
-RMDIR /S /Q "Demos\GenericDemo\obj"
+RMDIR /S /Q "Demos\AehnlichDemo\bin"
+RMDIR /S /Q "Demos\AehnlichDemo\obj"
 
 PAUSE
 
