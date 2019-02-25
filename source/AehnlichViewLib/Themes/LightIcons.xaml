@@ -7,6 +7,10 @@
                   UriSource="/AehnlichViewLib;component/Icons/Light/OpenFile.ico" />
 
     <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_CopyKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/Copy.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                   ResourceId=ICON_RefreshKey}"
                   UriSource="/AehnlichViewLib;component/Icons/Light/Refresh_black_16x.ico" />
 

@@ -51,6 +51,11 @@
         public static readonly ComponentResourceKey ICON_OpenFileKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_OpenFileKey");
 
         /// <summary>
+        /// Defines the icon that is shown for a copy text selection UI function (eg: Image on Button).
+        /// </summary>
+        public static readonly ComponentResourceKey ICON_CopyKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_CopyKey");
+
+        /// <summary>
         /// Defines the icon that is shown for a refresh UI function (eg: Image on Button).
         /// </summary>
         public static readonly ComponentResourceKey ICON_RefreshKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_RefreshKey");

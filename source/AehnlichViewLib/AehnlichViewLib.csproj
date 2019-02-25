@@ -136,6 +136,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\Light\OpenFile.ico" />
+    <Resource Include="Icons\Light\Copy.ico" />
+    <Content Include="Icons\Light\Copy_16x.svg" />
     <Content Include="Icons\Light\OpenFile_16x.svg" />
     <Resource Include="Icons\Light\GoToBottom.ico" />
     <Content Include="Icons\Light\GoToBottom_16x.svg" />

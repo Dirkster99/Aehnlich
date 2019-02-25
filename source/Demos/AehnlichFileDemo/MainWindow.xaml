@@ -34,18 +34,34 @@
             <ToolBar Grid.Column="0" VerticalAlignment="Center"
                      Background="Transparent"
                      ToolBarTray.IsLocked="True"
+                     MinHeight="32"
                      >
 
                 <Button
                     Padding="3"
                     Command="{Binding OpenFileFromActiveViewCommand}"
-                    ToolTip="Go to First Difference"
+                    ToolTip="Open File"
                     Margin="3" HorizontalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
                     >
                     <Button.Background>
                         <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_OpenFileKey}}"/>
+                    </Button.Background>
+                </Button>
+
+                <Separator />
+                
+                <Button
+                    Padding="3"
+                    Command="{Binding CopyTextSelectionFromActiveViewCommand}"
+                    ToolTip="Open File"
+                    Margin="3" HorizontalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    >
+                    <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_CopyKey}}"/>
                     </Button.Background>
                 </Button>
 

@@ -117,12 +117,14 @@
         /// Get the text that is currently selected in the edit control.
         /// </summary>
         /// <param name="selectedText"></param>
-        public void GetSelectedText(out string selectedText)
+        public string GetSelectedText()
         {
-            selectedText = string.Empty;
+            string selectedText = string.Empty;
 
             if (this.GetSelectedTextEvent != null)
                 this.GetSelectedTextEvent(this, out selectedText);
+
+            return selectedText;
         }
         #endregion methods
     }

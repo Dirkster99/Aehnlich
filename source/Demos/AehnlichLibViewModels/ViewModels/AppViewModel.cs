@@ -15,6 +15,7 @@
         private ICommand _GoToPrevDifferenceCommand;
         private ICommand _GoToLastDifferenceCommand;
         private ICommand _OpenFileFromActiveViewCommand;
+        private ICommand _CopyTextSelectionFromActiveViewCommand;
         private readonly FileDiffFormViewModel _DiffForm;
         #endregion fields
 
@@ -92,10 +93,60 @@
                             if (nonActView != null)
                                 FileSystemCommands.OpenInWindows(nonActView.FileName);
                         }
+                    },(p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+
+                        if (activeView != null)
+                        {
+                            if (string.IsNullOrEmpty(activeView.FileName) == false)
+                                return true;
+                        }
+
+                        if (nonActView != null)
+                        {
+                            if (string.IsNullOrEmpty(nonActView.FileName) == false)
+                                return true;
+                        }
+
+                        return false;
                     });
                 }
 
                 return _OpenFileFromActiveViewCommand;
+            }
+        }
+
+        /// <summary>
+        /// Gets a command that copies the currently selected text into the Windows Clipboard.
+        /// </summary>
+        public ICommand CopyTextSelectionFromActiveViewCommand
+        {
+            get
+            {
+                if (_CopyTextSelectionFromActiveViewCommand == null)
+                {
+                    _CopyTextSelectionFromActiveViewCommand = new RelayCommand<object>((p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+
+                        string textSelection = activeView.TxtControl.GetSelectedText();
+                        FileSystemCommands.CopyString(textSelection);
+                    }, (p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+
+                        if (activeView != null)
+                            return (string.IsNullOrEmpty(activeView.TxtControl.GetSelectedText()) == false);
+
+                        return false;
+                    });
+                }
+
+                return _CopyTextSelectionFromActiveViewCommand;
             }
         }
 

@@ -81,15 +81,15 @@
         /// <summary>
         /// Copies the given string into the Windows clipboard.
         /// </summary>
-        /// <param name="sFileName"></param>
-        public static void CopyPath(string sFileName)
+        /// <param name="sTextToCopy"></param>
+        public static void CopyString(string sTextToCopy)
         {
-            if (string.IsNullOrEmpty(sFileName) == true)
+            if (string.IsNullOrEmpty(sTextToCopy) == true)
                 return;
 
             try
             {
-                System.Windows.Clipboard.SetText(sFileName);
+                System.Windows.Clipboard.SetText(sTextToCopy);
             }
             catch
             {
