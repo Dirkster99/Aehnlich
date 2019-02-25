@@ -7,6 +7,8 @@
         xmlns:conv="clr-namespace:AehnlichLibViewModels.Converters;assembly=AehnlichLibViewModels"
         xmlns:ctrl="clr-namespace:AehnlichViewLib.Controls;assembly=AehnlichViewLib"
         xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
+
+        xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -34,16 +36,16 @@
             <ToolBar Grid.Column="0" VerticalAlignment="Center"
                      Background="Transparent"
                      ToolBarTray.IsLocked="True"
-                     MinHeight="32"
+                     MinHeight="16"
                      >
 
                 <Button
-                    Padding="3"
                     Command="{Binding OpenFileFromActiveViewCommand}"
                     ToolTip="Open File"
-                    Margin="3" HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
                     >
                     <Button.Background>
                         <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_OpenFileKey}}"/>
@@ -53,12 +55,12 @@
                 <Separator />
                 
                 <Button
-                    Padding="3"
                     Command="{Binding CopyTextSelectionFromActiveViewCommand}"
                     ToolTip="Open File"
-                    Margin="3" HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
                     >
                     <Button.Background>
                         <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_CopyKey}}"/>
@@ -68,12 +70,12 @@
                 <Separator />
 
                 <Button
-                    Padding="3"
                     Command="{Binding GoToFirstDifferenceCommand}"
                     ToolTip="Go to First Difference"
-                    Margin="3" HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
                     >
                      <Button.Background>
                         <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoTopKey}}"/>
@@ -81,12 +83,12 @@
                 </Button>
 
                 <Button
-                    Padding="3"
                     Command="{Binding GoToNextDifferenceCommand}"
                     ToolTip="Go to Next Difference"
-                    Margin="3" HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
                     >
                     <Button.Background>
                         <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoNextKey}}"/>
@@ -94,12 +96,12 @@
                 </Button>
 
                 <Button
-                    Padding="3"
                     Command="{Binding GoToPrevDifferenceCommand}"
                     ToolTip="Go to Previous Difference"
-                    Margin="3" HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
                     >
                     <Button.Background>
                         <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoPrevKey}}"/>
@@ -107,12 +109,12 @@
                 </Button>
 
                 <Button
-                    Padding="3"
                     Command="{Binding GoToLastDifferenceCommand}"
                     ToolTip="Go to Last Difference"
-                    Margin="3" HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
                     >
                     <Button.Background>
                         <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoBottomKey}}"/>
@@ -122,12 +124,12 @@
                 <Separator Margin="3,0,3,0"/>
                 
                 <Button
-                    Padding="3"
                     Command="{Binding CompareFilesCommand}"
-                    ToolTip="Refresh"
-                    Margin="3" HorizontalAlignment="Stretch"
+                    ToolTip="Recompare"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
                     >
                     <Button.CommandParameter>
                         <MultiBinding Converter="{StaticResource MultiParToParConverter}">
@@ -140,10 +142,61 @@
                     </Button.Background>
                 </Button>
 
+                <Separator Margin="0,0,3,0"
+                           Visibility="{Binding DiffForm.DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                           />
+
+                <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+                        Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
+                        >
+                    <Grid ToolTip="Changed"
+                      HorizontalAlignment="Stretch"
+                      MinHeight="16" MinWidth="16"
+                      Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"                        
+                    >
+                        <Grid.Background>
+                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"/>
+                        </Grid.Background>
+                    </Grid>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+                        Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
+                        >
+                    <Grid ToolTip="Deleted"
+                      HorizontalAlignment="Stretch"
+                      MinHeight="16" MinWidth="16"
+                      Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"/>
+                    </Grid.Background>
+                </Grid>
+                    
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+                        Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"
+                        >
+                    <Grid ToolTip="Inserted"
+                      HorizontalAlignment="Stretch"
+                      MinHeight="16" MinWidth="16"
+                      Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"                        
+                    >
+                        <Grid.Background>
+                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AddedKey}}"/>
+                        </Grid.Background>
+                    </Grid>
+                </Border>
+
+                <Separator Margin="0,0,3,0"
+                           Visibility="{Binding DiffForm.DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                           />
+
                 <TextBlock
                     DataContext="{Binding DiffForm.DiffCtrl}"
                     Text="{Binding Similarity_Text}"
-                    Margin="3,0" VerticalAlignment="Center"
+                    Margin="0,0,3,0"
+                    VerticalAlignment="Center"
                     ToolTip="Similarity"
                 />
 
@@ -157,10 +210,12 @@
                             DataContext="{Binding DiffForm.DiffCtrl}"
                             Visibility="{Binding IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
                             >
-
-                    <TextBlock Margin="3,0" Text="Ln:"><TextBlock Text="{Binding SynchronizedLine,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/></TextBlock>
-                    <TextBlock Margin="0,0,3,0" Text=", Col:"><TextBlock Text="{Binding SynchronizedColumn,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/></TextBlock>
-                    
+                    <TextBlock Margin="0,0,3,0" Text="Ln:" ToolTip="Current Line">
+                        <TextBlock Text="{Binding SynchronizedLine,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    </TextBlock>
+                    <TextBlock Margin="0,0,3,0" Text=", Col:" ToolTip="Current Column">
+                        <TextBlock Text="{Binding SynchronizedColumn,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    </TextBlock>
                 </StackPanel>
             </ToolBar>
 

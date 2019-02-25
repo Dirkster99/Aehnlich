@@ -32,4 +32,15 @@
                   UriSource="/AehnlichViewLib;component/Icons/Light/GotoBottom.ico" />
     <!-- Goto Icons-->
 
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_DeletedKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/minus.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_AddedKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/plus.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_ChangedKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/tilde.ico" />
 </ResourceDictionary>

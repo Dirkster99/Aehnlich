@@ -8,6 +8,9 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type local:Overview}">
+        <Setter Property="ColorBackgroundAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"/>
+        <Setter Property="ColorBackgroundContext" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"/>
+        <Setter Property="ColorBackgroundDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ButtonNormalOuterBorderKey}}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Orientation" Value="Vertical" />

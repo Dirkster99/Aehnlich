@@ -45,6 +45,11 @@
         #endregion DiffView BrushKeys
 
         #region ICONs
+        
+        public static readonly ComponentResourceKey ICON_DeletedKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_DeletedKey");
+        public static readonly ComponentResourceKey ICON_AddedKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_AddedKey");
+        public static readonly ComponentResourceKey ICON_ChangedKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_ChangedKey");
+
         /// <summary>
         /// Defines the icon that is shown for an Open File UI function (eg: Image on Button).
         /// </summary>
@@ -67,6 +72,14 @@
         public static readonly ComponentResourceKey ICON_GotoBottomKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_GotoBottomKey");
         #endregion Goto Diff Icons
         #endregion ICONs
+
+        #region Diff Colors
+        public static readonly ComponentResourceKey ColorBackgroundContextBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundContextBrushKey");
+
+        public static readonly ComponentResourceKey ColorBackgroundDeletedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundDeletedBrushKey");
+
+        public static readonly ComponentResourceKey ColorBackgroundAddedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundAddedBrushKey");
+        #endregion Diff Colors
 
         /***
                 public static readonly ComponentResourceKey ControlNormalBackgroundKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlNormalBackgroundKey");

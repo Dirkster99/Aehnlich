@@ -135,6 +135,12 @@
     <Resource Include="Icons\Light\Refresh_black_16x.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Icons\Light\minus.ico" />
+    <Content Include="Icons\Light\minus.svg" />
+    <Resource Include="Icons\Light\plus.ico" />
+    <Content Include="Icons\Light\plus.svg" />
+    <Resource Include="Icons\Light\tilde.ico" />
+    <Content Include="Icons\Light\tilde.svg" />
     <Resource Include="Icons\Light\OpenFile.ico" />
     <Resource Include="Icons\Light\Copy.ico" />
     <Content Include="Icons\Light\Copy_16x.svg" />

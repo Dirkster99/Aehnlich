@@ -55,32 +55,32 @@
         /// dependency property.
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundBlankProperty =
-            DependencyProperty.Register("ColorBackgroundBlank", typeof(Color),
-                typeof(Overview), new PropertyMetadata(default(Color), OnBitmapParameterChanged));
+            DependencyProperty.Register("ColorBackgroundBlank", typeof(SolidColorBrush),
+                typeof(Overview), new PropertyMetadata(default(SolidColorBrush), OnBitmapParameterChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundAdded"/>
         /// dependency property.
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundAddedProperty =
-            DependencyProperty.Register("ColorBackgroundAdded", typeof(Color),
-                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0x00, 0xba, 0xff), OnBitmapParameterChanged));
+            DependencyProperty.Register("ColorBackgroundAdded", typeof(SolidColorBrush),
+                typeof(Overview), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xba, 0xff)), OnBitmapParameterChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundDeleted"/>
         /// dependency property.
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundDeletedProperty =
-            DependencyProperty.Register("ColorBackgroundDeleted", typeof(Color),
-                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0xFF, 0x80, 0x80), OnBitmapParameterChanged));
+            DependencyProperty.Register("ColorBackgroundDeleted", typeof(SolidColorBrush),
+                typeof(Overview), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0x80, 0x80)), OnBitmapParameterChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundContext"/>
         /// dependency property.
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundContextProperty =
-            DependencyProperty.Register("ColorBackgroundContext", typeof(Color),
-                typeof(Overview), new PropertyMetadata(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80), OnBitmapParameterChanged));
+            DependencyProperty.Register("ColorBackgroundContext", typeof(SolidColorBrush),
+                typeof(Overview), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80)), OnBitmapParameterChanged));
         #endregion Diff Color Definitions
 
         /// <summary>
@@ -160,9 +160,9 @@
         /// signifies changed context (2 lines appear to be similar enough to align them
         /// but still mark them as different).
         /// </summary>
-        public Color ColorBackgroundContext
+        public SolidColorBrush ColorBackgroundContext
         {
-            get { return (Color)GetValue(ColorBackgroundContextProperty); }
+            get { return (SolidColorBrush)GetValue(ColorBackgroundContextProperty); }
             set { SetValue(ColorBackgroundContextProperty, value); }
         }
 
@@ -170,9 +170,9 @@
         /// Gets/sets the background color that is applied when drawing areas that
         /// signifies an element that is missing in one of the two (text) lines being compared.
         /// </summary>
-        public Color ColorBackgroundDeleted
+        public SolidColorBrush ColorBackgroundDeleted
         {
-            get { return (Color)GetValue(ColorBackgroundDeletedProperty); }
+            get { return (SolidColorBrush)GetValue(ColorBackgroundDeletedProperty); }
             set { SetValue(ColorBackgroundDeletedProperty, value); }
         }
 
@@ -180,9 +180,9 @@
         /// Gets/sets the background color that is applied when drawing areas that
         /// signifies an element that is added in one of the two (text) lines being compared.
         /// </summary>
-        public Color ColorBackgroundAdded
+        public SolidColorBrush ColorBackgroundAdded
         {
-            get { return (Color)GetValue(ColorBackgroundAddedProperty); }
+            get { return (SolidColorBrush)GetValue(ColorBackgroundAddedProperty); }
             set { SetValue(ColorBackgroundAddedProperty, value); }
         }
 
@@ -194,9 +194,9 @@
         /// default is <see cref="Default(Color)"/> - but sometimes it may be useful
         /// to color these lines which is why we have this property here.
         /// </summary>
-        public Color ColorBackgroundBlank
+        public SolidColorBrush ColorBackgroundBlank
         {
-            get { return (Color)GetValue(ColorBackgroundBlankProperty); }
+            get { return (SolidColorBrush)GetValue(ColorBackgroundBlankProperty); }
             set { SetValue(ColorBackgroundBlankProperty, value); }
         }
         #endregion Diff Color Definitions
@@ -293,7 +293,7 @@
                         double y = this.GetPixelLineHeight(i, numLines, height);
                         double fullFillWidth = width - (2 * GutterWidth);
 
-                        var color = default(Color);
+                        var color = default(SolidColorBrush);
                         switch (line)
                         {
                             case DiffContext.Context:
@@ -316,12 +316,12 @@
                                 break;
                         }
 
-                        if (color != default(Color))
+                        if (color != default(SolidColorBrush))
                         {
                             writeableBmp.FillRectangle((int)GutterWidth, (int)y,
                                                         (int)GutterWidth + (int)fullFillWidth,
                                                         (int)y + (int)lineHeight,
-                                                        color);
+                                                        color.Color);
                         }
                     }
 
@@ -376,7 +376,9 @@
         /// <param name="e"></param>
         private static void OnBitmapParameterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((Overview)d).OnBitmapParameterChanged(e.NewValue);
+            var sender = d as Overview;
+            if (sender != null)
+                sender.OnBitmapParameterChanged(e.NewValue);
         }
         #endregion static handlers
 
@@ -392,7 +394,8 @@
         /// <param name="newValue"></param>
         private void OnBitmapParameterChanged(object newValue)
         {
-            CreateBitmap(ItemsSource as IList<DiffContext>);
+            if (ItemsSource != null)
+                CreateBitmap(ItemsSource as IList<DiffContext>);
         }
 
         /// <summary>

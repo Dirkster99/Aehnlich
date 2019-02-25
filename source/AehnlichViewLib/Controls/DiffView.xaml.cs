@@ -30,32 +30,32 @@
         /// dependency property.
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundBlankProperty =
-            DependencyProperty.Register("ColorBackgroundBlank", typeof(Color),
-                typeof(TextEditor), new PropertyMetadata(default(Color), OnColorChanged));
+            DependencyProperty.Register("ColorBackgroundBlank", typeof(SolidColorBrush),
+                typeof(TextEditor), new PropertyMetadata(default(SolidColorBrush), OnColorChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundAdded"/>
         /// dependency property.
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundAddedProperty =
-            DependencyProperty.Register("ColorBackgroundAdded", typeof(Color),
-                typeof(TextEditor), new PropertyMetadata(Color.FromArgb(0xFF, 0x00, 0xba, 0xff), OnColorChanged));
+            DependencyProperty.Register("ColorBackgroundAdded", typeof(SolidColorBrush),
+                typeof(TextEditor), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xba, 0xff)), OnColorChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundDeleted"/>
         /// dependency property.
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundDeletedProperty =
-            DependencyProperty.Register("ColorBackgroundDeleted", typeof(Color),
-                typeof(TextEditor), new PropertyMetadata(Color.FromArgb(0xFF, 0xFF, 0x80, 0x80), OnColorChanged));
+            DependencyProperty.Register("ColorBackgroundDeleted", typeof(SolidColorBrush),
+                typeof(TextEditor), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0x80, 0x80)), OnColorChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundContext"/>
         /// dependency property.
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundContextProperty =
-            DependencyProperty.Register("ColorBackgroundContext", typeof(Color),
-                typeof(TextEditor), new PropertyMetadata(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80), OnColorChanged));
+            DependencyProperty.Register("ColorBackgroundContext", typeof(SolidColorBrush),
+                typeof(TextEditor), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80)), OnColorChanged));
         #endregion Diff Color Definitions
 
         #region EditorScrollOffsetXY
@@ -97,67 +97,6 @@
                                          typeof(DiffView),
                                          new UIPropertyMetadata(new SolidColorBrush(Color.FromArgb(33, 33, 33, 33)),
                                          DiffView.OnCurrentLineBackgroundChanged));
-
-        /// <summary>
-        /// Style the background color of the current editor line
-        /// </summary>
-        public SolidColorBrush EditorCurrentLineBackground
-        {
-            get { return (SolidColorBrush)GetValue(EditorCurrentLineBackgroundProperty); }
-            set { SetValue(EditorCurrentLineBackgroundProperty, value); }
-        }
-
-        /// <summary>
-        /// The dependency property for has changed.
-        /// Change the <seealso cref="SolidColorBrush"/> to be used for highlighting the current editor line
-        /// in the particular <seealso cref="EdiTextEditor"/> control.
-        /// </summary>
-        /// <param name="d"></param>
-        /// <param name="e"></param>
-        private static void OnCurrentLineBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-
-            if (d is DiffView && e != null)
-            {
-                var view = d as DiffView;
-
-                if (e.NewValue is SolidColorBrush)
-                {
-                    SolidColorBrush newValue = e.NewValue as SolidColorBrush;
-                    view.AdjustCurrentLineBackground(newValue);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Reset the <seealso cref="SolidColorBrush"/> to be used for highlighting the current editor line.
-        /// </summary>
-        /// <param name="newValue"></param>
-        private void AdjustCurrentLineBackground(SolidColorBrush newValue)
-        {
-            if (newValue != null)
-            {
-                HighlightCurrentLineBackgroundRenderer oldRenderer = null;
-
-                // Make sure there is only one of this type of background renderer
-                // Otherwise, we might keep adding and WPF keeps drawing them on top of each other
-                foreach (var item in this.TextArea.TextView.BackgroundRenderers)
-                {
-                    if (item != null)
-                    {
-                        if (item is HighlightCurrentLineBackgroundRenderer)
-                        {
-                            oldRenderer = item as HighlightCurrentLineBackgroundRenderer;
-                        }
-                    }
-                }
-
-                this.TextArea.TextView.BackgroundRenderers.Remove(oldRenderer);
-
-                this.TextArea.TextView.BackgroundRenderers.Add(new HighlightCurrentLineBackgroundRenderer(this, newValue.Clone()));
-            }
-        }
-
 
         private INotifyCollectionChanged _observeableDiffContext;
         private readonly DiffLineBackgroundRenderer _DiffBackgroundRenderer;
@@ -204,9 +143,9 @@
         /// signifies changed context (2 lines appear to be similar enough to align them
         /// but still mark them as different).
         /// </summary>
-        public Color ColorBackgroundContext
+        public SolidColorBrush ColorBackgroundContext
         {
-            get { return (Color)GetValue(ColorBackgroundContextProperty); }
+            get { return (SolidColorBrush)GetValue(ColorBackgroundContextProperty); }
             set { SetValue(ColorBackgroundContextProperty, value); }
         }
 
@@ -214,9 +153,9 @@
         /// Gets/sets the background color that is applied when drawing areas that
         /// signifies an element that is missing in one of the two (text) lines being compared.
         /// </summary>
-        public Color ColorBackgroundDeleted
+        public SolidColorBrush ColorBackgroundDeleted
         {
-            get { return (Color)GetValue(ColorBackgroundDeletedProperty); }
+            get { return (SolidColorBrush)GetValue(ColorBackgroundDeletedProperty); }
             set { SetValue(ColorBackgroundDeletedProperty, value); }
         }
 
@@ -224,9 +163,9 @@
         /// Gets/sets the background color that is applied when drawing areas that
         /// signifies an element that is added in one of the two (text) lines being compared.
         /// </summary>
-        public Color ColorBackgroundAdded
+        public SolidColorBrush ColorBackgroundAdded
         {
-            get { return (Color)GetValue(ColorBackgroundAddedProperty); }
+            get { return (SolidColorBrush)GetValue(ColorBackgroundAddedProperty); }
             set { SetValue(ColorBackgroundAddedProperty, value); }
         }
 
@@ -235,12 +174,12 @@
         /// signifies 2 blank lines in both of the two (text) lines being compared.
         /// 
         /// Normally, there should be no drawing required for this which is why the
-        /// default is <see cref="Default(Color)"/> - but sometimes it may be useful
+        /// default is <see cref="Default(SolidColorBrush)"/> - but sometimes it may be useful
         /// to color these lines which is why we have this property here.
         /// </summary>
-        public Color ColorBackgroundBlank
+        public SolidColorBrush ColorBackgroundBlank
         {
-            get { return (Color)GetValue(ColorBackgroundBlankProperty); }
+            get { return (SolidColorBrush)GetValue(ColorBackgroundBlankProperty); }
             set { SetValue(ColorBackgroundBlankProperty, value); }
         }
         #endregion Diff Color Definitions
@@ -321,6 +260,15 @@
             get { return (DateTime)GetValue(ActivationTimeStampProperty); }
             set { SetValue(ActivationTimeStampProperty, value); }
         }
+
+        /// <summary>
+        /// Style the background color of the current editor line
+        /// </summary>
+        public SolidColorBrush EditorCurrentLineBackground
+        {
+            get { return (SolidColorBrush)GetValue(EditorCurrentLineBackgroundProperty); }
+            set { SetValue(EditorCurrentLineBackgroundProperty, value); }
+        }
         #endregion properties
 
         #region methods
@@ -350,7 +298,58 @@
         {
             ((DiffView)d).ItemsSourceChanged(e.NewValue);
         }
+    
+        /// <summary>
+        /// The dependency property for has changed.
+        /// Change the <seealso cref="SolidColorBrush"/> to be used for highlighting the current editor line
+        /// in the particular <seealso cref="EdiTextEditor"/> control.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        private static void OnCurrentLineBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+
+            if (d is DiffView && e != null)
+            {
+                var view = d as DiffView;
+
+                if (e.NewValue is SolidColorBrush)
+                {
+                    SolidColorBrush newValue = e.NewValue as SolidColorBrush;
+                    view.AdjustCurrentLineBackground(newValue);
+                }
+            }
+        }
         #endregion static handlers
+
+        /// <summary>
+        /// Reset the <seealso cref="SolidColorBrush"/> to be used for highlighting the current editor line.
+        /// </summary>
+        /// <param name="newValue"></param>
+        private void AdjustCurrentLineBackground(SolidColorBrush newValue)
+        {
+            if (newValue != null)
+            {
+                HighlightCurrentLineBackgroundRenderer oldRenderer = null;
+
+                // Make sure there is only one of this type of background renderer
+                // Otherwise, we might keep adding and WPF keeps drawing them on top of each other
+                foreach (var item in this.TextArea.TextView.BackgroundRenderers)
+                {
+                    if (item != null)
+                    {
+                        if (item is HighlightCurrentLineBackgroundRenderer)
+                        {
+                            oldRenderer = item as HighlightCurrentLineBackgroundRenderer;
+                        }
+                    }
+                }
+
+                this.TextArea.TextView.BackgroundRenderers.Remove(oldRenderer);
+
+                this.TextArea.TextView.BackgroundRenderers.Add(new HighlightCurrentLineBackgroundRenderer(this, newValue.Clone()));
+            }
+        }
 
         /// <summary>
         /// Hock event handlers and restore editor states (if any) or defaults

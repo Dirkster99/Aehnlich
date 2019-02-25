@@ -44,10 +44,10 @@
         {
             this._DiffView = diffView;
 
-            AddedBackground = GetBrush4Color(_DiffView.ColorBackgroundAdded);
-            DeletedBackground = GetBrush4Color(_DiffView.ColorBackgroundDeleted);
-            ChangedBackground = GetBrush4Color(_DiffView.ColorBackgroundContext);
-            BlankBackground = GetBrush4Color(_DiffView.ColorBackgroundBlank);
+            AddedBackground = _DiffView.ColorBackgroundAdded;
+            DeletedBackground = _DiffView.ColorBackgroundDeleted;
+            ChangedBackground = _DiffView.ColorBackgroundContext;
+            BlankBackground = _DiffView.ColorBackgroundBlank;
         }
 
         public KnownLayer Layer { get { return KnownLayer.Background; } }
@@ -78,19 +78,19 @@
                 switch (context)
                 {
                     case DiffContext.Added:
-                        brush = AddedBackground;
+                        brush = _DiffView.ColorBackgroundAdded;
                         break;
 
                     case DiffContext.Deleted:
-                        brush = DeletedBackground;
+                        brush = _DiffView.ColorBackgroundDeleted;
                         break;
 
                     case DiffContext.Context:
-                        brush = ChangedBackground;
+                        brush = _DiffView.ColorBackgroundContext;
                         break;
 
                     case DiffContext.Blank:
-                        brush = BlankBackground;
+                        brush = _DiffView.ColorBackgroundBlank;
                         break;
                     default:
                         throw new System.ArgumentException(context.ToString());
