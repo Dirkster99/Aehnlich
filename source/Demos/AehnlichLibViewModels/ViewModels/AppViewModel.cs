@@ -1,7 +1,7 @@
 ﻿namespace AehnlichLibViewModels.ViewModels
 {
+    using AehnlichLibViewModels.Models;
     using AehnlichLibViewModels.ViewModels.Base;
-    using ICSharpCode.AvalonEdit.Document;
     using System.Windows.Input;
 
     public class AppViewModel : Base.ViewModelBase
@@ -14,6 +14,7 @@
         private ICommand _GoToNextDifferenceCommand;
         private ICommand _GoToPrevDifferenceCommand;
         private ICommand _GoToLastDifferenceCommand;
+        private ICommand _OpenFileFromActiveViewCommand;
         private readonly FileDiffFormViewModel _DiffForm;
         #endregion fields
 
@@ -67,6 +68,34 @@
                 }
 
                 return _CompareFilesCommand;
+            }
+        }
+
+        /// <summary>
+        /// Gets a command that opens the currently active file in Windows.
+        /// </summary>
+        public ICommand OpenFileFromActiveViewCommand
+        {
+            get
+            {
+                if (_OpenFileFromActiveViewCommand == null)
+                {
+                    _OpenFileFromActiveViewCommand = new RelayCommand<object>((p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+
+                        if (activeView != null)
+                            FileSystemCommands.OpenInWindows(activeView.FileName);
+                        else
+                        {
+                            if (nonActView != null)
+                                FileSystemCommands.OpenInWindows(nonActView.FileName);
+                        }
+                    });
+                }
+
+                return _OpenFileFromActiveViewCommand;
             }
         }
 

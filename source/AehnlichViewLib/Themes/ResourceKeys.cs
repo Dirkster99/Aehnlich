@@ -38,10 +38,18 @@
         #endregion Brush Keys
 
         #region DiffView BrushKeys
+        /// <summary>
+        /// Gets the color of highlighting for the currently highlighed line.
+        /// </summary>
         public static readonly ComponentResourceKey DiffViewCurrentLineBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DiffViewCurrentLineBackgroundBrushKey");
         #endregion DiffView BrushKeys
 
         #region ICONs
+        /// <summary>
+        /// Defines the icon that is shown for an Open File UI function (eg: Image on Button).
+        /// </summary>
+        public static readonly ComponentResourceKey ICON_OpenFileKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_OpenFileKey");
+
         /// <summary>
         /// Defines the icon that is shown for a refresh UI function (eg: Image on Button).
         /// </summary>

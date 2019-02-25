@@ -29,6 +29,7 @@
         private bool _isDirty = false;
         private int _Column;
         private int _Line;
+        private string _FileName;
         #endregion fields
 
         #region ctors
@@ -183,16 +184,17 @@
             }
         }
 
-        /// <summary>
-        /// Scrolls the attached view to line <paramref name="n"/>
-        /// where n should in the range of [1 ... max lines].
-        /// </summary>
-        /// <param name="n"></param>
-        internal void ScrollToLine(int n)
+        public string FileName
         {
-            DocumentLine line = Document.GetLineByNumber(n);
-            TxtControl.SelectText(line.Offset, 0);          // Select text with length 0 and scroll to where
-            TxtControl.ScrollToLine(n);                    // we are supposed to be at
+            get { return this._FileName; }
+            set
+            {
+                if (this._FileName != value)
+                {
+                    this._FileName = value;
+                    NotifyPropertyChanged(() => FileName);
+                }
+            }
         }
         #endregion properties
 
@@ -204,9 +206,13 @@
         /// </summary>
         /// <param name="lineOne"></param>
         /// <param name="lineTwo"></param>
-        public void SetData(IList<string> stringList, EditScript script, bool useA)
+        /// <param name="filename"></param>
+        public void SetData(string filename,
+                            IList<string> stringList,
+                            EditScript script, bool useA)
         {
-            this._lines = new DiffViewLines(stringList, script, useA);
+            this.FileName = filename;
+            _lines = new DiffViewLines(stringList, script, useA);
             NotifyPropertyChanged(() => LineCount);
 
             IList<DiffContext> lineDiffs;
@@ -219,7 +225,7 @@
 
             NotifyPropertyChanged(() => Document);
 
-            this.UpdateAfterSetData();
+            UpdateAfterSetData();
         }
 
         #region FirstDiff NextDiff PrevDiff LastDiff
@@ -354,6 +360,18 @@
             return new DiffViewPosition(starts[starts.Length - 1], _position.Column);
         }
         #endregion FirstDiff NextDiff PrevDiff LastDiff
+
+        /// <summary>
+        /// Scrolls the attached view to line <paramref name="n"/>
+        /// where n should in the range of [1 ... max lines].
+        /// </summary>
+        /// <param name="n"></param>
+        internal void ScrollToLine(int n)
+        {
+            DocumentLine line = Document.GetLineByNumber(n);
+            TxtControl.SelectText(line.Offset, 0);          // Select text with length 0 and scroll to where
+            TxtControl.ScrollToLine(n);                    // we are supposed to be at
+        }
 
         private string GetDocumentFromRawLines(out IList<DiffContext> documentLineDiffs)
         {

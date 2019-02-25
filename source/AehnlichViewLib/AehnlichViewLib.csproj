@@ -135,6 +135,8 @@
     <Resource Include="Icons\Light\Refresh_black_16x.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Icons\Light\OpenFile.ico" />
+    <Content Include="Icons\Light\OpenFile_16x.svg" />
     <Resource Include="Icons\Light\GoToBottom.ico" />
     <Content Include="Icons\Light\GoToBottom_16x.svg" />
     <Resource Include="Icons\Light\GoToNext.ico" />

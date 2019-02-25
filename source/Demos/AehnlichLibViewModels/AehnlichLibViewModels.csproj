@@ -54,6 +54,7 @@
     <Compile Include="Enums\DiffType.cs" />
     <Compile Include="Events\CaretPositionChangedEvent.cs" />
     <Compile Include="Interfaces\ISettingsNode.cs" />
+    <Compile Include="Models\FileSystemCommands.cs" />
     <Compile Include="Models\Options.cs" />
     <Compile Include="Models\ShowDiffArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

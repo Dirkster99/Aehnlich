@@ -260,8 +260,8 @@
             _ViewB.ChangeDiffOptions = changeDiffOptions;
             _ViewLineDiff.ChangeDiffOptions = changeDiffOptions;
 
-            _ViewA.SetData(listA, script, true);
-            _ViewB.SetData(listB, script, false);
+            _ViewA.SetData(nameA, listA, script, true);
+            _ViewB.SetData(nameB, listB, script, false);
             NotifyPropertyChanged(() => this.IsDiffDataAvailable);
 
             Debug.Assert(this._ViewA.LineCount == this._ViewB.LineCount, "Both DiffView's LineCounts must be the same");
@@ -307,7 +307,7 @@
             if (ViewB == null)
                 return ViewA;
 
-            if (ViewA.ViewActivation > ViewB.ViewActivation)
+            if (ViewA.ViewActivation < ViewB.ViewActivation)
             {
                 nonActiveView = ViewA;
                 return ViewB;
