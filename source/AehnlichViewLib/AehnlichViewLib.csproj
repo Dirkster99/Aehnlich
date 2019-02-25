@@ -54,6 +54,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\HighlightCurrentLineBackgroundRenderer.cs" />
+    <Compile Include="Controls\TextBoxController\DiffView_TextController.cs" />
+    <Compile Include="Controls\TextBoxController.cs" />
+    <Compile Include="Controls\TextBoxController\ITextBoxController.cs" />
     <Compile Include="Themes\ResourceKeys.cs" />
     <Page Include="Controls\DiffView.xaml">
       <SubType>Designer</SubType>
@@ -129,6 +133,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\Light\Refresh_black_16x.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Light\GoToBottom.ico" />
+    <Content Include="Icons\Light\GoToBottom_16x.svg" />
+    <Resource Include="Icons\Light\GoToNext.ico" />
+    <Content Include="Icons\Light\GoToNext_16x.svg" />
+    <Resource Include="Icons\Light\GoToPrev.ico" />
+    <Content Include="Icons\Light\GoToPrev_16x.svg" />
+    <Resource Include="Icons\Light\GoToTop.ico" />
+    <Content Include="Icons\Light\GoToTop_16x.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

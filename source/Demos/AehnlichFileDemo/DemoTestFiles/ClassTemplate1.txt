@@ -8,7 +8,7 @@ public class
         #region ctors
 
         #endregion ctors
-		CTOR
+
         #region properties
 
         #endregion properties

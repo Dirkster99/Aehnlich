@@ -6,4 +6,22 @@
                   ResourceId=ICON_RefreshKey}"
                   UriSource="/AehnlichViewLib;component/Icons/Light/Refresh_black_16x.ico" />
 
+    <!-- Goto Icons-->
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_GotoTopKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/GotoTop.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_GotoNextKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/GotoNext.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_GotoPrevKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/GotoPrev.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_GotoBottomKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/GotoBottom.ico" />
+    <!-- Goto Icons-->
+
 </ResourceDictionary>

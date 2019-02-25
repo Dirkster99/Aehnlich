@@ -37,11 +37,22 @@
 
         #endregion Brush Keys
 
+        #region DiffView BrushKeys
+        public static readonly ComponentResourceKey DiffViewCurrentLineBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DiffViewCurrentLineBackgroundBrushKey");
+        #endregion DiffView BrushKeys
+
         #region ICONs
         /// <summary>
         /// Defines the icon that is shown for a refresh UI function (eg: Image on Button).
         /// </summary>
         public static readonly ComponentResourceKey ICON_RefreshKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_RefreshKey");
+
+        #region Goto Diff Icons
+        public static readonly ComponentResourceKey ICON_GotoTopKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_GotoTopKey");
+        public static readonly ComponentResourceKey ICON_GotoNextKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_GotoNextKey");
+        public static readonly ComponentResourceKey ICON_GotoPrevKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_GotoPrevKey");
+        public static readonly ComponentResourceKey ICON_GotoBottomKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_GotoBottomKey");
+        #endregion Goto Diff Icons
         #endregion ICONs
 
         /***

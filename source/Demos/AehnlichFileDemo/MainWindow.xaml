@@ -35,6 +35,61 @@
                      Background="Transparent"
                      ToolBarTray.IsLocked="True"
                      >
+
+                <Button
+                    Padding="3"
+                    Command="{Binding GoToFirstDifferenceCommand}"
+                    ToolTip="Go to First Difference"
+                    Margin="3" HorizontalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    >
+                     <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoTopKey}}"/>
+                    </Button.Background>
+                </Button>
+
+                <Button
+                    Padding="3"
+                    Command="{Binding GoToNextDifferenceCommand}"
+                    ToolTip="Go to Next Difference"
+                    Margin="3" HorizontalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    >
+                    <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoNextKey}}"/>
+                    </Button.Background>
+                </Button>
+
+                <Button
+                    Padding="3"
+                    Command="{Binding GoToPrevDifferenceCommand}"
+                    ToolTip="Go to Previous Difference"
+                    Margin="3" HorizontalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    >
+                    <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoPrevKey}}"/>
+                    </Button.Background>
+                </Button>
+
+                <Button
+                    Padding="3"
+                    Command="{Binding GoToLastDifferenceCommand}"
+                    ToolTip="Go to Last Difference"
+                    Margin="3" HorizontalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    >
+                    <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoBottomKey}}"/>
+                    </Button.Background>
+                </Button>
+
+                <Separator Margin="3,0,3,0"/>
+                
                 <Button
                     Padding="3"
                     Command="{Binding CompareFilesCommand}"
@@ -164,6 +219,8 @@
                 ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
                 Column="{Binding Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 Line="{Binding Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                TextBoxController="{Binding TxtControl}"
+                ActivationTimeStamp="{Binding ViewActivation, Mode=OneWayToSource}"
 
                 FontFamily="Consolas"
                 FontSize="12pt"
@@ -183,6 +240,8 @@
                 ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
                 Column="{Binding Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 Line="{Binding Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                TextBoxController="{Binding TxtControl}"
+                ActivationTimeStamp="{Binding ViewActivation, Mode=OneWayToSource}"
 
                 FontFamily="Consolas"
                 FontSize="12pt"
@@ -209,6 +268,8 @@
             
                 Column="{Binding Column, Mode=OneWayToSource}"
                 Line="{Binding Line, Mode=OneWayToSource}"
+                TextBoxController="{Binding TxtControl}"
+                EditorCurrentLineBackground="Transparent"
 
                 FontFamily="Consolas"
                 FontSize="12pt"

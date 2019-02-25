@@ -38,4 +38,9 @@
                      ResourceId=ControlTextBrushKey}"
                      Color="Black"/>
 
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=DiffViewCurrentLineBackgroundBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     />
+
 </ResourceDictionary>

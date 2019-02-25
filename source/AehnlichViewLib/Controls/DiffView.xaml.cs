@@ -14,7 +14,7 @@
     /// Implements a <see cref="TextEditor"/> based view that can be used to highlight
     /// text difference through line background coloring.
     /// </summary>
-    public class DiffView : TextEditor
+    public partial class DiffView : TextEditor
     {
         #region fields
         /// <summary>
@@ -84,8 +84,83 @@
                 typeof(DiffView), new UIPropertyMetadata(1));
         #endregion CaretPosition
 
-        private readonly DiffLineBackgroundRenderer _DiffBackgroundRenderer;
+        /// <summary>
+        /// Implements the backing store of the <see cref="ActivationTimeStamp"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ActivationTimeStampProperty =
+            DependencyProperty.Register("ActivationTimeStamp", typeof(DateTime),
+                typeof(DiffView), new PropertyMetadata(default(DateTime)));
+
+        private static readonly DependencyProperty EditorCurrentLineBackgroundProperty =
+            DependencyProperty.Register("EditorCurrentLineBackground",
+                                         typeof(SolidColorBrush),
+                                         typeof(DiffView),
+                                         new UIPropertyMetadata(new SolidColorBrush(Color.FromArgb(33, 33, 33, 33)),
+                                         DiffView.OnCurrentLineBackgroundChanged));
+
+        /// <summary>
+        /// Style the background color of the current editor line
+        /// </summary>
+        public SolidColorBrush EditorCurrentLineBackground
+        {
+            get { return (SolidColorBrush)GetValue(EditorCurrentLineBackgroundProperty); }
+            set { SetValue(EditorCurrentLineBackgroundProperty, value); }
+        }
+
+        /// <summary>
+        /// The dependency property for has changed.
+        /// Change the <seealso cref="SolidColorBrush"/> to be used for highlighting the current editor line
+        /// in the particular <seealso cref="EdiTextEditor"/> control.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="e"></param>
+        private static void OnCurrentLineBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+
+            if (d is DiffView && e != null)
+            {
+                var view = d as DiffView;
+
+                if (e.NewValue is SolidColorBrush)
+                {
+                    SolidColorBrush newValue = e.NewValue as SolidColorBrush;
+                    view.AdjustCurrentLineBackground(newValue);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reset the <seealso cref="SolidColorBrush"/> to be used for highlighting the current editor line.
+        /// </summary>
+        /// <param name="newValue"></param>
+        private void AdjustCurrentLineBackground(SolidColorBrush newValue)
+        {
+            if (newValue != null)
+            {
+                HighlightCurrentLineBackgroundRenderer oldRenderer = null;
+
+                // Make sure there is only one of this type of background renderer
+                // Otherwise, we might keep adding and WPF keeps drawing them on top of each other
+                foreach (var item in this.TextArea.TextView.BackgroundRenderers)
+                {
+                    if (item != null)
+                    {
+                        if (item is HighlightCurrentLineBackgroundRenderer)
+                        {
+                            oldRenderer = item as HighlightCurrentLineBackgroundRenderer;
+                        }
+                    }
+                }
+
+                this.TextArea.TextView.BackgroundRenderers.Remove(oldRenderer);
+
+                this.TextArea.TextView.BackgroundRenderers.Add(new HighlightCurrentLineBackgroundRenderer(this, newValue.Clone()));
+            }
+        }
+
+
         private INotifyCollectionChanged _observeableDiffContext;
+        private readonly DiffLineBackgroundRenderer _DiffBackgroundRenderer;
         #endregion fields
 
         #region ctors
@@ -237,6 +312,15 @@
             }
         }
         #endregion CaretPosition
+
+        /// <summary>
+        /// Gets the timestamp for the last time when this view was active (had received focus).
+        /// </summary>
+        public DateTime ActivationTimeStamp
+        {
+            get { return (DateTime)GetValue(ActivationTimeStampProperty); }
+            set { SetValue(ActivationTimeStampProperty, value); }
+        }
         #endregion properties
 
         #region methods
@@ -278,12 +362,16 @@
         {
             try
             {
-                this.Focus();
-                this.ForceCursor = true;
+                this.GotFocus += DiffView_GotFocus;
+                ////this.Focus();
+                ////this.ForceCursor = true;
 
                 // Restore cursor position for CTRL-TAB Support http://avalondock.codeplex.com/workitem/15079
                 this.ScrollToHorizontalOffset(this.EditorScrollOffsetX);
                 this.ScrollToVerticalOffset(this.EditorScrollOffsetY);
+
+                // Highlight current line in editor (even if editor is not focused) via themable dp-property
+                this.AdjustCurrentLineBackground(this.EditorCurrentLineBackground);
 
                 this.TextArea.Caret.PositionChanged += Caret_PositionChanged;
             }
@@ -358,6 +446,17 @@
         private void OnColorChanged(object newValue)
         {
             this.InvalidateVisual();
+        }
+
+        /// <summary>
+        /// Method is invoked to record each time the view has been focused
+        /// to record its last time of activation in <see cref="ActivationTimeStamp"/> property.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DiffView_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ActivationTimeStamp = DateTime.Now;
         }
         #endregion methods
     }

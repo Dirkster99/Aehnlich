@@ -3,11 +3,13 @@
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Events;
+    using AehnlichViewLib.Controls;
     using AehnlichViewLib.Enums;
     using ICSharpCode.AvalonEdit.Document;
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Diagnostics;
     using System.Text;
 
     public class DiffSideViewModel : Base.ViewModelBase
@@ -16,10 +18,14 @@
         private ChangeDiffOptions _ChangeDiffOptions;
 
         private DiffViewLines _lines;
+        private DiffViewPosition _position;
+
         private TextDocument _document = null;
+        private TextBoxController _TxtControl;
 
         private readonly ObservableRangeCollection<DiffContext> _DocLineDiffs;
 
+        private DateTime _ViewActivation;
         private bool _isDirty = false;
         private int _Column;
         private int _Line;
@@ -34,6 +40,9 @@
             _DocLineDiffs = new ObservableRangeCollection<DiffContext>();
             _Line = 0;
             _Column = 0;
+
+            _TxtControl = new TextBoxController();
+            _ViewActivation = DateTime.MinValue;
         }
         #endregion ctors
 
@@ -49,6 +58,45 @@
                 {
                     this._document = value;
                     NotifyPropertyChanged(() => Document);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets/sets the textbox controller that is used to drive the view
+        /// from within the viewmodel (with event based commands like goto line x,y).
+        /// </summary>
+        public TextBoxController TxtControl
+        {
+            get { return _TxtControl; }
+
+            private set
+            {
+                if (_TxtControl != value)
+                {
+                    _TxtControl = value;
+                    NotifyPropertyChanged(() => TxtControl);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets/set the time stamp of the last time when the attached view
+        /// has been activated (GotFocus).
+        /// </summary>
+        public DateTime ViewActivation
+        {
+            get
+            {
+                return _ViewActivation;
+            }
+
+            set
+            {
+                if (_ViewActivation != value)
+                {
+                    _ViewActivation = value;
+                    NotifyPropertyChanged(() => ViewActivation);
                 }
             }
         }
@@ -134,10 +182,21 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Scrolls the attached view to line <paramref name="n"/>
+        /// where n should in the range of [1 ... max lines].
+        /// </summary>
+        /// <param name="n"></param>
+        internal void ScrollToLine(int n)
+        {
+            DocumentLine line = Document.GetLineByNumber(n);
+            TxtControl.SelectText(line.Offset, 0);          // Select text with length 0 and scroll to where
+            TxtControl.ScrollToLine(n);                    // we are supposed to be at
+        }
         #endregion properties
 
         #region methods
-
         /// <summary>
         /// Used to setup the ViewA/ViewB view that shows the left and right text views
         /// with the textual content and imaginary lines.
@@ -162,6 +221,139 @@
 
             this.UpdateAfterSetData();
         }
+
+        #region FirstDiff NextDiff PrevDiff LastDiff
+        /// <summary>
+        /// Determine whether or not we can goto the first difference in the model.
+        /// 
+        /// The function returns false:
+        /// - if there is no difference or
+        /// - if current positioning already indicates positioning on the 1st difference
+        /// </summary>
+        public bool CanGoToFirstDiff()
+        {
+            bool result = false;
+
+            if (_lines != null)
+            {
+                int[] starts = _lines.DiffStartLines;
+                int[] ends = _lines.DiffEndLines;
+                result = starts.Length > 0 &&
+                            ends.Length > 0 &&
+                            (_position.Line < starts[0] || _position.Line > ends[0]);
+            }
+
+            return result;
+        }
+
+        public bool CanGoToNextDiff()
+        {
+            bool result = false;
+            if (_lines != null)
+            {
+                int[] starts = _lines.DiffStartLines;
+                result = starts.Length > 0 && _position.Line < starts[starts.Length - 1];
+            }
+
+            return result;
+        }
+
+        public bool CanGoToPreviousDiff()
+        {
+            bool result = false;
+
+            if (_lines != null)
+            {
+                int[] ends = _lines.DiffEndLines;
+                result = ends.Length > 0 && _position.Line > ends[0];
+            }
+
+            return result;
+        }
+
+        public bool CanGoToLastDiff()
+        {
+            bool result = false;
+
+            if (_lines != null)
+            {
+                int[] starts = _lines.DiffStartLines;
+                int[] ends = _lines.DiffEndLines;
+                result = starts.Length > 0 && ends.Length > 0 &&
+                    (_position.Line < starts[starts.Length - 1] || _position.Line > ends[ends.Length - 1]);
+            }
+
+            return result;
+        }
+
+        internal void SetPosition(DiffViewPosition gotoPos)
+        {
+            _position = new DiffViewPosition(gotoPos.Line, gotoPos.Column);
+        }
+
+        /// <summary>
+        /// Gets the position of the first difference in the text.
+        /// </summary>
+        /// <returns></returns>
+        internal DiffViewPosition GetFirstDiffPosition()
+        {
+           return new DiffViewPosition(_lines.DiffStartLines[0], _position.Column);
+        }
+
+        /// <summary>
+        /// Gets the position of the next difference in the text.
+        /// </summary>
+        /// <returns></returns>
+        internal DiffViewPosition GetNextDiffPosition()
+        {
+            int[] starts = _lines.DiffStartLines;
+            int numStarts = starts.Length;
+            for (int i = 0; i < numStarts; i++)
+            {
+                if (_position.Line < starts[i])
+                {
+                    return new DiffViewPosition(starts[i], _position.Column);
+                }
+            }
+
+            // We should never get here.
+            Debug.Assert(false, "CanGoToPreviousDiff was wrong.");
+            return default(DiffViewPosition);
+        }
+
+        /// <summary>
+        /// Gets the position of the previous difference in the text.
+        /// </summary>
+        /// <returns></returns>
+        internal DiffViewPosition GetPrevDiffPosition()
+        {
+            int[] ends = _lines.DiffEndLines;
+            int numEnds = ends.Length;
+            for (int i = numEnds - 1; i >= 0; i--)
+            {
+                if (_position.Line > ends[i])
+                {
+                    // I'm intentionally setting the line to Starts[i] here instead of Ends[i].
+                    return new DiffViewPosition(_lines.DiffStartLines[i], _position.Column);
+                }
+            }
+
+            // We should never get here.
+            Debug.Assert(false, "CanGoToPreviousDiff was wrong.");
+            return default(DiffViewPosition);
+        }
+
+        /// <summary>
+        /// Gets the position of the last difference in the text.
+        /// </summary>
+        /// <returns></returns>
+        internal DiffViewPosition GetLastDiffPosition()
+        {
+            int[] starts = _lines.DiffStartLines;
+
+            return new DiffViewPosition(starts[starts.Length - 1], _position.Column);
+        }
+        #endregion FirstDiff NextDiff PrevDiff LastDiff
 
         private string GetDocumentFromRawLines(out IList<DiffContext> documentLineDiffs)
         {

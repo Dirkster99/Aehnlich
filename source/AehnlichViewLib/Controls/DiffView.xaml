@@ -4,11 +4,13 @@
                     xmlns:local="clr-namespace:AehnlichViewLib.Controls"
                     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
 	                xmlns:editing="clr-namespace:ICSharpCode.AvalonEdit.Editing;assembly=ICSharpCode.AvalonEdit"
+                    xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes"
                     >
 
     <Style TargetType="{x:Type local:DiffView}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+        <Setter Property="EditorCurrentLineBackground" Value="{DynamicResource {x:Static reskeys:ResourceKeys.DiffViewCurrentLineBackgroundBrushKey}}"/>
         <Setter Property="FlowDirection" Value="LeftToRight"/>
         <!-- AvalonEdit does not support RTL, so ensure we use LTR by default -->
         <Setter Property="Template">

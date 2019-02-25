@@ -7,6 +7,9 @@
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Events;
 
+    /// <summary>
+    /// DiffControl
+    /// </summary>
     public class DiffDocViewModel : Base.ViewModelBase
     {
         #region fields
@@ -188,6 +191,11 @@
             get { return _ViewLineDiff; }
         }
 
+        internal DiffSideViewModel GetActiveView(out object nonActView)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Gets/sets the height of the bottom panel view that shows diff
         /// of the currently selected line with a 2 line view.
@@ -279,6 +287,57 @@
             this.UpdateLineDiff();
 
 ////            this.ActiveControl = this.ViewA;
+        }
+
+        /// <summary>
+        /// Gets the view (of the 2 side by side views) that was activated last
+        /// (had the focus the last time)
+        /// </summary>
+        /// <returns></returns>
+        internal DiffSideViewModel GetActiveView(out DiffSideViewModel nonActiveView)
+        {
+            nonActiveView = null;
+
+            if (ViewA == null && ViewB == null)
+                return null;
+
+            if (ViewA == null)
+                return ViewB;
+
+            if (ViewB == null)
+                return ViewA;
+
+            if (ViewA.ViewActivation > ViewB.ViewActivation)
+            {
+                nonActiveView = ViewA;
+                return ViewB;
+            }
+
+            nonActiveView = ViewB;
+            return ViewA;
+        }
+
+        /// <summary>
+        /// Moves both views to the requested line position.
+        /// </summary>
+        /// <param name="gotoPos"></param>
+        /// <param name="viewA"></param>
+        /// <param name="viewB"></param>
+        internal void ScrollToLine(DiffViewPosition gotoPos,
+                                   DiffSideViewModel viewA,
+                                   DiffSideViewModel viewB)
+        {
+            if (viewA != null)
+            {
+                viewA.ScrollToLine(gotoPos.Line + 1);
+                viewA.SetPosition(gotoPos);
+            }
+
+            if (viewB != null)
+            {
+                viewB.ScrollToLine(gotoPos.Line + 1);
+                viewB.SetPosition(gotoPos);
+            }
         }
 
         private void UpdateLineDiff()
