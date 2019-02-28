@@ -60,6 +60,15 @@
 
         public bool FromA { get; }
 
+        /// <summary>
+        /// Get the line number that should be displayed for this line of text.
+        /// 
+        /// This line number is not the real line number i = 1...n from the original text
+        /// but a line number that accomodates for imaginary lines that are inserted to
+        /// sync the left and right view in a comparison.
+        /// 
+        /// Therefore, not all lines have an imaginary line number (this property is nullable).
+        /// </summary>
         public int? Number => this.number;
 
         public string Text => this.text;

@@ -23,7 +23,7 @@
         private TextDocument _document = null;
         private TextBoxController _TxtControl;
 
-        private readonly ObservableRangeCollection<DiffContext> _DocLineDiffs;
+        private readonly ObservableRangeCollection<DiffLineInfoViewModel> _DocLineDiffs;
 
         private DateTime _ViewActivation;
         private bool _isDirty = false;
@@ -38,7 +38,7 @@
         /// </summary>
         public DiffSideViewModel()
         {
-            _DocLineDiffs = new ObservableRangeCollection<DiffContext>();
+            _DocLineDiffs = new ObservableRangeCollection<DiffLineInfoViewModel>();
             _Line = 0;
             _Column = 0;
 
@@ -144,7 +144,7 @@
         }
         #endregion Caret Position
 
-        public IReadOnlyList<DiffContext> DocLineDiffs
+        public IReadOnlyList<DiffLineInfoViewModel> DocLineDiffs
         {
             get
             {
@@ -215,7 +215,7 @@
             _lines = new DiffViewLines(stringList, script, useA);
             NotifyPropertyChanged(() => LineCount);
 
-            IList<DiffContext> lineDiffs;
+            IList<DiffLineInfoViewModel> lineDiffs;
             string text = GetDocumentFromRawLines(out lineDiffs);
 
             _DocLineDiffs.Clear();
@@ -226,6 +226,39 @@
             NotifyPropertyChanged(() => Document);
 
             UpdateAfterSetData();
+        }
+
+        /// <summary>
+        /// Used to setup the ViewLineDiff view that shows only 2 lines over each other
+        /// representing the currently active line from the left/right side views under
+        /// each other.
+        /// </summary>
+        /// <param name="lineOne"></param>
+        /// <param name="lineTwo"></param>
+        internal void SetData(DiffViewLine lineOne, DiffViewLine lineTwo)
+        {
+            _lines = new DiffViewLines(lineOne, lineTwo);
+            var documentLineDiffs = new List<DiffLineInfoViewModel>();
+
+            string text = string.Empty;
+
+            if (lineOne != null && lineTwo != null)
+            {
+                documentLineDiffs.Add(TranslateLineContext(lineOne));
+                text += lineOne.Text + '\n';
+
+                documentLineDiffs.Add(TranslateLineContext(lineTwo));
+                text += lineTwo.Text + "\n";
+            }
+
+            _DocLineDiffs.Clear();
+            _DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
+            NotifyPropertyChanged(() => DocLineDiffs);
+
+            Document = new TextDocument(text);
+            NotifyPropertyChanged(() => Document);
+
+            this.UpdateAfterSetData();
         }
 
         #region FirstDiff NextDiff PrevDiff LastDiff
@@ -373,9 +406,9 @@
             TxtControl.ScrollToLine(n);                    // we are supposed to be at
         }
 
-        private string GetDocumentFromRawLines(out IList<DiffContext> documentLineDiffs)
+        private string GetDocumentFromRawLines(out IList<DiffLineInfoViewModel> documentLineDiffs)
         {
-            documentLineDiffs = new List<DiffContext>();
+            documentLineDiffs = new List<DiffLineInfoViewModel>();
             StringBuilder ret = new StringBuilder();
 
             foreach (var item in _lines)
@@ -387,7 +420,7 @@
             return ret.ToString();
         }
 
-        private DiffContext TranslateLineContext(DiffViewLine item)
+        private DiffLineInfoViewModel TranslateLineContext(DiffViewLine item)
         {
             DiffContext lineContext = DiffContext.Blank;
             switch (item.EditType)
@@ -407,42 +440,7 @@
                     break;
             }
 
-            return lineContext;
-        }
-
-        /// <summary>
-        /// Used to setup the ViewLineDiff view that shows only 2 lines over each other
-        /// representing the currently active line from the left/right side views under
-        /// each other.
-        /// </summary>
-        /// <param name="lineOne"></param>
-        /// <param name="lineTwo"></param>
-        internal void SetData(DiffViewLine lineOne, DiffViewLine lineTwo)
-        {
-            _lines = new DiffViewLines(lineOne, lineTwo);
-            var documentLineDiffs = new List<DiffContext>();
-
-            string text = string.Empty;
-
-            if (lineOne != null && lineTwo != null)
-            {
-                _DocLineDiffs.Add(TranslateLineContext(lineOne));
-                documentLineDiffs.Add(TranslateLineContext(lineOne));
-                text += lineOne.Text + '\n';
-
-                _DocLineDiffs.Add(TranslateLineContext(lineTwo));
-                documentLineDiffs.Add(TranslateLineContext(lineTwo));
-                text += lineTwo.Text + "\n";
-            }
-
-            _DocLineDiffs.Clear();
-            _DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
-            NotifyPropertyChanged(() => DocLineDiffs);
-
-            Document = new TextDocument(text);
-            NotifyPropertyChanged(() => Document);
-
-            this.UpdateAfterSetData();
+            return new DiffLineInfoViewModel(lineContext, item.Number);
         }
 
         /// <summary>

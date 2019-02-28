@@ -7,7 +7,7 @@ namespace AehnlichLib.Text
     /// Class models a single edit operation that should be applied to stringA in order to make
 	/// it equal to another stringB.
     /// </summary>
-    [DebuggerDisplay("Type = {Type}, StartA = {StartA}, StartB = {StartB}, Length = {Length}")]
+    [DebuggerDisplay("StartA = {StartA}, StartB = {StartB}, Length = {Length}")]
 	public sealed class Edit
 	{
 		#region Private Data Members

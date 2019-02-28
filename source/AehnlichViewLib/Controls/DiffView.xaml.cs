@@ -1,5 +1,6 @@
 ﻿namespace AehnlichViewLib.Controls
 {
+    using ICSharpCode.AvalonEdit.Editing;
     using AehnlichViewLib.Enums;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.Rendering;
@@ -9,6 +10,9 @@
     using System.Collections.Specialized;
     using System.Windows;
     using System.Windows.Media;
+    using System.Windows.Shapes;
+    using System.Windows.Data;
+    using System.Windows.Controls;
 
     /// <summary>
     /// Implements a <see cref="TextEditor"/> based view that can be used to highlight
@@ -99,7 +103,8 @@
                                          DiffView.OnCurrentLineBackgroundChanged));
 
         private INotifyCollectionChanged _observeableDiffContext;
-        private readonly DiffLineBackgroundRenderer _DiffBackgroundRenderer;
+
+        private DiffLineBackgroundRenderer _DiffBackgroundRenderer;
         #endregion fields
 
         #region ctors
@@ -119,8 +124,6 @@
         public DiffView()
             : base()
         {
-            _DiffBackgroundRenderer = new DiffLineBackgroundRenderer(this);
-            this.TextArea.TextView.BackgroundRenderers.Add(_DiffBackgroundRenderer);
         }
         #endregion ctors
 
@@ -361,6 +364,22 @@
         {
             try
             {
+                _DiffBackgroundRenderer = new DiffLineBackgroundRenderer(this);
+                this.TextArea.TextView.BackgroundRenderers.Add(_DiffBackgroundRenderer);
+
+                // Customize display of line numbers here
+                ShowLineNumbers = false;
+                this.TextArea.LeftMargins.Clear();
+                var leftMargins = this.TextArea.LeftMargins;
+
+                LineNumberMargin lineNumbers = new CustomLineNumberMargin(this);
+                Line line = (Line)DottedLineMargin.Create();
+                leftMargins.Insert(0, lineNumbers);
+                leftMargins.Insert(1, line);
+                var lineNumbersForeground = new Binding("LineNumbersForeground") { Source = this };
+                line.SetBinding(System.Windows.Shapes.Line.StrokeProperty, lineNumbersForeground);
+                lineNumbers.SetBinding(Control.ForegroundProperty, lineNumbersForeground);
+
                 this.GotFocus += DiffView_GotFocus;
                 ////this.Focus();
                 ////this.ForceCursor = true;

@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewLib
+﻿namespace AehnlichViewLib.Controls
 {
     using System.Collections.Generic;
     using System.Windows;
@@ -6,33 +6,21 @@
     using AehnlichViewLib.Controls;
     using AehnlichViewLib.Enums;
     using ICSharpCode.AvalonEdit.Rendering;
+    using Interfaces;
 
-    public class DiffLineBackgroundRenderer : IBackgroundRenderer
+    internal class DiffLineBackgroundRenderer : IBackgroundRenderer
     {
         #region fields
-        static Brush AddedBackground;
-        static Brush BlankBackground;
-        static Brush DeletedBackground;
-        static Brush ChangedBackground;
-
         static readonly Pen BorderlessPen;
         private readonly DiffView _DiffView;
         #endregion fields
 
+        #region ctors
+        /// <summary>
+        /// Static class constructor
+        /// </summary>
         static DiffLineBackgroundRenderer()
         {
-////            AddedBackground = new SolidColorBrush(Color.FromArgb(0x40, 0x00, 0x7a, 0xcc));
-////            AddedBackground.Freeze();
-////
-////            ChangedBackground = new SolidColorBrush(Color.FromArgb(0x40, 0x20, 0xFF, 0x20));
-////            AddedBackground.Freeze();
-////
-////            DeletedBackground = new SolidColorBrush(Color.FromArgb(0x40, 0xFF, 0x20, 0x20));
-////            DeletedBackground.Freeze();
-////
-////            BlankBackground = default(Brush);
-////            BlankBackground.Freeze();
-
             var transparentBrush = new SolidColorBrush(Colors.Transparent);
             transparentBrush.Freeze();
 
@@ -40,24 +28,40 @@
             BorderlessPen.Freeze();
         }
 
+        /// <summary>
+        /// Parameterized class constructor
+        /// </summary>
+        /// <param name="diffView"></param>
         public DiffLineBackgroundRenderer(DiffView diffView)
         {
             this._DiffView = diffView;
-
-            AddedBackground = _DiffView.ColorBackgroundAdded;
-            DeletedBackground = _DiffView.ColorBackgroundDeleted;
-            ChangedBackground = _DiffView.ColorBackgroundContext;
-            BlankBackground = _DiffView.ColorBackgroundBlank;
         }
 
-        public KnownLayer Layer { get { return KnownLayer.Background; } }
+        /// <summary>
+        /// Hidden standard constructor
+        /// </summary>
+        protected DiffLineBackgroundRenderer()
+        {
+        }
+        #endregion ctors
 
+        #region properties
+        public KnownLayer Layer { get { return KnownLayer.Background; } }
+        #endregion properties
+
+        #region methods
+        /// <summary>
+        /// Draws the background of line based on its <see cref="DiffContext"/>
+        /// and whether it is imaginary or not.
+        /// </summary>
+        /// <param name="textView"></param>
+        /// <param name="drawingContext"></param>
         public void Draw(TextView textView, DrawingContext drawingContext)
         {
             if (_DiffView == null)
                 return;
 
-            var srcLineDiffs = _DiffView.ItemsSource as IReadOnlyList<DiffContext>;
+            var srcLineDiffs = _DiffView.ItemsSource as IReadOnlyList<IDiffLineInfo>;
 
             if (srcLineDiffs == null)
                 return;
@@ -72,9 +76,10 @@
                 if (srcLineDiffs.Count <= linenum)
                     continue;
 
-                DiffContext context = srcLineDiffs[linenum];
+                var srcLineDiff = srcLineDiffs[linenum];
+                DiffContext context = srcLineDiff.Context;
 
-                var brush = default(Brush);
+                var brush = default(SolidColorBrush);
                 switch (context)
                 {
                     case DiffContext.Added:
@@ -96,8 +101,14 @@
                         throw new System.ArgumentException(context.ToString());
                 }
 
-                if (brush != default(Brush))
+                if (brush != default(SolidColorBrush))
                 {
+                    if (srcLineDiff.ImaginaryLineNumber.HasValue == false)
+                    {
+                        brush = new SolidColorBrush(Color.FromArgb(0x60,
+                            brush.Color.R, brush.Color.G, brush.Color.B));
+                    }
+
                     foreach (var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, 1000))
                     {
                         drawingContext.DrawRectangle(brush, BorderlessPen,
@@ -106,16 +117,6 @@
                 }
             }
         }
-
-        private Brush GetBrush4Color(Color thisColor)
-        {
-            if (thisColor == default(Color))
-                return default(Brush);
-
-            var brush = new SolidColorBrush(thisColor);
-            brush.Freeze();
-
-            return brush;
-        }
+        #endregion methods
     }
 }

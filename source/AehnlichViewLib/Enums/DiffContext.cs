@@ -8,6 +8,11 @@
     public enum DiffContext
     {
         /// <summary>
+        /// Both compared items are empty (eg. contain strings with length 0).
+        /// </summary>
+        Blank,
+
+        /// <summary>
         /// The left or right part of the compared items was added.
         /// </summary>
         Added,
@@ -22,10 +27,5 @@
         /// the same but have changed between each other.
         /// </summary>
         Context,
-
-        /// <summary>
-        /// Both compared items are empty (eg. contain strings with length 0).
-        /// </summary>
-        Blank
     }
 }

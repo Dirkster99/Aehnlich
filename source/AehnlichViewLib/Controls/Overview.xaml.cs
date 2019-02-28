@@ -10,6 +10,7 @@
     using System.Windows.Media.Imaging;
     using System.Windows.Media;
     using System.Collections.Specialized;
+    using AehnlichViewLib.Interfaces;
 
     /// <summary>
     /// Implements the Overview control that contains the marker items that can be used
@@ -224,7 +225,7 @@
         {
             base.OnRenderSizeChanged(sizeInfo);
 
-            CreateBitmap(ItemsSource as IList<DiffContext>);
+            CreateBitmap(ItemsSource as IEnumerable<IDiffLineInfo>);
         }
 
         /// <summary>
@@ -232,7 +233,7 @@
         /// has been changed.
         /// </summary>
         /// <param name="newList"></param>
-        private void CreateBitmap(IEnumerable<DiffContext> newList)
+        private void CreateBitmap(IEnumerable<IDiffLineInfo> newList)
         {
             if (_PART_ViewPortContainer == null || _PART_ImageViewport == null || newList == null)
             {
@@ -257,7 +258,7 @@
             DrawBitMap(newList, numLines, width, height);
         }
 
-        private void DrawBitMap(IEnumerable<DiffContext> newList,
+        private void DrawBitMap(IEnumerable<IDiffLineInfo> newList,
                                 int numLines, int width, int height)
         {
             // Init WriteableBitmap
@@ -288,13 +289,13 @@
                 int i = 0;
                 foreach (var line in newList)
                 {
-                    if (line != DiffContext.Blank)
+                    if (line.Context != DiffContext.Blank)
                     {
                         double y = this.GetPixelLineHeight(i, numLines, height);
                         double fullFillWidth = width - (2 * GutterWidth);
 
                         var color = default(SolidColorBrush);
-                        switch (line)
+                        switch (line.Context)
                         {
                             case DiffContext.Context:
                                 color = ColorBackgroundContext;
@@ -395,7 +396,7 @@
         private void OnBitmapParameterChanged(object newValue)
         {
             if (ItemsSource != null)
-                CreateBitmap(ItemsSource as IList<DiffContext>);
+                CreateBitmap(ItemsSource as IEnumerable<IDiffLineInfo>);
         }
 
         /// <summary>
@@ -418,7 +419,7 @@
 
             _observeableDiffContext = observeable;
 
-            IReadOnlyList<DiffContext> newList = newValue as IReadOnlyList<DiffContext>;
+            var newList = newValue as IEnumerable<IDiffLineInfo>;
             if (newList != null)
             {
                 //System.Diagnostics.Debug.WriteLine("Overview items list changed {0}", newList.Count());
@@ -434,7 +435,7 @@
 
         private void Observeable_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            IReadOnlyList<DiffContext> newList = ItemsSource as IReadOnlyList<DiffContext>;
+            var newList = ItemsSource as IEnumerable<IDiffLineInfo>;
             if (newList != null)
             {
                 //System.Diagnostics.Debug.WriteLine("Overview items list changed {0}", newList.Count());
@@ -456,13 +457,13 @@
         /// <returns></returns>
         private int GetItemsCount()
         {
-            var list = ItemsSource as IReadOnlyList<DiffContext>;
+            var list = ItemsSource as IReadOnlyList<IDiffLineInfo>;
             if (list != null)
             {
                 return list.Count;
             }
 
-            var enumerable = ItemsSource as IEnumerable<DiffContext>;
+            var enumerable = ItemsSource as IEnumerable<IDiffLineInfo>;
             if (enumerable != null)
             {
                 return enumerable.Count();

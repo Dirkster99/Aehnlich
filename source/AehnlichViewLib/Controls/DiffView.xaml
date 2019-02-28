@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 
                     xmlns:local="clr-namespace:AehnlichViewLib.Controls"
-                    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
 	                xmlns:editing="clr-namespace:ICSharpCode.AvalonEdit.Editing;assembly=ICSharpCode.AvalonEdit"
                     xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes"
                     >
