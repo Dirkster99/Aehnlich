@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewLib.Controls
+﻿namespace AehnlichViewLib.Controls.AvalonEditEx
 {
     // Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
     // 

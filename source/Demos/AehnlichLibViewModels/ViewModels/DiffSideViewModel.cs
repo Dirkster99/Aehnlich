@@ -3,7 +3,7 @@
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Events;
-    using AehnlichViewLib.Controls;
+    using AehnlichViewLib.Controls.AvalonEditEx;
     using AehnlichViewLib.Enums;
     using ICSharpCode.AvalonEdit.Document;
     using System;
@@ -207,6 +207,10 @@
         /// <param name="lineOne"></param>
         /// <param name="lineTwo"></param>
         /// <param name="filename"></param>
+        /// <param name="stringList"></param>
+        /// <param name="script"></param>
+        /// <param name="useA">Set to true if this data represents the reference view
+        /// (left view also known as ViewA) otherwise false.</param>
         public void SetData(string filename,
                             IList<string> stringList,
                             EditScript script, bool useA)

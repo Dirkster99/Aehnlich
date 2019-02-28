@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewLib.Controls
+﻿namespace AehnlichViewLib.Controls.AvalonEditEx
 {
     using AehnlichViewLib.Interfaces;
 

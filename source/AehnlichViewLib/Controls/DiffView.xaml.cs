@@ -13,6 +13,7 @@
     using System.Windows.Shapes;
     using System.Windows.Data;
     using System.Windows.Controls;
+    using AehnlichViewLib.Controls.AvalonEditEx;
 
     /// <summary>
     /// Implements a <see cref="TextEditor"/> based view that can be used to highlight
@@ -364,14 +365,18 @@
         {
             try
             {
+                // Initialize Diff line background color rendering
                 _DiffBackgroundRenderer = new DiffLineBackgroundRenderer(this);
                 this.TextArea.TextView.BackgroundRenderers.Add(_DiffBackgroundRenderer);
 
-                // Customize display of line numbers here
+                // Customize display of line numbers using real lines (shown with a number)
+                // and imaginary lines (shown without a number)
+                // Switch off default line handler in AvalonEdit
                 ShowLineNumbers = false;
                 this.TextArea.LeftMargins.Clear();
                 var leftMargins = this.TextArea.LeftMargins;
 
+                // Configure and insert custom line number margin indicator
                 LineNumberMargin lineNumbers = new CustomLineNumberMargin(this);
                 Line line = (Line)DottedLineMargin.Create();
                 leftMargins.Insert(0, lineNumbers);
@@ -380,6 +385,7 @@
                 line.SetBinding(System.Windows.Shapes.Line.StrokeProperty, lineNumbersForeground);
                 lineNumbers.SetBinding(Control.ForegroundProperty, lineNumbersForeground);
 
+                // Attach more event handlers
                 this.GotFocus += DiffView_GotFocus;
                 ////this.Focus();
                 ////this.ForceCursor = true;

@@ -54,10 +54,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\CustomLineNumberMargin.cs" />
-    <Compile Include="Controls\HighlightCurrentLineBackgroundRenderer.cs" />
+    <Compile Include="Controls\AvalonEditEx\CustomLineNumberMargin.cs" />
+    <Compile Include="Controls\AvalonEditEx\HighlightCurrentLineBackgroundRenderer.cs" />
     <Compile Include="Controls\TextBoxController\DiffView_TextController.cs" />
-    <Compile Include="Controls\TextBoxController.cs" />
+    <Compile Include="Controls\AvalonEditEx\TextBoxController.cs" />
     <Compile Include="Controls\TextBoxController\ITextBoxController.cs" />
     <Compile Include="Controls\Utils\ExtensionMethods.cs" />
     <Compile Include="Controls\Utils\TextFormatterFactory.cs" />
@@ -95,7 +95,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Controls\DiffLineBackgroundRenderer.cs" />
+    <Compile Include="Controls\AvalonEditEx\DiffLineBackgroundRenderer.cs" />
     <Page Include="Themes\LightBrushs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

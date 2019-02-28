@@ -19,33 +19,44 @@
         #endregion
 
         #region Private Data Members
-
-        private EditScript changeEditScript;
+        /// <summary>
+        /// Cache the edit script between this line and its counterpart in order to ensure
+        /// optimal performance when displaying line diff information.
+        /// </summary>
+        private EditScript _changeEditScript;
         private readonly int? number;
         private readonly string text;
-        private readonly EditType editType;
+        private readonly EditType _editType;
 
         #endregion
 
         #region Constructors
-
+        /// <summary>
+        /// Class constructor.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="number"></param>
+        /// <param name="editType"></param>
+        /// <param name="useA">Set to true if this data represents the reference view
+        /// (left view also known as ViewA) otherwise false.</param>
         public DiffViewLine(string text, int? number, EditType editType, bool fromA)
         {
             this.text = text;
             this.number = number;
-            this.editType = editType;
+            this._editType = editType;
             this.FromA = fromA;
         }
 
+        /// <summary>
+        /// Hidden standard class constructor.
+        /// </summary>
         private DiffViewLine()
         {
             this.text = string.Empty;
         }
-
         #endregion
 
         #region Public Properties
-
         /// <summary>
         /// Gets the equivalent line from the left view to the right view
         /// and vice versa.
@@ -53,11 +64,25 @@
         /// <param name="counterpartView"></param>
         public DiffViewLine Counterpart { get; internal set; }
 
+        /// <summary>
+        /// Gets whether the equivalent line of this line is different
+        /// (requires an edit operation - delete, insert, change
+        /// - to match both compared texts) or not.
+        /// </summary>
         [SuppressMessage("", "SA1101", Justification = "The EditType reference is to the type not to this.EditType.")]
-        public bool Edited => this.editType != EditType.None;
+        public bool Edited => this._editType != EditType.None;
 
-        public EditType EditType => this.editType;
+        /// <summary>
+        /// Gets the type of edit operation (delete, insert, change, none)
+        /// to signal how this line compares to its equivalent line linked
+        /// in the <see cref="Counterpart"/> property.
+        /// </summary>
+        public EditType EditType => this._editType;
 
+        /// <summary>
+        /// Gets whether this line represents the reference view
+        /// (left view also known as ViewA), otherwise false.</param>
+        /// </summary>
         public bool FromA { get; }
 
         /// <summary>
@@ -71,15 +96,36 @@
         /// </summary>
         public int? Number => this.number;
 
+        /// <summary>
+        /// Gets the original text that was used when comparing this line to its
+        /// <see cref="Counterpart"/> line.
+        /// </summary>
         public string Text => this.text;
-
         #endregion
 
         #region Public Methods
-
+        /// <summary>
+        /// Gets th edit script of this line in comparison to its <see cref="Counterpart"/>.
+        /// The change edit script can then be used to color each letter position in the line
+        /// to indicate how one line can completely match the other using character based
+        /// change operations (insert, delete, change, none).
+        /// 
+        /// The object will cache the edit script in a private member to compute this edit
+        /// only once. But the method should only be invoked on demand (when a line is actually
+        /// displayed) we should wait with pulling it until we have to have it for rendering.
+        /// 
+        /// Getting intra-line diffs makes the whole process into an O(n^2) operation instead of
+        /// just an O(n) operation for line-by-line diffs.  So we try to defer the
+        /// extra work until the user requests to see the changed line.  It's still
+        /// the same amount of work if the user views every line, but it makes the
+        /// user interface more responsive to split it up like this.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public EditScript GetChangeEditScript(ChangeDiffOptions options)
         {
-            if (this.changeEditScript == null && this.editType == EditType.Change && this.Counterpart != null)
+            if (_changeEditScript == null &&
+                _editType == EditType.Change && this.Counterpart != null)
             {
                 if (this.FromA)
                 {
@@ -88,10 +134,11 @@
                         GetCharactersToDiff(this.text, options, out trimCountA),
                         GetCharactersToDiff(this.Counterpart.text, options, out trimCountB),
                         false); // We don't want Change edits; just Deletes and Inserts.
-                    this.changeEditScript = diff.Execute();
+                    
+                    _changeEditScript = diff.Execute();
 
                     // If we trimmed/ignored leading whitespace, we have to offset each Edit to account for that.
-                    foreach (Edit edit in this.changeEditScript)
+                    foreach (Edit edit in _changeEditScript)
                     {
                         edit.Offset(trimCountA, trimCountB);
                     }
@@ -99,11 +146,11 @@
                 else if (this.Counterpart.FromA && this.Counterpart.Counterpart == this)
                 {
                     // Defer to the A line because its edit script changes A into B.
-                    this.changeEditScript = this.Counterpart.GetChangeEditScript(options);
+                    _changeEditScript = this.Counterpart.GetChangeEditScript(options);
                 }
             }
 
-            return this.changeEditScript;
+            return this._changeEditScript;
         }
 
         #endregion

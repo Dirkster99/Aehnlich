@@ -270,23 +270,19 @@
             this.Similarity_Text = string.Format("{0:P}", script.Similarity);
 
             this._ViewA.SetCounterpartLines(this._ViewB);
-////            this.Overview.DiffView = this.ViewA;
 
             // Show left and right file name labels over each ViewA and ViewB
             bool showNames = !string.IsNullOrEmpty(nameA) || !string.IsNullOrEmpty(nameB);
             this.edtLeft_Right_Visible = showNames;
-////            this.edtRight.Visible = showNames;
+
             if (showNames)
             {
                 this.edtLeft_Text = nameA;
                 this.edtRight_Text = nameB;
             }
 
-////            this.UpdateButtons();
             this.currentDiffLine = -1;
-            this.UpdateLineDiff();
-
-////            this.ActiveControl = this.ViewA;
+            this.UpdateLineDiff();              // Update 2 line diff ViewLineDiff
         }
 
         /// <summary>
@@ -340,6 +336,10 @@
             }
         }
 
+        /// <summary>
+        /// Update the 2 line display (ViewLineDiff) that contains the display
+        /// of the currently selected line in 2 rows rather than side by side.
+        /// </summary>
         private void UpdateLineDiff()
         {
             // Determine current cursor position in line n

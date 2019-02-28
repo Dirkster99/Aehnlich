@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewLib.Controls
+﻿namespace AehnlichViewLib.Controls.AvalonEditEx
 {
     using System.Collections.Generic;
     using System.Windows;

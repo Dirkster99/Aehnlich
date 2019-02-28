@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewLib.Controls
+﻿namespace AehnlichViewLib.Controls.AvalonEditEx
 {
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.Rendering;
@@ -10,7 +10,7 @@
     /// 
     /// Source: http://stackoverflow.com/questions/5072761/avalonedit-highlight-current-line-even-when-not-focused
     /// </summary>
-    public class HighlightCurrentLineBackgroundRenderer : IBackgroundRenderer
+    internal class HighlightCurrentLineBackgroundRenderer : IBackgroundRenderer
     {
         #region fields
         private readonly TextEditor _Editor;
