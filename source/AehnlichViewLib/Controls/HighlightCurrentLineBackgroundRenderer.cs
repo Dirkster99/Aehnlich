@@ -18,18 +18,54 @@
 
         #region ctors
         /// <summary>
-        /// Constructor
+        /// Class Constructor from editor
         /// </summary>
         /// <param name="editor"></param>
-        /// <param name="highlightBackgroundColorBrush"></param>
-        public HighlightCurrentLineBackgroundRenderer(TextEditor editor,
-                                                      SolidColorBrush highlightBackgroundColorBrush = null)
+        public HighlightCurrentLineBackgroundRenderer(TextEditor editor)
+            : this()
         {
             this._Editor = editor;
 
             // Light Blue 0x100000FF
-            this.BackgroundColorBrush = new SolidColorBrush((highlightBackgroundColorBrush == null ? Color.FromArgb(0x10, 0x80, 0x80, 0x80) :
-                                                                                                     highlightBackgroundColorBrush.Color));
+            this.BackgroundColorBrush = new SolidColorBrush(Color.FromArgb(0x10, 0x80, 0x80, 0x80));
+        }
+
+        /// <summary>
+        /// Class Constructor from editor and SolidColorBrush definition
+        /// </summary>
+        /// <param name="editor"></param>
+        /// <param name="highlightBackgroundColorBrush"></param>
+        public HighlightCurrentLineBackgroundRenderer(TextEditor editor,
+                                                      SolidColorBrush highlightBackgroundColorBrush)
+            : this()
+        {
+            this._Editor = editor;
+
+            // Light Blue 0x100000FF
+            this.BackgroundColorBrush = new SolidColorBrush(highlightBackgroundColorBrush.Color);
+        }
+
+        /// <summary>
+        /// Class Constructor from editor and color definition
+        /// </summary>
+        /// <param name="editor"></param>
+        /// <param name="highlightBackgroundColorBrush"></param>
+        public HighlightCurrentLineBackgroundRenderer(TextEditor editor,
+                                                      Color highlightBackgroundColor)
+            : this()
+        {
+            this._Editor = editor;
+
+            // Light Blue 0x100000FF
+            this.BackgroundColorBrush = new SolidColorBrush(highlightBackgroundColor);
+        }
+
+        /// <summary>
+        /// Hidden class standard constructor
+        /// </summary>
+        protected HighlightCurrentLineBackgroundRenderer()
+        {
+            // Nothing to initialize here...
         }
         #endregion ctors
 

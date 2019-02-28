@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
-    using AehnlichViewLib.Controls;
     using AehnlichViewLib.Enums;
     using ICSharpCode.AvalonEdit.Rendering;
     using Interfaces;
@@ -33,6 +32,7 @@
         /// </summary>
         /// <param name="diffView"></param>
         public DiffLineBackgroundRenderer(DiffView diffView)
+            : this()
         {
             this._DiffView = diffView;
         }
