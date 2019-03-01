@@ -1,13 +1,18 @@
 ﻿namespace AehnlichLibViewModels.ViewModels
 {
+    using System.Collections.Generic;
     using AehnlichViewLib.Enums;
     using AehnlichViewLib.Interfaces;
+    using ICSharpCode.AvalonEdit.Document;
 
     public class DiffLineInfoViewModel : Base.ViewModelBase, IDiffLineInfo
     {
         #region fields
         private DiffContext _Context;
         private int? _ImaginearyLineNumber;
+
+        private ObservableRangeCollection<ISegment> _LineEditScriptSegments = null;
+        private bool _FromA;
         #endregion fields
 
         #region ctors
@@ -16,12 +21,14 @@
         /// </summary>
         /// <param name="contextOfDiff"></param>
         /// <param name="imaginaryLineNumber"></param>
+        /// <param name="fromA"></param>
         public DiffLineInfoViewModel(DiffContext contextOfDiff
-                                   , int? imaginaryLineNumber)
+                                   , int? imaginaryLineNumber, bool fromA)
             : this()
         {
             Context = contextOfDiff;
             ImaginaryLineNumber = imaginaryLineNumber;
+            _FromA = fromA;
         }
 
         /// <summary>
@@ -59,10 +66,41 @@
                 }
             }
         }
+
+        public IReadOnlyCollection<ISegment> LineEditScriptSegments
+        {
+            get
+            {
+                return _LineEditScriptSegments;
+            }
+        }
+
+        public bool FromA
+        {
+            get { return _FromA; }
+            protected set
+            {
+                if (_FromA != value)
+                {
+                    _FromA = value;
+                    NotifyPropertyChanged(() => FromA);
+                }
+            }
+        }
+
         #endregion properties
 
         #region methods
 
+        internal void SetEditScript(IList<ISegment> segments)
+        {
+            if (_LineEditScriptSegments == null)
+                _LineEditScriptSegments = new ObservableRangeCollection<ISegment>();
+            else
+                _LineEditScriptSegments.Clear();
+
+            _LineEditScriptSegments.AddRange(segments);
+        }
         #endregion methods
     }
 }

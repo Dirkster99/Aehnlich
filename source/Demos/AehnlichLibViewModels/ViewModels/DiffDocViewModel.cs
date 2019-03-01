@@ -269,7 +269,7 @@
             // Sets the similarity value (0% - 100%) between 2 things shown in toolbar
             this.Similarity_Text = string.Format("{0:P}", script.Similarity);
 
-            this._ViewA.SetCounterpartLines(this._ViewB);
+            this._ViewA.SetCounterPartLines(this._ViewB);
 
             // Show left and right file name labels over each ViewA and ViewB
             bool showNames = !string.IsNullOrEmpty(nameA) || !string.IsNullOrEmpty(nameB);

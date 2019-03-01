@@ -276,65 +276,6 @@
                     <TextBlock Text="{Binding DiffForm.NumberOfLines}"/>
                 </ctrl:Overview.ToolTip-->
             </ctrl:Overview>
-<!--
-            <TextBox
-                Grid.Column="1" Grid.Row="0" Margin="0,3"
-                Text="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
-
-            <GridSplitter
-                Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
-                HorizontalAlignment="Stretch"
-                Background="Transparent"
-                Width="6" />
-
-            <TextBox
-                Grid.Column="3" Grid.Row="0" Margin="0,3"
-                Text="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
-
-            - Text Content
-                SyntaxHighlighting="{Binding HighlightDef}"
-            -
-            <ctrl:DiffView
-                Name="TextLeft" Grid.Column="1" Grid.Row="1" Margin="3"
-                DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
-                Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
-                ItemsSource="{Binding DocLineDiffs}"
-                ShowLineNumbers="True"
-				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                IsReadOnly="True"
-                
-                ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
-                Column="{Binding Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                Line="{Binding Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                TextBoxController="{Binding TxtControl}"
-                ActivationTimeStamp="{Binding ViewActivation, Mode=OneWayToSource}"
-
-                FontFamily="Consolas"
-                FontSize="12pt"
-                HorizontalScrollBarVisibility="Visible"
-                VerticalScrollBarVisibility="Visible"
-                />
-
-            <ctrl:DiffView
-                Name="TextRight" Grid.Column="3" Grid.Row="1" Margin="3"
-                DataContext="{Binding DiffForm.DiffCtrl.ViewB}"
-                Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
-                ItemsSource="{Binding DocLineDiffs}"
-                ShowLineNumbers="True"
-				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                IsReadOnly="True"
-                
-                ScrollViewer.ScrollChanged="DiffView_ScrollChanged"
-                Column="{Binding Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                Line="{Binding Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                TextBoxController="{Binding TxtControl}"
-                ActivationTimeStamp="{Binding ViewActivation, Mode=OneWayToSource}"
-
-                FontFamily="Consolas"
-                FontSize="12pt"
-                HorizontalScrollBarVisibility="Visible"
-                VerticalScrollBarVisibility="Visible"
-                /-->
 
             <ctrl:DiffControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1"
                               Name="DiffCtrl"

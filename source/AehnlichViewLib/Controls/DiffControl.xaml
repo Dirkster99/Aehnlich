@@ -38,17 +38,16 @@
 
                             <local:DiffView
                                 x:Name="TextLeft" Grid.Column="0" Grid.Row="1" Margin="3"
-                                DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
-                                Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
-                                ItemsSource="{Binding DocLineDiffs}"
+                                Document="{Binding DiffForm.DiffCtrl.ViewA.Document, UpdateSourceTrigger=PropertyChanged}"
+                                ItemsSource="{Binding DiffForm.DiffCtrl.ViewA.DocLineDiffs}"
                                 ShowLineNumbers="True"
-				                IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				                IsModified="{Binding DiffForm.DiffCtrl.ViewA.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsReadOnly="True"
                 
-                                Column="{Binding Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                Line="{Binding Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                TextBoxController="{Binding TxtControl}"
-                                ActivationTimeStamp="{Binding ViewActivation, Mode=OneWayToSource}"
+                                Column="{Binding DiffForm.DiffCtrl.ViewA.Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                Line="{Binding DiffForm.DiffCtrl.ViewA.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                TextBoxController="{Binding DiffForm.DiffCtrl.ViewA.TxtControl}"
+                                ActivationTimeStamp="{Binding DiffForm.DiffCtrl.ViewA.ViewActivation, Mode=OneWayToSource}"
 
                                 FontFamily="Consolas"
                                 FontSize="12pt"
@@ -58,17 +57,16 @@
 
                             <local:DiffView
                                 x:Name="TextRight" Grid.Column="2" Grid.Row="2" Margin="3"
-                                DataContext="{Binding DiffForm.DiffCtrl.ViewB}"
-                                Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
-                                ItemsSource="{Binding DocLineDiffs}"
+                                Document="{Binding DiffForm.DiffCtrl.ViewB.Document, UpdateSourceTrigger=PropertyChanged}"
+                                ItemsSource="{Binding DiffForm.DiffCtrl.ViewB.DocLineDiffs}"
                                 ShowLineNumbers="True"
-				                IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				                IsModified="{Binding DiffForm.DiffCtrl.ViewB.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsReadOnly="True"
                 
-                                Column="{Binding Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                Line="{Binding Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                TextBoxController="{Binding TxtControl}"
-                                ActivationTimeStamp="{Binding ViewActivation, Mode=OneWayToSource}"
+                                Column="{Binding DiffForm.DiffCtrl.ViewB.Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                Line="{Binding DiffForm.DiffCtrl.ViewB.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                TextBoxController="{Binding DiffForm.DiffCtrl.ViewB.TxtControl}"
+                                ActivationTimeStamp="{Binding DiffForm.DiffCtrl.ViewB.ViewActivation, Mode=OneWayToSource}"
 
                                 FontFamily="Consolas"
                                 FontSize="12pt"

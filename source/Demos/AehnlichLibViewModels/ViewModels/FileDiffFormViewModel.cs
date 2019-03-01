@@ -5,6 +5,7 @@
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Models;
+    using ICSharpCode.AvalonEdit;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -29,6 +30,8 @@
         private int _LineDiffHeight;
         private int _NumberOfLines;
 
+        private TextEditorOptions _DiffViewOptions;
+
         private readonly DiffDocViewModel _DiffCtrl;
         #endregion fields
 
@@ -38,12 +41,32 @@
         /// </summary>
         public FileDiffFormViewModel()
         {
+            _DiffViewOptions = new TextEditorOptions();
+            _DiffViewOptions.ConvertTabsToSpaces = true;
+
             Options.OptionsChanged += this.OptionsChanged;
             _DiffCtrl = new DiffDocViewModel();
         }
         #endregion ctors
 
         #region properties
+        public TextEditorOptions DiffViewOptions
+        {
+            get
+            {
+                return _DiffViewOptions;
+            }
+
+            set
+            {
+                if (_DiffViewOptions != value)
+                {
+                    _DiffViewOptions = value;
+                    NotifyPropertyChanged(() => _DiffViewOptions);
+                }
+            }
+        }
+
         public DiffDocViewModel DiffCtrl
         {
             get { return _DiffCtrl; }
@@ -352,6 +375,12 @@
             NotifyPropertyChanged(() => DiffCtrl);
 
             this.currentDiffArgs = e;
+        }
+
+        internal void GetChangeEditScript(int firstLine, int lastLine, int spacesPerTab)
+        {
+            _DiffCtrl.ViewA.GetChangeEditScript(firstLine, lastLine, spacesPerTab);
+            _DiffCtrl.ViewB.GetChangeEditScript(firstLine, lastLine, spacesPerTab);
         }
 
         private static void GetFileLines(string fileNameA, string fileNameB, out IList<string> a, out IList<string> b, out int leadingCharactersToIgnore)

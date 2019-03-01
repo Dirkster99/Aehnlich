@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
+    using AehnlichLibViewModels.Models;
     using AehnlichViewLib.Enums;
     using ICSharpCode.AvalonEdit.Rendering;
     using Interfaces;
@@ -109,10 +110,36 @@
                             brush.Color.R, brush.Color.G, brush.Color.B));
                     }
 
-                    foreach (var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, 1000))
+                    foreach (var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, (int)_DiffView.ActualWidth))
                     {
                         drawingContext.DrawRectangle(brush, BorderlessPen,
                             new Rect(0, rc.Top, textView.ActualWidth, rc.Height));
+                    }
+                }
+
+                if (srcLineDiff.LineEditScriptSegments != null)
+                {
+                    foreach (var item in srcLineDiff.LineEditScriptSegments)
+                    {
+                        // The main line background has already been drawn, so we just
+                        // need to draw the deleted or inserted background segments.
+                        if (srcLineDiff.FromA)
+                            brush = _DiffView.ColorBackgroundDeleted;
+                        else
+                            brush = _DiffView.ColorBackgroundDeleted;
+
+                        BackgroundGeometryBuilder geoBuilder = new BackgroundGeometryBuilder();
+					    geoBuilder.AlignToWholePixels = true;
+
+                        var segment = new Segment(v.StartOffset + item.Offset, item.Length,
+                                                  v.StartOffset + item.EndOffset);
+					    geoBuilder.AddSegment(textView, segment);
+
+					    Geometry geometry = geoBuilder.CreateGeometry();
+					    if (geometry != null)
+                        {
+						    drawingContext.DrawGeometry(brush, null, geometry);
+					    }
                     }
                 }
             }

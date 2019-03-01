@@ -1,6 +1,8 @@
 ﻿namespace AehnlichViewLib.Interfaces
 {
     using AehnlichViewLib.Enums;
+    using ICSharpCode.AvalonEdit.Document;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Gets the elements per line that are relevant for the view to draw
@@ -22,5 +24,9 @@
         /// original text (without accounting for imaginary lines.
         /// </summary>
         int? ImaginaryLineNumber { get; }
+
+        IReadOnlyCollection<ISegment> LineEditScriptSegments { get; }
+
+        bool FromA { get; }
     }
 }

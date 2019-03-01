@@ -3,6 +3,7 @@
     using AehnlichLibViewModels.Models;
     using AehnlichLibViewModels.ViewModels.Base;
     using AehnlichViewLib.Models;
+    using ICSharpCode.AvalonEdit;
     using System.Windows.Input;
 
     public class AppViewModel : Base.ViewModelBase
@@ -217,6 +218,11 @@
                             // Get value of first visible line and set it in Overview slider
                             OverViewValue = param.FirstLine;
                         }
+
+                        int spacesPerTab = 4;
+
+                        // Translate from 1-based values to tero-based values
+                        _DiffForm.GetChangeEditScript(param.FirstLine-1, param.LastLine-1, spacesPerTab);
                     }
                     , (p) =>
                     {
