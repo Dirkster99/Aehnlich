@@ -10,24 +10,6 @@
     /// </summary>
     public partial class MainWindow : Window
     {
-        #region fields
-////        private bool IgnoreNextSliderValueChange;
-////        private bool IgnoreNextTextSyncValueChange;
-        private readonly object lockObject = new object();
-
-////        public ICommand ViewPortChangedCommand
-////        {
-////            get { return (ICommand)GetValue(ViewPortChangedCommandProperty); }
-////            set { SetValue(ViewPortChangedCommandProperty, value); }
-////        }
-////
-////        // Using a DependencyProperty as the backing store for ViewPortChangedCommand.  This enables animation, styling, binding, etc...
-////        public static readonly DependencyProperty ViewPortChangedCommandProperty =
-////            DependencyProperty.Register("ViewPortChangedCommand", typeof(ICommand),
-////                typeof(MainWindow), new PropertyMetadata(null));
-        #endregion fields
-
-        #region ctors
         /// <summary>
         /// class constructor
         /// </summary>
@@ -37,9 +19,7 @@
 
             Loaded += MainWindow_Loaded;
         }
-        #endregion ctors
 
-        #region methods
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= MainWindow_Loaded;
@@ -60,86 +40,5 @@
 
             this.DataContext = appVM;
         }
-/***
-        /// <summary>
-        /// Implements scrollviewer synchronization
-        /// https://stackoverflow.com/questions/20864503/synchronizing-two-rich-text-box-scroll-bars-in-wpf
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DiffView_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            var textToSync = (sender == TextRight) ? TextLeft : TextRight;
-            var sourceToSync = sender  as ICSharpCode.AvalonEdit.TextEditor;
-
-            textToSync.ScrollToVerticalOffset(e.VerticalOffset);
-            textToSync.ScrollToHorizontalOffset(e.HorizontalOffset);
-
-            if (sourceToSync.TextArea.TextView.VisualLines.Any())
-            {
-                var firstline = sourceToSync.TextArea.TextView.VisualLines.First();
-                var lastline = sourceToSync.TextArea.TextView.VisualLines.Last();
-
-                int fline = firstline.FirstDocumentLine.LineNumber;
-                int lline = lastline.LastDocumentLine.LineNumber;
-
-////                if (ViewPortChangedCommand != null)
-////                {
-////                    var currentViewPort = new DiffViewPort(fline, lline);
-////
-////                    if (ViewPortChangedCommand.CanExecute(currentViewPort))
-////                        ViewPortChangedCommand.Execute(currentViewPort);
-////                }
-
-                OverviewSlider.NumberOfTextLinesInViewPort = (lline - fline) - 1;
-
-                lock (lockObject)
-                {
-                    if (IgnoreNextTextSyncValueChange == true)
-                    {
-                        IgnoreNextTextSyncValueChange = false;
-                        return;
-                    }
-
-                    IgnoreNextSliderValueChange = true;
-
-                    // Get value of first visible line and set it in Overview slider
-                    OverviewSlider.Value = fline;
-                }
-            }
-        }
-
-        private void OverviewSlider_ValueChanged(object sender,
-                                                 RoutedPropertyChangedEventArgs<double> e)
-        {
-            var ctrl = sender as AehnlichViewLib.Controls.Overview;
-            if (ctrl == null)
-                return;
-
-            var line = (int)ctrl.Value;
-
-            if (TextRight.TextArea.TextView.IsVisible)
-            {
-                if (TextRight.TextArea.TextView.VisualLines.Any())
-                {
-                    lock (lockObject)
-                    {
-                        if (IgnoreNextSliderValueChange == true)
-                        {
-                            IgnoreNextSliderValueChange = false;
-                            return;
-                        }
-
-                        IgnoreNextTextSyncValueChange = true;
-
-                        double vertOffset = (TextRight.TextArea.TextView.DefaultLineHeight) * line;
-                        TextRight.ScrollToVerticalOffset(vertOffset);
-                        TextLeft.ScrollToVerticalOffset(vertOffset);
-                    }
-                }
-            }
-        }
-***/
-        #endregion methods
     }
 }
