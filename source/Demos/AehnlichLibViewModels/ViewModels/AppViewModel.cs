@@ -2,6 +2,7 @@
 {
     using AehnlichLibViewModels.Models;
     using AehnlichLibViewModels.ViewModels.Base;
+    using AehnlichViewLib.Models;
     using System.Windows.Input;
 
     public class AppViewModel : Base.ViewModelBase
@@ -16,7 +17,17 @@
         private ICommand _GoToLastDifferenceCommand;
         private ICommand _OpenFileFromActiveViewCommand;
         private ICommand _CopyTextSelectionFromActiveViewCommand;
+
+        private double _OverViewValue = 0;
+        private int _NumberOfTextLinesInViewPort = 0;
+        private bool _IgnoreNextSliderValueChange = false;
+        private bool _IgnoreNextTextSyncValueChange = true;
+        private int _LastLineToSync = 0;
+        private ICommand _ViewPortChangedCommand;
+        private ICommand _OverviewValueChangedCommand;
+
         private readonly FileDiffFormViewModel _DiffForm;
+        private readonly object lockObject = new object();
         #endregion fields
 
         #region ctors
@@ -147,6 +158,121 @@
                 }
 
                 return _CopyTextSelectionFromActiveViewCommand;
+            }
+        }
+
+        public int NumberOfTextLinesInViewPort
+        {
+            get { return _NumberOfTextLinesInViewPort; }
+            private set
+            {
+                if (_NumberOfTextLinesInViewPort != value)
+                {
+                    _NumberOfTextLinesInViewPort = value;
+                    NotifyPropertyChanged(() => NumberOfTextLinesInViewPort);
+                }
+            }
+        }
+
+        public double OverViewValue
+        {
+            get { return _OverViewValue; }
+            private set
+            {
+                if (_OverViewValue != value)
+                {
+                    _OverViewValue = value;
+                    NotifyPropertyChanged(() => OverViewValue);
+                }
+            }
+        }
+
+        public ICommand ViewPortChangedCommand
+        {
+            get
+            {
+                if (_ViewPortChangedCommand == null)
+                {
+                    _ViewPortChangedCommand = new RelayCommand<object>((p) =>
+                    {
+                        var param = p as DiffViewPort;
+                        if (param == null)
+                            return;
+
+                        lock (lockObject)
+                        {
+                            if (_IgnoreNextTextSyncValueChange == true)
+                            {
+                                if (param.FirstLine == _LastLineToSync)
+                                    return;
+
+                                _IgnoreNextTextSyncValueChange = false;
+                                return;
+                            }
+
+                            _IgnoreNextSliderValueChange = true;
+
+                            NumberOfTextLinesInViewPort = (param.LastLine - param.FirstLine) - 1;
+
+                            // Get value of first visible line and set it in Overview slider
+                            OverViewValue = param.FirstLine;
+                        }
+                    }
+                    , (p) =>
+                    {
+                        return true;
+                    });
+                }
+
+                return _ViewPortChangedCommand;
+            }
+        }
+
+        public ICommand OverviewValueChangedCommand
+        {
+            get
+            {
+                if (_OverviewValueChangedCommand == null)
+                {
+                    _OverviewValueChangedCommand = new RelayCommand<object>((p) =>
+                    {
+                        lock (lockObject)
+                        {
+                            if ((p is double) == false)
+                                return;
+
+                            double param = (double)p;
+
+                            if (_IgnoreNextSliderValueChange == true)
+                            {
+                                if (_LastLineToSync == (int)param)
+                                    return;
+
+                                _IgnoreNextSliderValueChange = false;
+                                return;
+                            }
+
+                            _LastLineToSync = (int)param;
+                            _IgnoreNextTextSyncValueChange = true;
+
+                            DiffSideViewModel nonActView;
+                            DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+                            DiffViewPosition gotoPos = new DiffViewPosition((int)param, 0);
+                            DiffForm.DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
+                        }
+                    },
+                    (p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+                        if (activeView == null)
+                            return false;
+
+                        return true;
+                    });
+                }
+
+                return _OverviewValueChangedCommand;
             }
         }
 

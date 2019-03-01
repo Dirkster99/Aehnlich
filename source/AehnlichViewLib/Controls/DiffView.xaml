@@ -10,6 +10,8 @@
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
         <Setter Property="EditorCurrentLineBackground" Value="{DynamicResource {x:Static reskeys:ResourceKeys.DiffViewCurrentLineBackgroundBrushKey}}"/>
+        <Setter Property="EditorCurrentLineBorder" Value="{DynamicResource {x:Static reskeys:ResourceKeys.DiffViewCurrentLineBorderBrushKey}}"/>
+        <Setter Property="EditorCurrentLineBorder" Value="{DynamicResource {x:Static reskeys:ResourceKeys.DiffViewCurrentLineBorderThicknessKey}}"/>
         <Setter Property="ColorBackgroundAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"/>
         <Setter Property="ColorBackgroundContext" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"/>
         <Setter Property="ColorBackgroundDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"/>

@@ -1,7 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
-                    xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes">
+                    xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    >
 
     <!-- Accent Color Brush Definition
        - Look for references on ControlAccentBrushKey to find where this is being set in code -->
@@ -37,9 +39,20 @@
                      ResourceId=ControlTextBrushKey}"
                      Color="Gray"/>
 
+    <!-- Current Line Highlighting Keys -->
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=DiffViewCurrentLineBackgroundBrushKey}"
-                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     Color="Transparent"
                      />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=DiffViewCurrentLineBorderBrushKey}"
+                     Color="{DynamicResource {x:Static SystemColors.HighlightBrush}}"
+                     Opacity=".6"
+                     options:Freeze="true" />
+
+    <!--system:Double x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=DiffViewCurrentLineBorderThicknessKey}">1.0</system:Double-->
+    <!-- Current Line Highlighting Keys -->
 
 </ResourceDictionary>

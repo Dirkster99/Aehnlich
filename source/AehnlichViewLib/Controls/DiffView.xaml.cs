@@ -96,12 +96,24 @@
             DependencyProperty.Register("ActivationTimeStamp", typeof(DateTime),
                 typeof(DiffView), new PropertyMetadata(default(DateTime)));
 
+        #region EditorCurrentLine Highlighting Colors
         private static readonly DependencyProperty EditorCurrentLineBackgroundProperty =
             DependencyProperty.Register("EditorCurrentLineBackground",
-                                         typeof(SolidColorBrush),
+                                         typeof(Brush),
                                          typeof(DiffView),
-                                         new UIPropertyMetadata(new SolidColorBrush(Color.FromArgb(33, 33, 33, 33)),
-                                         DiffView.OnCurrentLineBackgroundChanged));
+                                         new UIPropertyMetadata(new SolidColorBrush(Colors.Transparent)));
+
+        public static readonly DependencyProperty EditorCurrentLineBorderProperty =
+            DependencyProperty.Register("EditorCurrentLineBorder", typeof(Brush),
+                typeof(DiffView), new PropertyMetadata(new SolidColorBrush(
+                    Color.FromArgb(0x60, SystemColors.HighlightBrush.Color.R,
+                                         SystemColors.HighlightBrush.Color.G,
+                                         SystemColors.HighlightBrush.Color.B))));
+
+        public static readonly DependencyProperty EditorCurrentLineBorderThicknessProperty =
+            DependencyProperty.Register("EditorCurrentLineBorderThickness", typeof(double),
+                typeof(DiffView), new PropertyMetadata((double)2.0d));
+        #endregion EditorCurrentLine Highlighting Colors
 
         private INotifyCollectionChanged _observeableDiffContext;
 
@@ -265,14 +277,28 @@
             set { SetValue(ActivationTimeStampProperty, value); }
         }
 
+        #region EditorCurrentLine Highlighting Colors
         /// <summary>
         /// Style the background color of the current editor line
         /// </summary>
-        public SolidColorBrush EditorCurrentLineBackground
+        public Brush EditorCurrentLineBackground
         {
-            get { return (SolidColorBrush)GetValue(EditorCurrentLineBackgroundProperty); }
+            get { return (Brush)GetValue(EditorCurrentLineBackgroundProperty); }
             set { SetValue(EditorCurrentLineBackgroundProperty, value); }
         }
+
+        public Brush EditorCurrentLineBorder
+        {
+            get { return (Brush)GetValue(EditorCurrentLineBorderProperty); }
+            set { SetValue(EditorCurrentLineBorderProperty, value); }
+        }
+
+        public double EditorCurrentLineBorderThickness
+        {
+            get { return (double)GetValue(EditorCurrentLineBorderThicknessProperty); }
+            set { SetValue(EditorCurrentLineBorderThicknessProperty, value); }
+        }
+        #endregion EditorCurrentLine Highlighting Colors
         #endregion properties
 
         #region methods
@@ -302,57 +328,33 @@
         {
             ((DiffView)d).ItemsSourceChanged(e.NewValue);
         }
-    
-        /// <summary>
-        /// The dependency property for has changed.
-        /// Change the <seealso cref="SolidColorBrush"/> to be used for highlighting the current editor line
-        /// in the particular <seealso cref="EdiTextEditor"/> control.
-        /// </summary>
-        /// <param name="d"></param>
-        /// <param name="e"></param>
-        private static void OnCurrentLineBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-
-            if (d is DiffView && e != null)
-            {
-                var view = d as DiffView;
-
-                if (e.NewValue is SolidColorBrush)
-                {
-                    SolidColorBrush newValue = e.NewValue as SolidColorBrush;
-                    view.AdjustCurrentLineBackground(newValue);
-                }
-            }
-        }
         #endregion static handlers
 
         /// <summary>
         /// Reset the <seealso cref="SolidColorBrush"/> to be used for highlighting the current editor line.
         /// </summary>
         /// <param name="newValue"></param>
-        private void AdjustCurrentLineBackground(SolidColorBrush newValue)
+        private void AdjustCurrentLineBackground()
         {
-            if (newValue != null)
-            {
-                HighlightCurrentLineBackgroundRenderer oldRenderer = null;
+            HighlightCurrentLineBackgroundRenderer oldRenderer = null;
 
-                // Make sure there is only one of this type of background renderer
-                // Otherwise, we might keep adding and WPF keeps drawing them on top of each other
-                foreach (var item in this.TextArea.TextView.BackgroundRenderers)
+            // Make sure there is only one of this type of background renderer
+            // Otherwise, we might keep adding and WPF keeps drawing them on top of each other
+            foreach (var item in this.TextArea.TextView.BackgroundRenderers)
+            {
+                if (item != null)
                 {
-                    if (item != null)
+                    if (item is HighlightCurrentLineBackgroundRenderer)
                     {
-                        if (item is HighlightCurrentLineBackgroundRenderer)
-                        {
-                            oldRenderer = item as HighlightCurrentLineBackgroundRenderer;
-                        }
+                        oldRenderer = item as HighlightCurrentLineBackgroundRenderer;
                     }
                 }
+            }
 
+            if (oldRenderer != null)
                 this.TextArea.TextView.BackgroundRenderers.Remove(oldRenderer);
 
-                this.TextArea.TextView.BackgroundRenderers.Add(new HighlightCurrentLineBackgroundRenderer(this, newValue.Clone()));
-            }
+            this.TextArea.TextView.BackgroundRenderers.Add(new HighlightCurrentLineBackgroundRenderer(this));
         }
 
         /// <summary>
@@ -395,7 +397,7 @@
                 this.ScrollToVerticalOffset(this.EditorScrollOffsetY);
 
                 // Highlight current line in editor (even if editor is not focused) via themable dp-property
-                this.AdjustCurrentLineBackground(this.EditorCurrentLineBackground);
+                this.AdjustCurrentLineBackground();
 
                 this.TextArea.Caret.PositionChanged += Caret_PositionChanged;
             }

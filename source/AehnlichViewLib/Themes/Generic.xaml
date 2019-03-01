@@ -5,6 +5,7 @@
         <ResourceDictionary Source="/AehnlichViewLib;component/Themes/LightIcons.xaml"/>
         <ResourceDictionary Source="/AehnlichViewLib;component/Themes/LightBrushs.xaml"/>
         <ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffView.xaml"/>
+        <ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffControl.xaml"/>
         <ResourceDictionary Source="/AehnlichViewLib;component/Controls/Overview.xaml"/>
     </ResourceDictionary.MergedDictionaries>    
 </ResourceDictionary>

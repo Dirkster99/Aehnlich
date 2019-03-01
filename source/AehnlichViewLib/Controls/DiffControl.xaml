@@ -1,0 +1,85 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:AehnlichViewLib.Controls"
+                    >
+
+    <Style TargetType="{x:Type local:DiffControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DiffControl}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBox x:Name="PART_LeftFileNameTextBox"
+                                Grid.Column="0" Grid.Row="0" Margin="0,3"
+                                Text="{Binding LeftFileName, Mode=OneWay,UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}" />
+
+                            <GridSplitter
+                                Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent"
+                                Width="6" />
+
+                            <TextBox  x:Name="PART_RightFileNameTextBox"
+                                Grid.Column="2" Grid.Row="0" Margin="0,3"
+                                Text="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
+
+                            <local:DiffView
+                                x:Name="TextLeft" Grid.Column="0" Grid.Row="1" Margin="3"
+                                DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
+                                Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
+                                ItemsSource="{Binding DocLineDiffs}"
+                                ShowLineNumbers="True"
+				                IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                IsReadOnly="True"
+                
+                                Column="{Binding Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                Line="{Binding Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                TextBoxController="{Binding TxtControl}"
+                                ActivationTimeStamp="{Binding ViewActivation, Mode=OneWayToSource}"
+
+                                FontFamily="Consolas"
+                                FontSize="12pt"
+                                HorizontalScrollBarVisibility="Visible"
+                                VerticalScrollBarVisibility="Visible"
+                            />
+
+                            <local:DiffView
+                                x:Name="TextRight" Grid.Column="2" Grid.Row="2" Margin="3"
+                                DataContext="{Binding DiffForm.DiffCtrl.ViewB}"
+                                Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
+                                ItemsSource="{Binding DocLineDiffs}"
+                                ShowLineNumbers="True"
+				                IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                IsReadOnly="True"
+                
+                                Column="{Binding Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                Line="{Binding Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                TextBoxController="{Binding TxtControl}"
+                                ActivationTimeStamp="{Binding ViewActivation, Mode=OneWayToSource}"
+
+                                FontFamily="Consolas"
+                                FontSize="12pt"
+                                HorizontalScrollBarVisibility="Visible"
+                                VerticalScrollBarVisibility="Visible"
+                                />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

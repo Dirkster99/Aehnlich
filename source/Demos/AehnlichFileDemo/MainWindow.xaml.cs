@@ -2,10 +2,8 @@
 {
     using AehnlichLibViewModels.ViewModels;
     using System;
-    using System.Linq;
     using System.Reflection;
     using System.Windows;
-    using System.Windows.Controls;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -13,9 +11,20 @@
     public partial class MainWindow : Window
     {
         #region fields
-        private bool IgnoreNextSliderValueChange;
-        private bool IgnoreNextTextSyncValueChange;
+////        private bool IgnoreNextSliderValueChange;
+////        private bool IgnoreNextTextSyncValueChange;
         private readonly object lockObject = new object();
+
+////        public ICommand ViewPortChangedCommand
+////        {
+////            get { return (ICommand)GetValue(ViewPortChangedCommandProperty); }
+////            set { SetValue(ViewPortChangedCommandProperty, value); }
+////        }
+////
+////        // Using a DependencyProperty as the backing store for ViewPortChangedCommand.  This enables animation, styling, binding, etc...
+////        public static readonly DependencyProperty ViewPortChangedCommandProperty =
+////            DependencyProperty.Register("ViewPortChangedCommand", typeof(ICommand),
+////                typeof(MainWindow), new PropertyMetadata(null));
         #endregion fields
 
         #region ctors
@@ -51,7 +60,7 @@
 
             this.DataContext = appVM;
         }
-
+/***
         /// <summary>
         /// Implements scrollviewer synchronization
         /// https://stackoverflow.com/questions/20864503/synchronizing-two-rich-text-box-scroll-bars-in-wpf
@@ -73,6 +82,14 @@
 
                 int fline = firstline.FirstDocumentLine.LineNumber;
                 int lline = lastline.LastDocumentLine.LineNumber;
+
+////                if (ViewPortChangedCommand != null)
+////                {
+////                    var currentViewPort = new DiffViewPort(fline, lline);
+////
+////                    if (ViewPortChangedCommand.CanExecute(currentViewPort))
+////                        ViewPortChangedCommand.Execute(currentViewPort);
+////                }
 
                 OverviewSlider.NumberOfTextLinesInViewPort = (lline - fline) - 1;
 
@@ -122,6 +139,7 @@
                 }
             }
         }
+***/
         #endregion methods
     }
 }

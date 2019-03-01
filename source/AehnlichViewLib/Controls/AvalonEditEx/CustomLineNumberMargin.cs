@@ -81,7 +81,7 @@
 
             if (textView != null && textView.VisualLinesValid)
             {
-                var foreground = (Brush)GetValue(Control.ForegroundProperty);
+                var foreground = _DiffView.LineNumbersForeground;
                 foreach (VisualLine line in textView.VisualLines)
                 {
                     // AvalonEdit is 1 based but the collection is of course zero based :-(
@@ -98,7 +98,8 @@
 
                     if (srcLineDiff.ImaginaryLineNumber.HasValue)
                     {
-                        int imaginaryLineNumber = (int)srcLineDiff.ImaginaryLineNumber;
+                        // Render displayed numbers in a 1-based format
+                        int imaginaryLineNumber = (int)srcLineDiff.ImaginaryLineNumber + 1;
                         FormattedText text = TextFormatterFactory.CreateFormattedText(
                             this,
                             imaginaryLineNumber.ToString(CultureInfo.CurrentCulture),

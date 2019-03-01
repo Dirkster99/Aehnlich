@@ -13,51 +13,18 @@
     internal class HighlightCurrentLineBackgroundRenderer : IBackgroundRenderer
     {
         #region fields
-        private readonly TextEditor _Editor;
+        private readonly DiffView _Editor;
         #endregion fields
 
         #region ctors
         /// <summary>
-        /// Class Constructor from editor
-        /// </summary>
-        /// <param name="editor"></param>
-        public HighlightCurrentLineBackgroundRenderer(TextEditor editor)
-            : this()
-        {
-            this._Editor = editor;
-
-            // Light Blue 0x100000FF
-            this.BackgroundColorBrush = new SolidColorBrush(Color.FromArgb(0x10, 0x80, 0x80, 0x80));
-        }
-
-        /// <summary>
         /// Class Constructor from editor and SolidColorBrush definition
         /// </summary>
         /// <param name="editor"></param>
-        /// <param name="highlightBackgroundColorBrush"></param>
-        public HighlightCurrentLineBackgroundRenderer(TextEditor editor,
-                                                      SolidColorBrush highlightBackgroundColorBrush)
+        public HighlightCurrentLineBackgroundRenderer(DiffView diffView)
             : this()
         {
-            this._Editor = editor;
-
-            // Light Blue 0x100000FF
-            this.BackgroundColorBrush = new SolidColorBrush(highlightBackgroundColorBrush.Color);
-        }
-
-        /// <summary>
-        /// Class Constructor from editor and color definition
-        /// </summary>
-        /// <param name="editor"></param>
-        /// <param name="highlightBackgroundColorBrush"></param>
-        public HighlightCurrentLineBackgroundRenderer(TextEditor editor,
-                                                      Color highlightBackgroundColor)
-            : this()
-        {
-            this._Editor = editor;
-
-            // Light Blue 0x100000FF
-            this.BackgroundColorBrush = new SolidColorBrush(highlightBackgroundColor);
+            _Editor = diffView;
         }
 
         /// <summary>
@@ -77,11 +44,6 @@
         {
             get { return KnownLayer.Background; }
         }
-
-        /// <summary>
-        /// Get/Set color brush to show for highlighting current line
-        /// </summary>
-        public SolidColorBrush BackgroundColorBrush { get; set; }
         #endregion properties
 
         #region methods
@@ -92,15 +54,29 @@
         /// <param name="drawingContext"></param>
         public void Draw(TextView textView, DrawingContext drawingContext)
         {
+            if (this._Editor == null)
+                return;
+
             if (this._Editor.Document == null)
                 return;
+
+            if (_Editor.EditorCurrentLineBorderThickness == 0 && _Editor.EditorCurrentLineBackground == null)
+                return;
+
+            Pen borderPen = null;
+
+            if (_Editor.EditorCurrentLineBorder != null)
+            {
+                borderPen = new Pen(_Editor.EditorCurrentLineBorder, _Editor.EditorCurrentLineBorderThickness);
+                borderPen.Freeze();
+            }
 
             textView.EnsureVisualLines();
             var currentLine = _Editor.Document.GetLineByOffset(_Editor.CaretOffset);
 
             foreach (var rect in BackgroundGeometryBuilder.GetRectsForSegment(textView, currentLine))
             {
-                drawingContext.DrawRectangle(new SolidColorBrush(this.BackgroundColorBrush.Color), null,
+                drawingContext.DrawRectangle(_Editor.EditorCurrentLineBackground, borderPen,
                                              new Rect(rect.Location, new Size(textView.ActualWidth, rect.Height)));
             }
         }

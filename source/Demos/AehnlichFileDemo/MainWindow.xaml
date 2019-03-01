@@ -12,6 +12,7 @@
         
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    
     <Grid Margin="3">
         <Grid.Resources>
             <conv:MultiParToParConverter x:Key="MultiParToParConverter"/>
@@ -133,8 +134,8 @@
                     >
                     <Button.CommandParameter>
                         <MultiBinding Converter="{StaticResource MultiParToParConverter}">
-                            <Binding ElementName="FilePathA_TextBox" Path="Text" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
-                            <Binding ElementName="FilePathB_TextBox" Path="Text" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                            <Binding ElementName="DiffCtrl" Path="LeftFileName" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                            <Binding ElementName="DiffCtrl" Path="RightFileName" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                         </MultiBinding>
                     </Button.CommandParameter>
                     <Button.Background>
@@ -219,8 +220,8 @@
                 </StackPanel>
             </ToolBar>
 
-            <!-- Debugging Values -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed">
+            <!-- Debugging Values  Visibility="Collapsed"-->
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <TextBlock
                     Margin="3" VerticalAlignment="Center"
                     Text="{Binding ElementName=OverviewSlider,Path=NumberOfTextLinesInViewPort}"
@@ -264,18 +265,19 @@
             <ctrl:Overview Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="3"
                            Width="30"
                            Name="OverviewSlider"
-                           ValueChanged="OverviewSlider_ValueChanged"
-                           DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
-                           ItemsSource="{Binding DocLineDiffs}"
+                           ItemsSource="{Binding DiffForm.DiffCtrl.ViewA.DocLineDiffs}"
+                           
+                           Value="{Binding OverViewValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                           NumberOfTextLinesInViewPort="{Binding NumberOfTextLinesInViewPort}"
+                           ValueChangedCommand="{Binding OverviewValueChangedCommand,Mode=OneWay}"
                            >
                 <!-- DiffForm.NumberOfLines -->
                 <!--ctrl:Overview.ToolTip>
                     <TextBlock Text="{Binding DiffForm.NumberOfLines}"/>
                 </ctrl:Overview.ToolTip-->
             </ctrl:Overview>
-
+<!--
             <TextBox
-                Name="FilePathA_TextBox"
                 Grid.Column="1" Grid.Row="0" Margin="0,3"
                 Text="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
 
@@ -286,13 +288,12 @@
                 Width="6" />
 
             <TextBox
-                Name="FilePathB_TextBox"
                 Grid.Column="3" Grid.Row="0" Margin="0,3"
                 Text="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
 
-            <!-- Text Content
+            - Text Content
                 SyntaxHighlighting="{Binding HighlightDef}"
-            -->
+            -
             <ctrl:DiffView
                 Name="TextLeft" Grid.Column="1" Grid.Row="1" Margin="3"
                 DataContext="{Binding DiffForm.DiffCtrl.ViewA}"
@@ -333,7 +334,15 @@
                 FontSize="12pt"
                 HorizontalScrollBarVisibility="Visible"
                 VerticalScrollBarVisibility="Visible"
-                />
+                /-->
+
+            <ctrl:DiffControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1"
+                              Name="DiffCtrl"
+                              LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                              RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                              ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
+                              
+                              Margin="3"/>
         </Grid>
 
         <GridSplitter
@@ -344,24 +353,27 @@
 
         <!-- ViewLineDiff -->
         <ctrl:DiffView
-                Grid.Column="0" Grid.Row="3" Margin="3"
-                DataContext="{Binding DiffForm.DiffCtrl.ViewLineDiff}"
-                Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
-                ItemsSource="{Binding DocLineDiffs}"
-                ShowLineNumbers="False"
-				IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                IsReadOnly="True"
+            Grid.Column="0" Grid.Row="3" Margin="3"
+            DataContext="{Binding DiffForm.DiffCtrl.ViewLineDiff}"
+            Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{Binding DocLineDiffs}"
+            ShowLineNumbers="False"
+			IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            IsReadOnly="True"
             
-                Column="{Binding Column, Mode=OneWayToSource}"
-                Line="{Binding Line, Mode=OneWayToSource}"
-                TextBoxController="{Binding TxtControl}"
-                EditorCurrentLineBackground="Transparent"
+            Column="{Binding Column, Mode=OneWayToSource}"
+            Line="{Binding Line, Mode=OneWayToSource}"
+            TextBoxController="{Binding TxtControl}"
+            EditorCurrentLineBackground="{x:Null}"
+            EditorCurrentLineBorderThickness="0"
+            
+            Focusable="False"
 
-                FontFamily="Consolas"
-                FontSize="12pt"
-                HorizontalScrollBarVisibility="Visible"
-                VerticalScrollBarVisibility="Visible"
-                />
+            FontFamily="Consolas"
+            FontSize="12pt"
+            HorizontalScrollBarVisibility="Visible"
+            VerticalScrollBarVisibility="Visible"
+            />
 
     </Grid>
 </Window>

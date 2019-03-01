@@ -11,6 +11,7 @@
     using System.Windows.Media;
     using System.Collections.Specialized;
     using AehnlichViewLib.Interfaces;
+    using System.Windows.Input;
 
     /// <summary>
     /// Implements the Overview control that contains the marker items that can be used
@@ -49,6 +50,16 @@
         public static readonly DependencyProperty NumberOfTextLinesInViewPortProperty =
             DependencyProperty.Register("NumberOfTextLinesInViewPort", typeof(int),
                 typeof(Overview), new PropertyMetadata(0, OnViewPortLinesChanged));
+
+        public static readonly DependencyProperty ValueChangedCommandProperty =
+            DependencyProperty.Register("ValueChangedCommand", typeof(ICommand),
+                typeof(Overview), new PropertyMetadata(null));
+
+        public ICommand ValueChangedCommand
+        {
+            get { return (ICommand)GetValue(ValueChangedCommandProperty); }
+            set { SetValue(ValueChangedCommandProperty, value); }
+        }
 
         #region Diff Color Definitions
         /// <summary>
@@ -214,6 +225,29 @@
 
             _PART_ViewPortContainer = GetTemplateChild(PART_ViewPortContainer) as Grid;
             _PART_ImageViewport = GetTemplateChild(PART_ImageViewport) as Image;
+        }
+
+        protected override void OnValueChanged(double oldValue, double newValue)
+        {
+            base.OnValueChanged(oldValue, newValue);
+
+            if (ValueChangedCommand != null)
+            {
+                if (ValueChangedCommand.CanExecute(newValue))
+                {
+                    // Check whether this attached behaviour is bound to a RoutedCommand
+                    if (ValueChangedCommand is RoutedCommand)
+                    {
+                        // Execute the routed command
+                        (ValueChangedCommand as RoutedCommand).Execute(newValue, this);
+                    }
+                    else
+                    {
+                        // Execute the Command as bound delegate
+                        ValueChangedCommand.Execute(newValue);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -524,9 +558,9 @@
         {
             this.Minimum = 0;
 
-            // Adding plus 1 to ensure that scrolling down always makes the last line fully visible
+            // Ensure positive maximum value
             if (countLines > 0)
-                this.Maximum = countLines - NumberOfTextLinesInViewPort + 1;
+                this.Maximum = countLines;
             else
                 this.Maximum = 0;
         }

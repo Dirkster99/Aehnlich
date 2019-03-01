@@ -37,15 +37,19 @@
 
         #endregion Brush Keys
 
-        #region DiffView BrushKeys
+        #region DiffView Currentline Keys
         /// <summary>
         /// Gets the color of highlighting for the currently highlighed line.
         /// </summary>
         public static readonly ComponentResourceKey DiffViewCurrentLineBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DiffViewCurrentLineBackgroundBrushKey");
-        #endregion DiffView BrushKeys
+
+        public static readonly ComponentResourceKey DiffViewCurrentLineBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DiffViewCurrentLineBorderBrushKey");
+
+        public static readonly ComponentResourceKey DiffViewCurrentLineBorderThicknessKey = new ComponentResourceKey(typeof(ResourceKeys), "DiffViewCurrentLineBorderThicknessKey");
+        #endregion Currentline Keys
 
         #region ICONs
-        
+
         public static readonly ComponentResourceKey ICON_DeletedKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_DeletedKey");
         public static readonly ComponentResourceKey ICON_AddedKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_AddedKey");
         public static readonly ComponentResourceKey ICON_ChangedKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_ChangedKey");

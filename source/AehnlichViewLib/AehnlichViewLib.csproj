@@ -54,15 +54,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\ScrollHelper.cs" />
     <Compile Include="Controls\AvalonEditEx\CustomLineNumberMargin.cs" />
     <Compile Include="Controls\AvalonEditEx\HighlightCurrentLineBackgroundRenderer.cs" />
-    <Compile Include="Controls\TextBoxController\DiffView_TextController.cs" />
-    <Compile Include="Controls\AvalonEditEx\TextBoxController.cs" />
-    <Compile Include="Controls\TextBoxController\ITextBoxController.cs" />
+    <Compile Include="Controls\AvalonEditEx\TextBoxController\DiffView_TextController.cs" />
+    <Compile Include="Controls\AvalonEditEx\TextBoxController\TextBoxController.cs" />
+    <Compile Include="Controls\AvalonEditEx\TextBoxController\ITextBoxController.cs" />
+    <Compile Include="Controls\DiffControl.cs" />
     <Compile Include="Controls\Utils\ExtensionMethods.cs" />
     <Compile Include="Controls\Utils\TextFormatterFactory.cs" />
     <Compile Include="Interfaces\IDiffLineInfo.cs" />
+    <Compile Include="Models\DiffViewPort.cs" />
     <Compile Include="Themes\ResourceKeys.cs" />
+    <Page Include="Controls\DiffControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DiffView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
