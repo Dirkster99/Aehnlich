@@ -220,8 +220,8 @@
                 </StackPanel>
             </ToolBar>
 
-            <!-- Debugging Values  Visibility="Collapsed"-->
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <!-- Debugging Values -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed">
                 <TextBlock
                     Margin="3" VerticalAlignment="Center"
                     Text="{Binding ElementName=OverviewSlider,Path=NumberOfTextLinesInViewPort}"

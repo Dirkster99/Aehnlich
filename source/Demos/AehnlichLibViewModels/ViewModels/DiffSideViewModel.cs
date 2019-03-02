@@ -341,6 +341,10 @@
 
             for (int i = firstLine; i < _lines.Count && i < lastLine; i++)
             {
+                // We've previously seen and computed this?
+                if (_DocLineDiffs[i].LineEditScriptSegmentsIsDirty == false)
+                    continue;
+
                 var editScript = _lines[i].GetChangeEditScript(this.ChangeDiffOptions);
 
                 if (editScript != null)
@@ -350,6 +354,8 @@
 
                     _DocLineDiffs[i].SetEditScript(segments);
                 }
+                else
+                    _DocLineDiffs[i].SetEditScript(null);  // Make sure its been set even if empty
             }
         }
 

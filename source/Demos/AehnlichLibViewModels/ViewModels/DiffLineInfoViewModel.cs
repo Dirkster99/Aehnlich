@@ -13,6 +13,7 @@
 
         private ObservableRangeCollection<ISegment> _LineEditScriptSegments = null;
         private bool _FromA;
+        private bool _LineEditScriptSegmentsIsDirty;
         #endregion fields
 
         #region ctors
@@ -37,6 +38,7 @@
         protected DiffLineInfoViewModel()
         {
             _Context = DiffContext.Blank;
+            _LineEditScriptSegmentsIsDirty = true;
         }
         #endregion ctors
 
@@ -88,10 +90,29 @@
             }
         }
 
+        public bool LineEditScriptSegmentsIsDirty
+        {
+            get { return _LineEditScriptSegmentsIsDirty; }
+            set
+            {
+                if (_LineEditScriptSegmentsIsDirty != value)
+                {
+                    _LineEditScriptSegmentsIsDirty = value;
+                    NotifyPropertyChanged(() => LineEditScriptSegmentsIsDirty);
+                }
+            }
+        }
         #endregion properties
 
         #region methods
-
+        /// <summary>
+        /// Re(sets) the list of text line <see cref="ISegment"/>s on demand when the
+        /// user scrolls to a certain location and brings the line into view.
+        /// 
+        /// Sets <see cref="LineEditScriptSegmentsIsDirty"/> to true to signify that the
+        /// script is already cached away.
+        /// </summary>
+        /// <param name="segments"></param>
         internal void SetEditScript(IList<ISegment> segments)
         {
             if (_LineEditScriptSegments == null)
@@ -99,7 +120,10 @@
             else
                 _LineEditScriptSegments.Clear();
 
-            _LineEditScriptSegments.AddRange(segments);
+            if (segments != null)
+                _LineEditScriptSegments.AddRange(segments);
+
+            LineEditScriptSegmentsIsDirty = false;
         }
         #endregion methods
     }
