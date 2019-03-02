@@ -109,6 +109,10 @@
                         brush = new SolidColorBrush(Color.FromArgb(0x60,
                             brush.Color.R, brush.Color.G, brush.Color.B));
                     }
+                    else
+                        brush = new SolidColorBrush(brush.Color);
+
+                    brush.Freeze();
 
                     foreach (var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, (int)_DiffView.ActualWidth))
                     {
@@ -138,7 +142,10 @@
 					    Geometry geometry = geoBuilder.CreateGeometry();
 					    if (geometry != null)
                         {
-						    drawingContext.DrawGeometry(brush, null, geometry);
+                            var drawBrush = new SolidColorBrush(brush.Color);
+                            drawBrush.Freeze();
+
+                            drawingContext.DrawGeometry(drawBrush, null, geometry);
 					    }
                     }
                 }

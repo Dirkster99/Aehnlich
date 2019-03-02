@@ -57,8 +57,8 @@
     </Compartments>
     <InheritanceLine Type="AehnlichLibViewModels.ViewModels.Base.ViewModelBase" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="2.75" Y="10.313" />
-        <Point X="3.188" Y="10.313" />
+        <Point X="2.75" Y="9.813" />
+        <Point X="3.188" Y="9.813" />
         <Point X="3.188" Y="3.982" />
       </Path>
     </InheritanceLine>
@@ -83,8 +83,8 @@
     </Compartments>
     <InheritanceLine Type="AehnlichLibViewModels.ViewModels.Base.ViewModelBase" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="2.75" Y="10.313" />
-        <Point X="8.75" Y="10.313" />
+        <Point X="2.75" Y="9.813" />
+        <Point X="8.75" Y="9.813" />
         <Point X="8.75" Y="6.29" />
       </Path>
     </InheritanceLine>
@@ -110,14 +110,16 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="AehnlichLibViewModels.ViewModels.DiffLineInfoViewModel">
-    <Position X="14.75" Y="7.75" Width="2.5" />
+    <Position X="14.75" Y="7.75" Width="3" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <InheritanceLine Type="AehnlichLibViewModels.ViewModels.Base.ViewModelBase" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="2.75" Y="10.313" />
-        <Point X="14.75" Y="10.312" />
+        <Point X="2.75" Y="9.813" />
+        <Point X="14.097" Y="9.813" />
+        <Point X="14.097" Y="9.812" />
+        <Point X="14.75" Y="9.812" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -130,8 +132,8 @@
     <Position X="10.75" Y="0.5" Width="2" />
     <InheritanceLine Type="AehnlichLibViewModels.ViewModels.Base.ViewModelBase" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="2.75" Y="10.313" />
-        <Point X="11.688" Y="10.313" />
+        <Point X="2.75" Y="9.813" />
+        <Point X="11.688" Y="9.813" />
         <Point X="11.688" Y="9.367" />
       </Path>
     </InheritanceLine>
@@ -193,8 +195,8 @@
     </Compartments>
     <InheritanceLine Type="AehnlichLibViewModels.ViewModels.Base.ViewModelBase" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="2.75" Y="10.313" />
-        <Point X="5.688" Y="10.313" />
+        <Point X="2.75" Y="9.813" />
+        <Point X="5.688" Y="9.813" />
         <Point X="5.688" Y="6.482" />
       </Path>
     </InheritanceLine>
@@ -222,7 +224,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="AehnlichLibViewModels.ViewModels.Base.ViewModelBase">
-    <Position X="0.5" Y="9.25" Width="2.25" />
+    <Position X="0.5" Y="8.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\Base\ViewModelBase.cs</FileName>
