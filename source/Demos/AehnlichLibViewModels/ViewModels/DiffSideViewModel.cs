@@ -230,8 +230,6 @@
             Document = new TextDocument(text);
 
             NotifyPropertyChanged(() => Document);
-
-            UpdateAfterSetData();
         }
 
         /// <summary>
@@ -241,30 +239,73 @@
         /// </summary>
         /// <param name="lineOne"></param>
         /// <param name="lineTwo"></param>
-        internal void SetData(DiffViewLine lineOne, DiffViewLine lineTwo)
+        internal void SetData(DiffViewLine lineOne, DiffViewLine lineTwo,
+                              DiffLineInfoViewModel lineOneVM,
+                              DiffLineInfoViewModel lineTwoVM,
+                              int spacesPerTab)
         {
             _lines = new DiffViewLines(lineOne, lineTwo);
             var documentLineDiffs = new List<DiffLineInfoViewModel>();
 
             string text = string.Empty;
 
+            if (lineOneVM != null && lineOneVM.LineEditScriptSegmentsIsDirty == true)
+            {
+                var editScript = lineOne.GetChangeEditScript(this.ChangeDiffOptions);
+
+                if (editScript != null)
+                {
+                    var segments = GetChangeSegments(editScript, lineOne.Text, lineOne.FromA,
+                                                     spacesPerTab);
+
+                    lineOneVM.SetEditScript(segments);
+                }
+                else
+                    lineOneVM.SetEditScript(null);  // Make sure its been set even if empty
+            }
+
+            if (lineTwoVM != null && lineTwoVM.LineEditScriptSegmentsIsDirty == true)
+            {
+                var editScript = lineTwo.GetChangeEditScript(this.ChangeDiffOptions);
+
+                if (editScript != null)
+                {
+                    var segments = GetChangeSegments(editScript, lineTwo.Text, lineTwo.FromA,
+                                                     spacesPerTab);
+
+                    lineTwoVM.SetEditScript(segments);
+                }
+                else
+                    lineTwoVM.SetEditScript(null);  // Make sure its been set even if empty
+            }
+
             if (lineOne != null && lineTwo != null)
             {
-                documentLineDiffs.Add(TranslateLineContext(lineOne));
+                if (lineOneVM != null)
+                    documentLineDiffs.Add(lineOneVM);
+                else
+                    documentLineDiffs.Add(TranslateLineContext(lineOne));
+
                 text += lineOne.Text + '\n';
 
-                documentLineDiffs.Add(TranslateLineContext(lineTwo));
+                if (lineTwoVM != null)
+                    documentLineDiffs.Add(lineTwoVM);
+                else
+                    documentLineDiffs.Add(TranslateLineContext(lineOne));
+
                 text += lineTwo.Text + "\n";
             }
 
+            text = text.Replace("\t", "    ");
+
+            // Update LineInfo viewmodels
             _DocLineDiffs.Clear();
             _DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
             NotifyPropertyChanged(() => DocLineDiffs);
 
+            // Update text document
             Document = new TextDocument(text);
             NotifyPropertyChanged(() => Document);
-
-            this.UpdateAfterSetData();
         }
 
         #region FirstDiff NextDiff PrevDiff LastDiff
@@ -503,48 +544,14 @@
             }
         }
 
-        private void UpdateAfterSetData()
+        internal DiffViewLine GetLine(int line, out DiffLineInfoViewModel lineVM)
         {
-            // Reset the position before we start calculating things
-////            this.position = new DiffViewPosition(0, 0);
-////            this.selectionStart = DiffViewPosition.Empty;
-////
-////            // We have to call this to recalc the gutter width
-////            this.UpdateTextMetrics(false);
-////
-////            // We have to call this to setup the scroll bars
-////            this.SetupScrollBars();
-////
-////            // Reset the scroll position
-////            this.VScrollPos = 0;
-////            this.HScrollPos = 0;
-////
-////            // Update the caret
-////            this.UpdateCaret();
-////
-////            // Force a repaint
-////            this.Invalidate();
-////
-////            // Fire the LinesChanged event
-////            if (this.LinesChanged != null)
-////            {
-////                this.LinesChanged(this, EventArgs.Empty);
-////            }
-////
-////            // Fire the position changed event
-////            if (this.PositionChanged != null)
-////            {
-////                this.PositionChanged(this, EventArgs.Empty);
-////            }
-////
-////            this.FireSelectionChanged();
-        }
+            lineVM = null;
 
-        internal DiffViewLine GetLine(int line)
-        {
             if (line >= this.LineCount)
                 return null;
 
+            lineVM = _DocLineDiffs[line];
             return _lines[line];
         }
 

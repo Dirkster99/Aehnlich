@@ -302,6 +302,8 @@
             ShowLineNumbers="False"
 			IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             IsReadOnly="True"
+
+            Options="{Binding ElementName=DiffCtrl,Path=DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
             
             Column="{Binding Column, Mode=OneWayToSource}"
             Line="{Binding Line, Mode=OneWayToSource}"

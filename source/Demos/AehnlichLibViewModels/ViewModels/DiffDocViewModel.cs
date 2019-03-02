@@ -6,6 +6,7 @@
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Events;
+    using AehnlichLibViewModels.Models;
     using ICSharpCode.AvalonEdit;
 
     /// <summary>
@@ -303,7 +304,45 @@
             }
 
             this.currentDiffLine = -1;
-            this.UpdateLineDiff();              // Update 2 line diff ViewLineDiff
+            this.UpdateViewLineDiff(4);              // Update 2 line diff ViewLineDiff
+        }
+
+        /// <summary>
+        /// Update the 2 line display (ViewLineDiff) that contains the display
+        /// of the currently selected line in 2 rows rather than side by side.
+        /// </summary>
+        private void UpdateViewLineDiff(int spacesPerTab)
+        {
+            // Determine zero based current cursor position in line n
+            int line = Math.Max(0, SynchronizedLine - 1);
+            if (line == this.currentDiffLine)
+            {
+                return;
+            }
+
+            this.currentDiffLine = line;
+
+            DiffViewLine lineOne = null;
+            DiffViewLine lineTwo = null;
+            DiffLineInfoViewModel lineOneVM = null;
+            DiffLineInfoViewModel lineTwoVM = null;
+            if (line < this.ViewA.LineCount)
+            {
+                lineOne = this.ViewA.GetLine(line, out lineOneVM);
+            }
+
+            // Normally, ViewA.LineCount == ViewB.LineCount, but during
+            // SetData they'll be mismatched momentarily as each view
+            // rebuilds its lines.
+            if (line < this.ViewB.LineCount)
+            {
+                lineTwo = this.ViewB.GetLine(line, out lineTwoVM);
+            }
+
+            if (lineOne != null && lineTwo != null)
+            {
+                this._ViewLineDiff.SetData(lineOne, lineTwo, lineOneVM, lineTwoVM, spacesPerTab);
+            }
         }
 
         /// <summary>
@@ -358,42 +397,6 @@
         }
 
         /// <summary>
-        /// Update the 2 line display (ViewLineDiff) that contains the display
-        /// of the currently selected line in 2 rows rather than side by side.
-        /// </summary>
-        private void UpdateLineDiff()
-        {
-            // Determine current cursor position in line n
-            int line = Math.Max(0, SynchronizedLine - 1);
-            if (line == this.currentDiffLine)
-            {
-                return;
-            }
-
-            this.currentDiffLine = line;
-
-            DiffViewLine lineOne = null;
-            DiffViewLine lineTwo = null;
-            if (line < this.ViewA.LineCount)
-            {
-                lineOne = this.ViewA.GetLine(line);
-            }
-
-            // Normally, ViewA.LineCount == ViewB.LineCount, but during
-            // SetData they'll be mismatched momentarily as each view
-            // rebuilds its lines.
-            if (line < this.ViewB.LineCount)
-            {
-                lineTwo = this.ViewB.GetLine(line);
-            }
-
-            if (lineOne != null && lineTwo != null)
-            {
-                this._ViewLineDiff.SetData(lineOne, lineTwo);
-            }
-        }
-
-        /// <summary>
         /// Is invoked when the cursor position in view B has been changed.
         /// </summary>
         /// <param name="sender"></param>
@@ -418,7 +421,7 @@
 
             if (e.ChangeType == CaretChangeType.Line || e.ChangeType == CaretChangeType.ColumnAndLine)
             {
-                UpdateLineDiff();
+                UpdateViewLineDiff(4);
                 UpdateOtherView(e, ViewB);
             }
         }
@@ -448,7 +451,7 @@
 
             if (e.ChangeType == CaretChangeType.Line || e.ChangeType == CaretChangeType.ColumnAndLine)
             {
-                UpdateLineDiff();
+                UpdateViewLineDiff(4);
                 UpdateOtherView(e, ViewA);
             }
         }
