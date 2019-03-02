@@ -5,6 +5,7 @@
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Models;
+    using AehnlichViewLib.Models;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -361,8 +362,9 @@
             this.IgnoreTextWhitespace = ignoreTextWhitespace;
             this.IsBinaryCompare = isBinaryCompare;
 
-            this._DiffCtrl.SetData(a, b, script, captionA, captionB,
-                                  ignoreCase, ignoreTextWhitespace, isBinaryCompare);
+            _DiffCtrl.SetData(a, b, script, captionA, captionB,
+                              ignoreCase, ignoreTextWhitespace,
+                              isBinaryCompare);
 
             if (Options.LineDiffHeight != 0)
             {

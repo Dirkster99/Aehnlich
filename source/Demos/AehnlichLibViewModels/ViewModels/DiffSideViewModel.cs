@@ -1,12 +1,11 @@
 ﻿namespace AehnlichLibViewModels.ViewModels
 {
-    using AehnlichLib.Enums;
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Events;
-    using AehnlichLibViewModels.Models;
     using AehnlichLibViewModels.ViewModels.LineInfo;
     using AehnlichViewLib.Controls.AvalonEditEx;
+    using AehnlichViewLib.Models;
     using ICSharpCode.AvalonEdit.Document;
     using System;
     using System.Collections.Generic;
@@ -16,20 +15,16 @@
     {
         #region fields
         private ChangeDiffOptions _ChangeDiffOptions;
-
-        ////        private DiffViewLines _lines;
-        private DiffViewPosition _position;
-
+        private readonly DiffLinesViewModel _DiffLines;
         private TextDocument _document = null;
         private TextBoxController _TxtControl;
 
-        ////        private readonly ObservableRangeCollection<DiffLineInfoViewModel> _DocLineDiffs;
-        private readonly DiffLinesViewModel _DiffLines;
+        private DiffViewPosition _position;
+        private int _Column;
+        private int _Line;
 
         private DateTime _ViewActivation;
         private bool _isDirty = false;
-        private int _Column;
-        private int _Line;
         private string _FileName;
         #endregion fields
 
@@ -39,7 +34,6 @@
         /// </summary>
         public DiffSideViewModel()
         {
-            ////        _DocLineDiffs = new ObservableRangeCollection<DiffLineInfoViewModel>();
             _DiffLines = new DiffLinesViewModel();
             _Line = 0;
             _Column = 0;
@@ -154,16 +148,6 @@
             }
         }
 
-////        public IReadOnlyList<DiffLineInfoViewModel> DocLineDiffs
-////        {
-////            get
-////            {
-////                return _DocLineDiffs;
-////            }
-////        }
-
-////        public int LineCount => this._lines != null ? this._lines.Count : 0;
-
         public bool IsDirty
         {
             get { return _isDirty; }
@@ -226,14 +210,6 @@
                             EditScript script, bool useA)
         {
             this.FileName = filename;
-////            _lines = new DiffViewLines(stringList, script, useA);
-////            NotifyPropertyChanged(() => LineCount);
-////
-////            IList<DiffLineInfoViewModel> lineDiffs;
-////            string text = GetDocumentFromRawLines(out lineDiffs);
-////
-////            _DocLineDiffs.Clear();
-////            _DocLineDiffs.AddRange(lineDiffs, NotifyCollectionChangedAction.Reset);
 
             string text = _DiffLines.SetData(stringList, script, useA);
             Document = new TextDocument(text);
@@ -439,83 +415,6 @@
                 return null;
 
             return _DiffLines.DocLineDiffs[line];
-        }
-
-        private IList<ISegment>
-            GetChangeSegments(EditScript changeEditScript,
-                              string originalLineText,
-                              bool useA,
-                              int spacesPerTab)
-        {
-            var result = new List<ISegment>();
-
-            int previousOriginalTextIndex = 0;
-            int previousDisplayTextIndex = 0;
-
-            foreach (Edit edit in changeEditScript)
-            {
-                if ((useA && edit.EditType == EditType.Delete) ||
-                    (!useA && edit.EditType == EditType.Insert))
-                {
-                    int startOriginalTextIndex = useA ? edit.StartA : edit.StartB;
-                    int startDisplayTextIndex = this.GetDisplayTextIndex(startOriginalTextIndex, previousOriginalTextIndex, previousDisplayTextIndex, originalLineText, spacesPerTab);
-
-                    int endOriginalTextIndex = startOriginalTextIndex + edit.Length;
-                    int endDisplayTextIndex = this.GetDisplayTextIndex(endOriginalTextIndex, startOriginalTextIndex, startDisplayTextIndex, originalLineText, spacesPerTab);
-
-                    previousOriginalTextIndex = endOriginalTextIndex;
-                    previousDisplayTextIndex = endDisplayTextIndex;
-
-                    result.Add(new Segment(startDisplayTextIndex, endDisplayTextIndex - startDisplayTextIndex, endDisplayTextIndex));
-                }
-            }
-
-            return result;
-        }
-
-        private int GetDisplayTextIndex(int originalTextIndex,
-                                        int previousOriginalTextIndex,
-                                        int previousDisplayTextIndex,
-                                        string originalLineText,
-                                        int spacesPerTab)
-        {
-            int result = previousDisplayTextIndex;
-
-            string originalText = originalLineText;
-            int maxLength = originalText.Length;
-
-            for (int i = previousOriginalTextIndex; i < maxLength && i < originalTextIndex; i++)
-            {
-                result += this.GetCharWidth(originalText[i], result, spacesPerTab);
-            }
-
-            return result;
-        }
-
-        private int GetCharWidth(char ch, int columnStart, int spacesPerTab)
-        {
-            int result = 1;
-            int position = columnStart + result;
-
-            if (ch == '\t')
-            {
-                // We've already counted the tab as one character, but now we need to add on spaces
-                // to expand to the next multiple of this.spacesPerTab.  The mod remainder tells us how
-                // many spaces of the current tab that we've used so far.
-                // Examples (with SpacesPerTab == 4):
-                //  position = 5 --> mod == 1 --> need 3 spaces
-                //  position = 16 --> mod == 0 --> need 0 spaces
-                //  position = 18 --> mod == 2 --> need 2 spaces
-                //  position = 23 --> mod == 1 --> need 1 space
-                int tabSpacesUsed = position % spacesPerTab;
-                if (tabSpacesUsed > 0)
-                {
-                    int extraSpacesNeeded = spacesPerTab - tabSpacesUsed;
-                    result += extraSpacesNeeded;
-                }
-            }
-
-            return result;
         }
         #endregion methods
     }

@@ -9,6 +9,7 @@
     using AehnlichLibViewModels.Events;
     using AehnlichLibViewModels.Models;
     using AehnlichLibViewModels.ViewModels.Base;
+    using AehnlichViewLib.Models;
     using ICSharpCode.AvalonEdit;
 
     /// <summary>
@@ -399,6 +400,7 @@
                               bool changeDiffIgnoreWhiteSpace,
                               bool changeDiffTreatAsBinaryLines)
         {
+            const int spacesPerTab = 4;
             ChangeDiffOptions changeDiffOptions = ChangeDiffOptions.None;
             if (changeDiffTreatAsBinaryLines)
             {
@@ -443,7 +445,7 @@
             }
 
             this.currentDiffLine = -1;
-            this.UpdateViewLineDiff(4);              // Update 2 line diff ViewLineDiff
+            this.UpdateViewLineDiff(spacesPerTab);    // Update 2 line diff ViewLineDiff
         }
 
         /// <summary>

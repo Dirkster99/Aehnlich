@@ -24,11 +24,16 @@
         public const string PART_LeftDiffView = "TextLeft";
         public const string PART_LeftFileNameTextBox = "PART_LeftFileNameTextBox";
 
+        /// <summary>
+        /// Implements the backing store of the <see cref="LeftFileName"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty LeftFileNameProperty =
             DependencyProperty.Register("LeftFileName", typeof(string),
                 typeof(DiffControl), new PropertyMetadata(null));
 
-
+        /// <summary>
+        /// Implements the backing store of the <see cref="RightFileName"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty RightFileNameProperty =
             DependencyProperty.Register("RightFileName", typeof(string),
                 typeof(DiffControl), new PropertyMetadata(null));
@@ -37,36 +42,9 @@
             DependencyProperty.Register("ViewPortChangedCommand", typeof(ICommand),
                 typeof(DiffControl), new PropertyMetadata(null));
 
-        public TextEditorOptions DiffViewOptions
-        {
-            get { return (TextEditorOptions)GetValue(DiffViewOptionsProperty); }
-            set { SetValue(DiffViewOptionsProperty, value); }
-        }
-
         public static readonly DependencyProperty DiffViewOptionsProperty =
             DependencyProperty.Register("DiffViewOptions", typeof(TextEditorOptions),
                 typeof(DiffControl), new PropertyMetadata(new TextEditorOptions { IndentationSize = 4, ShowTabs = false, ConvertTabsToSpaces=true }));
-
-        public ICommand ViewPortChangedCommand
-        {
-            get { return (ICommand)GetValue(ViewPortChangedCommandProperty); }
-            set { SetValue(ViewPortChangedCommandProperty, value); }
-        }
-
-        public string RightFileName
-        {
-            get { return (string)GetValue(RightFileNameProperty); }
-            set { SetValue(RightFileNameProperty, value); }
-        }
-
-        /// <summary>
-        /// Implements the backing staore of the <see cref="LeftFileName"/> dependency property.
-        /// </summary>
-        public string LeftFileName
-        {
-            get { return (string)GetValue(LeftFileNameProperty); }
-            set { SetValue(LeftFileNameProperty, value); }
-        }
 
         private DiffView _PART_LeftDiffView;
         private DiffView _PART_RightDiffView;
@@ -86,6 +64,29 @@
         #endregion ctors
 
         #region properties
+        public TextEditorOptions DiffViewOptions
+        {
+            get { return (TextEditorOptions)GetValue(DiffViewOptionsProperty); }
+            set { SetValue(DiffViewOptionsProperty, value); }
+        }
+
+        public ICommand ViewPortChangedCommand
+        {
+            get { return (ICommand)GetValue(ViewPortChangedCommandProperty); }
+            set { SetValue(ViewPortChangedCommandProperty, value); }
+        }
+
+        public string RightFileName
+        {
+            get { return (string)GetValue(RightFileNameProperty); }
+            set { SetValue(RightFileNameProperty, value); }
+        }
+
+        public string LeftFileName
+        {
+            get { return (string)GetValue(LeftFileNameProperty); }
+            set { SetValue(LeftFileNameProperty, value); }
+        }
         #endregion properties
 
         #region methods
@@ -135,7 +136,7 @@
             scrollToSync.ScrollToVerticalOffset(e.VerticalOffset);
             scrollToSync.ScrollToHorizontalOffset(e.HorizontalOffset);
 
-            // Get currently view lines viewport in source of event
+            // Get current view lines viewport in source of event
             if (sourceToSync.TextArea.TextView.VisualLines.Any())
             {
                 var firstline = sourceToSync.TextArea.TextView.VisualLines.First();

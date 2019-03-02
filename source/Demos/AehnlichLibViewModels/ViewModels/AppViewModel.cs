@@ -22,7 +22,7 @@
         private int _LastLineToSync = 0;
         private ICommand _ViewPortChangedCommand;
         private ICommand _OverviewValueChangedCommand;
-
+        private DiffViewPort _LastViewPort;
         private readonly FileDiffFormViewModel _DiffForm;
         private readonly object lockObject = new object();
         #endregion fields
@@ -219,6 +219,8 @@
 
                         // Translate from 1-based values to tero-based values
                         _DiffForm.GetChangeEditScript(param.FirstLine-1, param.LastLine-1, spacesPerTab);
+
+                        _LastViewPort = param;
                     }
                     , (p) =>
                     {

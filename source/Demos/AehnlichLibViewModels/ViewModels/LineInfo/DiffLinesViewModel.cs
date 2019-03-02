@@ -4,6 +4,7 @@
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichViewLib.Enums;
+    using AehnlichViewLib.Models;
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -52,7 +53,8 @@
         #endregion properties
 
         #region methods
-        public string SetData(IList<string> stringList, EditScript script, bool useA)
+        public string SetData(IList<string> stringList, EditScript script,
+                              bool useA)
         {
             _diffEndLines = null;
             _diffStartLines = null;
@@ -60,11 +62,10 @@
 
             var lines = GetLineModels(stringList, script, useA);
 
-            IList<DiffLineViewModel> lineDiffs;
-            string text = GetDocumentFromRawLines(lines, out lineDiffs);
+            string text = GetDocumentFromRawLines(lines);
 
             _DocLineDiffs.Clear();
-            _DocLineDiffs.AddRange(lineDiffs, NotifyCollectionChangedAction.Reset);
+            _DocLineDiffs.AddRange(lines, NotifyCollectionChangedAction.Reset);
 
             return text;
         }
@@ -117,10 +118,10 @@
         /// <param name="script"></param>
         /// <param name="useA">Set to true if this data represents the reference view
         /// (left view also known as ViewA) otherwise false.</param>
-        internal IList<DiffViewLine> GetLineModels(IList<string> stringList,
-                                                   EditScript script, bool useA)
+        internal IList<DiffLineViewModel> GetLineModels(IList<string> stringList,
+                                                        EditScript script, bool useA)
         {
-            List<DiffViewLine> ret = new List<DiffViewLine>();
+            var ret = new List<DiffLineViewModel>();
             int currentLine = 0;
 
             int totalEdits = script.Count;
@@ -188,7 +189,7 @@
         /// (left view also known as ViewA) otherwise false.</param>
         /// <returns>the actual number of added lines</returns>
         private int AddUneditedLines(IList<string> stringList, int current, int end, bool fromA,
-                                     List<DiffViewLine> items)
+                                     List<DiffLineViewModel> items)
         {
             for (int i = current; i < end; i++)
             {
@@ -204,7 +205,7 @@
 
         /// <summary>
         /// Constructs a <see cref="DiffViewLine"/> object and
-        /// adds it into the inherited Items collection.
+        /// adds it into the Items collection.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="number"></param>
@@ -213,7 +214,7 @@
         /// (left view also known as ViewA) otherwise false.</param>
         /// <returns></returns>
         private void AddLine(string text, int? number, EditType editType, bool fromA,
-                             List<DiffViewLine> items)
+                             List<DiffLineViewModel> items)
         {
             this.AddLine(new DiffViewLine(text, number, editType, fromA), items);
         }
@@ -222,14 +223,14 @@
         /// Adds another line in into the inherited Items collection.
         /// </summary>
         /// <param name="line"></param>
-        private void AddLine(DiffViewLine line, List<DiffViewLine> items)
+        private void AddLine(DiffViewLine line, List<DiffLineViewModel> items)
         {
             if (line.Number.HasValue && line.Number.Value > _maxImaginaryLineNumber)
             {
                 _maxImaginaryLineNumber = line.Number.Value;
             }
 
-            items.Add(line);
+            items.Add(TranslateLineContext(line));
         }
         #endregion model collection
 
@@ -259,17 +260,12 @@
             }
         }
 
-        private string GetDocumentFromRawLines(IList<DiffViewLine> lines,
-                                               out IList<DiffLineViewModel> documentLineDiffs)
+        private string GetDocumentFromRawLines(IList<DiffLineViewModel> lines)
         {
-            documentLineDiffs = new List<DiffLineViewModel>();
             StringBuilder ret = new StringBuilder();
 
             foreach (var item in lines)
-            {
-                documentLineDiffs.Add(TranslateLineContext(item));
                 ret.Append(item.Text + '\n');
-            }
 
             return ret.ToString().Replace("\t", "    ");
         }
