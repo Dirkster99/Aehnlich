@@ -1,4 +1,4 @@
-﻿namespace AehnlichLibViewModels.ViewModels
+﻿namespace AehnlichLibViewModels.ViewModels.LineInfo
 {
     using AehnlichLib.Binaries;
     using AehnlichLib.Enums;

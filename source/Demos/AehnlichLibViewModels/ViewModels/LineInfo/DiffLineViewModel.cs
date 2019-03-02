@@ -5,6 +5,7 @@
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Models;
+    using AehnlichLibViewModels.ViewModels.LineInfo;
     using AehnlichViewLib.Enums;
     using AehnlichViewLib.Interfaces;
     using ICSharpCode.AvalonEdit.Document;

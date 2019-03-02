@@ -1,5 +1,6 @@
 ﻿namespace AehnlichLibViewModels.ViewModels.LineInfo
 {
+    using AehnlichLib.Enums;
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichViewLib.Enums;
@@ -57,11 +58,7 @@
             _diffStartLines = null;
             _maxImaginaryLineNumber = 1;
 
-            var lines = new DiffViewLines(stringList, script, useA);
-
-            _diffStartLines = lines.DiffStartLines;
-            _diffEndLines = lines.DiffEndLines;
-            _maxImaginaryLineNumber = lines.MaxLineNumber;
+            var lines = GetLineModels(stringList, script, useA);
 
             IList<DiffLineViewModel> lineDiffs;
             string text = GetDocumentFromRawLines(lines, out lineDiffs);
@@ -112,6 +109,129 @@
             return text;
         }
 
+        #region model collection
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stringList"></param>
+        /// <param name="script"></param>
+        /// <param name="useA">Set to true if this data represents the reference view
+        /// (left view also known as ViewA) otherwise false.</param>
+        internal IList<DiffViewLine> GetLineModels(IList<string> stringList,
+                                                   EditScript script, bool useA)
+        {
+            List<DiffViewLine> ret = new List<DiffViewLine>();
+            int currentLine = 0;
+
+            int totalEdits = script.Count;
+            _diffStartLines = new int[totalEdits];
+            _diffEndLines = new int[totalEdits];
+
+            for (int e = 0; e < totalEdits; e++)
+            {
+                Edit edit = script[e];
+
+                // Get the starting line for this Edit
+                int startingLine;
+                bool dummyLine = false;
+                if (useA)
+                {
+                    dummyLine = edit.EditType == EditType.Insert;
+                    startingLine = edit.StartA;
+                }
+                else
+                {
+                    dummyLine = edit.EditType == EditType.Delete;
+                    startingLine = edit.StartB;
+                }
+
+                // Put in unedited lines up to this point
+                currentLine += this.AddUneditedLines(stringList, currentLine, startingLine, useA, ret);
+
+                // Record where the next diff starts and ends
+                _diffStartLines[e] = ret.Count;
+                _diffEndLines[e] = ret.Count + edit.Length - 1;
+
+                // Since Inserts occur after the current line
+                // instead of at it, we have to decrement the index.
+                for (int i = 0; i < edit.Length; i++)
+                {
+                    // A - Shows Deletes and Changes
+                    // B - Shows Inserts and Changes
+                    string text = string.Empty;
+                    int? number = null;
+                    if (!dummyLine)
+                    {
+                        number = startingLine + i;
+                        text = stringList[number.Value];
+                        currentLine++;
+                    }
+
+                    this.AddLine(text, number, edit.EditType, useA, ret);
+                }
+            }
+
+            // Put in any remaining unedited lines with Edittype.None
+            this.AddUneditedLines(stringList, currentLine, stringList.Count, useA, ret);
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Adds all lines between <paramref name="current"/> and <paramref name="end"/>
+        /// with <see cref="EditType.None"/> into the inherited Items.
+        /// </summary>
+        /// <param name="stringList">List of items to be added</param>
+        /// <param name="current">index of first item to be added</param>
+        /// <param name="end">index+1 of last item to be added</param>
+        /// <param name="fromA">Set to true if this data represents the reference view
+        /// (left view also known as ViewA) otherwise false.</param>
+        /// <returns>the actual number of added lines</returns>
+        private int AddUneditedLines(IList<string> stringList, int current, int end, bool fromA,
+                                     List<DiffViewLine> items)
+        {
+            for (int i = current; i < end; i++)
+            {
+                this.AddLine(stringList[i], i, EditType.None, fromA, items);
+            }
+
+            // If the edit script isn't using changes (i.e., just inserts and deletes)
+            // then we can hit cases where iEnd < iCurrent, but we don't want to
+            // return a negative value for number of added lines.
+            int result = Math.Max(end - current, 0);
+            return result;
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="DiffViewLine"/> object and
+        /// adds it into the inherited Items collection.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="number"></param>
+        /// <param name="editType"></param>
+        /// <param name="fromA">Set to true if this data represents the reference view
+        /// (left view also known as ViewA) otherwise false.</param>
+        /// <returns></returns>
+        private void AddLine(string text, int? number, EditType editType, bool fromA,
+                             List<DiffViewLine> items)
+        {
+            this.AddLine(new DiffViewLine(text, number, editType, fromA), items);
+        }
+
+        /// <summary>
+        /// Adds another line in into the inherited Items collection.
+        /// </summary>
+        /// <param name="line"></param>
+        private void AddLine(DiffViewLine line, List<DiffViewLine> items)
+        {
+            if (line.Number.HasValue && line.Number.Value > _maxImaginaryLineNumber)
+            {
+                _maxImaginaryLineNumber = line.Number.Value;
+            }
+
+            items.Add(line);
+        }
+        #endregion model collection
 
         /// <summary>
         /// Sets the Counterpart property in each line property of each
@@ -139,7 +259,7 @@
             }
         }
 
-        private string GetDocumentFromRawLines(DiffViewLines lines,
+        private string GetDocumentFromRawLines(IList<DiffViewLine> lines,
                                                out IList<DiffLineViewModel> documentLineDiffs)
         {
             documentLineDiffs = new List<DiffLineViewModel>();
