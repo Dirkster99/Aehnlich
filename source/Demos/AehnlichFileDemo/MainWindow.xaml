@@ -71,7 +71,7 @@
                 <Separator />
 
                 <Button
-                    Command="{Binding GoToFirstDifferenceCommand}"
+                    Command="{Binding DiffForm.DiffCtrl.GoToFirstDifferenceCommand}"
                     ToolTip="Go to First Difference"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
@@ -84,7 +84,7 @@
                 </Button>
 
                 <Button
-                    Command="{Binding GoToNextDifferenceCommand}"
+                    Command="{Binding DiffForm.DiffCtrl.GoToNextDifferenceCommand}"
                     ToolTip="Go to Next Difference"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
@@ -97,7 +97,7 @@
                 </Button>
 
                 <Button
-                    Command="{Binding GoToPrevDifferenceCommand}"
+                    Command="{Binding DiffForm.DiffCtrl.GoToPrevDifferenceCommand}"
                     ToolTip="Go to Previous Difference"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
@@ -110,7 +110,7 @@
                 </Button>
 
                 <Button
-                    Command="{Binding GoToLastDifferenceCommand}"
+                    Command="{Binding DiffForm.DiffCtrl.GoToLastDifferenceCommand}"
                     ToolTip="Go to Last Difference"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"

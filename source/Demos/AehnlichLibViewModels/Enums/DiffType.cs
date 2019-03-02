@@ -6,6 +6,7 @@
     /// </summary>
     public enum DiffType
     {
+        Unknown,
         File,
         Directory,
         Text

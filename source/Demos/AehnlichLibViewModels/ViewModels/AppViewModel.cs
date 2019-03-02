@@ -12,10 +12,6 @@
         private string _FilePathA;
         private string _FilePathB;
         private ICommand _CompareFilesCommand;
-        private ICommand _GoToFirstDifferenceCommand;
-        private ICommand _GoToNextDifferenceCommand;
-        private ICommand _GoToPrevDifferenceCommand;
-        private ICommand _GoToLastDifferenceCommand;
         private ICommand _OpenFileFromActiveViewCommand;
         private ICommand _CopyTextSelectionFromActiveViewCommand;
 
@@ -75,8 +71,8 @@
                         NotifyPropertyChanged(() => DiffForm);
 
                         // Position view on first difference if thats available
-                        if (GoToFirstDifferenceCommand.CanExecute(null))
-                            GoToFirstDifferenceCommand.Execute(null);
+                        if (_DiffForm.DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
+                            _DiffForm.DiffCtrl.GoToFirstDifferenceCommand.Execute(null);
                     });
                 }
 
@@ -281,140 +277,6 @@
                 return _OverviewValueChangedCommand;
             }
         }
-
-        #region Goto Diff Commands
-        /// <summary>
-        /// Gets a command that positions the diff viewer at the first detected difference.
-        /// </summary>
-        public ICommand GoToFirstDifferenceCommand
-        {
-            get
-            {
-                if (_GoToFirstDifferenceCommand == null)
-                {
-                    _GoToFirstDifferenceCommand = new RelayCommand<object>((p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
-                        DiffViewPosition gotoPos = activeView.GetFirstDiffPosition();
-                        DiffForm.DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
-                    },
-                    (p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
-                        if (activeView == null)
-                            return false;
-
-                        bool isEnabled = activeView.CanGoToFirstDiff();
-
-                        return isEnabled;
-                    });
-                }
-
-                return _GoToFirstDifferenceCommand;
-            }
-        }
-
-        /// <summary>
-        /// Gets a command that positions the diff viewer at the next detected difference.
-        /// </summary>
-        public ICommand GoToNextDifferenceCommand
-        {
-            get
-            {
-                if (_GoToNextDifferenceCommand == null)
-                {
-                    _GoToNextDifferenceCommand = new RelayCommand<object>((p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
-                        DiffViewPosition gotoPos = activeView.GetNextDiffPosition();
-                        DiffForm.DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
-                    },
-                    (p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
-                        if (activeView == null)
-                            return false;
-
-                        bool isEnabled = activeView.CanGoToNextDiff();
-
-                        return isEnabled;
-                    });
-                }
-
-                return _GoToNextDifferenceCommand;
-            }
-        }
-
-        /// <summary>
-        /// Gets a command that positions the diff viewer at a previously detected difference.
-        /// </summary>
-        public ICommand GoToPrevDifferenceCommand
-        {
-            get
-            {
-                if (_GoToPrevDifferenceCommand == null)
-                {
-                    _GoToPrevDifferenceCommand = new RelayCommand<object>((p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
-                        DiffViewPosition gotoPos = activeView.GetPrevDiffPosition();
-                        DiffForm.DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
-                    },
-                    (p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
-                        if (activeView == null)
-                            return false;
-
-                        bool isEnabled = activeView.CanGoToPreviousDiff();
-
-                        return isEnabled;
-                    });
-                }
-
-                return _GoToPrevDifferenceCommand;
-            }
-        }
-
-        /// <summary>
-        /// Gets a command that positions the diff viewer at the last detected difference.
-        /// </summary>
-        public ICommand GoToLastDifferenceCommand
-        {
-            get
-            {
-                if (_GoToLastDifferenceCommand == null)
-                {
-                    _GoToLastDifferenceCommand = new RelayCommand<object>((p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
-                        DiffViewPosition gotoPos = activeView.GetLastDiffPosition();
-                        DiffForm.DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
-                    },
-                    (p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
-                        if (activeView == null)
-                            return false;
-
-                        bool isEnabled = activeView.CanGoToLastDiff();
-
-                        return isEnabled;
-                    });
-                }
-
-                return _GoToLastDifferenceCommand;
-            }
-        }
-        #endregion Goto Diff Commands
 
         public FileDiffFormViewModel DiffForm
         {

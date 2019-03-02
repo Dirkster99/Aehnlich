@@ -5,7 +5,6 @@
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Models;
-    using ICSharpCode.AvalonEdit;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -29,7 +28,7 @@
         private bool _IsBinaryCompare;
         private int _LineDiffHeight;
         private int _NumberOfLines;
-
+        private DiffType _DiffType;
         private readonly DiffDocViewModel _DiffCtrl;
         #endregion fields
 
@@ -41,6 +40,7 @@
         {
             Options.OptionsChanged += this.OptionsChanged;
             _DiffCtrl = new DiffDocViewModel();
+            _DiffType = DiffType.Unknown;
         }
         #endregion ctors
 
@@ -285,18 +285,39 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the source and typr of the items being compared
+        /// <see cref="DiffType.File"/>, <see cref="DiffType.Text"/> or <see cref="DiffType.Directory"/>
+        /// </summary>
+        public DiffType DiffType
+        {
+            get
+            {
+                return _DiffType;
+            }
+
+            protected set
+            {
+                if (_DiffType != value)
+                {
+                    _DiffType = value;
+                    NotifyPropertyChanged(() => NumberOfLines);
+                }
+            }
+        }
         #endregion properties
 
         #region methods
-        public void ShowDifferences(ShowDiffArgs e)
+        public void ShowDifferences(ShowDiffArgs args)
         {
-            string textA = e.A;
-            string textB = e.B;
-            DiffType diffType = e.DiffType;
+            string textA = args.A;
+            string textB = args.B;
+            this.DiffType = args.DiffType;
 
             IList<string> a, b;
             int leadingCharactersToIgnore = 0;
-            bool fileNames = diffType == DiffType.File;
+            bool fileNames = (this.DiffType == DiffType.File);
             if (fileNames)
             {
                 GetFileLines(textA, textB, out a, out b, out leadingCharactersToIgnore);
@@ -352,7 +373,7 @@
             NumberOfLines = ListA.Count;
             NotifyPropertyChanged(() => DiffCtrl);
 
-            this.currentDiffArgs = e;
+            this.currentDiffArgs = args;
         }
 
         internal void GetChangeEditScript(int firstLine, int lastLine, int spacesPerTab)

@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Windows.Input;
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Events;
     using AehnlichLibViewModels.Models;
+    using AehnlichLibViewModels.ViewModels.Base;
     using ICSharpCode.AvalonEdit;
 
     /// <summary>
@@ -27,7 +29,10 @@
         private int currentDiffLine = -1;
         private int _SynchronizedLine = 1;
         private int _SynchronizedColumn = 0;
-
+        private ICommand _GoToLastDifferenceCommand;
+        private ICommand _GoToPrevDifferenceCommand;
+        private ICommand _GoToNextDifferenceCommand;
+        private ICommand _GoToFirstDifferenceCommand;
         private readonly TextEditorOptions _DiffViewOptions;
 
         ////        private int currentDiffLine = -1;
@@ -238,6 +243,140 @@
                 }
             }
         }
+
+        #region Goto Diff Commands
+        /// <summary>
+        /// Gets a command that positions the diff viewer at the first detected difference.
+        /// </summary>
+        public ICommand GoToFirstDifferenceCommand
+        {
+            get
+            {
+                if (_GoToFirstDifferenceCommand == null)
+                {
+                    _GoToFirstDifferenceCommand = new RelayCommand<object>((p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        DiffViewPosition gotoPos = activeView.GetFirstDiffPosition();
+                        ScrollToLine(gotoPos, nonActView, activeView);
+                    },
+                    (p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        if (activeView == null)
+                            return false;
+
+                        bool isEnabled = activeView.CanGoToFirstDiff();
+
+                        return isEnabled;
+                    });
+                }
+
+                return _GoToFirstDifferenceCommand;
+            }
+        }
+
+        /// <summary>
+        /// Gets a command that positions the diff viewer at the next detected difference.
+        /// </summary>
+        public ICommand GoToNextDifferenceCommand
+        {
+            get
+            {
+                if (_GoToNextDifferenceCommand == null)
+                {
+                    _GoToNextDifferenceCommand = new RelayCommand<object>((p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        DiffViewPosition gotoPos = activeView.GetNextDiffPosition();
+                        ScrollToLine(gotoPos, nonActView, activeView);
+                    },
+                    (p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        if (activeView == null)
+                            return false;
+
+                        bool isEnabled = activeView.CanGoToNextDiff();
+
+                        return isEnabled;
+                    });
+                }
+
+                return _GoToNextDifferenceCommand;
+            }
+        }
+
+        /// <summary>
+        /// Gets a command that positions the diff viewer at a previously detected difference.
+        /// </summary>
+        public ICommand GoToPrevDifferenceCommand
+        {
+            get
+            {
+                if (_GoToPrevDifferenceCommand == null)
+                {
+                    _GoToPrevDifferenceCommand = new RelayCommand<object>((p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        DiffViewPosition gotoPos = activeView.GetPrevDiffPosition();
+                        ScrollToLine(gotoPos, nonActView, activeView);
+                    },
+                    (p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        if (activeView == null)
+                            return false;
+
+                        bool isEnabled = activeView.CanGoToPreviousDiff();
+
+                        return isEnabled;
+                    });
+                }
+
+                return _GoToPrevDifferenceCommand;
+            }
+        }
+
+        /// <summary>
+        /// Gets a command that positions the diff viewer at the last detected difference.
+        /// </summary>
+        public ICommand GoToLastDifferenceCommand
+        {
+            get
+            {
+                if (_GoToLastDifferenceCommand == null)
+                {
+                    _GoToLastDifferenceCommand = new RelayCommand<object>((p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        DiffViewPosition gotoPos = activeView.GetLastDiffPosition();
+                        ScrollToLine(gotoPos, nonActView, activeView);
+                    },
+                    (p) =>
+                    {
+                        DiffSideViewModel nonActView;
+                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        if (activeView == null)
+                            return false;
+
+                        bool isEnabled = activeView.CanGoToLastDiff();
+
+                        return isEnabled;
+                    });
+                }
+
+                return _GoToLastDifferenceCommand;
+            }
+        }
+        #endregion Goto Diff Commands
         #endregion properties
 
         #region methods
