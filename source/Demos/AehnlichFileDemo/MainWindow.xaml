@@ -282,6 +282,7 @@
                               LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
+                              DiffViewOptions="{Binding DiffForm.DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               
                               Margin="3"/>
         </Grid>

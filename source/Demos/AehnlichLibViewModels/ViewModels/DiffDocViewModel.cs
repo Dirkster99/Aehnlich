@@ -6,6 +6,7 @@
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Events;
+    using ICSharpCode.AvalonEdit;
 
     /// <summary>
     /// DiffControl
@@ -26,6 +27,8 @@
         private int _SynchronizedLine = 1;
         private int _SynchronizedColumn = 0;
 
+        private readonly TextEditorOptions _DiffViewOptions;
+
         ////        private int currentDiffLine = -1;
         #endregion fields
 
@@ -35,6 +38,7 @@
         /// </summary>
         public DiffDocViewModel()
         {
+            _DiffViewOptions = new TextEditorOptions() { ShowTabs = false, ConvertTabsToSpaces = true, IndentationSize = 4 };
             _ViewA = new DiffSideViewModel();
             _ViewB = new DiffSideViewModel();
             _ViewLineDiff = new DiffSideViewModel();
@@ -45,6 +49,23 @@
         #endregion ctors
 
         #region properties
+        public TextEditorOptions DiffViewOptions
+        {
+            get
+            {
+                return _DiffViewOptions;
+            }
+
+////            protected set
+////            {
+////                if (_DiffViewOptions != value)
+////                {
+////                    _DiffViewOptions = value;
+////                    NotifyPropertyChanged(() => _DiffViewOptions);
+////                }
+////            }
+        }
+
         public DiffSideViewModel ViewA
         {
             get { return _ViewA; }

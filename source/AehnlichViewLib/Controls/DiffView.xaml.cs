@@ -36,7 +36,7 @@
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundBlankProperty =
             DependencyProperty.Register("ColorBackgroundBlank", typeof(SolidColorBrush),
-                typeof(TextEditor), new PropertyMetadata(default(SolidColorBrush), OnColorChanged));
+                typeof(DiffView), new PropertyMetadata(default(SolidColorBrush), OnColorChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundAdded"/>
@@ -44,7 +44,7 @@
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundAddedProperty =
             DependencyProperty.Register("ColorBackgroundAdded", typeof(SolidColorBrush),
-                typeof(TextEditor), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xba, 0xff)), OnColorChanged));
+                typeof(DiffView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xba, 0xff)), OnColorChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundDeleted"/>
@@ -52,7 +52,7 @@
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundDeletedProperty =
             DependencyProperty.Register("ColorBackgroundDeleted", typeof(SolidColorBrush),
-                typeof(TextEditor), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0x80, 0x80)), OnColorChanged));
+                typeof(DiffView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0x80, 0x80)), OnColorChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundContext"/>
@@ -60,7 +60,7 @@
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundContextProperty =
             DependencyProperty.Register("ColorBackgroundContext", typeof(SolidColorBrush),
-                typeof(TextEditor), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80)), OnColorChanged));
+                typeof(DiffView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80)), OnColorChanged));
         #endregion Diff Color Definitions
 
         #region EditorScrollOffsetXY

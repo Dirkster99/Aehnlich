@@ -30,8 +30,6 @@
         private int _LineDiffHeight;
         private int _NumberOfLines;
 
-        private TextEditorOptions _DiffViewOptions;
-
         private readonly DiffDocViewModel _DiffCtrl;
         #endregion fields
 
@@ -41,32 +39,12 @@
         /// </summary>
         public FileDiffFormViewModel()
         {
-            _DiffViewOptions = new TextEditorOptions();
-            _DiffViewOptions.ConvertTabsToSpaces = true;
-
             Options.OptionsChanged += this.OptionsChanged;
             _DiffCtrl = new DiffDocViewModel();
         }
         #endregion ctors
 
         #region properties
-        public TextEditorOptions DiffViewOptions
-        {
-            get
-            {
-                return _DiffViewOptions;
-            }
-
-            set
-            {
-                if (_DiffViewOptions != value)
-                {
-                    _DiffViewOptions = value;
-                    NotifyPropertyChanged(() => _DiffViewOptions);
-                }
-            }
-        }
-
         public DiffDocViewModel DiffCtrl
         {
             get { return _DiffCtrl; }

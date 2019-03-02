@@ -146,7 +146,7 @@
 
                 if (ViewPortChangedCommand != null)
                 {
-                    var currentViewPort = new DiffViewPort(fline, lline);
+                    var currentViewPort = new DiffViewPort(fline, lline, sourceToSync.LineCount);
 
                     if (ViewPortChangedCommand.CanExecute(currentViewPort))
                     {
