@@ -23,7 +23,7 @@
         /// Cache the edit script between this line and its counterpart in order to ensure
         /// optimal performance when displaying line diff information.
         /// </summary>
-        private EditScript _changeEditScript;
+////        private EditScript _changeEditScript;
         private readonly int? number;
         private readonly string text;
         private readonly EditType _editType;
@@ -110,12 +110,14 @@
         /// to indicate how one line can completely match the other using character based
         /// change operations (insert, delete, change, none).
         /// 
-        /// The object will cache the edit script in a private member to compute this edit
-        /// only once. But the method should only be invoked on demand (when a line is actually
-        /// displayed) we should wait with pulling it until we have to have it for rendering.
+        /// The method should only be invoked on demand (when a line is actually
+        /// displayed) - we should wait with pulling it until we have to have it for rendering.
         /// 
-        /// Getting intra-line diffs makes the whole process into an O(n^2) operation instead of
-        /// just an O(n) operation for line-by-line diffs.  So we try to defer the
+        /// This object will NOT cache the edit script so the caller should implement an external
+        /// caching algorithm to avoid multiple computations of the same answer.
+        /// 
+        /// Getting all intra-line diffs at once makes the whole process into an O(n^2) operation
+        /// instead of just an O(n) operation for line-by-line diffs.  So we try to defer the
         /// extra work until the user requests to see the changed line.  It's still
         /// the same amount of work if the user views every line, but it makes the
         /// user interface more responsive to split it up like this.
@@ -124,7 +126,9 @@
         /// <returns></returns>
         public EditScript GetChangeEditScript(ChangeDiffOptions options)
         {
-            if (_changeEditScript == null &&
+            EditScript _changeEditScript = null;
+
+            if (//_changeEditScript == null &&
                 _editType == EditType.Change && this.Counterpart != null)
             {
                 if (this.FromA)
@@ -150,7 +154,7 @@
                 }
             }
 
-            return this._changeEditScript;
+            return _changeEditScript;
         }
 
         #endregion
