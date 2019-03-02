@@ -54,7 +54,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviors\ScrollHelper.cs" />
     <Compile Include="Controls\AvalonEditEx\CustomLineNumberMargin.cs" />
     <Compile Include="Controls\AvalonEditEx\HighlightCurrentLineBackgroundRenderer.cs" />
     <Compile Include="Controls\AvalonEditEx\TextBoxController\DiffView_TextController.cs" />

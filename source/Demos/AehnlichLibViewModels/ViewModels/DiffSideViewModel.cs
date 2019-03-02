@@ -5,7 +5,6 @@
     using AehnlichLibViewModels.Events;
     using AehnlichLibViewModels.ViewModels.LineInfo;
     using AehnlichViewLib.Controls.AvalonEditEx;
-    using AehnlichViewLib.Models;
     using ICSharpCode.AvalonEdit.Document;
     using System;
     using System.Collections.Generic;

@@ -2,6 +2,8 @@
 {
     using AehnlichViewLib.Models;
     using ICSharpCode.AvalonEdit;
+    using ICSharpCode.AvalonEdit.Rendering;
+    using System;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -46,6 +48,13 @@
             DependencyProperty.Register("DiffViewOptions", typeof(TextEditorOptions),
                 typeof(DiffControl), new PropertyMetadata(new TextEditorOptions { IndentationSize = 4, ShowTabs = false, ConvertTabsToSpaces=true }));
 
+        /// <summary>
+        /// Implements the backing store of the <see cref="RequestRedraw"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RequestRedrawProperty =
+            DependencyProperty.Register("RequestRedraw", typeof(DateTime),
+                typeof(DiffControl), new PropertyMetadata(DateTime.MinValue, OnRequestRedraw));
+
         private DiffView _PART_LeftDiffView;
         private DiffView _PART_RightDiffView;
         private ScrollViewer _leftScrollViewer;
@@ -87,6 +96,17 @@
             get { return (string)GetValue(LeftFileNameProperty); }
             set { SetValue(LeftFileNameProperty, value); }
         }
+
+        /// <summary>
+        /// Gets/Sets a time property that will request a redraw
+        /// of the <see cref="KnownLayer.Background"/> layer
+        /// if set with th current time.
+        /// </summary>
+        public DateTime RequestRedraw
+        {
+            get { return (DateTime)GetValue(RequestRedrawProperty); }
+            set { SetValue(RequestRedrawProperty, value); }
+        }
         #endregion properties
 
         #region methods
@@ -114,6 +134,13 @@
                 _rightScrollViewer.ScrollChanged += Scrollviewer_ScrollChanged;
         }
 
+        /// <summary>
+        /// Is invoked when 1 of the scroll viewer view is changing to tell the
+        /// viemlodel about it and give it a chance to update its background highlighting
+        /// definition items.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Scrollviewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             ScrollViewer scrollToSync = null;
@@ -169,9 +196,10 @@
             e.Handled = true;
         }
 
-        public static ScrollViewer GetScrollViewer(UIElement element)
+        private static ScrollViewer GetScrollViewer(UIElement element)
         {
-            if (element == null) return null;
+            if (element == null)
+                return null;
 
             ScrollViewer retour = null;
 
@@ -186,8 +214,36 @@
                     retour = GetScrollViewer(VisualTreeHelper.GetChild(element, i) as UIElement);
                 }
             }
+
             return retour;
         }
+
+        #region RequestRedraw
+        private static void OnRequestRedraw(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DiffControl)d).OnRequestRedraw(e);
+        }
+
+        /// <summary>
+        /// Redraws the <see cref="KnownLayer.Background"/> layer when invoked.
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnRequestRedraw(DependencyPropertyChangedEventArgs e)
+        {
+            // https://stackoverflow.com/questions/12033388/avalonedit-how-to-invalidate-line-transformers
+            if (_PART_LeftDiffView != null)
+            {
+                _PART_LeftDiffView.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
+                //_PART_LeftDiffView.TextArea.TextView.Redraw();
+            }
+
+            if (_PART_RightDiffView != null)
+            {
+                _PART_RightDiffView.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
+                //_PART_RightDiffView.TextArea.TextView.Redraw();
+            }
+        }
+        #endregion RequestRedraw
         #endregion methods
     }
 }

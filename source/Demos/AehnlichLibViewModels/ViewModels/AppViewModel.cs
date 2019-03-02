@@ -3,8 +3,10 @@
     using AehnlichLibViewModels.Models;
     using AehnlichLibViewModels.ViewModels.Base;
     using AehnlichViewLib.Models;
-    using ICSharpCode.AvalonEdit;
+    using System;
+    using System.Windows;
     using System.Windows.Input;
+    using System.Windows.Threading;
 
     public class AppViewModel : Base.ViewModelBase
     {
@@ -23,6 +25,7 @@
         private ICommand _ViewPortChangedCommand;
         private ICommand _OverviewValueChangedCommand;
         private DiffViewPort _LastViewPort;
+        private DateTime _RequestRedraw;
         private readonly FileDiffFormViewModel _DiffForm;
         private readonly object lockObject = new object();
         #endregion fields
@@ -70,6 +73,13 @@
                         _DiffForm.ShowDifferences(new Models.ShowDiffArgs(fileA, fileB, Enums.DiffType.File));
                         NotifyPropertyChanged(() => DiffForm);
 
+                        // Requesting a redraw to make sure the change layer is visible in the background layer
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            RequestRedraw = DateTime.Now;
+                        }
+                        , DispatcherPriority.ApplicationIdle );
+
                         // Position view on first difference if thats available
                         if (_DiffForm.DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
                             _DiffForm.DiffCtrl.GoToFirstDifferenceCommand.Execute(null);
@@ -77,6 +87,19 @@
                 }
 
                 return _CompareFilesCommand;
+            }
+        }
+
+        public DateTime RequestRedraw
+        {
+            get { return _RequestRedraw; }
+            private set
+            {
+                if (_RequestRedraw != value)
+                {
+                    _RequestRedraw = value;
+                    NotifyPropertyChanged(() => RequestRedraw);
+                }
             }
         }
 
