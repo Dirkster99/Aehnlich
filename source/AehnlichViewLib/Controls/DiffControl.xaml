@@ -49,6 +49,8 @@
                                 TextBoxController="{Binding DiffForm.DiffCtrl.ViewA.TxtControl}"
                                 ActivationTimeStamp="{Binding DiffForm.DiffCtrl.ViewA.ViewActivation, Mode=OneWayToSource}"
 
+                                Options="{TemplateBinding DiffViewOptions}"
+                                
                                 FontFamily="Consolas"
                                 FontSize="12pt"
                                 HorizontalScrollBarVisibility="Visible"
@@ -67,6 +69,8 @@
                                 Line="{Binding DiffForm.DiffCtrl.ViewB.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                 TextBoxController="{Binding DiffForm.DiffCtrl.ViewB.TxtControl}"
                                 ActivationTimeStamp="{Binding DiffForm.DiffCtrl.ViewB.ViewActivation, Mode=OneWayToSource}"
+
+                                Options="{TemplateBinding DiffViewOptions}"
 
                                 FontFamily="Consolas"
                                 FontSize="12pt"

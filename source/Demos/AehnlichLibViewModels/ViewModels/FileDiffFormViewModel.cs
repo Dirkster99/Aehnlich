@@ -498,8 +498,8 @@
 
         private void ApplyOptions()
         {
-            this.ShowWhiteSpaceInMainDiff = Options.ShowWSInMainDiff;
-            this.ShowWhiteSpaceInLineDiff = Options.ShowWSInLineDiff;
+////            this.ShowWhiteSpaceInMainDiff = Options.ShowWSInMainDiff;
+////            this.ShowWhiteSpaceInLineDiff = Options.ShowWSInLineDiff;
 ////            this.DiffCtrl.ViewFont = Options.ViewFont;
         }
         #endregion methods

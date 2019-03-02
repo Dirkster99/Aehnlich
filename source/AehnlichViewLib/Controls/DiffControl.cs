@@ -1,6 +1,7 @@
 ﻿namespace AehnlichViewLib.Controls
 {
     using AehnlichViewLib.Models;
+    using ICSharpCode.AvalonEdit;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -36,7 +37,15 @@
             DependencyProperty.Register("ViewPortChangedCommand", typeof(ICommand),
                 typeof(DiffControl), new PropertyMetadata(null));
 
+        public TextEditorOptions DiffViewOptions
+        {
+            get { return (TextEditorOptions)GetValue(DiffViewOptionsProperty); }
+            set { SetValue(DiffViewOptionsProperty, value); }
+        }
 
+        public static readonly DependencyProperty DiffViewOptionsProperty =
+            DependencyProperty.Register("DiffViewOptions", typeof(TextEditorOptions),
+                typeof(DiffControl), new PropertyMetadata(new TextEditorOptions { IndentationSize = 4, ShowTabs = false, ConvertTabsToSpaces=true }));
 
         public ICommand ViewPortChangedCommand
         {

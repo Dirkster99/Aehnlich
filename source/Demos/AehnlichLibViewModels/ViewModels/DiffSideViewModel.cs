@@ -445,7 +445,7 @@
                 ret.Append(item.Text + '\n');
             }
 
-            return ret.ToString();
+            return ret.ToString().Replace("\t", "    ");
         }
 
         private DiffLineInfoViewModel TranslateLineContext(DiffViewLine item)

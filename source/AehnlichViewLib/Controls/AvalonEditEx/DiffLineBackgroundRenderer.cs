@@ -126,7 +126,7 @@
                         if (srcLineDiff.FromA)
                             brush = _DiffView.ColorBackgroundDeleted;
                         else
-                            brush = _DiffView.ColorBackgroundDeleted;
+                            brush = _DiffView.ColorBackgroundAdded;
 
                         BackgroundGeometryBuilder geoBuilder = new BackgroundGeometryBuilder();
 					    geoBuilder.AlignToWholePixels = true;
