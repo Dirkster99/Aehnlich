@@ -5,27 +5,26 @@
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Events;
     using AehnlichLibViewModels.Models;
+    using AehnlichLibViewModels.ViewModels.LineInfo;
     using AehnlichViewLib.Controls.AvalonEditEx;
-    using AehnlichViewLib.Enums;
     using ICSharpCode.AvalonEdit.Document;
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Diagnostics;
-    using System.Text;
 
     public class DiffSideViewModel : Base.ViewModelBase
     {
         #region fields
         private ChangeDiffOptions _ChangeDiffOptions;
 
-        private DiffViewLines _lines;
+        ////        private DiffViewLines _lines;
         private DiffViewPosition _position;
 
         private TextDocument _document = null;
         private TextBoxController _TxtControl;
 
-        private readonly ObservableRangeCollection<DiffLineInfoViewModel> _DocLineDiffs;
+        ////        private readonly ObservableRangeCollection<DiffLineInfoViewModel> _DocLineDiffs;
+        private readonly DiffLinesViewModel _DiffLines;
 
         private DateTime _ViewActivation;
         private bool _isDirty = false;
@@ -40,7 +39,8 @@
         /// </summary>
         public DiffSideViewModel()
         {
-            _DocLineDiffs = new ObservableRangeCollection<DiffLineInfoViewModel>();
+            ////        _DocLineDiffs = new ObservableRangeCollection<DiffLineInfoViewModel>();
+            _DiffLines = new DiffLinesViewModel();
             _Line = 0;
             _Column = 0;
 
@@ -146,15 +146,23 @@
         }
         #endregion Caret Position
 
-        public IReadOnlyList<DiffLineInfoViewModel> DocLineDiffs
+        public DiffLinesViewModel DiffLines
         {
             get
             {
-                return _DocLineDiffs;
+                return _DiffLines;
             }
         }
 
-        public int LineCount => this._lines != null ? this._lines.Count : 0;
+////        public IReadOnlyList<DiffLineInfoViewModel> DocLineDiffs
+////        {
+////            get
+////            {
+////                return _DocLineDiffs;
+////            }
+////        }
+
+////        public int LineCount => this._lines != null ? this._lines.Count : 0;
 
         public bool IsDirty
         {
@@ -218,17 +226,17 @@
                             EditScript script, bool useA)
         {
             this.FileName = filename;
-            _lines = new DiffViewLines(stringList, script, useA);
-            NotifyPropertyChanged(() => LineCount);
+////            _lines = new DiffViewLines(stringList, script, useA);
+////            NotifyPropertyChanged(() => LineCount);
+////
+////            IList<DiffLineInfoViewModel> lineDiffs;
+////            string text = GetDocumentFromRawLines(out lineDiffs);
+////
+////            _DocLineDiffs.Clear();
+////            _DocLineDiffs.AddRange(lineDiffs, NotifyCollectionChangedAction.Reset);
 
-            IList<DiffLineInfoViewModel> lineDiffs;
-            string text = GetDocumentFromRawLines(out lineDiffs);
-
-            _DocLineDiffs.Clear();
-            _DocLineDiffs.AddRange(lineDiffs, NotifyCollectionChangedAction.Reset);
-
+            string text = _DiffLines.SetData(stringList, script, useA);
             Document = new TextDocument(text);
-
             NotifyPropertyChanged(() => Document);
         }
 
@@ -239,69 +247,11 @@
         /// </summary>
         /// <param name="lineOne"></param>
         /// <param name="lineTwo"></param>
-        internal void SetData(DiffViewLine lineOne, DiffViewLine lineTwo,
-                              DiffLineInfoViewModel lineOneVM,
-                              DiffLineInfoViewModel lineTwoVM,
+        internal void SetData(DiffLineViewModel lineOneVM,
+                              DiffLineViewModel lineTwoVM,
                               int spacesPerTab)
         {
-            _lines = new DiffViewLines(lineOne, lineTwo);
-            var documentLineDiffs = new List<DiffLineInfoViewModel>();
-
-            string text = string.Empty;
-
-            if (lineOneVM != null && lineOneVM.LineEditScriptSegmentsIsDirty == true)
-            {
-                var editScript = lineOne.GetChangeEditScript(this.ChangeDiffOptions);
-
-                if (editScript != null)
-                {
-                    var segments = GetChangeSegments(editScript, lineOne.Text, lineOne.FromA,
-                                                     spacesPerTab);
-
-                    lineOneVM.SetEditScript(segments);
-                }
-                else
-                    lineOneVM.SetEditScript(null);  // Make sure its been set even if empty
-            }
-
-            if (lineTwoVM != null && lineTwoVM.LineEditScriptSegmentsIsDirty == true)
-            {
-                var editScript = lineTwo.GetChangeEditScript(this.ChangeDiffOptions);
-
-                if (editScript != null)
-                {
-                    var segments = GetChangeSegments(editScript, lineTwo.Text, lineTwo.FromA,
-                                                     spacesPerTab);
-
-                    lineTwoVM.SetEditScript(segments);
-                }
-                else
-                    lineTwoVM.SetEditScript(null);  // Make sure its been set even if empty
-            }
-
-            if (lineOne != null && lineTwo != null)
-            {
-                if (lineOneVM != null)
-                    documentLineDiffs.Add(lineOneVM);
-                else
-                    documentLineDiffs.Add(TranslateLineContext(lineOne));
-
-                text += lineOne.Text + '\n';
-
-                if (lineTwoVM != null)
-                    documentLineDiffs.Add(lineTwoVM);
-                else
-                    documentLineDiffs.Add(TranslateLineContext(lineOne));
-
-                text += lineTwo.Text + "\n";
-            }
-
-            text = text.Replace("\t", "    ");
-
-            // Update LineInfo viewmodels
-            _DocLineDiffs.Clear();
-            _DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
-            NotifyPropertyChanged(() => DocLineDiffs);
+            string text = _DiffLines.SetData(lineOneVM, lineTwoVM, spacesPerTab, this.ChangeDiffOptions);
 
             // Update text document
             Document = new TextDocument(text);
@@ -318,85 +268,75 @@
         /// </summary>
         public bool CanGoToFirstDiff()
         {
+            if (_DiffLines.DiffStartLines == null || _DiffLines.DiffEndLines == null)
+                return false;
+
             bool result = false;
 
-            if (_lines != null)
-            {
-                int[] starts = _lines.DiffStartLines;
-                int[] ends = _lines.DiffEndLines;
-                result = starts.Length > 0 &&
-                            ends.Length > 0 &&
-                            (_position.Line < starts[0] || _position.Line > ends[0]);
-            }
+            int[] starts = _DiffLines.DiffStartLines;
+            int[] ends = _DiffLines.DiffEndLines;
+
+            result = starts.Length > 0 &&
+                        ends.Length > 0 &&
+                        (_position.Line < starts[0] || _position.Line > ends[0]);
 
             return result;
         }
 
         public bool CanGoToNextDiff()
         {
+            if (_DiffLines.DiffStartLines == null)
+                return false;
+
             bool result = false;
-            if (_lines != null)
-            {
-                int[] starts = _lines.DiffStartLines;
-                result = starts.Length > 0 && _position.Line < starts[starts.Length - 1];
-            }
+
+            int[] starts = _DiffLines.DiffStartLines;
+            result = starts.Length > 0 && _position.Line < starts[starts.Length - 1];
 
             return result;
         }
 
         public bool CanGoToPreviousDiff()
         {
+            if (_DiffLines.DiffEndLines == null)
+                return false;
+
             bool result = false;
 
-            if (_lines != null)
-            {
-                int[] ends = _lines.DiffEndLines;
-                result = ends.Length > 0 && _position.Line > ends[0];
-            }
+            int[] ends = _DiffLines.DiffEndLines;
+            result = ends.Length > 0 && _position.Line > ends[0];
 
             return result;
         }
 
         public bool CanGoToLastDiff()
         {
+            if (_DiffLines.DiffStartLines == null || _DiffLines.DiffEndLines == null)
+                return false;
+
             bool result = false;
 
-            if (_lines != null)
-            {
-                int[] starts = _lines.DiffStartLines;
-                int[] ends = _lines.DiffEndLines;
-                result = starts.Length > 0 && ends.Length > 0 &&
-                    (_position.Line < starts[starts.Length - 1] || _position.Line > ends[ends.Length - 1]);
-            }
+            int[] starts = _DiffLines.DiffStartLines;
+            int[] ends = _DiffLines.DiffEndLines;
+            result = starts.Length > 0 && ends.Length > 0 &&
+                (_position.Line < starts[starts.Length - 1] || _position.Line > ends[ends.Length - 1]);
 
             return result;
         }
 
         internal void GetChangeEditScript(int firstLine, int lastLine, int spacesPerTab)
         {
-            if (_lines == null)
-                return;
-
             if (firstLine < 0 || lastLine <= 0)
                 return;
 
-            for (int i = firstLine; i < _lines.Count && i < lastLine; i++)
+            for (int i = firstLine; i < _DiffLines.LineCount && i < lastLine; i++)
             {
                 // We've previously seen and computed this?
-                if (_DocLineDiffs[i].LineEditScriptSegmentsIsDirty == false)
+                if (_DiffLines.DocLineDiffs[i].LineEditScriptSegmentsIsDirty == false)
                     continue;
 
-                var editScript = _lines[i].GetChangeEditScript(this.ChangeDiffOptions);
-
-                if (editScript != null)
-                {
-                    var segments = GetChangeSegments(editScript, _lines[i].Text, _lines[i].FromA,
-                                                     spacesPerTab);
-
-                    _DocLineDiffs[i].SetEditScript(segments);
-                }
-                else
-                    _DocLineDiffs[i].SetEditScript(null);  // Make sure its been set even if empty
+                if (_DiffLines.DocLineDiffs[i].LineEditScriptSegmentsIsDirty)
+                    _DiffLines.DocLineDiffs[i].GetChangeEditScript(this.ChangeDiffOptions, spacesPerTab);
             }
         }
 
@@ -411,7 +351,7 @@
         /// <returns></returns>
         internal DiffViewPosition GetFirstDiffPosition()
         {
-           return new DiffViewPosition(_lines.DiffStartLines[0], _position.Column);
+           return new DiffViewPosition(_DiffLines.DiffStartLines[0], _position.Column);
         }
 
         /// <summary>
@@ -420,7 +360,7 @@
         /// <returns></returns>
         internal DiffViewPosition GetNextDiffPosition()
         {
-            int[] starts = _lines.DiffStartLines;
+            int[] starts = _DiffLines.DiffStartLines;
             int numStarts = starts.Length;
             for (int i = 0; i < numStarts; i++)
             {
@@ -441,14 +381,14 @@
         /// <returns></returns>
         internal DiffViewPosition GetPrevDiffPosition()
         {
-            int[] ends = _lines.DiffEndLines;
+            int[] ends = _DiffLines.DiffEndLines;
             int numEnds = ends.Length;
             for (int i = numEnds - 1; i >= 0; i--)
             {
                 if (_position.Line > ends[i])
                 {
                     // I'm intentionally setting the line to Starts[i] here instead of Ends[i].
-                    return new DiffViewPosition(_lines.DiffStartLines[i], _position.Column);
+                    return new DiffViewPosition(_DiffLines.DiffStartLines[i], _position.Column);
                 }
             }
 
@@ -463,7 +403,7 @@
         /// <returns></returns>
         internal DiffViewPosition GetLastDiffPosition()
         {
-            int[] starts = _lines.DiffStartLines;
+            int[] starts = _DiffLines.DiffStartLines;
 
             return new DiffViewPosition(starts[starts.Length - 1], _position.Column);
         }
@@ -481,43 +421,6 @@
             TxtControl.ScrollToLine(n);                    // we are supposed to be at
         }
 
-        private string GetDocumentFromRawLines(out IList<DiffLineInfoViewModel> documentLineDiffs)
-        {
-            documentLineDiffs = new List<DiffLineInfoViewModel>();
-            StringBuilder ret = new StringBuilder();
-
-            foreach (var item in _lines)
-            {
-                documentLineDiffs.Add(TranslateLineContext(item));
-                ret.Append(item.Text + '\n');
-            }
-
-            return ret.ToString().Replace("\t", "    ");
-        }
-
-        private DiffLineInfoViewModel TranslateLineContext(DiffViewLine item)
-        {
-            DiffContext lineContext = DiffContext.Blank;
-            switch (item.EditType)
-            {
-                case AehnlichLib.Enums.EditType.Delete:
-                    lineContext = DiffContext.Deleted;
-                    break;
-                case AehnlichLib.Enums.EditType.Insert:
-                    lineContext = DiffContext.Added;
-                    break;
-                case AehnlichLib.Enums.EditType.Change:
-                    lineContext = DiffContext.Context;
-                    break;
-
-                case AehnlichLib.Enums.EditType.None:
-                default:
-                    break;
-            }
-
-            return new DiffLineInfoViewModel(lineContext, item.Number, item.FromA);
-        }
-
         /// <summary>
         /// Sets the Counterpart property in each line property of each
         /// <see cref="DiffSideViewModel"/> to refer to each other. This information
@@ -527,32 +430,15 @@
         /// <param name="counterpartView"></param>
         public void SetCounterPartLines(DiffSideViewModel counterpartView)
         {
-            int numLines = this.LineCount;
-            if (numLines != counterpartView.LineCount)
-            {
-                throw new ArgumentException("The counterpart view has a different number of view lines.", nameof(counterpartView));
-            }
-
-            for (int i = 0; i < numLines; i++)
-            {
-                DiffViewLine line = this._lines[i];
-                DiffViewLine counterpart = counterpartView._lines[i];
-
-                // Make the counterpart lines refer to each other.
-                line.Counterpart = counterpart;
-                counterpart.Counterpart = line;
-            }
+            _DiffLines.SetCounterPartLines(counterpartView._DiffLines);
         }
 
-        internal DiffViewLine GetLine(int line, out DiffLineInfoViewModel lineVM)
+        internal DiffLineViewModel GetLine(int line)
         {
-            lineVM = null;
-
-            if (line >= this.LineCount)
+            if (line >= _DiffLines.LineCount || _DiffLines.LineCount == 0)
                 return null;
 
-            lineVM = _DocLineDiffs[line];
-            return _lines[line];
+            return _DiffLines.DocLineDiffs[line];
         }
 
         private IList<ISegment>

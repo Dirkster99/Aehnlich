@@ -265,7 +265,7 @@
             <ctrl:Overview Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="3"
                            Width="30"
                            Name="OverviewSlider"
-                           ItemsSource="{Binding DiffForm.DiffCtrl.ViewA.DocLineDiffs}"
+                           ItemsSource="{Binding DiffForm.DiffCtrl.ViewA.DiffLines.DocLineDiffs}"
                            
                            Value="{Binding OverViewValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                            NumberOfTextLinesInViewPort="{Binding NumberOfTextLinesInViewPort}"
@@ -298,7 +298,7 @@
             Grid.Column="0" Grid.Row="3" Margin="3"
             DataContext="{Binding DiffForm.DiffCtrl.ViewLineDiff}"
             Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
-            ItemsSource="{Binding DocLineDiffs}"
+            ItemsSource="{Binding DiffLines.DocLineDiffs}"
             ShowLineNumbers="False"
 			IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             IsReadOnly="True"

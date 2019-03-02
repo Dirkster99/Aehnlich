@@ -39,7 +39,7 @@
                             <local:DiffView
                                 x:Name="TextLeft" Grid.Column="0" Grid.Row="1" Margin="3"
                                 Document="{Binding DiffForm.DiffCtrl.ViewA.Document, UpdateSourceTrigger=PropertyChanged}"
-                                ItemsSource="{Binding DiffForm.DiffCtrl.ViewA.DocLineDiffs}"
+                                ItemsSource="{Binding DiffForm.DiffCtrl.ViewA.DiffLines.DocLineDiffs}"
                                 ShowLineNumbers="True"
 				                IsModified="{Binding DiffForm.DiffCtrl.ViewA.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsReadOnly="True"
@@ -60,7 +60,7 @@
                             <local:DiffView
                                 x:Name="TextRight" Grid.Column="2" Grid.Row="2" Margin="3"
                                 Document="{Binding DiffForm.DiffCtrl.ViewB.Document, UpdateSourceTrigger=PropertyChanged}"
-                                ItemsSource="{Binding DiffForm.DiffCtrl.ViewB.DocLineDiffs}"
+                                ItemsSource="{Binding DiffForm.DiffCtrl.ViewB.DiffLines.DocLineDiffs}"
                                 ShowLineNumbers="True"
 				                IsModified="{Binding DiffForm.DiffCtrl.ViewB.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsReadOnly="True"

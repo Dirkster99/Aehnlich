@@ -90,7 +90,7 @@
         {
             get
             {
-                return _ViewA.LineCount > 0 || _ViewB.LineCount > 0;
+                return _ViewA.DiffLines.LineCount > 0 || _ViewB.DiffLines.LineCount > 0;
             }
         }
 
@@ -425,7 +425,7 @@
             _ViewB.SetData(nameB, listB, script, false);
             NotifyPropertyChanged(() => this.IsDiffDataAvailable);
 
-            Debug.Assert(this._ViewA.LineCount == this._ViewB.LineCount, "Both DiffView's LineCounts must be the same");
+            Debug.Assert(this._ViewA.DiffLines.LineCount == this._ViewB.DiffLines.LineCount, "Both DiffView's LineCounts must be the same");
 
             // Sets the similarity value (0% - 100%) between 2 things shown in toolbar
             this.Similarity_Text = string.Format("{0:P}", script.Similarity);
@@ -461,27 +461,14 @@
 
             this.currentDiffLine = line;
 
-            DiffViewLine lineOne = null;
-            DiffViewLine lineTwo = null;
-            DiffLineInfoViewModel lineOneVM = null;
-            DiffLineInfoViewModel lineTwoVM = null;
-            if (line < this.ViewA.LineCount)
-            {
-                lineOne = this.ViewA.GetLine(line, out lineOneVM);
-            }
+            DiffLineViewModel lineOneVM = null;
+            DiffLineViewModel lineTwoVM = null;
 
-            // Normally, ViewA.LineCount == ViewB.LineCount, but during
-            // SetData they'll be mismatched momentarily as each view
-            // rebuilds its lines.
-            if (line < this.ViewB.LineCount)
-            {
-                lineTwo = this.ViewB.GetLine(line, out lineTwoVM);
-            }
+            lineOneVM = this.ViewA.GetLine(line);
+            lineTwoVM = this.ViewB.GetLine(line);
 
-            if (lineOne != null && lineTwo != null)
-            {
-                this._ViewLineDiff.SetData(lineOne, lineTwo, lineOneVM, lineTwoVM, spacesPerTab);
-            }
+            if (lineOneVM != null && lineTwoVM != null)
+                this._ViewLineDiff.SetData(lineOneVM, lineTwoVM, spacesPerTab);
         }
 
         /// <summary>
