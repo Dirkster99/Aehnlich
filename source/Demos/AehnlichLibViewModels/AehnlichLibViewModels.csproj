@@ -53,6 +53,7 @@
     <Compile Include="Enums\CompareType.cs" />
     <Compile Include="Enums\DiffType.cs" />
     <Compile Include="Events\CaretPositionChangedEvent.cs" />
+    <Compile Include="Interfaces\IDiffLines.cs" />
     <Compile Include="Interfaces\ISettingsNode.cs" />
     <Compile Include="Models\FileSystemCommands.cs" />
     <Compile Include="Models\Options.cs" />
@@ -66,8 +67,7 @@
     <Compile Include="ViewModels\LineInfo\DiffViewLine.cs" />
     <Compile Include="ViewModels\DiffSideViewModel.cs" />
     <Compile Include="ViewModels\DiffViewPosition.cs" />
-    <Compile Include="ViewModels\FileDiffFormViewModel.cs" />
-    <Compile Include="ViewModels\LineInfo\DiffLinesViewModel.cs" />
+    <Compile Include="ViewModels\LineInfo\LinesFactory.cs" />
     <Compile Include="ViewModels\ObservableRangeCollection.cs" />
   </ItemGroup>
   <ItemGroup>

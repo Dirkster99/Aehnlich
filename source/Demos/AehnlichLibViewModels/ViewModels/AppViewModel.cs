@@ -11,6 +11,7 @@
     public class AppViewModel : Base.ViewModelBase
     {
         #region fields
+
         private string _FilePathA;
         private string _FilePathB;
         private ICommand _CompareFilesCommand;
@@ -26,7 +27,9 @@
         private ICommand _OverviewValueChangedCommand;
         private DiffViewPort _LastViewPort;
         private DateTime _RequestRedraw;
-        private readonly FileDiffFormViewModel _DiffForm;
+
+////        private readonly FileDiffFormViewModel _DiffForm;
+        private readonly DiffDocViewModel _DiffCtrl;
         private readonly object lockObject = new object();
         #endregion fields
 
@@ -40,7 +43,8 @@
 
         public AppViewModel()
         {
-            _DiffForm = new FileDiffFormViewModel();
+////            _DiffForm = new FileDiffFormViewModel();
+            _DiffCtrl = new DiffDocViewModel();
         }
         #endregion ctors
 
@@ -70,19 +74,16 @@
                         if (string.IsNullOrEmpty(fileA) || string.IsNullOrEmpty(fileB))
                             return;
 
-                        _DiffForm.ShowDifferences(new Models.ShowDiffArgs(fileA, fileB, Enums.DiffType.File));
-                        NotifyPropertyChanged(() => DiffForm);
+                        _DiffCtrl.ShowDifferences(new Models.ShowDiffArgs(fileA, fileB, Enums.DiffType.File));
 
-                        // Requesting a redraw to make sure the change layer is visible in the background layer
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            RequestRedraw = DateTime.Now;
-                        }
-                        , DispatcherPriority.ApplicationIdle );
+                        if (_LastViewPort != null)
+                            _DiffCtrl.GetChangeEditScript(_LastViewPort.FirstLine - 1, _LastViewPort.LastLine - 1, 4);
 
                         // Position view on first difference if thats available
-                        if (_DiffForm.DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
-                            _DiffForm.DiffCtrl.GoToFirstDifferenceCommand.Execute(null);
+                        if (_DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
+                            _DiffCtrl.GoToFirstDifferenceCommand.Execute(null);
+
+                        NotifyPropertyChanged(() => DiffCtrl);
                     });
                 }
 
@@ -115,7 +116,7 @@
                     _OpenFileFromActiveViewCommand = new RelayCommand<object>((p) =>
                     {
                         DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
 
                         if (activeView != null)
                             FileSystemCommands.OpenInWindows(activeView.FileName);
@@ -127,7 +128,7 @@
                     },(p) =>
                     {
                         DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
 
                         if (activeView != null)
                         {
@@ -161,14 +162,14 @@
                     _CopyTextSelectionFromActiveViewCommand = new RelayCommand<object>((p) =>
                     {
                         DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
 
                         string textSelection = activeView.TxtControl.GetSelectedText();
                         FileSystemCommands.CopyString(textSelection);
                     }, (p) =>
                     {
                         DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
 
                         if (activeView != null)
                             return (string.IsNullOrEmpty(activeView.TxtControl.GetSelectedText()) == false);
@@ -240,8 +241,18 @@
 
                         int spacesPerTab = 4;
 
-                        // Translate from 1-based values to tero-based values
-                        _DiffForm.GetChangeEditScript(param.FirstLine-1, param.LastLine-1, spacesPerTab);
+                        // Translate from 1-based values to zero-based values
+                        _DiffCtrl.GetChangeEditScript(param.FirstLine-1, param.LastLine-1, spacesPerTab);
+
+                        if (_LastViewPort == null)
+                        {
+                            // Requesting a redraw to make sure the change layer is visible in the background layer
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                RequestRedraw = DateTime.Now;
+                            }
+                            , DispatcherPriority.ApplicationIdle);
+                        }
 
                         _LastViewPort = param;
                     }
@@ -283,15 +294,15 @@
                             _IgnoreNextTextSyncValueChange = true;
 
                             DiffSideViewModel nonActView;
-                            DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+                            DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
                             DiffViewPosition gotoPos = new DiffViewPosition((int)param, 0);
-                            DiffForm.DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
+                            DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
                         }
                     },
                     (p) =>
                     {
                         DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffForm.DiffCtrl.GetActiveView(out nonActView);
+                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
                         if (activeView == null)
                             return false;
 
@@ -303,10 +314,15 @@
             }
         }
 
-        public FileDiffFormViewModel DiffForm
+        public DiffDocViewModel DiffCtrl
         {
-            get { return _DiffForm; }
+            get { return _DiffCtrl; }
         }
+
+////        public FileDiffFormViewModel DiffForm
+////        {
+////            get { return _DiffForm; }
+////        }
 
         /// <summary>
         /// Gets the path of file A in the comparison.
@@ -318,7 +334,7 @@
                 return _FilePathA;
             }
 
-            protected set
+            set
             {
                 if (_FilePathA != value)
                 {
@@ -338,7 +354,7 @@
                 return _FilePathB;
             }
 
-            protected set
+            set
             {
                 if (_FilePathB != value)
                 {

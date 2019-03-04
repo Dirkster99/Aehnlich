@@ -1,10 +1,9 @@
 ﻿namespace AehnlichLibViewModels.Models
 {
     using ICSharpCode.AvalonEdit.Document;
-    using System;
     using System.Diagnostics;
 
-    [DebuggerDisplay("Start = {Start}, Length = {Length}")]
+    [DebuggerDisplay("Offset = {Offset}, EndOffset = {EndOffset}, Length = {Length}")]
     public struct Segment : ISegment
     {
         #region Constructors

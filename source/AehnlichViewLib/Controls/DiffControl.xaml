@@ -24,7 +24,7 @@
 
                             <TextBox x:Name="PART_LeftFileNameTextBox"
                                 Grid.Column="0" Grid.Row="0" Margin="0,3"
-                                Text="{Binding LeftFileName, Mode=OneWay,UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}" />
+                                Text="{Binding FilePathA, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
 
                             <GridSplitter
                                 Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
@@ -34,20 +34,20 @@
 
                             <TextBox  x:Name="PART_RightFileNameTextBox"
                                 Grid.Column="2" Grid.Row="0" Margin="0,3"
-                                Text="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" />
+                                Text="{Binding FilePathB, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
 
                             <local:DiffView
                                 x:Name="TextLeft" Grid.Column="0" Grid.Row="1" Margin="3"
-                                Document="{Binding DiffForm.DiffCtrl.ViewA.Document, UpdateSourceTrigger=PropertyChanged}"
-                                ItemsSource="{Binding DiffForm.DiffCtrl.ViewA.DiffLines.DocLineDiffs}"
+                                Document="{Binding DiffCtrl.ViewA.Document, UpdateSourceTrigger=PropertyChanged}"
+                                ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
                                 ShowLineNumbers="True"
-				                IsModified="{Binding DiffForm.DiffCtrl.ViewA.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				                IsModified="{Binding DiffCtrl.ViewA.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsReadOnly="True"
                 
-                                Column="{Binding DiffForm.DiffCtrl.ViewA.Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                Line="{Binding DiffForm.DiffCtrl.ViewA.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                TextBoxController="{Binding DiffForm.DiffCtrl.ViewA.TxtControl}"
-                                ActivationTimeStamp="{Binding DiffForm.DiffCtrl.ViewA.ViewActivation, Mode=OneWayToSource}"
+                                Column="{Binding DiffCtrl.ViewA.Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                Line="{Binding DiffCtrl.ViewA.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                TextBoxController="{Binding DiffCtrl.ViewA.TxtControl}"
+                                ActivationTimeStamp="{Binding DiffCtrl.ViewA.ViewActivation, Mode=OneWayToSource}"
 
                                 Options="{TemplateBinding DiffViewOptions}"
                                 
@@ -59,16 +59,16 @@
 
                             <local:DiffView
                                 x:Name="TextRight" Grid.Column="2" Grid.Row="2" Margin="3"
-                                Document="{Binding DiffForm.DiffCtrl.ViewB.Document, UpdateSourceTrigger=PropertyChanged}"
-                                ItemsSource="{Binding DiffForm.DiffCtrl.ViewB.DiffLines.DocLineDiffs}"
+                                Document="{Binding DiffCtrl.ViewB.Document, UpdateSourceTrigger=PropertyChanged}"
+                                ItemsSource="{Binding DiffCtrl.ViewB.DocLineDiffs}"
                                 ShowLineNumbers="True"
-				                IsModified="{Binding DiffForm.DiffCtrl.ViewB.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				                IsModified="{Binding DiffCtrl.ViewB.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsReadOnly="True"
                 
-                                Column="{Binding DiffForm.DiffCtrl.ViewB.Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                Line="{Binding DiffForm.DiffCtrl.ViewB.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                TextBoxController="{Binding DiffForm.DiffCtrl.ViewB.TxtControl}"
-                                ActivationTimeStamp="{Binding DiffForm.DiffCtrl.ViewB.ViewActivation, Mode=OneWayToSource}"
+                                Column="{Binding DiffCtrl.ViewB.Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                Line="{Binding DiffCtrl.ViewB.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                TextBoxController="{Binding DiffCtrl.ViewB.TxtControl}"
+                                ActivationTimeStamp="{Binding DiffCtrl.ViewB.ViewActivation, Mode=OneWayToSource}"
 
                                 Options="{TemplateBinding DiffViewOptions}"
 

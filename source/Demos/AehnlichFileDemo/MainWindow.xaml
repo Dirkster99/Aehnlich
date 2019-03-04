@@ -71,7 +71,7 @@
                 <Separator />
 
                 <Button
-                    Command="{Binding DiffForm.DiffCtrl.GoToFirstDifferenceCommand}"
+                    Command="{Binding DiffCtrl.GoToFirstDifferenceCommand}"
                     ToolTip="Go to First Difference"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
@@ -84,7 +84,7 @@
                 </Button>
 
                 <Button
-                    Command="{Binding DiffForm.DiffCtrl.GoToNextDifferenceCommand}"
+                    Command="{Binding DiffCtrl.GoToNextDifferenceCommand}"
                     ToolTip="Go to Next Difference"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
@@ -97,7 +97,7 @@
                 </Button>
 
                 <Button
-                    Command="{Binding DiffForm.DiffCtrl.GoToPrevDifferenceCommand}"
+                    Command="{Binding DiffCtrl.GoToPrevDifferenceCommand}"
                     ToolTip="Go to Previous Difference"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
@@ -110,7 +110,7 @@
                 </Button>
 
                 <Button
-                    Command="{Binding DiffForm.DiffCtrl.GoToLastDifferenceCommand}"
+                    Command="{Binding DiffCtrl.GoToLastDifferenceCommand}"
                     ToolTip="Go to Last Difference"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
@@ -134,8 +134,8 @@
                     >
                     <Button.CommandParameter>
                         <MultiBinding Converter="{StaticResource MultiParToParConverter}">
-                            <Binding ElementName="DiffCtrl" Path="LeftFileName" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
-                            <Binding ElementName="DiffCtrl" Path="RightFileName" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                            <Binding Path="FilePathA" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                            <Binding Path="FilePathB" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                         </MultiBinding>
                     </Button.CommandParameter>
                     <Button.Background>
@@ -144,7 +144,7 @@
                 </Button>
 
                 <Separator Margin="0,0,3,0"
-                           Visibility="{Binding DiffForm.DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                           Visibility="{Binding DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
                            />
 
                 <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
@@ -190,11 +190,11 @@
                 </Border>
 
                 <Separator Margin="0,0,3,0"
-                           Visibility="{Binding DiffForm.DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                           Visibility="{Binding DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
                            />
 
                 <TextBlock
-                    DataContext="{Binding DiffForm.DiffCtrl}"
+                    DataContext="{Binding DiffCtrl}"
                     Text="{Binding Similarity_Text}"
                     Margin="0,0,3,0"
                     VerticalAlignment="Center"
@@ -202,13 +202,13 @@
                 />
 
                 <Separator Margin="0,0,3,0"
-                           Visibility="{Binding DiffForm.DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                           Visibility="{Binding DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
                            />
 
                 <!-- IsDiffDataAvailable -->
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center"
-                            DataContext="{Binding DiffForm.DiffCtrl}"
+                            DataContext="{Binding DiffCtrl}"
                             Visibility="{Binding IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
                             >
                     <TextBlock Margin="0,0,3,0" Text="Ln:" ToolTip="Current Line">
@@ -265,15 +265,15 @@
             <ctrl:Overview Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="3"
                            Width="30"
                            Name="OverviewSlider"
-                           ItemsSource="{Binding DiffForm.DiffCtrl.ViewA.DiffLines.DocLineDiffs}"
+                           ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
                            
                            Value="{Binding OverViewValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                            NumberOfTextLinesInViewPort="{Binding NumberOfTextLinesInViewPort}"
                            ValueChangedCommand="{Binding OverviewValueChangedCommand,Mode=OneWay}"
                            >
-                <!-- DiffForm.NumberOfLines -->
+                <!-- NumberOfLines -->
                 <!--ctrl:Overview.ToolTip>
-                    <TextBlock Text="{Binding DiffForm.NumberOfLines}"/>
+                    <TextBlock Text="{Binding NumberOfLines}"/>
                 </ctrl:Overview.ToolTip-->
             </ctrl:Overview>
 
@@ -282,7 +282,7 @@
                               LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
-                              DiffViewOptions="{Binding DiffForm.DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                              DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               RequestRedraw="{Binding RequestRedraw, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                               
                               Margin="3"/>
@@ -297,9 +297,9 @@
         <!-- ViewLineDiff -->
         <ctrl:DiffView
             Grid.Column="0" Grid.Row="3" Margin="3"
-            DataContext="{Binding DiffForm.DiffCtrl.ViewLineDiff}"
+            DataContext="{Binding DiffCtrl.ViewLineDiff}"
             Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
-            ItemsSource="{Binding DiffLines.DocLineDiffs}"
+            ItemsSource="{Binding DocLineDiffs}"
             ShowLineNumbers="False"
 			IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             IsReadOnly="True"

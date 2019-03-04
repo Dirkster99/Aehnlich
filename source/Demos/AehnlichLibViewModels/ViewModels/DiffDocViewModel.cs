@@ -3,13 +3,18 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
+    using System.Text;
     using System.Windows.Input;
+    using System.Xml;
+    using AehnlichLib.Binaries;
+    using AehnlichLib.Dir;
     using AehnlichLib.Text;
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Events;
     using AehnlichLibViewModels.Models;
     using AehnlichLibViewModels.ViewModels.Base;
-    using AehnlichViewLib.Models;
+    using AehnlichLibViewModels.ViewModels.LineInfo;
     using ICSharpCode.AvalonEdit;
 
     /// <summary>
@@ -18,6 +23,10 @@
     public class DiffDocViewModel : Base.ViewModelBase
     {
         #region fields
+        private ShowDiffArgs _currentDiffArgs;
+        private int _NumberOfLines;
+        private DiffType _DiffType;
+
         private readonly DiffSideViewModel _ViewA;
         private readonly DiffSideViewModel _ViewB;
         private readonly DiffSideViewModel _ViewLineDiff;
@@ -34,6 +43,7 @@
         private ICommand _GoToPrevDifferenceCommand;
         private ICommand _GoToNextDifferenceCommand;
         private ICommand _GoToFirstDifferenceCommand;
+        private string _StatusText;
         private readonly TextEditorOptions _DiffViewOptions;
 
         ////        private int currentDiffLine = -1;
@@ -91,7 +101,7 @@
         {
             get
             {
-                return _ViewA.DiffLines.LineCount > 0 || _ViewB.DiffLines.LineCount > 0;
+                return _ViewA.LineCount > 0 || _ViewB.LineCount > 0;
             }
         }
 
@@ -378,9 +388,147 @@
             }
         }
         #endregion Goto Diff Commands
+
+        public int NumberOfLines
+        {
+            get
+            {
+                return _NumberOfLines;
+            }
+
+            protected set
+            {
+                if (_NumberOfLines != value)
+                {
+                    _NumberOfLines = value;
+                    NotifyPropertyChanged(() => NumberOfLines);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the type of the items being compared
+        /// <see cref="DiffType.File"/>, <see cref="DiffType.Text"/> or <see cref="DiffType.Directory"/>
+        /// </summary>
+        public DiffType DiffType
+        {
+            get
+            {
+                return _DiffType;
+            }
+
+            protected set
+            {
+                if (_DiffType != value)
+                {
+                    _DiffType = value;
+                    NotifyPropertyChanged(() => DiffType);
+                    NotifyPropertyChanged(() => ToolTipText);
+                }
+            }
+        }
+
+        public string ToolTipText
+        {
+            get
+            {
+                string result = null;
+
+                if (_currentDiffArgs != null)
+                {
+                    result = _currentDiffArgs.A + Environment.NewLine + _currentDiffArgs.B;
+                }
+
+                return result;
+            }
+        }
+
+        public string StatusText
+        {
+            get
+            {
+                return _StatusText;
+            }
+
+            protected set
+            {
+                if (_StatusText != value)
+                {
+                    _StatusText = value;
+                    NotifyPropertyChanged(() => StatusText);
+                }
+            }
+        }
         #endregion properties
 
         #region methods
+        public void ShowDifferences(ShowDiffArgs args)
+        {
+            this.DiffType = args.DiffType;
+
+
+            IList<string> a, b;
+            int leadingCharactersToIgnore = 0;
+            bool fileNames = (this.DiffType == DiffType.File);
+            if (fileNames)
+            {
+                GetFileLines(args.A, args.B, out a, out b, out leadingCharactersToIgnore);
+            }
+            else
+            {
+                GetTextLines(args.A, args.B, out a, out b);
+            }
+
+            bool isBinaryCompare = leadingCharactersToIgnore > 0;
+            bool ignoreCase = isBinaryCompare ? false : Options.IgnoreCase;
+            bool ignoreTextWhitespace = isBinaryCompare ? false : Options.IgnoreTextWhitespace;
+            TextDiff diff = new TextDiff(Options.HashType, ignoreCase, ignoreTextWhitespace, leadingCharactersToIgnore, !Options.ShowChangeAsDeleteInsert);
+            EditScript script = diff.Execute(a, b);
+
+            string captionA = string.Empty;
+            string captionB = string.Empty;
+            if (fileNames)
+            {
+                try
+                {
+                    this.StatusText = string.Format("{0} : {1}", Path.GetFileName(args.A), Path.GetFileName(args.B));
+                }
+                catch
+                {
+                    // System.IO throws exception on invalid file name
+                }
+            }
+            else
+            {
+                this.StatusText = "Text Comparison";
+            }
+
+            // Apply options first since SetData needs to know things
+            // like SpacesPerTab and ShowWhitespace up front, so it
+            // can build display lines, determine scroll bounds, etc.
+////            this.ApplyOptions();
+
+            ////            this.FileNameA = args.A;
+            ////            this.FileNameB = args.B;
+
+            ////            this.IgnoreCase = ignoreCase;
+            ////            this.IgnoreTextWhitespace = ignoreTextWhitespace;
+            ////            this.IsBinaryCompare = isBinaryCompare;
+
+            SetData(a, b, script, args, ignoreCase, ignoreTextWhitespace, isBinaryCompare);
+
+            ////            if (Options.LineDiffHeight != 0)
+            ////            {
+            ////                this.LineDiffHeight = Options.LineDiffHeight;
+            ////                this._DiffCtrl.LineDiffHeight = Options.LineDiffHeight;
+            ////            }
+
+            NumberOfLines = a.Count;
+///            NotifyPropertyChanged(() => DiffCtrl);
+///
+///            this.currentDiffArgs = args;
+        }
+
         /// <summary>
         /// Sets up the left and right diff viewmodels which contain line by line information
         /// with reference to textual contents and whether it should be handled as insertion,
@@ -389,17 +537,18 @@
         /// <param name="listA"></param>
         /// <param name="listB"></param>
         /// <param name="script"></param>
-        /// <param name="nameA"></param>
-        /// <param name="nameB"></param>
+        /// <param name="args"></param>
         /// <param name="changeDiffIgnoreCase"></param>
         /// <param name="changeDiffIgnoreWhiteSpace"></param>
         /// <param name="changeDiffTreatAsBinaryLines"></param>
-        internal void SetData(IList<string> listA, IList<string> listB, EditScript script,
-                              string nameA, string nameB,
-                              bool changeDiffIgnoreCase,
-                              bool changeDiffIgnoreWhiteSpace,
-                              bool changeDiffTreatAsBinaryLines)
+        private void SetData(IList<string> listA, IList<string> listB, EditScript script,
+                             ShowDiffArgs args,
+                             bool changeDiffIgnoreCase,
+                             bool changeDiffIgnoreWhiteSpace,
+                             bool changeDiffTreatAsBinaryLines)
         {
+            _currentDiffArgs = args;
+
             const int spacesPerTab = 4;
             ChangeDiffOptions changeDiffOptions = ChangeDiffOptions.None;
             if (changeDiffTreatAsBinaryLines)
@@ -423,25 +572,27 @@
             _ViewB.ChangeDiffOptions = changeDiffOptions;
             _ViewLineDiff.ChangeDiffOptions = changeDiffOptions;
 
-            _ViewA.SetData(nameA, listA, script, true);
-            _ViewB.SetData(nameB, listB, script, false);
+            var factory = new LinesFactory();
+            factory.SetData(listA, listB, script);
+
+            _ViewA.SetData(args.A, factory.LinesA, factory.TextA);
+            _ViewB.SetData(args.B, factory.LinesB, factory.TextB);
+
             NotifyPropertyChanged(() => this.IsDiffDataAvailable);
 
-            Debug.Assert(this._ViewA.DiffLines.LineCount == this._ViewB.DiffLines.LineCount, "Both DiffView's LineCounts must be the same");
+            Debug.Assert(this._ViewA.LineCount == this._ViewB.LineCount, "Both DiffView's LineCounts must be the same");
 
             // Sets the similarity value (0% - 100%) between 2 things shown in toolbar
             this.Similarity_Text = string.Format("{0:P}", script.Similarity);
 
-            this._ViewA.SetCounterPartLines(this._ViewB);
-
             // Show left and right file name labels over each ViewA and ViewB
-            bool showNames = !string.IsNullOrEmpty(nameA) || !string.IsNullOrEmpty(nameB);
+            bool showNames = !string.IsNullOrEmpty(args.A) || !string.IsNullOrEmpty(args.B);
             this.edtLeft_Right_Visible = showNames;
 
             if (showNames)
             {
-                this.edtLeft_Text = nameA;
-                this.edtRight_Text = nameB;
+                this.edtLeft_Text = args.A;
+                this.edtRight_Text = args.B;
             }
 
             this.currentDiffLine = -1;
@@ -522,6 +673,19 @@
                 viewB.ScrollToLine(gotoPos.Line + 1);
                 viewB.SetPosition(gotoPos);
             }
+        }
+
+        /// <summary>
+        /// Is invoked whenever the view port of the document changes to ensure all change
+        /// script segments per line are available when they are scrolled into the view.
+        /// </summary>
+        /// <param name="firstLine"></param>
+        /// <param name="lastLine"></param>
+        /// <param name="spacesPerTab"></param>
+        internal void GetChangeEditScript(int firstLine, int lastLine, int spacesPerTab)
+        {
+            _ViewA.GetChangeEditScript(firstLine, lastLine, spacesPerTab);
+            _ViewB.GetChangeEditScript(firstLine, lastLine, spacesPerTab);
         }
 
         /// <summary>
@@ -606,6 +770,116 @@
                 }
             }
         }
+
+        #region TextLineConverter
+        private static void GetFileLines(string fileNameA, string fileNameB, out IList<string> a, out IList<string> b, out int leadingCharactersToIgnore)
+        {
+            a = null;
+            b = null;
+            leadingCharactersToIgnore = 0;
+            CompareType compareType = Options.CompareType;
+            bool isAuto = compareType == CompareType.Auto;
+
+            if (compareType == CompareType.Binary ||
+                (isAuto && (DiffUtility.IsBinaryFile(fileNameA) || DiffUtility.IsBinaryFile(fileNameB))))
+            {
+                using (FileStream fileA = File.OpenRead(fileNameA))
+                using (FileStream fileB = File.OpenRead(fileNameB))
+                {
+                    BinaryDiff diff = new BinaryDiff
+                    {
+                        FootprintLength = Options.BinaryFootprintLength
+                    };
+
+                    AddCopyCollection addCopy = diff.Execute(fileA, fileB);
+
+                    BinaryDiffLines lines = new BinaryDiffLines(fileA, addCopy, Options.BinaryFootprintLength);
+                    a = lines.BaseLines;
+                    b = lines.VersionLines;
+                    leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
+                }
+            }
+
+            if (compareType == CompareType.Xml || (isAuto && (a == null || b == null)))
+            {
+                a = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameA, fileNameA, !isAuto);
+
+                // If A failed to parse with Auto, then there's no reason to try B.
+                if (a != null)
+                {
+                    b = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameB, fileNameB, !isAuto);
+                }
+
+                // If we get here and the compare type was XML, then both
+                // inputs parsed correctly, and both lists should be non-null.
+                // If we get here and the compare type was Auto, then one
+                // or both lists may be null, so we'll fallthrough to the text
+                // handling logic.
+            }
+
+            if (a == null || b == null)
+            {
+                a = DiffUtility.GetFileTextLines(fileNameA);
+                b = DiffUtility.GetFileTextLines(fileNameB);
+            }
+        }
+
+        private static void GetTextLines(string textA, string textB, out IList<string> a, out IList<string> b)
+        {
+            a = null;
+            b = null;
+            CompareType compareType = Options.CompareType;
+            bool isAuto = compareType == CompareType.Auto;
+
+            if (compareType == CompareType.Xml || isAuto)
+            {
+                a = TryGetXmlLines(DiffUtility.GetXmlTextLinesFromXml, "the left side text", textA, !isAuto);
+
+                // If A failed to parse with Auto, then there's no reason to try B.
+                if (a != null)
+                {
+                    b = TryGetXmlLines(DiffUtility.GetXmlTextLinesFromXml, "the right side text", textB, !isAuto);
+                }
+
+                // If we get here and the compare type was XML, then both
+                // inputs parsed correctly, and both lists should be non-null.
+                // If we get here and the compare type was Auto, then one
+                // or both lists may be null, so we'll fallthrough to the text
+                // handling logic.
+            }
+
+            if (a == null || b == null)
+            {
+                a = DiffUtility.GetStringTextLines(textA);
+                b = DiffUtility.GetStringTextLines(textB);
+            }
+        }
+
+        private static IList<string> TryGetXmlLines(
+            Func<string, bool, IList<string>> converter,
+            string name,
+            string input,
+            bool throwOnError)
+        {
+            IList<string> result = null;
+            try
+            {
+                result = converter(input, Options.IgnoreXmlWhitespace);
+            }
+            catch (XmlException ex)
+            {
+                if (throwOnError)
+                {
+                    StringBuilder sb = new StringBuilder("An XML comparison was attempted, but an XML exception occurred while parsing ");
+                    sb.Append(name).AppendLine(".").AppendLine();
+                    sb.AppendLine("Exception Message:").Append(ex.Message);
+                    throw new XmlException(sb.ToString(), ex);
+                }
+            }
+
+            return result;
+        }
+        #endregion TextLineConverter
         #endregion methods
     }
 }

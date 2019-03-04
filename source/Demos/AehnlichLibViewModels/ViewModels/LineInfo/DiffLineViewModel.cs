@@ -17,7 +17,6 @@
 
         private ObservableRangeCollection<ISegment> _LineEditScriptSegments = null;
         private bool _LineEditScriptSegmentsIsDirty;
-        private DiffLineViewModel _counterPart;
         private readonly DiffViewLine _Model;
         #endregion fields
 
@@ -101,18 +100,22 @@
             }
         }
 
-        public DiffLineViewModel Counterpart
+        internal DiffViewLine Counterpart
         {
-            get { return _counterPart;  }
-            internal set
+            get
             {
-                if (_counterPart != value)
-                {
-                    _counterPart = value;
-                    NotifyPropertyChanged(() => Counterpart);
+                if (_Model != null)
+                    return _Model.Counterpart;
 
-                    if (_Model != null)
-                        _Model.Counterpart = value._Model;
+                return _Model;
+            }
+
+            set
+            {
+                if (_Model.Counterpart != value)
+                {
+                    _Model.Counterpart = value;
+                    NotifyPropertyChanged(() => Counterpart);
                 }
             }
         }
@@ -130,6 +133,17 @@
         #endregion properties
 
         #region methods
+        /// <summary>
+        /// Links the model contained in this viewmodel to its counterpart line model
+        /// in order to compute diffs on a line by line level. This computation should
+        /// be on demand because the algorthmic complexity is otherwise non-linear.
+        /// </summary>
+        /// <param name="counterpart"></param>
+        internal void SetCounterPart(DiffLineViewModel counterpart)
+        {
+            _Model.Counterpart = counterpart._Model;
+        }
+
         /// <summary>
         /// Re(sets) the list of text line <see cref="ISegment"/>s on demand when the
         /// user scrolls to a certain location and brings the line into view.
