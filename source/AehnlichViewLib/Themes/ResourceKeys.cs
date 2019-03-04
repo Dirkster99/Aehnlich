@@ -64,6 +64,10 @@
         /// </summary>
         public static readonly ComponentResourceKey ICON_CopyKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_CopyKey");
 
+        public static readonly ComponentResourceKey ICON_FindKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_FindKey");
+        public static readonly ComponentResourceKey ICON_NextKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_NextKey");
+        public static readonly ComponentResourceKey ICON_PreviousKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_PreviousKey");
+
         /// <summary>
         /// Defines the icon that is shown for a refresh UI function (eg: Image on Button).
         /// </summary>
@@ -75,6 +79,8 @@
         public static readonly ComponentResourceKey ICON_GotoPrevKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_GotoPrevKey");
         public static readonly ComponentResourceKey ICON_GotoBottomKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_GotoBottomKey");
         #endregion Goto Diff Icons
+
+        public static readonly ComponentResourceKey ICON_CloseKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_CloseKey");       
         #endregion ICONs
 
         #region Diff Colors

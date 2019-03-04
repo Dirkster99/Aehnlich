@@ -233,14 +233,14 @@
             // https://stackoverflow.com/questions/12033388/avalonedit-how-to-invalidate-line-transformers
             if (_PART_LeftDiffView != null)
             {
-                //_PART_LeftDiffView.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
-                _PART_LeftDiffView.TextArea.TextView.Redraw();
+                _PART_LeftDiffView.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
+                //_PART_LeftDiffView.TextArea.TextView.Redraw();
             }
 
             if (_PART_RightDiffView != null)
             {
-                //_PART_RightDiffView.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
-                _PART_RightDiffView.TextArea.TextView.Redraw();
+                _PART_RightDiffView.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
+                //_PART_RightDiffView.TextArea.TextView.Redraw();
             }
         }
         #endregion RequestRedraw

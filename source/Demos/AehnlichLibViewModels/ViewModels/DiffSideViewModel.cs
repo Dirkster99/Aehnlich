@@ -14,11 +14,10 @@
     {
         #region fields
         private ChangeDiffOptions _ChangeDiffOptions;
-////        private readonly DiffLinesViewModel _DiffLines;
         private TextDocument _document = null;
         private TextBoxController _TxtControl;
 
-        private DiffViewPosition _position;
+        private readonly DiffViewPosition _position;
         private int _Column;
         private int _Line;
 
@@ -47,8 +46,8 @@
         /// </summary>
         public DiffSideViewModel()
         {
+            _position = new DiffViewPosition(0,0);
             _DocLineDiffs = new ObservableRangeCollection<DiffLineViewModel>();
-////            _DiffLines = new DiffLinesViewModel();
             _Line = 0;
             _Column = 0;
 
@@ -154,17 +153,6 @@
         }
         #endregion Caret Position
 
-        /// <summary>
-        /// Gets the object that holds all line diffs hosted in this object.
-        /// </summary>
-////        public DiffLinesViewModel DiffLines
-////        {
-////            get
-////            {
-////                return _DiffLines;
-////            }
-////        }
-
         public bool IsDirty
         {
             get { return _isDirty; }
@@ -207,6 +195,7 @@
                 }
             }
         }
+
         #region DiffLines
         public IReadOnlyList<DiffLineViewModel> DocLineDiffs
         {
@@ -238,8 +227,10 @@
                               IDiffLines lines, string text)
         {
             this.FileName = filename;
+            _position.SetPosition(0, 0);
+            Line = 0;
+            Column = 0;
 
-////            _DiffLines.SetData(lines);
             if (lines != null)
             {
                 _diffEndLines = lines.DiffEndLines;
@@ -369,10 +360,12 @@
             return result;
         }
 
-        internal void GetChangeEditScript(int firstLine, int lastLine, int spacesPerTab)
+        internal int GetChangeEditScript(int firstLine, int lastLine, int spacesPerTab)
         {
+            int count = 0;
+
             if (firstLine < 0 || lastLine <= 0)
-                return;
+                return count;
 
             for (int i = firstLine; i < LineCount && i < lastLine; i++)
             {
@@ -381,13 +374,18 @@
                     continue;
 
                 if (DocLineDiffs[i].LineEditScriptSegmentsIsDirty)
+                {
+                    count++;
                     DocLineDiffs[i].GetChangeEditScript(this.ChangeDiffOptions, spacesPerTab);
+                }
             }
+
+            return count;
         }
 
         internal void SetPosition(DiffViewPosition gotoPos)
         {
-            _position = new DiffViewPosition(gotoPos.Line, gotoPos.Column);
+            _position.SetPosition(gotoPos.Line, gotoPos.Column);
         }
 
         /// <summary>

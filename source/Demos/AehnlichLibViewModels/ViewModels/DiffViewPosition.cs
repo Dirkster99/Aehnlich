@@ -3,16 +3,20 @@
     using System.Diagnostics;
 
     [DebuggerDisplay("Line = {Line}, Column = {Column}")]
-    internal struct DiffViewPosition
+    public class DiffViewPosition : Base.ViewModelBase
     {
         #region Public Fields
-
         public static readonly DiffViewPosition Empty = new DiffViewPosition(-100000, -100000);
-
+        private int _Line;
+        private int _Column;
         #endregion
 
         #region Constructors
-
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="column"></param>
         public DiffViewPosition(int line, int column)
             : this()
         {
@@ -20,14 +24,55 @@
             this.Column = column;
         }
 
+        /// <summary>
+        /// Hidden standard ctor
+        /// </summary>
+        protected DiffViewPosition()
+        {
+        }
         #endregion
 
         #region Public Properties
 
-        public int Column { get; }
+        public int Column
+        {
+            get
+            {
+                return _Column;
+            }
 
-        public int Line { get; }
+            set
+            {
+                if (_Column != value)
+                {
+                    _Column = value;
+                    NotifyPropertyChanged(() => Column);
 
+//                    CaretPositionChanged?.Invoke(this,
+//                        new CaretPositionChangedEvent(_Line, _Column, CaretChangeType.Column));
+                }
+            }
+        }
+
+        public int Line
+        {
+            get
+            {
+                return _Line;
+            }
+
+            set
+            {
+                if (_Line != value)
+                {
+                    _Line = value;
+                    NotifyPropertyChanged(() => Line);
+
+//                    CaretPositionChanged?.Invoke(this,
+//                        new CaretPositionChangedEvent(_Line, _Column, CaretChangeType.Line));
+                }
+            }
+        }
         #endregion
 
         #region Public Operators
@@ -86,15 +131,14 @@
 
         public override bool Equals(object value)
         {
-            bool result = false;
+            var other = value as DiffViewPosition;
+            if (value == null)
+                return false;
 
-            DiffViewPosition? position = value as DiffViewPosition?;
-            if (position != null)
-            {
-                result = this.CompareTo(position.Value) == 0;
-            }
+            if (other.Column != this.Column || other.Line != this.Line)
+                return false;
 
-            return result;
+            return true;
         }
 
         public override int GetHashCode()
@@ -103,6 +147,11 @@
             return result;
         }
 
+        internal void SetPosition(int line, int column)
+        {
+            Line = line;
+
+        }
         #endregion
     }
 }

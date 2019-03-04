@@ -9,6 +9,18 @@
     <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                   ResourceId=ICON_CopyKey}"
                   UriSource="/AehnlichViewLib;component/Icons/Light/Copy.ico" />
+    
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_FindKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/Search_16x.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_NextKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/Next_16x.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_PreviousKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/Previous_16x.ico" />
 
     <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                   ResourceId=ICON_RefreshKey}"
@@ -43,4 +55,10 @@
     <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                   ResourceId=ICON_ChangedKey}"
                   UriSource="/AehnlichViewLib;component/Icons/Light/tilde.ico" />
+
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_CloseKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/Close.ico" />
+
 </ResourceDictionary>

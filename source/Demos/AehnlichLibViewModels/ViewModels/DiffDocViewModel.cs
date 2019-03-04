@@ -45,8 +45,6 @@
         private ICommand _GoToFirstDifferenceCommand;
         private string _StatusText;
         private readonly TextEditorOptions _DiffViewOptions;
-
-        ////        private int currentDiffLine = -1;
         #endregion fields
 
         #region ctors
@@ -72,15 +70,6 @@
             {
                 return _DiffViewOptions;
             }
-
-////            protected set
-////            {
-////                if (_DiffViewOptions != value)
-////                {
-////                    _DiffViewOptions = value;
-////                    NotifyPropertyChanged(() => _DiffViewOptions);
-////                }
-////            }
         }
 
         public DiffSideViewModel ViewA
@@ -508,25 +497,17 @@
             // can build display lines, determine scroll bounds, etc.
 ////            this.ApplyOptions();
 
-            ////            this.FileNameA = args.A;
-            ////            this.FileNameB = args.B;
+////            this.FileNameA = args.A;
+////            this.FileNameB = args.B;
 
-            ////            this.IgnoreCase = ignoreCase;
-            ////            this.IgnoreTextWhitespace = ignoreTextWhitespace;
-            ////            this.IsBinaryCompare = isBinaryCompare;
+////            this.IgnoreCase = ignoreCase;
+////            this.IgnoreTextWhitespace = ignoreTextWhitespace;
+////            this.IsBinaryCompare = isBinaryCompare;
 
             SetData(a, b, script, args, ignoreCase, ignoreTextWhitespace, isBinaryCompare);
 
-            ////            if (Options.LineDiffHeight != 0)
-            ////            {
-            ////                this.LineDiffHeight = Options.LineDiffHeight;
-            ////                this._DiffCtrl.LineDiffHeight = Options.LineDiffHeight;
-            ////            }
-
             NumberOfLines = a.Count;
-///            NotifyPropertyChanged(() => DiffCtrl);
-///
-///            this.currentDiffArgs = args;
+            this._currentDiffArgs = args;
         }
 
         /// <summary>
@@ -682,10 +663,14 @@
         /// <param name="firstLine"></param>
         /// <param name="lastLine"></param>
         /// <param name="spacesPerTab"></param>
-        internal void GetChangeEditScript(int firstLine, int lastLine, int spacesPerTab)
+        internal int GetChangeEditScript(int firstLine, int lastLine, int spacesPerTab)
         {
-            _ViewA.GetChangeEditScript(firstLine, lastLine, spacesPerTab);
-            _ViewB.GetChangeEditScript(firstLine, lastLine, spacesPerTab);
+            int count = 0;
+
+            count += _ViewA.GetChangeEditScript(firstLine, lastLine, spacesPerTab);
+            count += _ViewB.GetChangeEditScript(firstLine, lastLine, spacesPerTab);
+
+            return count;
         }
 
         /// <summary>

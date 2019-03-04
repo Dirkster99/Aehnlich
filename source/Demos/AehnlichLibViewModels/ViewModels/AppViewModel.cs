@@ -1,5 +1,6 @@
 ﻿namespace AehnlichLibViewModels.ViewModels
 {
+    using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Models;
     using AehnlichLibViewModels.ViewModels.Base;
     using AehnlichViewLib.Models;
@@ -11,7 +12,6 @@
     public class AppViewModel : Base.ViewModelBase
     {
         #region fields
-
         private string _FilePathA;
         private string _FilePathB;
         private ICommand _CompareFilesCommand;
@@ -27,13 +27,17 @@
         private ICommand _OverviewValueChangedCommand;
         private DiffViewPort _LastViewPort;
         private DateTime _RequestRedraw;
-
-////        private readonly FileDiffFormViewModel _DiffForm;
+        private ICommand _FindTextCommand;
         private readonly DiffDocViewModel _DiffCtrl;
-        private readonly object lockObject = new object();
+        private readonly object _lockObject = new object();
+
+        private InlineDialogMode _InlineDialog;
         #endregion fields
 
         #region ctors
+        /// <summary>
+        /// Parameterized class constructor
+        /// </summary>
         public AppViewModel(string fileA, string fileB)
             : this()
         {
@@ -41,9 +45,12 @@
             _FilePathB = fileB;
         }
 
+        /// <summary>
+        /// Class constructor
+        /// </summary>
         public AppViewModel()
         {
-////            _DiffForm = new FileDiffFormViewModel();
+            _InlineDialog = InlineDialogMode.None;
             _DiffCtrl = new DiffDocViewModel();
         }
         #endregion ctors
@@ -220,7 +227,7 @@
                         if (param == null)
                             return;
 
-                        lock (lockObject)
+                        lock (_lockObject)
                         {
                             if (_IgnoreNextTextSyncValueChange == true)
                             {
@@ -242,9 +249,9 @@
                         int spacesPerTab = 4;
 
                         // Translate from 1-based values to zero-based values
-                        _DiffCtrl.GetChangeEditScript(param.FirstLine-1, param.LastLine-1, spacesPerTab);
+                        int count = _DiffCtrl.GetChangeEditScript(param.FirstLine-1, param.LastLine-1, spacesPerTab);
 
-                        if (_LastViewPort == null)
+                        if (count > 0)
                         {
                             // Requesting a redraw to make sure the change layer is visible in the background layer
                             Application.Current.Dispatcher.Invoke(() =>
@@ -274,7 +281,7 @@
                 {
                     _OverviewValueChangedCommand = new RelayCommand<object>((p) =>
                     {
-                        lock (lockObject)
+                        lock (_lockObject)
                         {
                             if ((p is double) == false)
                                 return;
@@ -319,11 +326,6 @@
             get { return _DiffCtrl; }
         }
 
-////        public FileDiffFormViewModel DiffForm
-////        {
-////            get { return _DiffForm; }
-////        }
-
         /// <summary>
         /// Gets the path of file A in the comparison.
         /// </summary>
@@ -360,6 +362,46 @@
                 {
                     _FilePathB = value;
                     NotifyPropertyChanged(() => FilePathB);
+                }
+            }
+        }
+
+        public ICommand FindTextCommand
+        {
+            get
+            {
+                if (_FindTextCommand == null)
+                {
+                    _FindTextCommand = new RelayCommand<object>((p) =>
+                    {
+                        if (InlineDialog != InlineDialogMode.Find)
+                        {
+                            InlineDialog = InlineDialogMode.Find;
+                        }
+                        else
+                        {
+                            InlineDialog = InlineDialogMode.None;
+                        }
+                    },
+                    (p) =>
+                    {
+                        return DiffCtrl.IsDiffDataAvailable;
+                    });
+                }
+
+                return _FindTextCommand;
+            }
+        }
+
+        public InlineDialogMode InlineDialog
+        {
+            get { return _InlineDialog; }
+            set
+            {
+                if (_InlineDialog != value)
+                {
+                    _InlineDialog = value;
+                    NotifyPropertyChanged(() => InlineDialog);
                 }
             }
         }

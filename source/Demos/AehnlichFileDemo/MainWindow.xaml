@@ -5,23 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         
         xmlns:conv="clr-namespace:AehnlichLibViewModels.Converters;assembly=AehnlichLibViewModels"
-        xmlns:ctrl="clr-namespace:AehnlichViewLib.Controls;assembly=AehnlichViewLib"
-        xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
 
+        xmlns:ctrl="clr-namespace:AehnlichViewLib.Controls;assembly=AehnlichViewLib"
+        xmlns:usctrl="clr-namespace:AehnlichLibViewModels.Views;assembly=AehnlichLibViewModels"
+        xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Ähnlich" Height="450" Width="800">
     
     <Grid Margin="3">
         <Grid.Resources>
             <conv:MultiParToParConverter x:Key="MultiParToParConverter"/>
             <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
+            <conv:InlineDilaogToVisibilityPropConverter x:Key="InlineDilaogToVisibilityPropConverter"/>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="4*"/>
             <RowDefinition Height="Auto"/>
@@ -39,7 +42,6 @@
                      ToolBarTray.IsLocked="True"
                      MinHeight="16"
                      >
-
                 <Button
                     Command="{Binding OpenFileFromActiveViewCommand}"
                     ToolTip="Open File"
@@ -57,7 +59,7 @@
                 
                 <Button
                     Command="{Binding CopyTextSelectionFromActiveViewCommand}"
-                    ToolTip="Open File"
+                    ToolTip="Copy Text"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
@@ -65,6 +67,20 @@
                     >
                     <Button.Background>
                         <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_CopyKey}}"/>
+                    </Button.Background>
+                </Button>
+
+                <Button
+                    Name="FindButton"
+                    Command="{Binding FindTextCommand}"
+                    ToolTip="Find"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
+                    >
+                    <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_FindKey}}"/>
                     </Button.Background>
                 </Button>
 
@@ -219,7 +235,7 @@
                     </TextBlock>
                 </StackPanel>
             </ToolBar>
-
+            
             <!-- Debugging Values -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed">
                 <TextBlock
@@ -249,7 +265,13 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Column="0" Grid.Row="1">
+        <Grid Grid.Column="0" Grid.Row="1" Margin="3,6"
+              Visibility="{Binding InlineDialog, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InlineDilaogToVisibilityPropConverter}}"
+              >
+            <usctrl:FindControl />
+        </Grid>
+
+        <Grid Grid.Column="0" Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -285,18 +307,18 @@
                               DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               RequestRedraw="{Binding RequestRedraw, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                               
-                              Margin="3"/>
+                              Margin="3,0,3,3"/>
         </Grid>
 
         <GridSplitter
-                Grid.Column="0" Grid.Row="2"
+                Grid.Column="0" Grid.Row="3"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
                 Height="6" />
 
         <!-- ViewLineDiff -->
         <ctrl:DiffView
-            Grid.Column="0" Grid.Row="3" Margin="3"
+            Grid.Column="0" Grid.Row="4" Margin="3"
             DataContext="{Binding DiffCtrl.ViewLineDiff}"
             Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
             ItemsSource="{Binding DocLineDiffs}"
