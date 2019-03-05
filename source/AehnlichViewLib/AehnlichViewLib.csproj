@@ -59,7 +59,6 @@
     <Compile Include="Controls\AvalonEditEx\TextBoxController\DiffView_TextController.cs" />
     <Compile Include="Controls\AvalonEditEx\TextBoxController\TextBoxController.cs" />
     <Compile Include="Controls\AvalonEditEx\TextBoxController\ITextBoxController.cs" />
-    <Compile Include="Controls\DiffControl.cs" />
     <Compile Include="Controls\Utils\ExtensionMethods.cs" />
     <Compile Include="Controls\Utils\TextFormatterFactory.cs" />
     <Compile Include="Interfaces\IDiffLineInfo.cs" />
@@ -70,6 +69,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="Controls\DiffControl.xaml.cs">
+      <DependentUpon>DiffControl.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Page Include="Controls\DiffView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

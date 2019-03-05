@@ -1,9 +1,10 @@
 ﻿namespace AehnlichLibViewModels.ViewModels
 {
+    using System;
     using System.Diagnostics;
 
     [DebuggerDisplay("Line = {Line}, Column = {Column}")]
-    public class DiffViewPosition : Base.ViewModelBase
+    public class DiffViewPosition : Base.ViewModelBase, IEquatable<DiffViewPosition>
     {
         #region Public Fields
         public static readonly DiffViewPosition Empty = new DiffViewPosition(-100000, -100000);
@@ -47,9 +48,6 @@
                 {
                     _Column = value;
                     NotifyPropertyChanged(() => Column);
-
-//                    CaretPositionChanged?.Invoke(this,
-//                        new CaretPositionChangedEvent(_Line, _Column, CaretChangeType.Column));
                 }
             }
         }
@@ -67,9 +65,6 @@
                 {
                     _Line = value;
                     NotifyPropertyChanged(() => Line);
-
-//                    CaretPositionChanged?.Invoke(this,
-//                        new CaretPositionChangedEvent(_Line, _Column, CaretChangeType.Line));
                 }
             }
         }
@@ -129,16 +124,22 @@
             return result;
         }
 
-        public override bool Equals(object value)
+        public bool Equals(DiffViewPosition value)
         {
-            var other = value as DiffViewPosition;
             if (value == null)
                 return false;
 
-            if (other.Column != this.Column || other.Line != this.Line)
+            if (value.Column != this.Column || value.Line != this.Line)
                 return false;
 
             return true;
+        }
+
+        public override bool Equals(object value)
+        {
+            var other = value as DiffViewPosition;
+
+            return Equals(value);
         }
 
         public override int GetHashCode()
