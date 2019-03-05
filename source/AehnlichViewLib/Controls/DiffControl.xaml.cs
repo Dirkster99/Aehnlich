@@ -2,8 +2,6 @@
 {
     using AehnlichViewLib.Models;
     using ICSharpCode.AvalonEdit;
-    using ICSharpCode.AvalonEdit.Rendering;
-    using System;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -48,13 +46,6 @@
             DependencyProperty.Register("DiffViewOptions", typeof(TextEditorOptions),
                 typeof(DiffControl), new PropertyMetadata(new TextEditorOptions { IndentationSize = 4, ShowTabs = false, ConvertTabsToSpaces = true }));
 
-        /// <summary>
-        /// Implements the backing store of the <see cref="RequestRedraw"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty RequestRedrawProperty =
-            DependencyProperty.Register("RequestRedraw", typeof(DateTime),
-                typeof(DiffControl), new PropertyMetadata(DateTime.MinValue, OnRequestRedraw));
-
         private DiffView _PART_LeftDiffView;
         private DiffView _PART_RightDiffView;
         private ScrollViewer _leftScrollViewer;
@@ -95,17 +86,6 @@
         {
             get { return (string)GetValue(LeftFileNameProperty); }
             set { SetValue(LeftFileNameProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets/Sets a time property that will request a redraw
-        /// of the <see cref="KnownLayer.Background"/> layer
-        /// if set with th current time.
-        /// </summary>
-        public DateTime RequestRedraw
-        {
-            get { return (DateTime)GetValue(RequestRedrawProperty); }
-            set { SetValue(RequestRedrawProperty, value); }
         }
         #endregion properties
 
@@ -217,33 +197,6 @@
 
             return retour;
         }
-
-        #region RequestRedraw
-        private static void OnRequestRedraw(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((DiffControl)d).OnRequestRedraw(e);
-        }
-
-        /// <summary>
-        /// Redraws the <see cref="KnownLayer.Background"/> layer when invoked.
-        /// </summary>
-        /// <param name="e"></param>
-        private void OnRequestRedraw(DependencyPropertyChangedEventArgs e)
-        {
-            // https://stackoverflow.com/questions/12033388/avalonedit-how-to-invalidate-line-transformers
-            if (_PART_LeftDiffView != null)
-            {
-                // _PART_LeftDiffView.TextArea.TextView.Redraw();
-                _PART_LeftDiffView.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
-            }
-
-            if (_PART_RightDiffView != null)
-            {
-                // _PART_RightDiffView.TextArea.TextView.Redraw();
-                _PART_RightDiffView.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
-            }
-        }
-        #endregion RequestRedraw
         #endregion methods
     }
 }

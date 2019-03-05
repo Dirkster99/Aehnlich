@@ -61,6 +61,7 @@
     <Compile Include="Controls\AvalonEditEx\TextBoxController\ITextBoxController.cs" />
     <Compile Include="Controls\Utils\ExtensionMethods.cs" />
     <Compile Include="Controls\Utils\TextFormatterFactory.cs" />
+    <Compile Include="Converters\NullToEnabledPropConverter.cs" />
     <Compile Include="Interfaces\IDiffLineInfo.cs" />
     <Compile Include="Models\DiffViewPort.cs" />
     <Compile Include="Models\Segment.cs" />

@@ -26,7 +26,6 @@
         private ICommand _ViewPortChangedCommand;
         private ICommand _OverviewValueChangedCommand;
         private DiffViewPort _LastViewPort;
-        private DateTime _RequestRedraw;
         private ICommand _FindTextCommand;
         private readonly DiffDocViewModel _DiffCtrl;
         private readonly object _lockObject = new object();
@@ -95,19 +94,6 @@
                 }
 
                 return _CompareFilesCommand;
-            }
-        }
-
-        public DateTime RequestRedraw
-        {
-            get { return _RequestRedraw; }
-            private set
-            {
-                if (_RequestRedraw != value)
-                {
-                    _RequestRedraw = value;
-                    NotifyPropertyChanged(() => RequestRedraw);
-                }
             }
         }
 
@@ -251,16 +237,6 @@
                         // Translate from 1-based values to zero-based values
                         int count = _DiffCtrl.GetChangeEditScript(param.FirstLine-1, param.LastLine-1, spacesPerTab);
 
-                        if (count > 0)
-                        {
-                            // Requesting a redraw to make sure the change layer is visible in the background layer
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                RequestRedraw = DateTime.Now;
-                            }
-                            , DispatcherPriority.ApplicationIdle);
-                        }
-
                         _LastViewPort = param;
                     }
                     , (p) =>
@@ -366,6 +342,10 @@
             }
         }
 
+        /// <summary>
+        /// Implements a find command via AvalonEdits build in searxh panel which can be
+        /// activated if the right or left control has focus.
+        /// </summary>
         public ICommand FindTextCommand
         {
             get
@@ -374,18 +354,22 @@
                 {
                     _FindTextCommand = new RelayCommand<object>((p) =>
                     {
-                        if (InlineDialog != InlineDialogMode.Find)
-                        {
-                            InlineDialog = InlineDialogMode.Find;
-                        }
-                        else
-                        {
-                            InlineDialog = InlineDialogMode.None;
-                        }
+                        ApplicationCommands.Find.Execute(null, null);
+
+                        ////if (InlineDialog != InlineDialogMode.Find)
+                        ////{
+                        ////    InlineDialog = InlineDialogMode.Find;
+                        ////}
+                        ////else
+                        ////{
+                        ////    InlineDialog = InlineDialogMode.None;
+                        ////}
                     },
                     (p) =>
                     {
-                        return DiffCtrl.IsDiffDataAvailable;
+                        return ApplicationCommands.Find.CanExecute(null, null);
+
+                        ////return DiffCtrl.IsDiffDataAvailable;
                     });
                 }
 

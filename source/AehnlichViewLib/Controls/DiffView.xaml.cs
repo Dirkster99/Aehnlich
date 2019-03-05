@@ -14,6 +14,7 @@
     using System.Windows.Data;
     using System.Windows.Controls;
     using AehnlichViewLib.Controls.AvalonEditEx;
+    using ICSharpCode.AvalonEdit.Search;
 
     /// <summary>
     /// Implements a <see cref="TextEditor"/> based view that can be used to highlight
@@ -367,6 +368,14 @@
         {
             try
             {
+                // This adds a search panel into the edit
+                // It is available via Ctrl-F
+                SearchPanel.Install(this);
+
+                // Remove rounded corners from text selection
+                this.TextArea.SelectionCornerRadius = 0;
+                this.TextArea.SelectionBorder = null;
+
                 // Initialize Diff line background color rendering
                 _DiffBackgroundRenderer = new DiffLineBackgroundRenderer(this);
                 this.TextArea.TextView.BackgroundRenderers.Add(_DiffBackgroundRenderer);
