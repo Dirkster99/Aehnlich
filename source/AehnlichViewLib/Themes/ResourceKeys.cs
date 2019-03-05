@@ -80,7 +80,9 @@
         public static readonly ComponentResourceKey ICON_GotoBottomKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_GotoBottomKey");
         #endregion Goto Diff Icons
 
-        public static readonly ComponentResourceKey ICON_CloseKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_CloseKey");       
+        public static readonly ComponentResourceKey ICON_CloseKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_CloseKey");
+
+        public static readonly ComponentResourceKey ICON_GotoLineKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_GotoLineKey");
         #endregion ICONs
 
         #region Diff Colors

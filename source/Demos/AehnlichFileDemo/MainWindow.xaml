@@ -25,7 +25,6 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="4*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -71,9 +70,9 @@
                 </Button>
 
                 <Button
-                    Name="FindButton"
                     Command="{Binding FindTextCommand}"
                     ToolTip="Find"
+                    ToolTipService.IsEnabled="True"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     MinHeight="16" MinWidth="16"
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
@@ -84,6 +83,20 @@
                     </Button.Background>
                 </Button>
 
+                <Button
+                    Command="{Binding GotoLineCommand}"
+                    ToolTip="Goto Line"
+                    ToolTipService.IsEnabled="True"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
+                    >
+                    <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoLineKey}}"/>
+                    </Button.Background>
+                </Button>
+                
                 <Separator />
 
                 <Button
@@ -265,13 +278,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Column="0" Grid.Row="1" Margin="3,6"
-              Visibility="{Binding InlineDialog, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InlineDilaogToVisibilityPropConverter}}"
-              >
-            <usctrl:FindControl />
-        </Grid>
-
-        <Grid Grid.Column="0" Grid.Row="2">
+        <Grid Grid.Column="0" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -281,10 +288,18 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <ctrl:Overview Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="3"
+            <Grid Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="0" Margin="3,0,3,3"
+                  Visibility="{Binding InlineDialog, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InlineDilaogToVisibilityPropConverter}}"
+              >
+                <usctrl:GotoControl DataContext="{Binding GotoLineController}"
+                />
+            </Grid>
+
+            <ctrl:Overview Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="3"
                            Width="30"
                            Name="OverviewSlider"
                            ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
@@ -299,7 +314,7 @@
                 </ctrl:Overview.ToolTip-->
             </ctrl:Overview>
 
-            <ctrl:DiffControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1"
+            <ctrl:DiffControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2"
                               Name="DiffCtrl"
                               LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
@@ -310,14 +325,14 @@
         </Grid>
 
         <GridSplitter
-                Grid.Column="0" Grid.Row="3"
+                Grid.Column="0" Grid.Row="2"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
                 Height="6" />
 
         <!-- ViewLineDiff -->
         <ctrl:DiffView
-            Grid.Column="0" Grid.Row="4" Margin="3"
+            Grid.Column="0" Grid.Row="3" Margin="3"
             DataContext="{Binding DiffCtrl.ViewLineDiff}"
             Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
             ItemsSource="{Binding DocLineDiffs}"

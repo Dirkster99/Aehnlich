@@ -10,6 +10,7 @@
                 <ControlTemplate TargetType="{x:Type local:DiffControl}">
                     <ControlTemplate.Resources>
                         <conv:NullToEnabledPropConverter x:Key="NullToEnabledPropConverter"/>
+                        <conv:NullToVisibilityPropConverter x:Key="NullToVisibilityPropConverter"/>
                     </ControlTemplate.Resources>
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"

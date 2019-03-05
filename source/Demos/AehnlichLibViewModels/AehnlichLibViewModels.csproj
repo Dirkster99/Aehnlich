@@ -34,6 +34,9 @@
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
+    <Reference Include="NumericUpDownLib, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.NumericUpDownLib.2.2.2\lib\net4\NumericUpDownLib.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -70,8 +73,8 @@
     <Compile Include="ViewModels\DiffViewPosition.cs" />
     <Compile Include="ViewModels\LineInfo\LinesFactory.cs" />
     <Compile Include="ViewModels\ObservableRangeCollection.cs" />
-    <Compile Include="Views\FindControl.xaml.cs">
-      <DependentUpon>FindControl.xaml</DependentUpon>
+    <Compile Include="Views\GotoControl.xaml.cs">
+      <DependentUpon>GotoControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -89,7 +92,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\FindControl.xaml">
+    <Page Include="Views\GotoControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -3,6 +3,6 @@
     public enum InlineDialogMode
     {
         None,
-        Find
+        Goto
     }
 }

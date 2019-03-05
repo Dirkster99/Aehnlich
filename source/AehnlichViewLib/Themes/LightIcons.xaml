@@ -56,9 +56,12 @@
                   ResourceId=ICON_ChangedKey}"
                   UriSource="/AehnlichViewLib;component/Icons/Light/tilde.ico" />
 
-
     <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                   ResourceId=ICON_CloseKey}"
                   UriSource="/AehnlichViewLib;component/Icons/Light/Close.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_GotoLineKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/ThisLine.ico" />
 
 </ResourceDictionary>

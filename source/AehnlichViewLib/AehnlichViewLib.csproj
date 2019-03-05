@@ -61,6 +61,7 @@
     <Compile Include="Controls\AvalonEditEx\TextBoxController\ITextBoxController.cs" />
     <Compile Include="Controls\Utils\ExtensionMethods.cs" />
     <Compile Include="Controls\Utils\TextFormatterFactory.cs" />
+    <Compile Include="Converters\NullToVisibilityPropConverter.cs" />
     <Compile Include="Converters\NullToEnabledPropConverter.cs" />
     <Compile Include="Interfaces\IDiffLineInfo.cs" />
     <Compile Include="Models\DiffViewPort.cs" />
@@ -165,6 +166,8 @@
     <Resource Include="Icons\Light\Previous_16x.ico" />
     <Content Include="Icons\Light\Search_16x.svg" />
     <Resource Include="Icons\Light\Search_16x.ico" />
+    <Resource Include="Icons\Light\ThisLine.ico" />
+    <Content Include="Icons\Light\ThisLine_16x.svg" />
     <Content Include="Icons\Light\tilde.svg" />
     <Resource Include="Icons\Light\OpenFile.ico" />
     <Resource Include="Icons\Light\Copy.ico" />

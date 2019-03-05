@@ -31,6 +31,7 @@
         private readonly object _lockObject = new object();
 
         private InlineDialogMode _InlineDialog;
+        private ICommand _GotoLineCommand;
         #endregion fields
 
         #region ctors
@@ -355,25 +356,41 @@
                     _FindTextCommand = new RelayCommand<object>((p) =>
                     {
                         ApplicationCommands.Find.Execute(null, null);
-
-                        ////if (InlineDialog != InlineDialogMode.Find)
-                        ////{
-                        ////    InlineDialog = InlineDialogMode.Find;
-                        ////}
-                        ////else
-                        ////{
-                        ////    InlineDialog = InlineDialogMode.None;
-                        ////}
                     },
                     (p) =>
                     {
                         return ApplicationCommands.Find.CanExecute(null, null);
-
-                        ////return DiffCtrl.IsDiffDataAvailable;
                     });
                 }
 
                 return _FindTextCommand;
+            }
+        }
+
+        public ICommand GotoLineCommand
+        {
+            get
+            {
+                if (_GotoLineCommand == null)
+                {
+                    _GotoLineCommand = new RelayCommand<object>((p) =>
+                    {
+
+                        if (InlineDialog != InlineDialogMode.Goto)
+                        {
+                            InlineDialog = InlineDialogMode.Goto;
+                        }
+                        else
+                        {
+                            InlineDialog = InlineDialogMode.None;
+                        }
+                    },(p) =>
+                    {
+                        return DiffCtrl.IsDiffDataAvailable;
+                    });
+                }
+
+                return _GotoLineCommand;
             }
         }
 

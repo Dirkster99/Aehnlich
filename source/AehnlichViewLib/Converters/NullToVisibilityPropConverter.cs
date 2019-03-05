@@ -7,20 +7,20 @@
 
     /// <summary>
     /// Converts an object null or non-null value into a configurable
-    /// value of type <seealso cref="bool"/>.
+    /// value of type <seealso cref="Visibility"/>.
     /// </summary>
-    [ValueConversion(typeof(object), typeof(bool))]
-    public sealed class NullToEnabledPropConverter : IValueConverter
+    [ValueConversion(typeof(object), typeof(Visibility))]
+    public sealed class NullToVisibilityPropConverter : IValueConverter
     {
         #region constructor
         /// <summary>
         /// Class constructor
         /// </summary>
-        public NullToEnabledPropConverter()
+        public NullToVisibilityPropConverter()
         {
             // set defaults
-            NullValue = false;
-            NonNullValue = true;
+            NullValue = Visibility.Collapsed;
+            NonNullValue = Visibility.Visible;
         }
         #endregion constructor
 
@@ -29,13 +29,13 @@
         /// Gets/sets the <see cref="Visibility"/> value that is associated
         /// (converted into) with the boolean true value.
         /// </summary>
-        public bool NullValue { get; set; }
+        public Visibility NullValue { get; set; }
 
         /// <summary>
         /// Gets/sets the <see cref="Visibility"/> value that is associated
         /// (converted into) with the boolean false value.
         /// </summary>
-        public bool NonNullValue { get; set; }
+        public Visibility NonNullValue { get; set; }
         #endregion properties
 
         #region methods
@@ -57,7 +57,7 @@
         }
 
         /// <summary>
-        /// Not implemented.
+        /// Not implemented
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>
