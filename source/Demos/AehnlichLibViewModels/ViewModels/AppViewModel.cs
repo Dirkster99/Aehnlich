@@ -4,10 +4,7 @@
     using AehnlichLibViewModels.Models;
     using AehnlichLibViewModels.ViewModels.Base;
     using AehnlichViewLib.Models;
-    using System;
-    using System.Windows;
     using System.Windows.Input;
-    using System.Windows.Threading;
 
     public class AppViewModel : Base.ViewModelBase
     {
@@ -28,6 +25,7 @@
         private DiffViewPort _LastViewPort;
         private ICommand _FindTextCommand;
         private readonly DiffDocViewModel _DiffCtrl;
+        private readonly GotoLineControllerViewModel _GotoLineController;
         private readonly object _lockObject = new object();
 
         private InlineDialogMode _InlineDialog;
@@ -52,6 +50,7 @@
         {
             _InlineDialog = InlineDialogMode.None;
             _DiffCtrl = new DiffDocViewModel();
+            _GotoLineController = new GotoLineControllerViewModel(GotoLine);
         }
         #endregion ctors
 
@@ -83,6 +82,9 @@
 
                         _DiffCtrl.ShowDifferences(new Models.ShowDiffArgs(fileA, fileB, Enums.DiffType.File));
 
+                        GotoLineController.MaxLineValue = (int)_DiffCtrl.NumberOfLines;
+
+                        // Compute change edit scripts if we know the size of the viewport
                         if (_LastViewPort != null)
                             _DiffCtrl.GetChangeEditScript(_LastViewPort.FirstLine - 1, _LastViewPort.LastLine - 1, 4);
 
@@ -119,25 +121,25 @@
                             if (nonActView != null)
                                 FileSystemCommands.OpenInWindows(nonActView.FileName);
                         }
-                    },(p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+                    }, (p) =>
+                     {
+                         DiffSideViewModel nonActView;
+                         DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
 
-                        if (activeView != null)
-                        {
-                            if (string.IsNullOrEmpty(activeView.FileName) == false)
-                                return true;
-                        }
+                         if (activeView != null)
+                         {
+                             if (string.IsNullOrEmpty(activeView.FileName) == false)
+                                 return true;
+                         }
 
-                        if (nonActView != null)
-                        {
-                            if (string.IsNullOrEmpty(nonActView.FileName) == false)
-                                return true;
-                        }
+                         if (nonActView != null)
+                         {
+                             if (string.IsNullOrEmpty(nonActView.FileName) == false)
+                                 return true;
+                         }
 
-                        return false;
-                    });
+                         return false;
+                     });
                 }
 
                 return _OpenFileFromActiveViewCommand;
@@ -236,7 +238,7 @@
                         int spacesPerTab = 4;
 
                         // Translate from 1-based values to zero-based values
-                        int count = _DiffCtrl.GetChangeEditScript(param.FirstLine-1, param.LastLine-1, spacesPerTab);
+                        int count = _DiffCtrl.GetChangeEditScript(param.FirstLine - 1, param.LastLine - 1, spacesPerTab);
 
                         _LastViewPort = param;
                     }
@@ -384,10 +386,10 @@
                         {
                             InlineDialog = InlineDialogMode.None;
                         }
-                    },(p) =>
-                    {
-                        return DiffCtrl.IsDiffDataAvailable;
-                    });
+                    }, (p) =>
+                     {
+                         return DiffCtrl.IsDiffDataAvailable;
+                     });
                 }
 
                 return _GotoLineCommand;
@@ -406,10 +408,21 @@
                 }
             }
         }
+
+        public GotoLineControllerViewModel GotoLineController
+        {
+            get
+            {
+                return _GotoLineController;
+            }
+        }
         #endregion properties
 
         #region methods
-
+        private void GotoLine(uint thisLine)
+        {
+            DiffCtrl.GotoTextLine(thisLine);
+        }
         #endregion methods
     }
 }

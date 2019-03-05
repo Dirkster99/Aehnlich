@@ -67,6 +67,7 @@
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
     <Compile Include="ViewModels\Base\ViewModelBase.cs" />
     <Compile Include="ViewModels\DiffDocViewModel.cs" />
+    <Compile Include="ViewModels\GotoLineControllerViewModel.cs" />
     <Compile Include="ViewModels\LineInfo\DiffLineViewModel.cs" />
     <Compile Include="ViewModels\LineInfo\DiffViewLine.cs" />
     <Compile Include="ViewModels\DiffSideViewModel.cs" />

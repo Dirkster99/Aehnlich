@@ -476,6 +476,40 @@
 
             return DocLineDiffs[lineN];
         }
+
+        internal DiffLineViewModel GotoTextLine(int thisLine)
+        {
+            DocumentLine line = Document.GetLineByNumber(thisLine);
+
+            TxtControl.SelectText(line.Offset, 0);  // Select text with length 0 and scroll to where
+            TxtControl.ScrollToLine(thisLine);     // we are supposed to be at
+
+            return _DocLineDiffs[thisLine-1];
+        }
+
+        internal int FindThisTextLine(int thisLine)
+        {
+            // Translate given line number into real line number (adding virtual lines if any)
+            int idx = thisLine;
+            var model = _DocLineDiffs[idx];
+
+            int iCurrLineNumber = (model.ImaginaryLineNumber == null ? 0 : (int)model.ImaginaryLineNumber);
+
+            // TODO: Naive search should be binary later on
+            if (iCurrLineNumber < thisLine)
+            {
+                for (; idx < _DocLineDiffs.Count; idx++)
+                {
+                    model = _DocLineDiffs[idx];
+                    iCurrLineNumber = (model.ImaginaryLineNumber == null ? 0 : (int)model.ImaginaryLineNumber);
+
+                    if (iCurrLineNumber >= thisLine)
+                        break;
+                }
+            }
+
+            return idx;
+        }
         #endregion methods
     }
 }

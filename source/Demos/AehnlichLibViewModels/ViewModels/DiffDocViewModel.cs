@@ -24,7 +24,7 @@
     {
         #region fields
         private ShowDiffArgs _currentDiffArgs;
-        private int _NumberOfLines;
+        private uint _NumberOfLines;
         private DiffType _DiffType;
 
         private readonly DiffSideViewModel _ViewA;
@@ -378,7 +378,7 @@
         }
         #endregion Goto Diff Commands
 
-        public int NumberOfLines
+        public uint NumberOfLines
         {
             get
             {
@@ -506,8 +506,28 @@
 
             SetData(a, b, script, args, ignoreCase, ignoreTextWhitespace, isBinaryCompare);
 
-            NumberOfLines = a.Count;
+            NumberOfLines = (uint)a.Count;
             this._currentDiffArgs = args;
+        }
+
+        internal void GotoTextLine(uint thisLine)
+        {
+            if (ViewA != null && ViewB != null)
+            {
+                int realLineA = ViewA.FindThisTextLine((int)thisLine);
+                var lineModel = ViewA.GotoTextLine(realLineA);
+
+                if (lineModel.Counterpart.Number != null)
+                {
+                    int realLineB = ViewB.FindThisTextLine((int)lineModel.Counterpart.Number+1);
+                    ViewB.GotoTextLine((int)realLineB);
+                }
+                else
+                {
+                    int realLineB = ViewB.FindThisTextLine((int)thisLine);
+                    ViewB.GotoTextLine((int)realLineB);
+                }
+            }
         }
 
         /// <summary>
