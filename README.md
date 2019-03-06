@@ -3,4 +3,4 @@
 # Ähnlich
 A WPF Diff/Merge utility based on the WinForms implementation by [Bill Menees](http://menees.com/). 
 
-![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/00%20Docs/%C3%84hnlichDemo.png?token=ACB_JMEdMFu_upNlekJO3jMpaO1MaQz3ks5cfw7gwA%3D%3D)
+![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/00%20Docs/%C3%84hnlichDemo.png)
