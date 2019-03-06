@@ -2,3 +2,5 @@
 
 # Ähnlich
 A WPF Diff/Merge utility based on the WinForms implementation by [Bill Menees](http://menees.com/). 
+
+![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/00%20Docs/%C3%84hnlichDemo.png)
