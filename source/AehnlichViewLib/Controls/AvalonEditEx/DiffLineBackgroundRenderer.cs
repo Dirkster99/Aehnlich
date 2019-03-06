@@ -123,14 +123,20 @@
 
                 if (srcLineDiff.LineEditScriptSegments != null)
                 {
+                    var drawDelBrush = new SolidColorBrush(_DiffView.ColorBackgroundDeleted.Color);
+                    drawDelBrush.Freeze();
+
+                    var drawAddBrush = new SolidColorBrush(_DiffView.ColorBackgroundAdded.Color);
+                    drawAddBrush.Freeze();
+
                     foreach (var item in srcLineDiff.LineEditScriptSegments)
                     {
                         // The main line background has already been drawn, so we just
                         // need to draw the deleted or inserted background segments.
                         if (srcLineDiff.FromA)
-                            brush = _DiffView.ColorBackgroundDeleted;
+                            brush = drawDelBrush;
                         else
-                            brush = _DiffView.ColorBackgroundAdded;
+                            brush = drawAddBrush;
 
                         BackgroundGeometryBuilder geoBuilder = new BackgroundGeometryBuilder();
 					    geoBuilder.AlignToWholePixels = true;
@@ -141,12 +147,7 @@
 
 					    Geometry geometry = geoBuilder.CreateGeometry();
 					    if (geometry != null)
-                        {
-                            var drawBrush = new SolidColorBrush(brush.Color);
-                            drawBrush.Freeze();
-
-                            drawingContext.DrawGeometry(drawBrush, null, geometry);
-					    }
+                            drawingContext.DrawGeometry(brush, null, geometry);
                     }
                 }
             }
