@@ -2,15 +2,19 @@
 {
     using System;
     using System.Windows.Input;
+    using AehnlichLibViewModels.Enums;
     using Base;
 
     public class GotoLineControllerViewModel : Base.ViewModelBase
     {
         #region fields
-        private int _MaxLineValue;
+        private uint _MaxLineValue;
         private ICommand _GotoThisLineCommand;
         private Action<uint> _gotoLineAction;
-        private int _MinLineValue;
+        private uint _MinLineValue;
+        private uint _Value;
+        private ICommand _CloseGotoThisLineCommand;
+        private Func<InlineDialogMode, InlineDialogMode> _closeFunc;
         #endregion fields
 
         #region ctor
@@ -21,19 +25,26 @@
             _gotoLineAction = gotoLine;
         }
 
+        public GotoLineControllerViewModel(Action<uint> gotoLine,
+                                           Func<InlineDialogMode, InlineDialogMode> closeFunc) : this(gotoLine)                      
+        {
+            _closeFunc = closeFunc;
+        }
+
         /// <summary>
         /// Class constructor
         /// </summary>
         protected GotoLineControllerViewModel()
         {
-            MinLineValue = 1;
+            _MinLineValue = 1;
+            Value = 1;
             MaxLineValue = 1;
         }
         #endregion ctor
 
         #region properties
         
-        public int MinLineValue
+        public uint MinLineValue
         {
             get { return _MinLineValue; }
             set
@@ -47,7 +58,7 @@
             }
         }
 
-        public int MaxLineValue
+        public uint MaxLineValue
         {
             get { return _MaxLineValue; }
             set
@@ -56,7 +67,22 @@
                 {
                     _MaxLineValue = value;
                     NotifyPropertyChanged(() => MaxLineValue);
+                    NotifyPropertyChanged(() => MinLineValue);
                     NotifyPropertyChanged(() => GotoLineToolTip);
+                }
+            }
+        }
+
+
+        public uint Value
+        {
+            get { return _Value; }
+            set
+            {
+                if (_Value != value)
+                {
+                    _Value = value;
+                    NotifyPropertyChanged(() => Value);
                 }
             }
         }
@@ -89,6 +115,28 @@
                 return _GotoThisLineCommand;
             }
         }
+
+        public ICommand CloseGotoThisLineCommand
+        {
+            get
+            {
+                if (_CloseGotoThisLineCommand == null)
+                {
+                    _CloseGotoThisLineCommand = new RelayCommand<object>((p) =>
+                    {
+                        _closeFunc(InlineDialogMode.None);
+                    },
+                    (p) =>
+                    {
+                        return (_closeFunc == null ? false : true);
+                    });
+                }
+
+                return _CloseGotoThisLineCommand;
+            }
+        }
+
+        
         #endregion properties
     }
 }

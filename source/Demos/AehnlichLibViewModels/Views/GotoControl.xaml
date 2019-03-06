@@ -17,13 +17,14 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <ctrl:NumericUpDown Grid.Column="0" Margin="0,3,3,0"
-                            DisplayLength="8"
-                            MinValue="{Binding MinLineValue}"
-                            MaxValue="{Binding MaxLineValue}"
-                            HorizontalAlignment="Left" VerticalAlignment="Center"
-                            Name="IntegerUpDown"
-                            ToolTip="{Binding GotoLineToolTip}"
+        <ctrl:UIntegerUpDown Grid.Column="0" Margin="0,3,3,0"
+                             DisplayLength="8"
+                             Value="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                             MinValue="{Binding MinLineValue}"
+                             MaxValue="{Binding MaxLineValue}"
+                             HorizontalAlignment="Left" VerticalAlignment="Center"
+                             Name="IntegerUpDown"
+                             ToolTip="{Binding GotoLineToolTip}"
                         />
         
         <Button Grid.Column="1"
@@ -39,6 +40,7 @@
 
         <Button Grid.Column="2"
                 ToolTip="Close"
+                Command="{Binding CloseGotoThisLineCommand}"
                 BorderThickness="0"
                 BorderBrush="Transparent"
                 HorizontalAlignment="Right" VerticalAlignment="Center"

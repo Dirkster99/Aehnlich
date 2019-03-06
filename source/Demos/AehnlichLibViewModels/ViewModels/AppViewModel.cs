@@ -50,7 +50,7 @@
         {
             _InlineDialog = InlineDialogMode.None;
             _DiffCtrl = new DiffDocViewModel();
-            _GotoLineController = new GotoLineControllerViewModel(GotoLine);
+            _GotoLineController = new GotoLineControllerViewModel(GotoLine, ToogleInlineDialog);
         }
         #endregion ctors
 
@@ -82,7 +82,7 @@
 
                         _DiffCtrl.ShowDifferences(new Models.ShowDiffArgs(fileA, fileB, Enums.DiffType.File));
 
-                        GotoLineController.MaxLineValue = (int)_DiffCtrl.NumberOfLines;
+                        GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
 
                         // Compute change edit scripts if we know the size of the viewport
                         if (_LastViewPort != null)
@@ -346,7 +346,7 @@
         }
 
         /// <summary>
-        /// Implements a find command via AvalonEdits build in searxh panel which can be
+        /// Implements a find command via AvalonEdits build in search panel which can be
         /// activated if the right or left control has focus.
         /// </summary>
         public ICommand FindTextCommand
@@ -377,15 +377,7 @@
                 {
                     _GotoLineCommand = new RelayCommand<object>((p) =>
                     {
-
-                        if (InlineDialog != InlineDialogMode.Goto)
-                        {
-                            InlineDialog = InlineDialogMode.Goto;
-                        }
-                        else
-                        {
-                            InlineDialog = InlineDialogMode.None;
-                        }
+                        ToogleInlineDialog(InlineDialogMode.Goto);
                     }, (p) =>
                      {
                          return DiffCtrl.IsDiffDataAvailable;
@@ -419,6 +411,16 @@
         #endregion properties
 
         #region methods
+        private InlineDialogMode ToogleInlineDialog(InlineDialogMode forThisDialog)
+        {
+            if (InlineDialog != forThisDialog)
+                InlineDialog = forThisDialog;
+            else
+                InlineDialog = InlineDialogMode.None;
+
+            return InlineDialog;
+        }
+
         private void GotoLine(uint thisLine)
         {
             DiffCtrl.GotoTextLine(thisLine);
