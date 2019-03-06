@@ -5,6 +5,6 @@ A WPF Diff/Merge utility based on the WinForms implementation by [Bill Menees](h
 
 ![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/00%20Docs/%C3%84hnlichDemo.png)
 
-![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/0000%20Docs/%C3%84hnlich1.png)
+![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/00%20Docs/%C3%84hnlich1.png)
 
-![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/0000%20Docs/%C3%84hnlich2.png)
+![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/00%20Docs/%C3%84hnlich2.png)
