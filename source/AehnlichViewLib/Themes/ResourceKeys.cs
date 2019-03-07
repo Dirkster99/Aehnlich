@@ -89,8 +89,10 @@
         public static readonly ComponentResourceKey ColorBackgroundContextBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundContextBrushKey");
 
         public static readonly ComponentResourceKey ColorBackgroundDeletedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundDeletedBrushKey");
-
         public static readonly ComponentResourceKey ColorBackgroundAddedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundAddedBrushKey");
+
+        public static readonly ComponentResourceKey ColorBackgroundImaginaryDeletedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundImaginaryDeletedBrushKey");
+        public static readonly ComponentResourceKey ColorBackgroundImaginaryAddedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundImaginaryAddedBrushKey");
         #endregion Diff Colors
 
         /***

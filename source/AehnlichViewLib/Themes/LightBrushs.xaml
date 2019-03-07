@@ -55,6 +55,18 @@
                      Color="#00baff"
                      options:Freeze="true" />
 
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=ColorBackgroundImaginaryDeletedBrushKey}"
+                     Color="#00baff"
+                     Opacity=".4"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=ColorBackgroundImaginaryAddedBrushKey}"
+                     Color="#00baff"
+                     Opacity=".4"
+                     options:Freeze="true" />
+
     <!-- Current Line Highlighting Keys -->
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=DiffViewCurrentLineBackgroundBrushKey}"

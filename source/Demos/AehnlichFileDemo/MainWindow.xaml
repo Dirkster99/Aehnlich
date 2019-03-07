@@ -38,7 +38,7 @@
 
             <ToolBar Grid.Column="0" VerticalAlignment="Center"
                      Background="Transparent"
-                     ToolBarTray.IsLocked="True"
+                     ToolBarTray.IsLocked="True"  ToolBar.OverflowMode="Never"
                      MinHeight="16"
                      >
                 <Button

@@ -62,6 +62,22 @@
         public static readonly DependencyProperty ColorBackgroundContextProperty =
             DependencyProperty.Register("ColorBackgroundContext", typeof(SolidColorBrush),
                 typeof(DiffView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80)), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundImaginaryLineAdded"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundImaginaryLineAddedProperty =
+            DependencyProperty.Register("ColorBackgroundImaginaryLineAdded", typeof(SolidColorBrush),
+                typeof(DiffView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x60, 0x00, 0xba, 0xff)), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundImaginaryLineDeleted"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundImaginaryLineDeletedProperty =
+            DependencyProperty.Register("ColorBackgroundImaginaryLineDeleted", typeof(SolidColorBrush),
+                typeof(DiffView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x60, 0x80, 0xFF, 0x80)), OnColorChanged));
         #endregion Diff Color Definitions
 
         #region EditorScrollOffsetXY
@@ -199,6 +215,28 @@
             get { return (SolidColorBrush)GetValue(ColorBackgroundBlankProperty); }
             set { SetValue(ColorBackgroundBlankProperty, value); }
         }
+
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies an element that is missing in one of the two (text) lines being compared.
+        /// </summary>
+        public SolidColorBrush ColorBackgroundImaginaryLineDeleted
+        {
+            get { return (SolidColorBrush)GetValue(ColorBackgroundImaginaryLineDeletedProperty); }
+            set { SetValue(ColorBackgroundImaginaryLineDeletedProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies an element that is added as an imaginary line in one of the two
+		/// (text) lines being compared.
+        /// </summary>
+        public SolidColorBrush ColorBackgroundImaginaryLineAdded
+        {
+            get { return (SolidColorBrush)GetValue(ColorBackgroundImaginaryLineAddedProperty); }
+            set { SetValue(ColorBackgroundImaginaryLineAddedProperty, value); }
+        }
+       
         #endregion Diff Color Definitions
 
         #region EditorScrollOffsetXY
