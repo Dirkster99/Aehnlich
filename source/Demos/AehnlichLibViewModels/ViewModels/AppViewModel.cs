@@ -3,33 +3,38 @@
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Models;
     using AehnlichLibViewModels.ViewModels.Base;
+    using AehnlichLibViewModels.ViewModels.Suggest;
+    using AehnlichViewLib.Enums;
     using AehnlichViewLib.Models;
+    using System;
     using System.Windows.Input;
 
-    public class AppViewModel : Base.ViewModelBase
+    public class AppViewModel : Base.ViewModelBase, IDisposable
     {
         #region fields
-        private string _FilePathA;
-        private string _FilePathB;
         private ICommand _CompareFilesCommand;
+        private ICommand _ViewPortChangedCommand;
         private ICommand _OpenFileFromActiveViewCommand;
         private ICommand _CopyTextSelectionFromActiveViewCommand;
+        private ICommand _OverviewValueChangedCommand;
+        private ICommand _FindTextCommand;
+        private ICommand _GotoLineCommand;
 
         private double _OverViewValue = 0;
         private int _NumberOfTextLinesInViewPort = 0;
         private bool _IgnoreNextSliderValueChange = false;
-        private bool _IgnoreNextTextSyncValueChange = true;
         private int _LastLineToSync = 0;
-        private ICommand _ViewPortChangedCommand;
-        private ICommand _OverviewValueChangedCommand;
-        private DiffViewPort _LastViewPort;
-        private ICommand _FindTextCommand;
         private readonly DiffDocViewModel _DiffCtrl;
         private readonly GotoLineControllerViewModel _GotoLineController;
         private readonly object _lockObject = new object();
 
         private InlineDialogMode _InlineDialog;
-        private ICommand _GotoLineCommand;
+        private bool _disposed;
+
+        private bool _IgnoreNextTextSyncValueChange = true;
+        private DiffViewPort _LastViewPort;
+        private Focus _FocusControl;
+        private readonly SuggestSourceViewModel _FilePathA, _FilePathB;
         #endregion fields
 
         #region ctors
@@ -39,8 +44,8 @@
         public AppViewModel(string fileA, string fileB)
             : this()
         {
-            _FilePathA = fileA;
-            _FilePathB = fileB;
+            _FilePathA.FilePath = fileA;
+            _FilePathB.FilePath = fileB;
         }
 
         /// <summary>
@@ -48,9 +53,13 @@
         /// </summary>
         public AppViewModel()
         {
+            _FilePathA = new SuggestSourceViewModel();
+            _FilePathB = new SuggestSourceViewModel();
+
             _InlineDialog = InlineDialogMode.None;
             _DiffCtrl = new DiffDocViewModel();
             _GotoLineController = new GotoLineControllerViewModel(GotoLine, ToogleInlineDialog);
+            _FocusControl = Focus.LeftFilePath;
         }
         #endregion ctors
 
@@ -66,37 +75,102 @@
                 {
                     _CompareFilesCommand = new RelayCommand<object>((p) =>
                     {
-                        var param = p as object[];
+                        SuggestSourceViewModel fileA;
+                        SuggestSourceViewModel fileB;
 
-                        if (param == null)
+                        if ((p is object[]) == false)
+                        {
+                            fileA = this.FilePathA;
+                            fileB = this.FilePathB;
+                        }
+                        else
+                        {
+                            var param = p as object[];
+
+                            if (param == null)
+                                return;
+
+                            if (param.Length != 2)
+                                return;
+
+                            fileA = param[0] as SuggestSourceViewModel;
+                            fileB = param[1] as SuggestSourceViewModel;
+                        }
+
+                        if (fileA == null || fileB == null)
                             return;
 
-                        if (param.Length != 2)
+                        if (fileA.IsTextValid == false || fileB.IsTextValid == false)
                             return;
 
-                        string fileA = param[0] as string;
-                        string fileB = param[1] as string;
-
-                        if (string.IsNullOrEmpty(fileA) || string.IsNullOrEmpty(fileB))
+                        if (string.IsNullOrEmpty(fileA.FilePath) || string.IsNullOrEmpty(fileB.FilePath))
                             return;
 
-                        _DiffCtrl.ShowDifferences(new Models.ShowDiffArgs(fileA, fileB, Enums.DiffType.File));
-
-                        GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
-
-                        // Compute change edit scripts if we know the size of the viewport
-                        if (_LastViewPort != null)
-                            _DiffCtrl.GetChangeEditScript(_LastViewPort.FirstLine - 1, _LastViewPort.LastLine - 1, 4);
-
-                        // Position view on first difference if thats available
-                        if (_DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
-                            _DiffCtrl.GoToFirstDifferenceCommand.Execute(null);
-
-                        NotifyPropertyChanged(() => DiffCtrl);
+                        CompareFilesCommand_Executed(fileA.FilePath, fileB.FilePath);
                     });
                 }
 
                 return _CompareFilesCommand;
+            }
+        }
+
+        /// <summary>
+        /// Gets a focus element indicator to indicate a ui element to focus
+        /// (this is used to focus the lift diff view by default when loading new files)
+        /// </summary>
+        public Focus FocusControl
+        {
+            get { return _FocusControl; }
+            protected set
+            {
+                if (_FocusControl != value)
+                {
+                    _FocusControl = value;
+                    NotifyPropertyChanged(() => FocusControl);
+                }
+            }
+        }
+
+        public ICommand ViewPortChangedCommand
+        {
+            get
+            {
+                if (_ViewPortChangedCommand == null)
+                {
+                    _ViewPortChangedCommand = new RelayCommand<object>((p) =>
+                    {
+                        var param = p as DiffViewPort;
+                        if (param == null)
+                            return;
+
+                        lock (_lockObject)
+                        {
+                            if (_IgnoreNextTextSyncValueChange == true)
+                            {
+                                if (param.FirstLine == _LastLineToSync)
+                                    return;
+
+                                _IgnoreNextTextSyncValueChange = false;
+                                return;
+                            }
+
+                            _IgnoreNextSliderValueChange = true;
+
+                            NumberOfTextLinesInViewPort = (param.LastLine - param.FirstLine) - 1;
+
+                            // Get value of first visible line and set it in Overview slider
+                            OverViewValue = param.FirstLine;
+                        }
+
+                        _LastViewPort = param;
+                    }
+                    , (p) =>
+                    {
+                        return true;
+                    });
+                }
+
+                return _ViewPortChangedCommand;
             }
         }
 
@@ -204,54 +278,6 @@
             }
         }
 
-        public ICommand ViewPortChangedCommand
-        {
-            get
-            {
-                if (_ViewPortChangedCommand == null)
-                {
-                    _ViewPortChangedCommand = new RelayCommand<object>((p) =>
-                    {
-                        var param = p as DiffViewPort;
-                        if (param == null)
-                            return;
-
-                        lock (_lockObject)
-                        {
-                            if (_IgnoreNextTextSyncValueChange == true)
-                            {
-                                if (param.FirstLine == _LastLineToSync)
-                                    return;
-
-                                _IgnoreNextTextSyncValueChange = false;
-                                return;
-                            }
-
-                            _IgnoreNextSliderValueChange = true;
-
-                            NumberOfTextLinesInViewPort = (param.LastLine - param.FirstLine) - 1;
-
-                            // Get value of first visible line and set it in Overview slider
-                            OverViewValue = param.FirstLine;
-                        }
-
-                        int spacesPerTab = 4;
-
-                        // Translate from 1-based values to zero-based values
-                        int count = _DiffCtrl.GetChangeEditScript(param.FirstLine - 1, param.LastLine - 1, spacesPerTab);
-
-                        _LastViewPort = param;
-                    }
-                    , (p) =>
-                    {
-                        return true;
-                    });
-                }
-
-                return _ViewPortChangedCommand;
-            }
-        }
-
         public ICommand OverviewValueChangedCommand
         {
             get
@@ -277,7 +303,7 @@
                             }
 
                             _LastLineToSync = (int)param;
-                            _IgnoreNextTextSyncValueChange = true;
+////                            _IgnoreNextTextSyncValueChange = true;
 
                             DiffSideViewModel nonActView;
                             DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
@@ -308,40 +334,22 @@
         /// <summary>
         /// Gets the path of file A in the comparison.
         /// </summary>
-        public string FilePathA
+        public SuggestSourceViewModel FilePathA
         {
             get
             {
                 return _FilePathA;
-            }
-
-            set
-            {
-                if (_FilePathA != value)
-                {
-                    _FilePathA = value;
-                    NotifyPropertyChanged(() => FilePathA);
-                }
             }
         }
 
         /// <summary>
         /// Gets the path of file B in the comparison.
         /// </summary>
-        public string FilePathB
+        public SuggestSourceViewModel FilePathB
         {
             get
             {
                 return _FilePathB;
-            }
-
-            set
-            {
-                if (_FilePathB != value)
-                {
-                    _FilePathB = value;
-                    NotifyPropertyChanged(() => FilePathB);
-                }
             }
         }
 
@@ -411,6 +419,32 @@
         #endregion properties
 
         #region methods
+        private void CompareFilesCommand_Executed(string fileA, string fileB)
+        {
+            try
+            {
+                if (System.IO.File.Exists(fileA) == false ||
+                    System.IO.File.Exists(fileB) == false)
+                    return;
+
+                _DiffCtrl.ShowDifferences(new ShowDiffArgs(fileA, fileB, DiffType.File));
+
+                FocusControl = Focus.None;
+                FocusControl = Focus.LeftView;
+                GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
+
+                // Position view on first difference if thats available
+                if (_DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
+                    _DiffCtrl.GoToFirstDifferenceCommand.Execute(null);
+
+                NotifyPropertyChanged(() => DiffCtrl);
+            }
+            catch
+            {
+                // Catch any System.IO exception to make sure application keeps running...
+            }
+        }
+
         private InlineDialogMode ToogleInlineDialog(InlineDialogMode forThisDialog)
         {
             if (InlineDialog != forThisDialog)
@@ -425,6 +459,41 @@
         {
             DiffCtrl.GotoTextLine(thisLine);
         }
+
+        #region IDisposable
+        /// <summary>
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed == false)
+            {
+                if (disposing == true)
+                {
+                    // Dispose of the currently used inner disposables
+                    _DiffCtrl.Dispose();
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion IDisposable
         #endregion methods
     }
 }

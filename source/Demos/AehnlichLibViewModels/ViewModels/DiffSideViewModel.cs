@@ -3,14 +3,19 @@
     using AehnlichLibViewModels.Enums;
     using AehnlichLibViewModels.Events;
     using AehnlichLibViewModels.Interfaces;
+    using AehnlichLibViewModels.Tasks;
     using AehnlichViewLib.Controls.AvalonEditEx;
+    using AehnlichViewLib.Events;
+    using AehnlichViewLib.Interfaces;
     using ICSharpCode.AvalonEdit.Document;
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Diagnostics;
+    using System.Threading;
+    using System.Threading.Tasks;
 
-    public class DiffSideViewModel : Base.ViewModelBase
+    public class DiffSideViewModel : Base.ViewModelBase, ILineDiffProvider, IDisposable
     {
         #region fields
         private ChangeDiffOptions _ChangeDiffOptions;
@@ -20,10 +25,12 @@
         private readonly DiffViewPosition _position;
         private int _Column;
         private int _Line;
+        private int _spacesPerTab = 4;
 
         private DateTime _ViewActivation;
         private bool _isDirty = false;
         private string _FileName;
+        private OneTaskLimitedScheduler _oneTaskScheduler;
 
         #region DiffLines
         private readonly ObservableRangeCollection<DiffLineViewModel> _DocLineDiffs;
@@ -37,6 +44,7 @@
         /// view to sync both sides into a consistent display.
         /// </summary>
         private int _maxImaginaryLineNumber = 1;
+        private bool _disposed;
         #endregion DiffLines
         #endregion fields
 
@@ -53,10 +61,20 @@
 
             _TxtControl = new TextBoxController();
             _ViewActivation = DateTime.MinValue;
+
+            _oneTaskScheduler = new OneTaskLimitedScheduler();
         }
         #endregion ctors
 
-        public EventHandler<CaretPositionChangedEvent> CaretPositionChanged;
+        public event EventHandler<CaretPositionChangedEvent> CaretPositionChanged;
+
+        /// <summary>
+        /// Event is raised when newly requested line diff edit script segments
+        /// have been computed and are available for hightlighting.
+        /// 
+        /// <seealso cref="ILineDiffProvider"/>
+        /// </summary>
+        public event EventHandler<DiffLineInfoChangedEvent> DiffLineInfoChanged;
 
         #region properties
         public TextDocument Document
@@ -216,6 +234,56 @@
 
         #region methods
         /// <summary>
+        /// Implements a method that is invoked by the view to request
+        /// the matching (edit script computation) of the indicated text lines.
+        /// 
+        /// This method should be called on the UI thread since
+        /// the resulting event <see cref="ILineDiffProvider.DiffLineInfoChanged"/>
+        /// will be raised on the calling thread.
+        /// </summary>
+        /// <returns>Number of lines matched (may not be as requested if line appears to have been matched already).</returns>
+        void ILineDiffProvider.RequestLineDiff(IEnumerable<int> linenumbers)
+        {
+            // Capture the current context and make sure resulting event is raised on that context
+            var uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
+            Task.Factory.StartNew<List<int>>(() =>
+            {
+                var linesChanged = new List<int>();
+
+                foreach (var i in linenumbers)
+                {
+                    if (_DocLineDiffs.Count <= i)
+                        continue;
+
+                    // We've previously seen and computed this?
+                    if (DocLineDiffs[i].LineEditScriptSegmentsIsDirty == false)
+                        continue;
+
+                    DocLineDiffs[i].GetChangeEditScript(this.ChangeDiffOptions, _spacesPerTab);
+
+                    // Its possible that we have to match this even though there is no result
+                    // So, we optimize empty results away like this
+                    if (DocLineDiffs[i].LineEditScriptSegments != null)
+                        linesChanged.Add(i);
+                }
+
+                return linesChanged;
+            }
+            , CancellationToken.None, TaskCreationOptions.PreferFairness, _oneTaskScheduler
+            ).ContinueWith((r) =>
+            {
+                // Tell the view we are done please redraw these if you like
+                if (r.Result.Count > 0)
+                {
+                    this.DiffLineInfoChanged?.Invoke(this,
+                        new DiffLineInfoChangedEvent(DiffLineInfoChange.LineEditScriptSegments, r.Result));
+                }
+            },
+            uiScheduler);
+        }
+
+        /// <summary>
         /// Used to setup the ViewA/ViewB view that shows the left and right text views
         /// with the textual content and imaginary lines.
         /// each other.
@@ -224,10 +292,11 @@
         /// <param name="lines"></param>
         /// <param name="text"></param>
         internal void SetData(string filename,
-                              IDiffLines lines, string text)
+                              IDiffLines lines, string text, int spacesPerTab)
         {
             this.FileName = filename;
             _position.SetPosition(0, 0);
+            _spacesPerTab = spacesPerTab;
             Line = 0;
             Column = 0;
 
@@ -237,8 +306,7 @@
                 _diffStartLines = lines.DiffStartLines;
                 _maxImaginaryLineNumber = lines.MaxImaginaryLineNumber;
 
-                _DocLineDiffs.Clear();
-                _DocLineDiffs.AddRange(lines.DocLineDiffs, NotifyCollectionChangedAction.Reset);
+                _DocLineDiffs.ReplaceRange(lines.DocLineDiffs);
             }
             else
             {
@@ -263,6 +331,7 @@
                               DiffLineViewModel lineTwoVM,
                               int spacesPerTab)
         {
+            _spacesPerTab = spacesPerTab;
             var documentLineDiffs = new List<DiffLineViewModel>();
 
             string text = string.Empty;
@@ -358,29 +427,6 @@
                 (_position.Line < starts[starts.Length - 1] || _position.Line > ends[ends.Length - 1]);
 
             return result;
-        }
-
-        internal int GetChangeEditScript(int firstLine, int lastLine, int spacesPerTab)
-        {
-            int count = 0;
-
-            if (firstLine < 0 || lastLine <= 0)
-                return count;
-
-            for (int i = firstLine; i < LineCount && i < lastLine; i++)
-            {
-                // We've previously seen and computed this?
-                if (DocLineDiffs[i].LineEditScriptSegmentsIsDirty == false)
-                    continue;
-
-                if (DocLineDiffs[i].LineEditScriptSegmentsIsDirty)
-                {
-                    count++;
-                    DocLineDiffs[i].GetChangeEditScript(this.ChangeDiffOptions, spacesPerTab);
-                }
-            }
-
-            return count;
         }
 
         internal void SetPosition(DiffViewPosition gotoPos)
@@ -510,6 +556,42 @@
 
             return idx;
         }
+
+        #region IDisposable
+        /// <summary>
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed == false)
+            {
+                if (disposing == true)
+                {
+                    // Dispose of the currently used inner disposables
+                    _oneTaskScheduler.Dispose();
+                    _oneTaskScheduler = null;
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion IDisposable
         #endregion methods
     }
 }

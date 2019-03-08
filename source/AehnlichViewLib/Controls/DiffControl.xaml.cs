@@ -1,7 +1,9 @@
 ﻿namespace AehnlichViewLib.Controls
 {
+    using AehnlichViewLib.Enums;
     using AehnlichViewLib.Models;
     using ICSharpCode.AvalonEdit;
+    using System;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -25,6 +27,13 @@
         public const string PART_LeftFileNameTextBox = "PART_LeftFileNameTextBox";
 
         /// <summary>
+        /// Implements the backing store of the <see cref="SetFocus"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SetFocusProperty =
+            DependencyProperty.Register("SetFocus", typeof(Focus),
+                typeof(DiffControl), new PropertyMetadata(Enums.Focus.LeftFilePath, OnSetFocusChanged));
+
+        /// <summary>
         /// Implements the backing store of the <see cref="LeftFileName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LeftFileNameProperty =
@@ -38,6 +47,9 @@
             DependencyProperty.Register("RightFileName", typeof(string),
                 typeof(DiffControl), new PropertyMetadata(null));
 
+        /// <summary>
+        /// Implements the backing store of the <see cref="ViewPortChangedCommand"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ViewPortChangedCommandProperty =
             DependencyProperty.Register("ViewPortChangedCommand", typeof(ICommand),
                 typeof(DiffControl), new PropertyMetadata(null));
@@ -46,13 +58,19 @@
             DependencyProperty.Register("DiffViewOptions", typeof(TextEditorOptions),
                 typeof(DiffControl), new PropertyMetadata(new TextEditorOptions { IndentationSize = 4, ShowTabs = false, ConvertTabsToSpaces = true }));
 
-        private DiffView _PART_LeftDiffView;
-        private DiffView _PART_RightDiffView;
-        private ScrollViewer _leftScrollViewer;
-        private ScrollViewer _rightScrollViewer;
+        // Using a DependencyProperty as the backing store for NextLeftTargetLocation.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty NextLeftTargetLocationProperty =
+            DependencyProperty.Register("NextLeftTargetLocation", typeof(ICommand),
+                typeof(DiffControl), new PropertyMetadata(null));
 
-        private TextBox _PART_LeftFileNameTextBox;
-        private TextBox _PART_RightFileNameTextBox;
+        // Using a DependencyProperty as the backing store for NextRightTargetLocation.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty NextRightTargetLocationProperty =
+            DependencyProperty.Register("NextRightTargetLocation", typeof(ICommand),
+                typeof(DiffControl), new PropertyMetadata(null));
+
+        private DiffView _PART_LeftDiffView, _PART_RightDiffView;
+        private SuggestBoxLib.SuggestBox _PART_LeftFileNameTextBox, _PART_RightFileNameTextBox;
+        private ScrollViewer _leftScrollViewer, _rightScrollViewer;
         #endregion fields
 
         #region ctors
@@ -70,10 +88,10 @@
             set { SetValue(DiffViewOptionsProperty, value); }
         }
 
-        public ICommand ViewPortChangedCommand
+        public string LeftFileName
         {
-            get { return (ICommand)GetValue(ViewPortChangedCommandProperty); }
-            set { SetValue(ViewPortChangedCommandProperty, value); }
+            get { return (string)GetValue(LeftFileNameProperty); }
+            set { SetValue(LeftFileNameProperty, value); }
         }
 
         public string RightFileName
@@ -82,10 +100,33 @@
             set { SetValue(RightFileNameProperty, value); }
         }
 
-        public string LeftFileName
+        /// <summary>
+        /// Implements a bindable command that can be invoked when the current view
+        /// in the left or right view changes (window changes size resulting in less
+        /// or more text lines being available in actual displayed view).
+        /// </summary>
+        public ICommand ViewPortChangedCommand
         {
-            get { return (string)GetValue(LeftFileNameProperty); }
-            set { SetValue(LeftFileNameProperty, value); }
+            get { return (ICommand)GetValue(ViewPortChangedCommandProperty); }
+            set { SetValue(ViewPortChangedCommandProperty, value); }
+        }
+
+        public Focus SetFocus
+        {
+            get { return (Focus)GetValue(SetFocusProperty); }
+            set { SetValue(SetFocusProperty, value); }
+        }
+
+        public ICommand NextLeftTargetLocation
+        {
+            get { return (ICommand)GetValue(NextLeftTargetLocationProperty); }
+            set { SetValue(NextLeftTargetLocationProperty, value); }
+        }
+
+        public ICommand NextRightTargetLocation
+        {
+            get { return (ICommand)GetValue(NextRightTargetLocationProperty); }
+            set { SetValue(NextRightTargetLocationProperty, value); }
         }
         #endregion properties
 
@@ -98,8 +139,8 @@
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            _PART_LeftFileNameTextBox = GetTemplateChild(PART_LeftFileNameTextBox) as TextBox;
-            _PART_RightFileNameTextBox = GetTemplateChild(PART_RightFileNameTextBox) as TextBox;
+            _PART_LeftFileNameTextBox = GetTemplateChild(PART_LeftFileNameTextBox) as SuggestBoxLib.SuggestBox;
+            _PART_RightFileNameTextBox = GetTemplateChild(PART_RightFileNameTextBox) as SuggestBoxLib.SuggestBox;
 
             _PART_LeftDiffView = GetTemplateChild(PART_LeftDiffView) as DiffView;
             _PART_RightDiffView = GetTemplateChild(PART_RightDiffView) as DiffView;
@@ -112,6 +153,39 @@
 
             if (_rightScrollViewer != null)
                 _rightScrollViewer.ScrollChanged += Scrollviewer_ScrollChanged;
+
+            if (_PART_LeftFileNameTextBox != null)
+                _PART_LeftFileNameTextBox.NewLocationRequestEvent += _PART_FileNameTextBox_NewLocationRequestEvent;
+
+            if (_PART_RightFileNameTextBox != null)
+                _PART_RightFileNameTextBox.NewLocationRequestEvent += _PART_FileNameTextBox_NewLocationRequestEvent;
+
+        }
+
+        private void _PART_FileNameTextBox_NewLocationRequestEvent(object sender,
+                                                                   SuggestBoxLib.Events.NextTargetLocationArgs e)
+        {
+            ICommand commandToExec = null;
+
+            if (sender == _PART_LeftFileNameTextBox)
+                commandToExec = NextLeftTargetLocation;
+
+            if (sender == _PART_RightFileNameTextBox)
+                commandToExec = NextRightTargetLocation;
+
+            if (commandToExec == null)
+                return;
+
+            if (commandToExec is RoutedCommand)
+            {
+                if (((RoutedCommand)commandToExec).CanExecute(e, this))
+                    ((RoutedCommand)commandToExec).Execute(e, this);
+            }
+            else
+            {
+                if (commandToExec.CanExecute(e))
+                    commandToExec.Execute(e);
+            }
         }
 
         /// <summary>
@@ -126,6 +200,7 @@
             ScrollViewer scrollToSync = null;
             DiffView sourceToSync = null;
 
+            // Determine the scroller that has send the event so we know the scroller to sync
             if (sender == _rightScrollViewer)
             {
                 scrollToSync = _leftScrollViewer;
@@ -137,8 +212,7 @@
                 sourceToSync = _PART_RightDiffView;
             }
 
-            // Sync scrollviewers on both side
-            var src_scrollToSync = sender as ScrollViewer;
+            var src_scrollToSync = sender as ScrollViewer;  // Sync scrollviewers on both side of DiffControl
 
             scrollToSync.ScrollToVerticalOffset(e.VerticalOffset);
             scrollToSync.ScrollToHorizontalOffset(e.HorizontalOffset);
@@ -197,6 +271,52 @@
 
             return retour;
         }
+
+        #region SetFocus Dependency Property
+        private static void OnSetFocusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as DiffControl).OnSetFocusChanged(e);
+        }
+
+        private void OnSetFocusChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if ((e.NewValue is Enums.Focus) == false)
+                return;
+
+            UIElement elementToFocus = null;
+
+            switch ((Enums.Focus)e.NewValue)
+            {
+                case Enums.Focus.LeftFilePath:
+                    elementToFocus = _PART_LeftFileNameTextBox;
+                    break;
+
+                case Enums.Focus.RightFilePath:
+                    elementToFocus = _PART_RightFileNameTextBox;
+                    break;
+
+                case Enums.Focus.LeftView:
+                    elementToFocus = _PART_LeftDiffView;
+                    break;
+
+                case Enums.Focus.RightView:
+                    elementToFocus = _PART_RightDiffView;
+                    break;
+
+                case Enums.Focus.None:
+                    return;
+
+                default:
+                    throw new ArgumentException(((Enums.Focus)e.NewValue).ToString());
+            }
+
+            if (elementToFocus != null)
+            {
+                elementToFocus.Focus();
+                Keyboard.Focus(elementToFocus);
+            }
+        }
+        #endregion SetFocus Dependency Property
         #endregion methods
     }
 }

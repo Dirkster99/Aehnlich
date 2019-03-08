@@ -47,6 +47,7 @@
         {
             if (notificationMode != NotifyCollectionChangedAction.Add && notificationMode != NotifyCollectionChangedAction.Reset)
                 throw new ArgumentException("Mode must be either Add or Reset for AddRange.", nameof(notificationMode));
+
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
 

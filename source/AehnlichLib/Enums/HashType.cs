@@ -29,7 +29,7 @@
 
         /// <summary>
 	    /// The hash based comparison of sequenceA and sequenceB is based on the unique occurence of a sequence.
-        /// That is, each unique sequence will have the same hash code. Consider fpr example the following
+        /// That is, each unique sequence will have the same hash code. Consider for example the following
 	    /// sequence of strings (sequences):
         ///
         /// Number String    Hash Value

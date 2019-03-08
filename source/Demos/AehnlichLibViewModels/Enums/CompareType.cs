@@ -1,6 +1,6 @@
 ﻿namespace AehnlichLibViewModels.Enums
 {
-    internal enum CompareType
+    public enum CompareType
     {
         Auto,
         Text,

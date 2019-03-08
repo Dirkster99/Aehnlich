@@ -2,6 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:AehnlichViewLib.Controls"
                     xmlns:conv="clr-namespace:AehnlichViewLib.Converters"
+                    
+                    xmlns:sc="clr-namespace:SuggestBoxLib;assembly=SuggestBoxLib"
+                    xmlns:behav="clr-namespace:AehnlichViewLib.Behaviors"
                     >
 
     <Style TargetType="{x:Type local:DiffControl}">
@@ -27,9 +30,14 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <TextBox x:Name="PART_LeftFileNameTextBox"
-                                Grid.Column="0" Grid.Row="0" Margin="0,3"
-                                Text="{Binding FilePathA, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                            <sc:SuggestBox DataContext="{Binding FilePathA}"
+                                x:Name="PART_LeftFileNameTextBox" Grid.Column="0" Grid.Row="0" Margin="0,3"
+                                Hint="Enter a file system path"
+                                Text="{Binding FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                ValidText="{Binding IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                TextChangedCommand="{Binding SuggestTextChangedCommand}"
+                                ItemsSource="{Binding ListQueryResult}"
+                            />
 
                             <GridSplitter
                                 Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
@@ -37,10 +45,15 @@
                                 Background="Transparent"
                                 Width="6" />
 
-                            <TextBox  x:Name="PART_RightFileNameTextBox"
-                                Grid.Column="2" Grid.Row="0" Margin="0,3"
-                                Text="{Binding FilePathB, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-
+                            <sc:SuggestBox DataContext="{Binding FilePathB}"
+                                x:Name="PART_RightFileNameTextBox" Grid.Column="2" Grid.Row="0" Margin="0,3"
+                                Hint="Enter a file system path"
+                                Text="{Binding FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                ValidText="{Binding IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                TextChangedCommand="{Binding SuggestTextChangedCommand}"
+                                ItemsSource="{Binding ListQueryResult}"
+                            />
+                            
                             <!-- Editor IsEnabled if Document is bound with not null to work around crash -->
                             <local:DiffView
                                 x:Name="TextLeft" Grid.Column="0" Grid.Row="1" Margin="3"
@@ -57,6 +70,7 @@
                                 ActivationTimeStamp="{Binding DiffCtrl.ViewA.ViewActivation, Mode=OneWayToSource}"
 
                                 Options="{TemplateBinding DiffViewOptions}"
+                                LineDiffDataProvider="{Binding DiffCtrl.ViewA, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                 
                                 FontFamily="Consolas"
                                 FontSize="12pt"
@@ -80,6 +94,7 @@
                                 ActivationTimeStamp="{Binding DiffCtrl.ViewB.ViewActivation, Mode=OneWayToSource}"
 
                                 Options="{TemplateBinding DiffViewOptions}"
+                                LineDiffDataProvider="{Binding DiffCtrl.ViewB, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 
                                 FontFamily="Consolas"
                                 FontSize="12pt"

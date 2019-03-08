@@ -109,15 +109,6 @@
 
                 return _Model;
             }
-
-            set
-            {
-                if (_Model.Counterpart != value)
-                {
-                    _Model.Counterpart = value;
-                    NotifyPropertyChanged(() => Counterpart);
-                }
-            }
         }
 
         public string Text
@@ -154,17 +145,26 @@
         /// <param name="segments"></param>
         internal void SetEditScript(IList<ISegment> segments)
         {
-            if (_LineEditScriptSegments == null)
-                _LineEditScriptSegments = new ObservableRangeCollection<ISegment>();
-            else
-                _LineEditScriptSegments.Clear();
-
             if (segments != null)
-                _LineEditScriptSegments.AddRange(segments);
+            {
+                if (_LineEditScriptSegments == null)
+                    _LineEditScriptSegments = new ObservableRangeCollection<ISegment>();
+
+                if (segments != null)
+                    _LineEditScriptSegments.ReplaceRange(segments);
+            }
 
             LineEditScriptSegmentsIsDirty = false;
         }
 
+        /// <summary>
+        /// Matches this line against its counterpart model line and
+        /// outputs an edit script to highlight operations necessary
+        /// to transfer this line's content into the content of the other line.
+        /// </summary>
+        /// <param name="changeDiffOptions"></param>
+        /// <param name="spacesPerTab"></param>
+        /// <returns></returns>
         internal EditScript GetChangeEditScript(ChangeDiffOptions changeDiffOptions, int spacesPerTab)
         {
             var editScript = _Model.GetChangeEditScript(changeDiffOptions);
@@ -180,11 +180,10 @@
             return editScript;
         }
 
-        private IList<ISegment>
-                GetChangeSegments(EditScript changeEditScript,
-                                  string originalLineText,
-                                  bool useA,
-                                  int spacesPerTab)
+        private IList<ISegment> GetChangeSegments(EditScript changeEditScript,
+                                                  string originalLineText,
+                                                  bool useA,
+                                                  int spacesPerTab)
         {
             var result = new List<ISegment>();
 

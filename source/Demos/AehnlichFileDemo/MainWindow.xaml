@@ -320,7 +320,10 @@
                               RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
                               DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                              SetFocus="{Binding FocusControl, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               
+                              NextLeftTargetLocation="{Binding CompareFilesCommand}"
+                              NextRightTargetLocation="{Binding CompareFilesCommand}"
                               Margin="3,0,3,3"/>
         </Grid>
 
@@ -336,7 +339,7 @@
             DataContext="{Binding DiffCtrl.ViewLineDiff}"
             Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
             ItemsSource="{Binding DocLineDiffs}"
-            ShowLineNumbers="False"
+            ShowLineNumbers="True"
 			IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             IsReadOnly="True"
 

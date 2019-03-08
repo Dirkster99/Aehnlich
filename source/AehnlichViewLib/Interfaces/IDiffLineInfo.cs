@@ -16,7 +16,7 @@
         /// Gets the change context for this line in comparison to its
         /// counterpart (insert, delete, change, none).
         /// </summary>
-        DiffContext Context      { get; }
+        DiffContext Context { get; }
 
         /// <summary>
         /// Gets null if this line is imaginary (has no representation in
@@ -25,8 +25,25 @@
         /// </summary>
         int? ImaginaryLineNumber { get; }
 
+        /// <summary>
+        /// Gets the <see cref="ISegment"/> collection that describes the difference
+        /// between 2 matched lines through their indicated background highlighting.
+        /// </summary>
         IReadOnlyCollection<ISegment> LineEditScriptSegments { get; }
 
+        /// <summary>
+        /// Gets whether <see cref="LineEditScriptSegments"/> have previously been
+        /// computed or whether these segments are yet to be computed on demand.
+        ///
+        /// Gets false if the line has previously been matched to its counterpart line
+        /// and true if matching is still to be performed on demand.
+        /// </summary>
+        bool LineEditScriptSegmentsIsDirty { get; }
+
+        /// <summary>
+        /// Gets whether this line is from the (left) viewA (usually used as reference)
+        /// or not.
+        /// </summary>
         bool FromA { get; }
     }
 }

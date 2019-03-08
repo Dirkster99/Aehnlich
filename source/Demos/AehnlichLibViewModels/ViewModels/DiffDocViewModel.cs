@@ -18,14 +18,13 @@
     using ICSharpCode.AvalonEdit;
 
     /// <summary>
-    /// DiffControl
+    /// Implements a viewmodel that services both views viewA and viewB (left and right).
     /// </summary>
-    public class DiffDocViewModel : Base.ViewModelBase
+    public class DiffDocViewModel : Base.ViewModelBase, IDisposable
     {
         #region fields
-        private ShowDiffArgs _currentDiffArgs;
+        private ShowDiffArgs _Args;
         private uint _NumberOfLines;
-        private DiffType _DiffType;
 
         private readonly DiffSideViewModel _ViewA;
         private readonly DiffSideViewModel _ViewB;
@@ -44,6 +43,7 @@
         private ICommand _GoToNextDifferenceCommand;
         private ICommand _GoToFirstDifferenceCommand;
         private string _StatusText;
+        private bool _disposed;
         private readonly TextEditorOptions _DiffViewOptions;
         #endregion fields
 
@@ -378,6 +378,16 @@
         }
         #endregion Goto Diff Commands
 
+        /// <summary>
+        /// Gets the total number of lines that are avaiable.
+        /// This includes imaginary lines that may have
+        /// been inserted to being both texts into a synchronized
+        /// view.
+        /// 
+        /// This count applies therfore, to the right and left
+        /// view and is either equal (or more commonly) larger than
+        /// the actual number of lines in the original text.
+        /// </summary>
         public uint NumberOfLines
         {
             get
@@ -403,17 +413,7 @@
         {
             get
             {
-                return _DiffType;
-            }
-
-            protected set
-            {
-                if (_DiffType != value)
-                {
-                    _DiffType = value;
-                    NotifyPropertyChanged(() => DiffType);
-                    NotifyPropertyChanged(() => ToolTipText);
-                }
+                return _Args.DiffType;
             }
         }
 
@@ -423,9 +423,9 @@
             {
                 string result = null;
 
-                if (_currentDiffArgs != null)
+                if (_Args != null)
                 {
-                    result = _currentDiffArgs.A + Environment.NewLine + _currentDiffArgs.B;
+                    result = _Args.A + Environment.NewLine + _Args.B;
                 }
 
                 return result;
@@ -453,25 +453,22 @@
         #region methods
         public void ShowDifferences(ShowDiffArgs args)
         {
-            this.DiffType = args.DiffType;
-
-
             IList<string> a, b;
             int leadingCharactersToIgnore = 0;
-            bool fileNames = (this.DiffType == DiffType.File);
+            bool fileNames = (args.DiffType == DiffType.File);
             if (fileNames)
             {
-                GetFileLines(args.A, args.B, out a, out b, out leadingCharactersToIgnore);
+                GetFileLines(args.A, args.B, out a, out b, out leadingCharactersToIgnore, args);
             }
             else
             {
-                GetTextLines(args.A, args.B, out a, out b);
+                GetTextLines(args.A, args.B, args, out a, out b);
             }
 
             bool isBinaryCompare = leadingCharactersToIgnore > 0;
-            bool ignoreCase = isBinaryCompare ? false : Options.IgnoreCase;
-            bool ignoreTextWhitespace = isBinaryCompare ? false : Options.IgnoreTextWhitespace;
-            TextDiff diff = new TextDiff(Options.HashType, ignoreCase, ignoreTextWhitespace, leadingCharactersToIgnore, !Options.ShowChangeAsDeleteInsert);
+            bool ignoreCase = isBinaryCompare ? false : args.IgnoreCase;
+            bool ignoreTextWhitespace = isBinaryCompare ? false : args.IgnoreTextWhitespace;
+            TextDiff diff = new TextDiff(args.HashType, ignoreCase, ignoreTextWhitespace, leadingCharactersToIgnore, !args.ShowChangeAsDeleteInsert);
             EditScript script = diff.Execute(a, b);
 
             string captionA = string.Empty;
@@ -492,22 +489,10 @@
                 this.StatusText = "Text Comparison";
             }
 
-            // Apply options first since SetData needs to know things
-            // like SpacesPerTab and ShowWhitespace up front, so it
-            // can build display lines, determine scroll bounds, etc.
-////            this.ApplyOptions();
-
-////            this.FileNameA = args.A;
-////            this.FileNameB = args.B;
-
-////            this.IgnoreCase = ignoreCase;
-////            this.IgnoreTextWhitespace = ignoreTextWhitespace;
-////            this.IsBinaryCompare = isBinaryCompare;
-
             SetData(a, b, script, args, ignoreCase, ignoreTextWhitespace, isBinaryCompare);
 
-            NumberOfLines = (uint)a.Count;
-            this._currentDiffArgs = args;
+            this.NumberOfLines = (uint)a.Count;
+            _Args = args;
         }
 
         internal void GotoTextLine(uint thisLine)
@@ -548,9 +533,8 @@
                              bool changeDiffIgnoreWhiteSpace,
                              bool changeDiffTreatAsBinaryLines)
         {
-            _currentDiffArgs = args;
+            _Args = args;
 
-            const int spacesPerTab = 4;
             ChangeDiffOptions changeDiffOptions = ChangeDiffOptions.None;
             if (changeDiffTreatAsBinaryLines)
             {
@@ -576,8 +560,8 @@
             var factory = new LinesFactory();
             factory.SetData(listA, listB, script);
 
-            _ViewA.SetData(args.A, factory.LinesA, factory.TextA);
-            _ViewB.SetData(args.B, factory.LinesB, factory.TextB);
+            _ViewA.SetData(args.A, factory.LinesA, factory.TextA, args.SpacesPerTab);
+            _ViewB.SetData(args.B, factory.LinesB, factory.TextB, args.SpacesPerTab);
 
             NotifyPropertyChanged(() => this.IsDiffDataAvailable);
 
@@ -597,7 +581,7 @@
             }
 
             this.currentDiffLine = -1;
-            this.UpdateViewLineDiff(spacesPerTab);    // Update 2 line diff ViewLineDiff
+            this.UpdateViewLineDiff(args.SpacesPerTab);    // Update 2 line diff ViewLineDiff
         }
 
         /// <summary>
@@ -674,23 +658,6 @@
                 viewB.ScrollToLine(gotoPos.Line + 1);
                 viewB.SetPosition(gotoPos);
             }
-        }
-
-        /// <summary>
-        /// Is invoked whenever the view port of the document changes to ensure all change
-        /// script segments per line are available when they are scrolled into the view.
-        /// </summary>
-        /// <param name="firstLine"></param>
-        /// <param name="lastLine"></param>
-        /// <param name="spacesPerTab"></param>
-        internal int GetChangeEditScript(int firstLine, int lastLine, int spacesPerTab)
-        {
-            int count = 0;
-
-            count += _ViewA.GetChangeEditScript(firstLine, lastLine, spacesPerTab);
-            count += _ViewB.GetChangeEditScript(firstLine, lastLine, spacesPerTab);
-
-            return count;
         }
 
         /// <summary>
@@ -777,12 +744,14 @@
         }
 
         #region TextLineConverter
-        private static void GetFileLines(string fileNameA, string fileNameB, out IList<string> a, out IList<string> b, out int leadingCharactersToIgnore)
+        private static void GetFileLines(string fileNameA, string fileNameB,
+                                         out IList<string> a, out IList<string> b,
+                                         out int leadingCharactersToIgnore, ShowDiffArgs args)
         {
             a = null;
             b = null;
             leadingCharactersToIgnore = 0;
-            CompareType compareType = Options.CompareType;
+            CompareType compareType = args.CompareType;
             bool isAuto = compareType == CompareType.Auto;
 
             if (compareType == CompareType.Binary ||
@@ -793,12 +762,12 @@
                 {
                     BinaryDiff diff = new BinaryDiff
                     {
-                        FootprintLength = Options.BinaryFootprintLength
+                        FootprintLength = args.BinaryFootprintLength
                     };
 
                     AddCopyCollection addCopy = diff.Execute(fileA, fileB);
 
-                    BinaryDiffLines lines = new BinaryDiffLines(fileA, addCopy, Options.BinaryFootprintLength);
+                    BinaryDiffLines lines = new BinaryDiffLines(fileA, addCopy, args.BinaryFootprintLength);
                     a = lines.BaseLines;
                     b = lines.VersionLines;
                     leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
@@ -807,12 +776,12 @@
 
             if (compareType == CompareType.Xml || (isAuto && (a == null || b == null)))
             {
-                a = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameA, fileNameA, !isAuto);
+                a = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameA, fileNameA, !isAuto, args);
 
                 // If A failed to parse with Auto, then there's no reason to try B.
                 if (a != null)
                 {
-                    b = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameB, fileNameB, !isAuto);
+                    b = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameB, fileNameB, !isAuto, args);
                 }
 
                 // If we get here and the compare type was XML, then both
@@ -829,21 +798,22 @@
             }
         }
 
-        private static void GetTextLines(string textA, string textB, out IList<string> a, out IList<string> b)
+        private static void GetTextLines(string textA, string textB, ShowDiffArgs args
+                                       , out IList<string> a, out IList<string> b)
         {
             a = null;
             b = null;
-            CompareType compareType = Options.CompareType;
+            CompareType compareType = args.CompareType;
             bool isAuto = compareType == CompareType.Auto;
 
             if (compareType == CompareType.Xml || isAuto)
             {
-                a = TryGetXmlLines(DiffUtility.GetXmlTextLinesFromXml, "the left side text", textA, !isAuto);
+                a = TryGetXmlLines(DiffUtility.GetXmlTextLinesFromXml, "the left side text", textA, !isAuto, args);
 
                 // If A failed to parse with Auto, then there's no reason to try B.
                 if (a != null)
                 {
-                    b = TryGetXmlLines(DiffUtility.GetXmlTextLinesFromXml, "the right side text", textB, !isAuto);
+                    b = TryGetXmlLines(DiffUtility.GetXmlTextLinesFromXml, "the right side text", textB, !isAuto, args);
                 }
 
                 // If we get here and the compare type was XML, then both
@@ -864,12 +834,13 @@
             Func<string, bool, IList<string>> converter,
             string name,
             string input,
-            bool throwOnError)
+            bool throwOnError,
+            ShowDiffArgs args)
         {
             IList<string> result = null;
             try
             {
-                result = converter(input, Options.IgnoreXmlWhitespace);
+                result = converter(input, args.IgnoreXmlWhitespace);
             }
             catch (XmlException ex)
             {
@@ -885,6 +856,42 @@
             return result;
         }
         #endregion TextLineConverter
+
+        #region IDisposable
+        /// <summary>
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed == false)
+            {
+                if (disposing == true)
+                {
+                    // Dispose of the currently used inner disposables
+                    _ViewA.Dispose();
+                    _ViewB.Dispose();
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion IDisposable
         #endregion methods
     }
 }

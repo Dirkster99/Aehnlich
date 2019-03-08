@@ -67,6 +67,7 @@
             if (srcLineDiffs == null)
                 return;
 
+            var toBeRequested = new List<int>();
             foreach (var v in textView.VisualLines)
             {
                 var linenum = v.FirstDocumentLine.LineNumber - 1;
@@ -112,7 +113,20 @@
                             drawingContext.DrawGeometry(brush, null, geometry);
                     }
                 }
+                else
+                {
+                    // Has this line ever been computed before ?
+                    if (srcLineDiff.LineEditScriptSegmentsIsDirty == true &&
+                        _DiffView.LineDiffDataProvider != null)
+                    {
+                        toBeRequested.Add(linenum);
+                    }
+                }
             }
+
+            // Request matching of additional lines if these appear to be dirty
+            if (toBeRequested.Count > 0)
+                _DiffView.LineDiffDataProvider.RequestLineDiff(toBeRequested);
         }
 
         private Brush GetLineBackgroundDiffBrush(DiffContext context, bool lineIsImaginary)
@@ -159,7 +173,7 @@
                     default:
                     case DiffContext.Blank:
                     case DiffContext.Context:
-                        throw new System.NotSupportedException(string.Format("Context '{0}' not supported. An imaginary line can only be inserted, deleted or changed.", context));
+                        throw new System.NotSupportedException(string.Format("Context '{0}' not supported. An imaginary line can only be inserted or deleted.", context));
                 }
             }
 
