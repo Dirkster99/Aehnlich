@@ -7,10 +7,14 @@
              xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
              xmlns:ctrl="clr-namespace:NumericUpDownLib;assembly=NumericUpDownLib"
              xmlns:behav="clr-namespace:AehnlichLibViewModels.Behaviors"
+             xmlns:conv="clr-namespace:AehnlichLibViewModels.Converters"
              
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="800">
     <Grid Margin="0">
+        <Grid.Resources>
+            <conv:MultiParToParConverter x:Key="MultiParToParConverter"/>
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
@@ -24,14 +28,19 @@
                              MaxValue="{Binding MaxLineValue}"
                              HorizontalAlignment="Left" VerticalAlignment="Center"
                              Name="IntegerUpDown"
-                             SelectAllTextOnFocus="True"
                              IsReadOnly="False"
                              ToolTip="{Binding GotoLineToolTip}"
                              
                              behav:OnEnterToCommandBehavior.Command="{Binding GotoThisLineCommand}"
-                             behav:OnEnterToCommandBehavior.CommandParameter="{Binding ElementName=IntegerUpDown,Path=Value}"
-                        />
-        
+                        >
+            <behav:OnEnterToCommandBehavior.CommandParameter>
+                <MultiBinding Converter="{StaticResource MultiParToParConverter}">
+                    <Binding ElementName="IntegerUpDown" Path="Value" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                    <Binding ElementName="IntegerUpDown" Mode="OneWay"/>
+                </MultiBinding>
+            </behav:OnEnterToCommandBehavior.CommandParameter>
+        </ctrl:UIntegerUpDown>
+
         <Button Grid.Column="1"
                 ToolTip="Go to this line in the text."
                 HorizontalAlignment="Left" VerticalAlignment="Center"
