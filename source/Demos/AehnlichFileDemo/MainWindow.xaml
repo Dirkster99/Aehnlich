@@ -12,7 +12,9 @@
         xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         
         mc:Ignorable="d"
-        Title="Ähnlich" Height="450" Width="800">
+        Title="Ähnlich" Height="450" Width="800"
+        Icon="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"
+        >
     
     <Grid Margin="3">
         <Grid.Resources>
