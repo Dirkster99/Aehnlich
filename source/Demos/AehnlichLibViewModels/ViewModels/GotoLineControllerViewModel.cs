@@ -109,6 +109,12 @@
                         var param = (uint)p;
 
                         _gotoLineAction.Invoke(param);
+                    },(p) =>
+                    {
+                        if (MinLineValue < MaxLineValue)
+                            return true;
+
+                        return false;
                     });
                 }
 

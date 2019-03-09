@@ -58,7 +58,7 @@
 
             _InlineDialog = InlineDialogMode.None;
             _DiffCtrl = new DiffDocViewModel();
-            _GotoLineController = new GotoLineControllerViewModel(GotoLine, ToogleInlineDialog);
+            _GotoLineController = new GotoLineControllerViewModel(DiffCtrl.GotoTextLine, ToogleInlineDialog);
             _FocusControl = Focus.LeftFilePath;
         }
         #endregion ctors
@@ -453,11 +453,6 @@
                 InlineDialog = InlineDialogMode.None;
 
             return InlineDialog;
-        }
-
-        private void GotoLine(uint thisLine)
-        {
-            DiffCtrl.GotoTextLine(thisLine);
         }
 
         #region IDisposable

@@ -500,11 +500,12 @@
             if (ViewA != null && ViewB != null)
             {
                 int realLineA = ViewA.FindThisTextLine((int)thisLine);
-                var lineModel = ViewA.GotoTextLine(realLineA);
+                var modelLineA = ViewA.GotoTextLine(realLineA);
 
-                if (lineModel.Counterpart.Number != null)
+                if (modelLineA.Counterpart.Number.HasValue)
                 {
-                    int realLineB = ViewB.FindThisTextLine((int)lineModel.Counterpart.Number+1);
+                    int counterPartLine = Math.Min((int)modelLineA.Counterpart.Number+1, ViewB.DocLineDiffs.Count);
+                    int realLineB = ViewB.FindThisTextLine(counterPartLine);
                     ViewB.GotoTextLine((int)realLineB);
                 }
                 else

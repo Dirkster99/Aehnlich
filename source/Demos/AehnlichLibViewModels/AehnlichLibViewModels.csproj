@@ -49,6 +49,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\OnEnterToCommandBehavior.cs" />
     <Compile Include="Converters\InlineDilaogToVisibilityPropConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityPropConverter.cs" />
     <Compile Include="Converters\MultiParToParConverter.cs" />

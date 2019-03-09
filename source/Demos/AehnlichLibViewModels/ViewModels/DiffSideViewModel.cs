@@ -536,7 +536,10 @@
         internal int FindThisTextLine(int thisLine)
         {
             // Translate given line number into real line number (adding virtual lines if any)
-            int idx = thisLine;
+            int idx = Math.Min(thisLine, _DocLineDiffs.Count-1);
+            if (idx < 0)
+                idx = 0;
+
             var model = _DocLineDiffs[idx];
 
             int iCurrLineNumber = (model.ImaginaryLineNumber == null ? 0 : (int)model.ImaginaryLineNumber);
