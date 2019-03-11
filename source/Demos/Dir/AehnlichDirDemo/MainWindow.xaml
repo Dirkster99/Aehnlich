@@ -44,6 +44,19 @@
                     </Button.Background>
                 </Button>
 
+                <Button
+                    Command="{Binding DirDiffDoc.BrowseUpCommand}"
+                    ToolTip="Go Back up"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
+                    >
+                    <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ArrowUpKey}}"/>
+                    </Button.Background>
+                </Button>
+
             </ToolBar>
         </Grid>
 

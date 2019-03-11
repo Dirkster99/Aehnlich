@@ -64,4 +64,22 @@
                   ResourceId=ICON_GotoLineKey}"
                   UriSource="/AehnlichViewLib;component/Icons/Light/ThisLine.ico" />
 
+    <!-- Arrow Icons -->
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_ArrowUpKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/arrow_up.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_ArrowDownKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/arrow_down.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_ArrowLeftKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/arrow_left.ico" />
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_ArrowRightKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/arrow_right.ico" />
+    <!-- Arrow Icons -->
+
 </ResourceDictionary>

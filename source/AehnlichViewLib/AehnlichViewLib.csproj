@@ -159,6 +159,14 @@
   <ItemGroup>
     <Resource Include="Icons\Light\minus.ico" />
     <Resource Include="Icons\Light\Close.ico" />
+    <Resource Include="Icons\Light\arrow_down.ico" />
+    <Content Include="Icons\Light\arrow_down.svg" />
+    <Resource Include="Icons\Light\arrow_left.ico" />
+    <Content Include="Icons\Light\arrow_left.svg" />
+    <Resource Include="Icons\Light\arrow_right.ico" />
+    <Content Include="Icons\Light\arrow_right.svg" />
+    <Resource Include="Icons\Light\arrow_up.ico" />
+    <Content Include="Icons\Light\arrow_up.svg" />
     <Content Include="Icons\Light\Close_16x.svg" />
     <Resource Include="Icons\Dark\Close_White_16x.ico" />
     <Content Include="Icons\Dark\Close_White_16x.svg" />

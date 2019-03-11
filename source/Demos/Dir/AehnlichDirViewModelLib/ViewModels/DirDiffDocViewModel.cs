@@ -12,9 +12,11 @@
         private string _LblFilter;
         private string _PathB, _PathA;
         private ICommand _BrowseItemCommand;
+        private ICommand _BrowseUpCommand;
 
         private DirectoryDiffResults _Results;
         private readonly ObservableRangeCollection<DirEntryViewModel> _DirEntries;
+        private readonly Stack<DirEntryViewModel> _DirPathStack;
         #endregion fields
 
         #region ctors
@@ -24,6 +26,7 @@
         public DirDiffDocViewModel()
         {
             _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
+            _DirPathStack = new Stack<DirEntryViewModel>();
         }
         #endregion ctors
 
@@ -91,17 +94,76 @@
                             return;
 
                         if (param.Subentries.Count == 0) // No more subentries to browse to
-                        {
-                            _DirEntries.Clear();
                             return;
-                        }
 
                         var dirs = SetDirectoryEntries(param.Subentries, param.ItemPathA, param.ItemPathB);
                         _DirEntries.ReplaceRange(dirs);
+                        PathA = param.ItemPathA;
+                        PathB = param.ItemPathB;
+
+                        _DirPathStack.Push(param);
                     });
                 }
 
                 return _BrowseItemCommand;
+            }
+        }
+
+        public ICommand BrowseUpCommand
+        {
+            get
+            {
+                if (_BrowseUpCommand == null)
+                {
+                    _BrowseUpCommand = new RelayCommand<object>((p) =>
+                    {
+                        if (_DirPathStack.Count == 0)
+                            return;
+
+                        _DirPathStack.Pop();
+
+                        DirectoryDiffEntryCollection entries = null;
+                        string itemPathA = string.Empty, itemPathB = string.Empty;
+                        if (_DirPathStack.Count > 0)
+                        {
+                            var param = _DirPathStack.Peek();
+                            if (param == null)
+                                return;
+
+                            if (param.IsFile == true)  // Todo Open a text file diff view for this
+                                return;
+
+                            if (param.Subentries.Count == 0) // No more subentries to browse to
+                                return;
+
+                            itemPathA = param.ItemPathA;
+                            itemPathB = param.ItemPathB;
+                            entries = param.Subentries;
+                        }
+                        else
+                        {
+                            itemPathA = _Results.DirectoryA.FullName; // Go back to root entries display
+                            itemPathB = _Results.DirectoryB.FullName;
+                            entries = _Results.Entries;
+                        }
+
+                        var dirs = SetDirectoryEntries(entries, itemPathA, itemPathB);
+                        _DirEntries.ReplaceRange(dirs);
+                        PathA = itemPathA;
+                        PathB = itemPathB;
+
+                    },(p) =>
+                    {
+                        if (_DirPathStack.Count > 0)
+                            return true;
+
+                        return false;
+                    }
+                    
+                    );
+                }
+
+                return _BrowseUpCommand;
             }
         }
         #endregion properties

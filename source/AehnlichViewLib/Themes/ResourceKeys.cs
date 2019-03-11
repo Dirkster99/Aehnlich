@@ -83,6 +83,13 @@
         public static readonly ComponentResourceKey ICON_CloseKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_CloseKey");
 
         public static readonly ComponentResourceKey ICON_GotoLineKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_GotoLineKey");
+
+        #region Arrow Icons
+        public static readonly ComponentResourceKey ICON_ArrowUpKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_ArrowUpKey");
+        public static readonly ComponentResourceKey ICON_ArrowDownKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_ArrowDownKey");
+        public static readonly ComponentResourceKey ICON_ArrowLeftKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_ArrowLeftKey");
+        public static readonly ComponentResourceKey ICON_ArrowRightKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_ArrowRightKey");
+        #endregion Arrow Icons
         #endregion ICONs
 
         #region Diff Colors
