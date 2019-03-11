@@ -10,7 +10,9 @@ ECHO AehnlichLib
 ECHO AehnlichLib_UnitTests
 ECHO AehnlichViewLib
 ECHO Demos\AehnlichLibViewModels
-ECHO Demos\AehnlichDemo
+ECHO Demos\AehnlichFileDemo
+ECHO Demos\Dir\AehnlichDirDemo
+ECHO Demos\Dir\AehnlichDirViewModelLib
 ECHO.
 REM Ask the user if hes really sure to continue beyond this point XXXXXXXX
 set /p choice=Are you sure to continue (Y/N)?
@@ -50,10 +52,22 @@ RMDIR /S /Q "Demos\AehnlichLibViewModels\bin"
 RMDIR /S /Q "Demos\AehnlichLibViewModels\obj"
 
 ECHO.
-ECHO Deleting BIN and OBJ Folders in Demos\GenericDemo
+ECHO Deleting BIN and OBJ Folders in Demos\AehnlichFileDemo
 ECHO.
-RMDIR /S /Q "Demos\AehnlichDemo\bin"
-RMDIR /S /Q "Demos\AehnlichDemo\obj"
+RMDIR /S /Q "Demos\AehnlichFileDemo\bin"
+RMDIR /S /Q "Demos\AehnlichFileDemo\obj"
+
+ECHO.
+ECHO Deleting BIN and OBJ Folders in Demos\Dir\AehnlichDirDemo
+ECHO.
+RMDIR /S /Q "Demos\Dir\AehnlichDirDemo\bin"
+RMDIR /S /Q "Demos\Dir\AehnlichDirDemo\obj"
+
+ECHO.
+ECHO Deleting BIN and OBJ Folders in Demos\AehnlichFileDemo
+ECHO.
+RMDIR /S /Q "Demos\Dir\AehnlichDirViewModelLib\bin"
+RMDIR /S /Q "Demos\Dir\AehnlichDirViewModelLib\obj"
 
 PAUSE
 
