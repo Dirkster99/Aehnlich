@@ -1,7 +1,6 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
     using AehnlichDirViewModelLib.ViewModels.Base;
-    using System;
     using System.Windows.Input;
 
     public class AppViewModel : Base.ViewModelBase

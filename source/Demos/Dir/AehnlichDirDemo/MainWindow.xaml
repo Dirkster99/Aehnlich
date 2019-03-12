@@ -72,8 +72,8 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <TextBox
@@ -84,7 +84,15 @@
                 Margin="0,0,0,3"
                 />
 
-            <ListBox Grid.Column="0" Grid.Row="1" Name="ListA"
+            <TextBox
+                Grid.Column="0" Grid.Row="1"
+                Text="{Binding DirDiffDoc.PathA,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                IsReadOnly="True"
+                HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                Margin="0,3,0,3"
+                />
+
+            <ListBox Grid.Column="0" Grid.Row="2" Name="ListA"
                      ItemsSource="{Binding DirDiffDoc.DirEntries}"
                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                      ScrollViewer.ScrollChanged="List_ScrollChanged"
@@ -157,14 +165,6 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <TextBox
-                Grid.Column="0" Grid.Row="2"
-                Text="{Binding DirDiffDoc.PathA,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                IsReadOnly="True"
-                HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                Margin="0,3,0,3"
-                />
-
             <GridSplitter
                 Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
                 HorizontalAlignment="Stretch"
@@ -179,7 +179,15 @@
                 Margin="0,0,0,3"
                 />
 
-            <ListBox Grid.Column="2" Grid.Row="1" Name="ListB"
+            <TextBox
+                Grid.Column="2" Grid.Row="1"
+                Text="{Binding DirDiffDoc.PathB,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                IsReadOnly="True"
+                HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                Margin="0,3,0,3"
+                />
+
+            <ListBox Grid.Column="2" Grid.Row="2" Name="ListB"
                      ItemsSource="{Binding DirDiffDoc.DirEntries}"
                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                      ScrollViewer.ScrollChanged="List_ScrollChanged"
@@ -250,14 +258,6 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-
-            <TextBox
-                Grid.Column="2" Grid.Row="2"
-                Text="{Binding DirDiffDoc.PathB,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                IsReadOnly="True"
-                HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                Margin="0,3,0,3"
-                />
 
         </Grid>
     </Grid>

@@ -3,12 +3,14 @@
     using AehnlichDirViewModelLib.Models;
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
+    using System;
     using System.Collections.Generic;
     using System.Windows.Input;
 
     public class DirDiffDocViewModel : Base.ViewModelBase
     {
         #region fields
+        private ShowDirDiffArgs _CompareOptions;
         private string _LblFilter;
         private string _PathB, _PathA;
         private ICommand _BrowseItemCommand;
@@ -98,10 +100,10 @@
 
                         var dirs = SetDirectoryEntries(param.Subentries, param.ItemPathA, param.ItemPathB);
                         _DirEntries.ReplaceRange(dirs);
-                        PathA = param.ItemPathA;
-                        PathB = param.ItemPathB;
 
                         _DirPathStack.Push(param);
+                        PathA = GetSubPath(_CompareOptions.LeftDir, _DirPathStack, true);
+                        PathB = GetSubPath(_CompareOptions.RightDir, _DirPathStack, false);
                     });
                 }
 
@@ -149,8 +151,8 @@
 
                         var dirs = SetDirectoryEntries(entries, itemPathA, itemPathB);
                         _DirEntries.ReplaceRange(dirs);
-                        PathA = itemPathA;
-                        PathB = itemPathB;
+                        PathA = GetSubPath(_CompareOptions.LeftDir, _DirPathStack, true);
+                        PathB = GetSubPath(_CompareOptions.RightDir, _DirPathStack, false);
 
                     },(p) =>
                     {
@@ -171,7 +173,7 @@
         #region methods
         internal void ShowDifferences(ShowDirDiffArgs args)
         {
-            DirectoryDiff diff = new DirectoryDiff(
+            var diff = new DirectoryDiff(
                 args.ShowOnlyInA,
                 args.ShowOnlyInB,
                 args.ShowDifferent,
@@ -183,6 +185,8 @@
             DirectoryDiffResults results = diff.Execute(args.LeftDir, args.RightDir);
 
             SetData(results);
+
+            _CompareOptions = args; // Record comparison options for later
         }
 
         private void SetData(DirectoryDiffResults results)
@@ -191,11 +195,12 @@
             string currentPathB = results.DirectoryB.FullName;
 
             var dirs = SetDirectoryEntries(results.Entries, currentPathA, currentPathB);
+            _DirPathStack.Clear();
 
             _Results = results;
             _DirEntries.ReplaceRange(dirs);
-            PathA = currentPathA;
-            PathB = currentPathB;
+            PathA = string.Empty;
+            PathB = string.Empty;
 
 ////            this.TreeA.SetData(results, true);
 ////            this.TreeB.SetData(results, false);
@@ -230,6 +235,30 @@
             }
 
             return dirs;
+        }
+
+        /// <summary>
+        /// Gets the relative sub-path portion of the current <see cref="_DirPathStack"/> against
+        /// the given <see cref="basePath"/>.
+        /// </summary>
+        /// <param name="basePath"></param>
+        /// <param name="dirPathStack"></param>
+        /// <param name="forA"></param>
+        /// <returns></returns>
+        private string GetSubPath(string basePath, Stack<DirEntryViewModel> dirPathStack, bool forA)
+        {
+            string subPath = string.Empty;
+            if (dirPathStack.Count == 0)
+                return subPath;
+
+            if (forA)
+                subPath = dirPathStack.Peek().ItemPathA;
+            else
+                subPath = dirPathStack.Peek().ItemPathB;
+
+            subPath = subPath.Substring(basePath.Length);
+
+            return subPath;
         }
         #endregion methods
     }
