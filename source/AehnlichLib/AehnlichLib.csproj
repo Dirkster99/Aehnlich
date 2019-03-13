@@ -56,6 +56,8 @@
     <Compile Include="Dir\DirectoryDiffFileFilter.cs" />
     <Compile Include="Dir\DirectoryDiffResults.cs" />
     <Compile Include="Dir\FileSystemInfoComparer.cs" />
+    <Compile Include="Dir\Merge\MergedEntry.cs" />
+    <Compile Include="Dir\Merge\MergeIndex.cs" />
     <Compile Include="Enums\EditType.cs" />
     <Compile Include="Enums\HashType.cs" />
     <Compile Include="Interfaces\IAddCopy.cs" />

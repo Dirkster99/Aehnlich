@@ -150,7 +150,7 @@
                                             <MultiBinding.ConverterParameter>
                                                 <conv:IconSize >Small</conv:IconSize>
                                             </MultiBinding.ConverterParameter>
-                                            <Binding Path="ItemPathB" />
+                                            <Binding Path="ItemPathA" />
                                             <Binding Path="ItemName" />
                                             <!--Binding Path="IconResourceId" /-->
                                         </MultiBinding>

@@ -128,154 +128,105 @@ namespace AehnlichLib.Dir
 			return results;
 		}
 
-		#endregion
+        #endregion
 
-		#region Private Methods
+        #region Private Methods
         /// <summary>
         /// Compares 2 sets of <see cref="FileSystemInfo"/> objects and returns their
         /// status in terms of difference in the <paramref name="entry"/> parameter.
         /// </summary>
-        /// <param name="infosA"></param>
-        /// <param name="infosB"></param>
-        /// <param name="entry"></param>
-        /// <param name="isFile"></param>
+        /// <param name="mergeIndex">Contains the 2 sets of objects to compare in a merged sorted list</param>
+        /// <param name="entry">Contains the resulting list</param>
         /// <param name="checkIfFilesAreDifferent"></param>
-		private void DiffDirectories(FileSystemInfo[] infosA,
-                                     FileSystemInfo[] infosB,
-                                     DirectoryDiffEntry entry,
-                                     bool checkIfFilesAreDifferent)   
-		{
-			int indexA = 0;
-			int indexB = 0;
-
-			int countA = infosA.Length;
-			int countB = infosB.Length;
-
-			while (indexA < countA && indexB < countB)
-			{
-				FileSystemInfo infoA = infosA[indexA];
-				FileSystemInfo infoB = infosB[indexB];
-
-				int compareResult = string.Compare(infoA.Name, infoB.Name, true);
-				if (compareResult == 0)
-				{
-					// The item is in both directories
-					if (this.showDifferent || this.showSame)
-					{
-						bool different = false;
-						DirectoryDiffEntry newEntry = new DirectoryDiffEntry(infoA.Name, false, true, true, false);
-
-						if (this.recursive)
-						{
-							this.Execute((DirectoryInfo)infoA, (DirectoryInfo)infoB, newEntry, checkIfFilesAreDifferent);
-						}
-
-						if (this.ignoreDirectoryComparison)
-						{
-							newEntry.Different = false;
-						}
-						else
-						{
-							different = newEntry.Different;
-						}
-
-						if (this.ignoreDirectoryComparison || (different && this.showDifferent) || (!different && this.showSame))
-						{
-							entry.Subentries.Add(newEntry);
-						}
-
-						if (different)
-						{
-							entry.Different = true;
-						}
-					}
-
-					indexA++;
-					indexB++;
-				}
-				else if (compareResult < 0)
-				{
-					// The item is only in A
-					if (this.showOnlyInA)
-					{
-						entry.Subentries.Add(new DirectoryDiffEntry(infoA.Name, false, true, false, false));
-						entry.Different = true;
-					}
-
-					indexA++;
-				}
-				else
-				{
-					// iCompareResult > 0
-					// The item is only in B
-					if (this.showOnlyInB)
-					{
-						entry.Subentries.Add(new DirectoryDiffEntry(infoB.Name, false, false, true, false));
-						entry.Different = true;
-					}
-
-					indexB++;
-				}
-			}
-
-			// Add any remaining entries
-			if (indexA < countA && this.showOnlyInA)
-			{
-				for (int i = indexA; i < countA; i++)
-				{
-					entry.Subentries.Add(new DirectoryDiffEntry(infosA[i].Name, false, true, false, false));
-					entry.Different = true;
-				}
-			}
-			else if (indexB < countB && this.showOnlyInB)
-			{
-				for (int i = indexB; i < countB; i++)
-				{
-					entry.Subentries.Add(new DirectoryDiffEntry(infosB[i].Name, false, false, true, false));
-					entry.Different = true;
-				}
-			}
-		}
-
-        /// <summary>
-        /// Compares 2 sets of <see cref="FileSystemInfo"/> objects and returns their
-        /// status in terms of difference in the <paramref name="entry"/> parameter.
-        /// </summary>
-        /// <param name="infosA"></param>
-        /// <param name="infosB"></param>
-        /// <param name="entry"></param>
-        /// <param name="isFile"></param>
-        /// <param name="checkIfFilesAreDifferent"></param>
-		private void DiffFiles(FileSystemInfo[] infosA,
-                              FileSystemInfo[] infosB,
-                              DirectoryDiffEntry entry,
-                              bool checkIfFilesAreDifferent)
+        private void DiffDirectories(Merge.MergeIndex mergeIndex,
+                                      DirectoryDiffEntry entry,
+                                      bool checkIfFilesAreDifferent)
         {
-            int indexA = 0;
-            int indexB = 0;
-
-            int countA = infosA.Length;
-            int countB = infosB.Length;
-
-            while (indexA < countA && indexB < countB)
+            foreach (var item in mergeIndex.MergedEntries)
             {
-                FileSystemInfo infoA = infosA[indexA];
-                FileSystemInfo infoB = infosB[indexB];
+                if (item.InfoA != null && item.InfoB != null)
+                {
+                    // The item is in both directories
+                    // The item is in both directories
+                    if (this.showDifferent || this.showSame)
+                    {
+                        bool different = false;
+                        DirectoryDiffEntry newEntry = new DirectoryDiffEntry(item.InfoA.Name, false, true, true, false);
 
-                int compareResult = string.Compare(infoA.Name, infoB.Name, true);
-                if (compareResult == 0)
+                        if (this.recursive)
+                        {
+                            this.Execute((DirectoryInfo)item.InfoA, (DirectoryInfo)item.InfoB, newEntry, checkIfFilesAreDifferent);
+                        }
+
+                        if (this.ignoreDirectoryComparison)
+                        {
+                            newEntry.Different = false;
+                        }
+                        else
+                        {
+                            different = newEntry.Different;
+                        }
+
+                        if (this.ignoreDirectoryComparison || (different && this.showDifferent) || (!different && this.showSame))
+                        {
+                            entry.Subentries.Add(newEntry);
+                        }
+
+                        if (different)
+                        {
+                            entry.Different = true;
+                        }
+                    }
+
+
+                }
+                else if (item.InfoA != null && item.InfoB == null)
+                {
+                    // The item is only in A
+                    if (this.showOnlyInA)
+                    {
+                        entry.Subentries.Add(new DirectoryDiffEntry(item.InfoA.Name, false, true, false, false));
+                        entry.Different = true;
+                    }
+                }
+                else
+                {
+                    // The item is only in B (both itemA and itemB null is not supported)
+                    if (this.showOnlyInB)
+                    {
+                        entry.Subentries.Add(new DirectoryDiffEntry(item.InfoB.Name, false, false, true, false));
+                        entry.Different = true;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Compares 2 sets of <see cref="FileSystemInfo"/> objects and returns their
+        /// status in terms of difference in the <paramref name="entry"/> parameter.
+        /// </summary>
+        /// <param name="mergeIndex">Contains the 2 sets of objects to compare in a merged sorted list</param>
+        /// <param name="entry">Contains the resulting list</param>
+        /// <param name="checkIfFilesAreDifferent"></param>
+        private void DiffFiles2(Merge.MergeIndex mergeIndex,
+                                DirectoryDiffEntry entry,
+                                bool checkIfFilesAreDifferent)
+        {
+            foreach (var item in mergeIndex.MergedEntries)
+            {
+                if (item.InfoA != null && item.InfoB != null)
                 {
                     // The item is in both directories
                     if (this.showDifferent || this.showSame)
                     {
                         bool different = false;
-                        DirectoryDiffEntry newEntry = new DirectoryDiffEntry(infoA.Name, true, true, true, false);
+                        DirectoryDiffEntry newEntry = new DirectoryDiffEntry(item.InfoA.Name, true, true, true, false);
 
                         if (checkIfFilesAreDifferent)
                         {
                             try
                             {
-                                different = DiffUtility.AreFilesDifferent((FileInfo)infoA, (FileInfo)infoB);
+                                different = DiffUtility.AreFilesDifferent((FileInfo)item.InfoA, (FileInfo)item.InfoB);
                             }
                             catch (IOException ex)
                             {
@@ -299,53 +250,28 @@ namespace AehnlichLib.Dir
                             entry.Different = true;
                         }
                     }
-
-                    indexA++;
-                    indexB++;
                 }
-                else if (compareResult < 0)
+                else if (item.InfoA != null && item.InfoB == null)
                 {
                     // The item is only in A
                     if (this.showOnlyInA)
                     {
-                        entry.Subentries.Add(new DirectoryDiffEntry(infoA.Name, true, true, false, false));
+                        entry.Subentries.Add(new DirectoryDiffEntry(item.InfoA.Name, true, true, false, false));
                         entry.Different = true;
                     }
-
-                    indexA++;
                 }
                 else
                 {
-                    // iCompareResult > 0
                     // The item is only in B
                     if (this.showOnlyInB)
                     {
-                        entry.Subentries.Add(new DirectoryDiffEntry(infoB.Name, true, false, true, false));
+                        entry.Subentries.Add(new DirectoryDiffEntry(item.InfoB.Name, true, false, true, false));
                         entry.Different = true;
                     }
-
-                    indexB++;
-                }
-            }
-
-            // Add any remaining entries
-            if (indexA < countA && this.showOnlyInA)
-            {
-                for (int i = indexA; i < countA; i++)
-                {
-                    entry.Subentries.Add(new DirectoryDiffEntry(infosA[i].Name, true, true, false, false));
-                    entry.Different = true;
-                }
-            }
-            else if (indexB < countB && this.showOnlyInB)
-            {
-                for (int i = indexB; i < countB; i++)
-                {
-                    entry.Subentries.Add(new DirectoryDiffEntry(infosB[i].Name, true, false, true, false));
-                    entry.Different = true;
                 }
             }
         }
+
 
         private void Execute(DirectoryInfo directoryA,
                              DirectoryInfo directoryB,
@@ -353,42 +279,42 @@ namespace AehnlichLib.Dir
                              bool checkIfFilesAreDifferent)
 		{
             {
-                // Get the arrays of subdirectories
+                // Get the arrays of subdirectories and merge them into 1 list
                 DirectoryInfo[] directoriesA = directoryA.GetDirectories();
                 DirectoryInfo[] directoriesB = directoryB.GetDirectories();
 
-                // Sort them
-                Array.Sort(directoriesA, FileSystemInfoComparer.DirectoryComparer);
-                Array.Sort(directoriesB, FileSystemInfoComparer.DirectoryComparer);
+                var mergeIdx = new Merge.MergeIndex(directoriesA, directoriesB, false);
+                mergeIdx.Merge();
 
                 // Diff them
-                this.DiffDirectories(directoriesA, directoriesB, entry, checkIfFilesAreDifferent);
+                this.DiffDirectories(mergeIdx, entry, checkIfFilesAreDifferent);
             }
 
-
             {
-                // Get the arrays of files
+                // Get the arrays of files and merge them into 1 list
                 FileInfo[] filesA, filesB;
+                Merge.MergeIndex mergeIdx = null;
                 if (this.filter == null)
                 {
                     filesA = directoryA.GetFiles();
                     filesB = directoryB.GetFiles();
 
-                    // Sort them
-                    Array.Sort(filesA, FileSystemInfoComparer.FileComparer);
-                    Array.Sort(filesB, FileSystemInfoComparer.FileComparer);
+                    mergeIdx = new Merge.MergeIndex(filesA, filesB, false);
                 }
                 else
                 {
                     filesA = this.filter.Filter(directoryA);
                     filesB = this.filter.Filter(directoryB);
+
+                    // Assumption: Filter generates sorted entries
+                    mergeIdx = new Merge.MergeIndex(filesA, filesB, true);
                 }
 
-                // Diff them
-                this.DiffFiles(filesA, filesB, entry, checkIfFilesAreDifferent);
+                // Merge and Diff them
+                mergeIdx.Merge();
+                DiffFiles2(mergeIdx, entry, checkIfFilesAreDifferent);
             }
         }
-
 		#endregion
 	}
 }
