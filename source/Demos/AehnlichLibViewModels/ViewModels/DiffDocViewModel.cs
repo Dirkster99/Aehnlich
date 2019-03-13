@@ -218,11 +218,6 @@
             get { return _ViewLineDiff; }
         }
 
-        internal DiffSideViewModel GetActiveView(out object nonActView)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Gets/sets the height of the bottom panel view that shows diff
         /// of the currently selected line with a 2 line view.

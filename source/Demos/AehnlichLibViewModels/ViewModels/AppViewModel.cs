@@ -270,7 +270,7 @@
             get { return _OverViewValue; }
             private set
             {
-                if (_OverViewValue != value)
+                if (Math.Abs(_OverViewValue - value) > 1)
                 {
                     _OverViewValue = value;
                     NotifyPropertyChanged(() => OverViewValue);
@@ -476,6 +476,8 @@
                 {
                     // Dispose of the currently used inner disposables
                     _DiffCtrl.Dispose();
+                    _FilePathA.Dispose();
+                    _FilePathB.Dispose();
                 }
 
                 // There are no unmanaged resources to release, but

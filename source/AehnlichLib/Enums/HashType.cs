@@ -11,7 +11,7 @@
     {
         /// <summary>
         /// Default for hash based comparison of sequenceA and sequenceB is based on the GetHashCode() method
-        /// implemented in <see cref="Object"/> class or its override of an inheriting class
+        /// implemented in <see cref="System.Object"/> class or its override of an inheriting class
         /// (eg. new string("XXX").GetHashCode()).
         ///
         /// https://docs.microsoft.com/en-us/dotnet/api/system.object.gethashcode

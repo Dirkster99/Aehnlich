@@ -205,7 +205,7 @@
                 const string imgresdll = "imageres.dll";
                 if (filename.Length > imgresdll.Length)
                 {
-                    int idx = filename.IndexOf(imgresdll);
+                    int idx = filename.IndexOf(imgresdll, StringComparison.InvariantCulture);
                     if (idx > 0)
                     {
                         string match = filename.Substring(idx);

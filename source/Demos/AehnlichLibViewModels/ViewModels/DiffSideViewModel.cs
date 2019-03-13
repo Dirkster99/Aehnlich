@@ -325,8 +325,8 @@
         /// representing the currently active line from the left/right side views under
         /// each other.
         /// </summary>
-        /// <param name="lineOne"></param>
-        /// <param name="lineTwo"></param>
+        /// <param name="lineOneVM"></param>
+        /// <param name="lineTwoVM"></param>
         internal void SetData(DiffLineViewModel lineOneVM,
                               DiffLineViewModel lineTwoVM,
                               int spacesPerTab)

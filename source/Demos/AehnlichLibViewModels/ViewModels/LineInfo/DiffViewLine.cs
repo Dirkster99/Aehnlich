@@ -37,7 +37,7 @@
         /// <param name="text"></param>
         /// <param name="number"></param>
         /// <param name="editType"></param>
-        /// <param name="useA">Set to true if this data represents the reference view
+        /// <param name="fromA">Set to true if this data represents the reference view
         /// (left view also known as ViewA) otherwise false.</param>
         public DiffViewLine(string text, int? number, EditType editType, bool fromA)
         {
@@ -61,7 +61,6 @@
         /// Gets the equivalent line from the left view to the right view
         /// and vice versa.
         /// </summary>
-        /// <param name="counterpartView"></param>
         public DiffViewLine Counterpart { get; internal set; }
 
         /// <summary>
@@ -81,7 +80,7 @@
 
         /// <summary>
         /// Gets whether this line represents the reference view
-        /// (left view also known as ViewA), otherwise false.</param>
+        /// (left view also known as ViewA), otherwise false.
         /// </summary>
         public bool FromA { get; }
 

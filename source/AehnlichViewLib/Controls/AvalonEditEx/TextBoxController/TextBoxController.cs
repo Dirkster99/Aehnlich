@@ -116,7 +116,6 @@
         /// <summary>
         /// Get the text that is currently selected in the edit control.
         /// </summary>
-        /// <param name="selectedText"></param>
         public string GetSelectedText()
         {
             string selectedText = string.Empty;

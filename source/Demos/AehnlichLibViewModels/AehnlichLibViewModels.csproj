@@ -58,7 +58,6 @@
     <Compile Include="Enums\DiffType.cs" />
     <Compile Include="Events\CaretPositionChangedEvent.cs" />
     <Compile Include="Interfaces\IDiffLines.cs" />
-    <Compile Include="Interfaces\ISettingsNode.cs" />
     <Compile Include="Models\FileSystemCommands.cs" />
     <Compile Include="Enums\InlineDialogMode.cs" />
     <Compile Include="Models\ShowDiffArgs.cs" />

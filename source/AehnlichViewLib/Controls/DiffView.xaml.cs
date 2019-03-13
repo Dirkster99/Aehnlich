@@ -55,7 +55,7 @@
         /// Redraw additional line changed background highlighting segments since viewmodel
         /// just computed these (they cannot have been drawn anytime before but user is looking at it).
         /// 
-        /// Method execute when bound viewmodel sends the <see cref="DiffLineInfoChangedEvent"/>.
+        /// Method execute when bound viewmodel sends the <see cref="Events.DiffLineInfoChangedEvent"/>.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -280,7 +280,7 @@
         /// signifies 2 blank lines in both of the two (text) lines being compared.
         /// 
         /// Normally, there should be no drawing required for this which is why the
-        /// default is <see cref="Default(SolidColorBrush)"/> - but sometimes it may be useful
+        /// default is default(<see cref="SolidColorBrush"/>) - but sometimes it may be useful
         /// to color these lines which is why we have this property here.
         /// </summary>
         public SolidColorBrush ColorBackgroundBlank
@@ -445,7 +445,6 @@
         /// <summary>
         /// Reset the <seealso cref="SolidColorBrush"/> to be used for highlighting the current editor line.
         /// </summary>
-        /// <param name="newValue"></param>
         private void AdjustCurrentLineBackground()
         {
             HighlightCurrentLineBackgroundRenderer oldRenderer = null;
@@ -504,7 +503,7 @@
                 leftMargins.Insert(0, lineNumbers);
                 leftMargins.Insert(1, line);
                 var lineNumbersForeground = new Binding("LineNumbersForeground") { Source = this };
-                line.SetBinding(System.Windows.Shapes.Line.StrokeProperty, lineNumbersForeground);
+                line.SetBinding(Shape.StrokeProperty, lineNumbersForeground);
                 lineNumbers.SetBinding(Control.ForegroundProperty, lineNumbersForeground);
 
                 // Attach more event handlers

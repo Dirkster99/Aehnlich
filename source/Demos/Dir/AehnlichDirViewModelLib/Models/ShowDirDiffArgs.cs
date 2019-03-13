@@ -80,12 +80,11 @@
         public bool ShowSame { get; set; }
 
         /// <summary>
-        /// <param <see cref="Recursive">Determines whether or not only files and folders
+        /// <see cref="Recursive"/> Determines whether or not only files and folders
         /// in a given directory are compared without comparing contents of sub-directories.
         /// 
         /// Set this option to true to also compare contents in sub-directories and not just
         /// content on the given root level.
-        /// </param>
         /// </summary>
         public bool Recursive { get; set; }
 
@@ -95,7 +94,7 @@
         /// different files/directories or not.
         /// 
         /// Setting this parameter to true ignores directories completely (they are never flagged as different).
-        /// Setting it to false leads to generating entries with a hint towards difference even for directories.</param>
+        /// Setting it to false leads to generating entries with a hint towards difference even for directories.
         /// </summary>
         public bool IgnoreDirectoryComparison { get; set; }
 

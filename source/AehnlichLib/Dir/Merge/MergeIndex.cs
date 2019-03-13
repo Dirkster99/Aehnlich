@@ -16,6 +16,9 @@
         /// <summary>
         /// Class constructor
         /// </summary>
+        /// <param name="infosA"></param>
+        /// <param name="infosB"></param>
+        /// <param name="isSorted"></param>
         public MergeIndex(FileSystemInfo[] infosA,
                           FileSystemInfo[] infosB,
                           bool isSorted)
@@ -23,7 +26,7 @@
         {
             InfosA = infosA;
             InfosB = infosB;
-            IsSorted = IsSorted;
+            IsSorted = isSorted;
         }
 
         /// <summary>

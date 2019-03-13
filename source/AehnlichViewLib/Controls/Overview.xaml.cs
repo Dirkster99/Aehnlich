@@ -203,7 +203,7 @@
         /// signifies 2 blank lines in both of the two (text) lines being compared.
         /// 
         /// Normally, there should be no drawing required for this which is why the
-        /// default is <see cref="Default(Color)"/> - but sometimes it may be useful
+        /// default is default(<see cref="Color"/>) - but sometimes it may be useful
         /// to color these lines which is why we have this property here.
         /// </summary>
         public SolidColorBrush ColorBackgroundBlank

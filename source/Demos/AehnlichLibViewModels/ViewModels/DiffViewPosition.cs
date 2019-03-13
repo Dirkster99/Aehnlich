@@ -135,11 +135,11 @@
             return true;
         }
 
-        public override bool Equals(object value)
+        public override bool Equals(object obj)
         {
-            var other = value as DiffViewPosition;
+            var other = obj as DiffViewPosition;
 
-            return Equals(value);
+            return Equals(obj);
         }
 
         public override int GetHashCode()

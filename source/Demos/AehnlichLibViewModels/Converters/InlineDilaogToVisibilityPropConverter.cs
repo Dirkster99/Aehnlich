@@ -34,8 +34,8 @@
 
         #region methods
         /// <summary>
-        /// Convertzs a bool value into <see cref="Visibility"/> as configured in the
-        /// <see cref="TrueValue"/> and <see cref="FalseValue"/> properties.
+        /// Converts a value from the <see cref="InlineDialogMode"/> enumeration into
+        /// a <see cref="Visibility"/> value as configured in the properties of this converter.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>

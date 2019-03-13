@@ -298,7 +298,7 @@
 
             /// <summary>
             /// Sets the Counterpart property in each line property of each
-            /// <see cref="DiffLinesViewModel"/> to refer to each other. This information
+            /// <see cref="DiffLines"/> object to refer to each other. This information
             /// can be used for finding equivelant lines from left to right lines[] collection
             /// and vice versa.
             /// </summary>

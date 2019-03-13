@@ -239,7 +239,7 @@
 
         /// <summary>
         /// Gets the relative sub-path portion of the current <see cref="_DirPathStack"/> against
-        /// the given <see cref="basePath"/>.
+        /// the given <param name="basePath"/>.
         /// </summary>
         /// <param name="basePath"></param>
         /// <param name="dirPathStack"></param>

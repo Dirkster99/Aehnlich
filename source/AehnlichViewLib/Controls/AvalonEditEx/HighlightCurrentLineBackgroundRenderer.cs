@@ -20,7 +20,7 @@
         /// <summary>
         /// Class Constructor from editor and SolidColorBrush definition
         /// </summary>
-        /// <param name="editor"></param>
+        /// <param name="diffView"></param>
         public HighlightCurrentLineBackgroundRenderer(DiffView diffView)
             : this()
         {

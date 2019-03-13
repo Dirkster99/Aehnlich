@@ -13,7 +13,7 @@
     /// Defines a suggestion object to generate suggestions
     /// based on sub entries of specified string.
     /// </summary>
-    public class SuggestSourceViewModel : Base.ViewModelBase
+    public class SuggestSourceViewModel : Base.ViewModelBase, IDisposable
     {
         #region fields
         private readonly Dictionary<string, CancellationTokenSource> _Queue;
@@ -22,6 +22,7 @@
         private ICommand _SuggestTextChangedCommand;
         private bool _IsTextValid = true;
         private string _FilePath;
+        private bool _disposed;
         #endregion fields
 
         #region ctors
@@ -169,11 +170,9 @@
         #region input parser
         /// <summary>
         /// Method returns a task that returns a list of suggestion objects
-        /// that are associated to the <paramref name="input"/> string
-        /// and given <paramref name="location"/> object.
+        /// that are associated to the <paramref name="input"/> string.
         /// </summary>
         /// <param name="input"></param>
-        /// <param name="validInput"></param>
         /// <returns></returns>
         public Task<SuggestQueryResultModel> SuggestAsync(string input)
         {
@@ -377,6 +376,41 @@
             return null;
         }
         #endregion input parser
+
+        #region IDisposable
+        /// <summary>
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed == false)
+            {
+                if (disposing == true)
+                {
+                    // Dispose of the currently used inner disposables
+                    _SlowStuffSemaphore.Dispose();
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion IDisposable
         #endregion methods
     }
 }
