@@ -208,9 +208,9 @@ namespace AehnlichLib.Dir
         /// <param name="mergeIndex">Contains the 2 sets of objects to compare in a merged sorted list</param>
         /// <param name="entry">Contains the resulting list</param>
         /// <param name="checkIfFilesAreDifferent"></param>
-        private void DiffFiles2(Merge.MergeIndex mergeIndex,
-                                DirectoryDiffEntry entry,
-                                bool checkIfFilesAreDifferent)
+        private void DiffFiles(Merge.MergeIndex mergeIndex,
+                               DirectoryDiffEntry entry,
+                               bool checkIfFilesAreDifferent)
         {
             foreach (var item in mergeIndex.MergedEntries)
             {
@@ -272,7 +272,6 @@ namespace AehnlichLib.Dir
             }
         }
 
-
         private void Execute(DirectoryInfo directoryA,
                              DirectoryInfo directoryB,
                              DirectoryDiffEntry entry,
@@ -283,10 +282,9 @@ namespace AehnlichLib.Dir
                 DirectoryInfo[] directoriesA = directoryA.GetDirectories();
                 DirectoryInfo[] directoriesB = directoryB.GetDirectories();
 
+                // Merge them and Diff them
                 var mergeIdx = new Merge.MergeIndex(directoriesA, directoriesB, false);
                 mergeIdx.Merge();
-
-                // Diff them
                 this.DiffDirectories(mergeIdx, entry, checkIfFilesAreDifferent);
             }
 
@@ -312,7 +310,7 @@ namespace AehnlichLib.Dir
 
                 // Merge and Diff them
                 mergeIdx.Merge();
-                DiffFiles2(mergeIdx, entry, checkIfFilesAreDifferent);
+                DiffFiles(mergeIdx, entry, checkIfFilesAreDifferent);
             }
         }
 		#endregion

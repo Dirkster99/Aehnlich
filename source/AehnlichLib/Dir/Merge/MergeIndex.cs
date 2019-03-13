@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
 
     /// <summary>
@@ -43,8 +44,23 @@
         public List<MergedEntry> MergedEntries { get; protected set; }
         #endregion properties
 
+        /// <summary>
+        /// Method merges the lists in <see cref="InfosA"/> and <see cref="InfosB"/> by
+        /// - sorting (if necessary) both lists and
+        /// - comparing their items in each index and
+        /// - inserting empty items in <see cref="InfosA"/> or <seealso cref="InfosB"/>
+        /// </summary>
+        /// <returns>Resulting number of merged entries - this should always be:
+        /// max(<seealso cref="InfosA"/>.Count, <seealso cref="InfosB"/>.Count)</returns>
         public int Merge()
         {
+            // Not much to merge here
+            if (InfosA.Length == 0 && InfosB.Length == 0)
+            {
+                MergedEntries = new List<MergedEntry>();
+                return 0;
+            }
+
             if (IsSorted == false)
             {
                 if (InfosA is DirectoryInfo[] && InfosB is DirectoryInfo[])
@@ -116,6 +132,7 @@
                 }
             }
 
+            Debug.Assert(mergedEntries.Count <= (InfosA.Length + InfosB.Length));
             MergedEntries = mergedEntries;
 
             return mergedEntries.Count;
