@@ -51,6 +51,7 @@
     <Compile Include="Converters\BoolToVisibilityPropConverter.cs" />
     <Compile Include="Converters\DiffToBackgroundColorConverter.cs" />
     <Compile Include="Converters\MultiParToParConverter.cs" />
+    <Compile Include="Models\FileSystemCommands.cs" />
     <Compile Include="Models\ShowDirDiffArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />

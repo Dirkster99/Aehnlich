@@ -24,9 +24,9 @@
                           bool isSorted)
             : this()
         {
-            InfosA = infosA;
-            InfosB = infosB;
-            IsSorted = isSorted;
+            this.InfosA = infosA;
+            this.InfosB = infosB;
+            this.IsSorted = isSorted;
         }
 
         /// <summary>

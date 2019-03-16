@@ -1,7 +1,10 @@
 ﻿namespace AehnlichLib.Dir.Merge
 {
+    using System.Diagnostics;
     using System.IO;
+    using System.Linq;
 
+    [DebuggerDisplay("InfoA = {InfoA}, InfoB = {InfoB}, BothGotChildren = {BothGotChildren}")]
     internal class MergedEntry
     {
         #region ctors
@@ -9,8 +12,8 @@
                            FileSystemInfo infoB)
             : this()
         {
-            InfoA = infoA;
-            InfoB = infoB;
+            this.InfoA = infoA;
+            this.InfoB = infoB;
         }
 
         /// <summary>
@@ -26,6 +29,42 @@
         public FileSystemInfo InfoA { get; }
 
         public FileSystemInfo InfoB { get; }
+
+        public bool BothGotChildren
+        {
+            get
+            {
+                var dirA = InfoA as DirectoryInfo;
+                var dirB = InfoB as DirectoryInfo;
+
+                if (dirA == null || dirB == null)
+                    return false;
+
+                return dirA.GetDirectories().Any() && dirB.GetDirectories().Any();
+            }
+        }
+
+        /// <summary>
+        /// Gets a relative path between the given root path A and B and the sub-dir.
+        /// 
+        /// The relative path is equal for A and B if this directory occurs in A and B in the same spot.
+        /// </summary>
+        /// <param name="directoryA"></param>
+        /// <param name="directoryB"></param>
+        /// <returns></returns>
+        internal string GetBasePath(DirectoryInfo directoryA, DirectoryInfo directoryB)
+        {
+            string nameA = (this.InfoA == null ? string.Empty : this.InfoA.FullName);
+            string nameB = (this.InfoB == null ? string.Empty : this.InfoB.FullName);
+            string basePath = string.Empty;
+
+            if (string.IsNullOrEmpty(nameA) == false)
+                basePath = nameA.Substring(directoryA.FullName.Length + 1);
+            else
+                basePath = nameB.Substring(directoryB.FullName.Length + 1);
+
+            return basePath;
+        }
         #endregion properties
     }
 }

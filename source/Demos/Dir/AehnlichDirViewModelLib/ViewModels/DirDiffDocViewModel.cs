@@ -17,6 +17,7 @@
         private ICommand _BrowseUpCommand;
 
         private DirectoryDiffResults _Results;
+        private ICommand _CopyPathToClipboardCommand;
         private readonly ObservableRangeCollection<DirEntryViewModel> _DirEntries;
         private readonly Stack<DirEntryViewModel> _DirPathStack;
         #endregion fields
@@ -168,6 +169,32 @@
                 return _BrowseUpCommand;
             }
         }
+
+
+        public ICommand CopyPathToClipboardCommand
+        {
+            get
+            {
+                if (_CopyPathToClipboardCommand == null)
+                {
+                    _CopyPathToClipboardCommand = new RelayCommand<object>((p) =>
+                    {
+                        var param = (p as string);
+
+                        FileSystemCommands.CopyString(param);
+
+
+                    }, (p) =>
+                    {
+                        return (p is string);
+                    }
+
+                    );
+                }
+
+                return _CopyPathToClipboardCommand;
+            }
+        }       
         #endregion properties
 
         #region methods

@@ -79,7 +79,7 @@
             <TextBox
                 Name="LeftDirPath"
                 Grid.Column="0" Grid.Row="0"
-                Text="{Binding LeftDirPath}"
+                Text="{Binding LeftDirPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 Margin="0,0,0,3"
                 />
@@ -106,6 +106,14 @@
                 <ListBox.Resources>
                     <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter"/>
                 </ListBox.Resources>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Copy Path to Clipboard"
+                                  Command="{Binding Data.CopyPathToClipboardCommand, Source={StaticResource DocumentContextProxy}}"
+                                  CommandParameter="{Binding Path=PlacementTarget.SelectedItem.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                  />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
                 <ListBox.ItemContainerStyle>
                     <!-- Color line according to its diff status of compared line in other directory -->
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -174,7 +182,7 @@
             <TextBox
                 Name="RightDirPath"
                 Grid.Column="2" Grid.Row="0"
-                Text="{Binding RightDirPath}"
+                Text="{Binding RightDirPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 Margin="0,0,0,3"
                 />
@@ -201,6 +209,14 @@
                 <ListBox.Resources>
                     <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter"/>
                 </ListBox.Resources>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Copy Path to Clipboard"
+                                  Command="{Binding Data.CopyPathToClipboardCommand, Source={StaticResource DocumentContextProxy}}"
+                                  CommandParameter="{Binding Path=PlacementTarget.SelectedItem.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                  />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
                 <ListBox.ItemContainerStyle>
                     <!-- Color line according to its diff status of compared line in other directory -->
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">

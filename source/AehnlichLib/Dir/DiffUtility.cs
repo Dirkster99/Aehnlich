@@ -15,9 +15,16 @@ namespace AehnlichLib.Dir
 
 		public static bool AreFilesDifferent(string fileName1, string fileName2) => AreFilesDifferent(new FileInfo(fileName1), new FileInfo(fileName2));
 
+        /// <summary>
+        /// Returns false if both files are equal and true if they differ.
+        /// </summary>
+        /// <param name="info1"></param>
+        /// <param name="info2"></param>
+        /// <returns></returns>
 		public static bool AreFilesDifferent(FileInfo info1, FileInfo info2)
 		{
-			// Before we open the files, compare the sizes.  If they are different, then the files are certainly different.
+            // Before we open the files, compare the sizes.  If they are different,
+            // then the files are certainly different.
 			if (info1.Length != info2.Length)
 			{
 				return true;
