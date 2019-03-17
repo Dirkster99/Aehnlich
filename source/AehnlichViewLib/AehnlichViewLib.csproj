@@ -62,6 +62,9 @@
     <Compile Include="Controls\AvalonEditEx\TextBoxController\DiffView_TextController.cs" />
     <Compile Include="Controls\AvalonEditEx\TextBoxController\TextBoxController.cs" />
     <Compile Include="Controls\AvalonEditEx\TextBoxController\ITextBoxController.cs" />
+    <Compile Include="Controls\DiffDirView.xaml.cs">
+      <DependentUpon>DiffDirView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Utils\ExtensionMethods.cs" />
     <Compile Include="Controls\Utils\TextFormatterFactory.cs" />
     <Compile Include="Converters\NullToVisibilityPropConverter.cs" />
@@ -81,6 +84,10 @@
       <DependentUpon>DiffControl.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Controls\DiffDirView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\DiffView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

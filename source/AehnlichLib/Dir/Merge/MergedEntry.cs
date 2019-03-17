@@ -47,21 +47,22 @@
         /// <summary>
         /// Gets a relative path between the given root path A and B and the sub-dir.
         /// 
-        /// The relative path is equal for A and B if this directory occurs in A and B in the same spot.
+        /// The relative path is equal for A and B if this directory occurs in A and B
+        /// in the same relative spot.
         /// </summary>
-        /// <param name="directoryA"></param>
-        /// <param name="directoryB"></param>
+        /// <param name="fsItemA"></param>
+        /// <param name="fsItemB"></param>
         /// <returns></returns>
-        internal string GetBasePath(DirectoryInfo directoryA, DirectoryInfo directoryB)
+        internal string GetBasePath(FileSystemInfo fsItemA, FileSystemInfo fsItemB)
         {
             string nameA = (this.InfoA == null ? string.Empty : this.InfoA.FullName);
             string nameB = (this.InfoB == null ? string.Empty : this.InfoB.FullName);
             string basePath = string.Empty;
 
             if (string.IsNullOrEmpty(nameA) == false)
-                basePath = nameA.Substring(directoryA.FullName.Length + 1);
+                basePath = nameA.Substring(fsItemA.FullName.Length + 1);
             else
-                basePath = nameB.Substring(directoryB.FullName.Length + 1);
+                basePath = nameB.Substring(fsItemB.FullName.Length + 1);
 
             return basePath;
         }

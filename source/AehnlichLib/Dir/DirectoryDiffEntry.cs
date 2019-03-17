@@ -1,5 +1,7 @@
 namespace AehnlichLib.Dir
 {
+    using System;
+
     public sealed class DirectoryDiffEntry
 	{
 		#region Private Data Members
@@ -14,44 +16,77 @@ namespace AehnlichLib.Dir
         #endregion
 
         #region Constructors
-        internal DirectoryDiffEntry(string basePath, string name, bool isFile, bool inA, bool inB)
+        /// <summary>
+        /// Class constructor (with additional length parameters that are mostly useful for files).
+        /// </summary>
+        /// <param name="basePath"></param>
+        /// <param name="name"></param>
+        /// <param name="isFile"></param>
+        /// <param name="inA"></param>
+        /// <param name="inB"></param>
+        /// <param name="lastUpdateA"></param>
+        /// <param name="lastUpdateB"></param>
+        /// <param name="lengthA"></param>
+        /// <param name="lengthB"></param>
+        internal DirectoryDiffEntry(string basePath,
+                            string name,
+                            bool isFile,
+                            bool inA, bool inB,
+                            DateTime lastUpdateA, DateTime lastUpdateB,
+                            long lengthA, long lengthB)
+            : this(basePath, name, isFile, inA, inB,lastUpdateA, lastUpdateB)
+        {
+            this.LengthA = lengthA;
+            this.LengthB = lengthB;
+        }
+
+
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        /// <param name="basePath"></param>
+        /// <param name="name"></param>
+        /// <param name="isFile"></param>
+        /// <param name="inA"></param>
+        /// <param name="inB"></param>
+        /// <param name="lastUpdateA"></param>
+        /// <param name="lastUpdateB"></param>
+        internal DirectoryDiffEntry(string basePath,
+                                    string name,
+                                    bool isFile,
+                                    bool inA, bool inB,
+                                    DateTime lastUpdateA, DateTime lastUpdateB)
             : this()
         {
-            // Mark node as different if this entry either refers to A only or B only
-            this._different = (inA == true && inB == false || inA == false && inB == true);
-
             this.BasePath = basePath;
             this.Name = name;
-            this._isFile = isFile;
-            this._inA = inA;
-            this._inB = inB;
+            _isFile = isFile;
+            _inA = inA;
+            _inB = inB;
+
+            // Mark node as different if this entry either refers to A only or B only
+            _different = (inA == true && inB == false || inA == false && inB == true);
+            this.LastUpdateA = lastUpdateA;
+            this.LastUpdateB = lastUpdateB;
         }
 
-        internal DirectoryDiffEntry(string basePath, string name, bool isFile, bool inA, bool inB, bool different)
-            : this(name, isFile, inA, inB, different)
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        public DirectoryDiffEntry()
         {
-            this.BasePath = basePath;
+            this.Name = string.Empty;
+            this.BasePath = string.Empty;
+            _isFile = true;
+            _inA = true;
+            _inB = true;
+            _different = false;
         }
+        #endregion
 
-        internal DirectoryDiffEntry(string name, bool isFile, bool inA, bool inB, bool different)
-            : this()
-		{
-			this.Name = name;
-			this._isFile = isFile;
-			this._inA = inA;
-			this._inB = inB;
-			this._different = different;
-		}
+        #region Public Properties
 
-        private DirectoryDiffEntry()
-        {
-            BasePath = string.Empty;
-        }
-		#endregion
-
-		#region Public Properties
-
-		public bool Different
+        public bool Different
 		{
 			get { return this._different; }
 
@@ -75,11 +110,27 @@ namespace AehnlichLib.Dir
 
         public string Name { get; }
 
-		public object TagA { get; set; }
+        /// <summary>
+        /// Gets the last time this item has been changed through a write access.
+        /// </summary>
+		public DateTime LastUpdateA { get; }
 
-		public object TagB { get; set; }
+        /// <summary>
+        /// Gets the last time this item has been changed through a write access.
+        /// </summary>
+        public DateTime LastUpdateB { get; }
 
-		public DirectoryDiffEntryCollection Subentries
+        /// <summary>
+        /// Gets the size, in bytes, of the current file system item.
+        /// </summary>
+        public long LengthA { get; internal set; }
+
+        /// <summary>
+        /// Gets the size, in bytes, of the current file system item.
+        /// </summary>
+        public long LengthB { get; internal set; }
+
+        public DirectoryDiffEntryCollection Subentries
 		{
 			get
 			{

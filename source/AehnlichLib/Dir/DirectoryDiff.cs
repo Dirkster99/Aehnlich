@@ -119,10 +119,9 @@ namespace AehnlichLib.Dir
 		public DirectoryDiffResults Execute(DirectoryInfo directoryA, DirectoryInfo directoryB)
         {
             // Create a faux base entry to pass to Execute
-            DirectoryDiffEntry entry = new DirectoryDiffEntry(string.Empty, false, true, true, false);
+            DirectoryDiffEntry rootEntry = new DirectoryDiffEntry();
 
             // Non-recursive diff match version
-            DirectoryDiffEntry rootEntry = new DirectoryDiffEntry(string.Empty, true, true, true, false);
             var mergedRootEntry = new MergedEntry(directoryA, directoryB);
             this.BuildSubDirs(mergedRootEntry, rootEntry, directoryA, directoryB);
             this.AddFiles(rootEntry, _Filter, directoryA, directoryB);
@@ -216,36 +215,6 @@ namespace AehnlichLib.Dir
             }
         }
 
-        /// <summary>
-        /// Gets a relative path between the given root path A and B and the sub-dir.
-        /// 
-        /// The relative path is equal for A and B if this directory occurs in A and B in the same spot.
-        /// </summary>
-        /// <param name="directoryA"></param>
-        /// <param name="directoryB"></param>
-        /// <param name="current"></param>
-        /// <param name="iLevel"></param>
-        /// <returns></returns>
-        private string GetBasePath(DirectoryInfo directoryA, DirectoryInfo directoryB,
-                                   MergedEntry current, int iLevel)
-        {
-            string nameA = (current.InfoA == null ? string.Empty : current.InfoA.FullName);
-            string nameB = (current.InfoB == null ? string.Empty : current.InfoB.FullName);
-            string basePath = string.Empty;
-
-            if (iLevel == 0)
-                basePath = string.Empty;
-            else
-            {
-                if (string.IsNullOrEmpty(nameA) == false)
-                    basePath = nameA.Substring(directoryA.FullName.Length + 1);
-                else
-                    basePath = nameB.Substring(directoryB.FullName.Length + 1);
-            }
-
-            return basePath;
-        }
-
         private string GetParentPath(string path)
         {
             if (path.Contains('\\') == false)
@@ -265,12 +234,26 @@ namespace AehnlichLib.Dir
         {
             DirectoryDiffEntry newEntry = null;
 
+            DateTime lastUpdateA = default(DateTime);
+            DateTime lastUpdateB = default(DateTime);
+
+            if (item.InfoA != null)
+            {
+                lastUpdateA = item.InfoA.LastWriteTime;
+            }
+
+            if (item.InfoB != null)
+            {
+                lastUpdateB = item.InfoB.LastWriteTime;
+            }
+
             if (item.InfoA != null && item.InfoB != null)
             {
                 // The item is in both directories
                 if (this._ShowDifferent || this._ShowSame)
                 {
-                    newEntry = new DirectoryDiffEntry(basePath, item.InfoA.Name, false, true, true);
+                    newEntry = new DirectoryDiffEntry(basePath, item.InfoA.Name, false, true, true,
+                                                      lastUpdateA, lastUpdateB);
                 }
             }
             else if (item.InfoA != null && item.InfoB == null)
@@ -278,7 +261,8 @@ namespace AehnlichLib.Dir
                 // The item is only in A
                 if (this._ShowOnlyInA)
                 {
-                    newEntry = new DirectoryDiffEntry(basePath, item.InfoA.Name, false, true, false);
+                    newEntry = new DirectoryDiffEntry(basePath, item.InfoA.Name, false, true, false,
+                                                      lastUpdateA, lastUpdateB);
                 }
             }
             else
@@ -286,7 +270,8 @@ namespace AehnlichLib.Dir
                 // The item is only in B
                 if (this._ShowOnlyInB)
                 {
-                    newEntry = new DirectoryDiffEntry(basePath, item.InfoB.Name, false, false, true);
+                    newEntry = new DirectoryDiffEntry(basePath, item.InfoB.Name, false, false, true,
+                                                      lastUpdateA, lastUpdateB);
                 }
             }
 
@@ -300,7 +285,7 @@ namespace AehnlichLib.Dir
         /// and re-evaluates their status in terms of difference.
         /// 
         /// The algorithm used implements a Post-Order traversal algorithm which also allows us
-        /// to aggregate results (sub-directory is different) up-wards through the hierarchy.
+        /// to aggregate results (sub-directory is different, size) up-wards through the hierarchy.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="filter"></param>
@@ -336,6 +321,15 @@ namespace AehnlichLib.Dir
                 // -> Load files only for root directory if recursion is turned off
                 if (node.InA == true && node.InB == true && (this._Recursive || string.IsNullOrEmpty(node.BasePath)))
                 {
+                    if (node.CountSubDirectories() > 0)
+                    {
+                        foreach (var item in node.Subentries) // Aggregate size of sub-directories up
+                        {
+                            node.LengthA += item.LengthA;
+                            node.LengthB += item.LengthA;
+                        }
+                    }
+
                     string sDirA = System.IO.Path.Combine(directoryA.FullName, node.BasePath);
                     string sDirB = System.IO.Path.Combine(directoryB.FullName, node.BasePath);
 
@@ -363,7 +357,13 @@ namespace AehnlichLib.Dir
 
                     // Merge and Diff them
                     mergeIdx.Merge();
-                    DiffFiles(mergeIdx, node, checkIfFilesAreDifferent);
+                    long lengthSumA, lengthSumB;
+                    DiffFiles(mergeIdx, node, checkIfFilesAreDifferent, directoryA, directoryB,
+                              out lengthSumA, out lengthSumB);
+
+                    // Add size of files to size of this directory (which includes size of sub-directories)
+                    node.LengthA += lengthSumA;
+                    node.LengthB += lengthSumB;
 
                     node.SetDiffBasedOnChildren(_IgnoreDirectoryComparison);
                 }
@@ -391,20 +391,72 @@ namespace AehnlichLib.Dir
         /// </summary>
         /// <param name="mergeIndex">Contains the 2 sets of objects to compare in a merged sorted list</param>
         /// <param name="entry">Contains the resulting list</param>
+        /// <param name="rootPathA"></param>
+        /// <param name="rootPathB"></param>
         /// <param name="checkIfFilesAreDifferent"></param>
+        /// <param name="lengthSumA"></param>
+        /// <param name="lengthSumB"></param>
         private void DiffFiles(Merge.MergeIndex mergeIndex,
                                DirectoryDiffEntry entry,
-                               bool checkIfFilesAreDifferent)
+                               bool checkIfFilesAreDifferent,
+                               DirectoryInfo rootPathA, DirectoryInfo rootPathB,
+                               out long lengthSumA, out long lengthSumB)
         {
+            lengthSumA = 0;
+            lengthSumB = 0;
+
             foreach (var item in mergeIndex.MergedEntries)
             {
+                DateTime lastUpdateA = default(DateTime);
+                DateTime lastUpdateB = default(DateTime);
+                long lengthA = 0, lengthB = 0;
+
+                if (item.InfoA != null)
+                {
+                    lastUpdateA = item.InfoA.LastWriteTime;
+
+                    try
+                    {
+                        if (item.InfoA is FileInfo)
+                        {
+                            lengthA = ((FileInfo)item.InfoA).Length;
+                            lengthSumA += lengthA;
+                        }
+                    }
+                    catch
+                    {
+                        lengthA = 0;
+                    }
+                }
+
+                if (item.InfoB != null)
+                {
+                    lastUpdateB = item.InfoB.LastWriteTime;
+
+                    try
+                    {
+                        if (item.InfoB is FileInfo)
+                        {
+                            lengthB = ((FileInfo)item.InfoB).Length;
+                            lengthSumB += lengthB;
+                        }
+                    }
+                    catch
+                    {
+                        lengthB = 0;
+                    }
+                }
+
+                string basePath = item.GetBasePath(rootPathA, rootPathB);
+
                 if (item.InfoA != null && item.InfoB != null)
                 {
                     // The item is in both directories
                     if (_ShowDifferent || _ShowSame)
                     {
                         bool different = false;
-                        DirectoryDiffEntry newEntry = new DirectoryDiffEntry(item.InfoA.Name, true, true, true, false);
+                        var newEntry = new DirectoryDiffEntry(basePath, item.InfoA.Name, true, true, true,
+                                                              lastUpdateA, lastUpdateB, lengthA, lengthB);
 
                         if (checkIfFilesAreDifferent)
                         {
@@ -440,7 +492,8 @@ namespace AehnlichLib.Dir
                     // The item is only in A
                     if (this._ShowOnlyInA)
                     {
-                        entry.AddSubEntry(new DirectoryDiffEntry(item.InfoA.Name, true, true, false, false));
+                        entry.AddSubEntry(new DirectoryDiffEntry(basePath, item.InfoA.Name, true, true, false,
+                                                                 lastUpdateA, default(DateTime), lengthA, 0));
 
                         // Mark directory as different if files are different
                         entry.Different = true;
@@ -451,7 +504,8 @@ namespace AehnlichLib.Dir
                     // The item is only in B
                     if (this._ShowOnlyInB)
                     {
-                        entry.AddSubEntry(new DirectoryDiffEntry(item.InfoB.Name, true, false, true, false));
+                        entry.AddSubEntry(new DirectoryDiffEntry(basePath, item.InfoB.Name, true, false, true,
+                                                                 default(DateTime), lastUpdateB, 0, lengthB));
 
                         // Mark directory as different if files are different
                         entry.Different = true;

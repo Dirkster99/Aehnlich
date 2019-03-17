@@ -7,6 +7,8 @@
         xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         xmlns:conv="clr-namespace:AehnlichDirViewModelLib.Converters;assembly=AehnlichDirViewModelLib"
         xmlns:behav="clr-namespace:AehnlichDirViewModelLib.Behaviors;assembly=AehnlichDirViewModelLib"
+        
+        xmlns:ctrl="clr-namespace:AehnlichViewLib.Controls;assembly=AehnlichViewLib"
 
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -60,7 +62,7 @@
             </ToolBar>
         </Grid>
 
-        <Grid Grid.Column="0" Grid.Row="1">
+        <Grid Grid.Column="0" Grid.Row="1" Margin="0,3,0,0">
             <Grid.Resources>
                 <behav:BindingProxy x:Key="DocumentContextProxy" Data="{Binding DirDiffDoc}" />
             </Grid.Resources>
@@ -94,14 +96,14 @@
 
             <ListBox Grid.Column="0" Grid.Row="2" Name="ListA"
                      ItemsSource="{Binding DirDiffDoc.DirEntries}"
-                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                      ScrollViewer.ScrollChanged="List_ScrollChanged"
+                     SelectionChanged="List_SelectionChanged"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                      ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                      ScrollViewer.VerticalScrollBarVisibility="Auto" 
                      ScrollViewer.CanContentScroll="True"
                      behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
                      behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=ListA,Path=SelectedItem}"
-                     SelectionChanged="List_SelectionChanged"
                      >
                 <ListBox.Resources>
                     <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter"/>
@@ -165,16 +167,103 @@
                                     </Image.Source>
                                 </Image>
 
-                                <TextBlock Grid.Column="1" Text="{Binding ItemName}"
-                                                        ToolTip="{Binding ItemPathA}" />
+                                <TextBlock Grid.Column="1" Text="{Binding ItemName}">
+                                    <TextBlock.ToolTip>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="3"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Column="0" Grid.Row="0" Text="Path:" HorizontalAlignment="Right"/>
+                                            <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding ItemPathA}" HorizontalAlignment="Left"/>
+
+                                            <TextBlock Grid.Column="0" Grid.Row="1" Text="Size:" HorizontalAlignment="Right"/>
+                                            <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding ItemLengthA}" HorizontalAlignment="Left"/>
+
+                                            <TextBlock Grid.Column="0" Grid.Row="2" Text="Size:" HorizontalAlignment="Right"/>
+                                            <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding ItemLastUpdateA}" HorizontalAlignment="Left"/>
+                                        </Grid>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
                             </Grid>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
+            <!--ctrl:DiffDirView
+                Grid.Column="0" Grid.Row="3"
+                ItemsSource="{Binding DirDiffDoc.DirEntries}">
+                <ctrl:DiffDirView.Resources>
+                    <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter"/>
+                </ctrl:DiffDirView.Resources>
+                <ctrl:DiffDirView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.Resources>
+                                <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
+                                <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverterNeg"
+                                                                    TrueValue="Collapsed"
+                                                                    FalseValue="Visible"
+                                                                    />
+                            </Grid.Resources>
+
+                            <Grid Visibility="{Binding IsItemInA, Converter={StaticResource BoolToVisibilityPropConverterNeg}}"
+                                  >
+                                <TextBlock Text="" HorizontalAlignment="Stretch" Background="Transparent"/>
+                            </Grid>
+
+                            <Grid Visibility="{Binding IsItemInA, Converter={StaticResource BoolToVisibilityPropConverter}}"
+                                  >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Image Margin="3,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{x:Static conv:AssociatedIconConverter.Default}">
+                                            <MultiBinding.ConverterParameter>
+                                                <conv:IconSize >Small</conv:IconSize>
+                                            </MultiBinding.ConverterParameter>
+                                            <Binding Path="ItemPathA" />
+                                            <Binding Path="ItemName" />
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+
+                                <TextBlock Grid.Column="1" Text="{Binding ItemName}"
+                                                        ToolTip="{Binding ItemPathA}" />
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ctrl:DiffDirView.ItemTemplate>
+                <ctrl:DiffDirView.ItemContainerStyle>
+                    - Color line according to its diff status of compared line in other directory -
+                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}">
+                                    <Binding Path="IsItemInA"/>
+                                    <Binding Path="IsItemInB"/>
+                                    <Binding Path="IsItemDifferent"/>
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    </Style>
+                </ctrl:DiffDirView.ItemContainerStyle>
+            </ctrl:DiffDirView-->
+
             <GridSplitter
-                Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"
+                Grid.Column="1" Grid.Row="0" Grid.RowSpan="4"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
                 Width="6" />
@@ -267,8 +356,31 @@
                                     </Image.Source>
                                 </Image>
 
-                                <TextBlock Grid.Column="1" Text="{Binding ItemName}"
-                                                       ToolTip="{Binding ItemPathB}" />
+                                <TextBlock Grid.Column="1" Text="{Binding ItemName}">
+                                    <TextBlock.ToolTip>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="3"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Column="0" Grid.Row="0" Text="Path:" HorizontalAlignment="Right"/>
+                                            <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding ItemPathB}" HorizontalAlignment="Left"/>
+
+                                            <TextBlock Grid.Column="0" Grid.Row="1" Text="Size:" HorizontalAlignment="Right"/>
+                                            <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding ItemLengthB}" HorizontalAlignment="Left"/>
+
+                                            <TextBlock Grid.Column="0" Grid.Row="2" Text="Size:" HorizontalAlignment="Right"/>
+                                            <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding ItemLastUpdateB}" HorizontalAlignment="Left"/>
+                                        </Grid>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
                             </Grid>
                         </Grid>
                     </DataTemplate>

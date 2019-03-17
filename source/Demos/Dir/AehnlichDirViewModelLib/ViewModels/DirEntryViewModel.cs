@@ -1,6 +1,7 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
     using AehnlichLib.Dir;
+    using System;
 
     public class DirEntryViewModel : Base.ViewModelBase
     {
@@ -82,6 +83,38 @@
             get
             {
                 return _Model.IsFile;
+            }
+        }
+
+        public long ItemLengthA
+        {
+            get
+            {
+                return _Model.LengthA;
+            }
+        }
+
+        public long ItemLengthB
+        {
+            get
+            {
+                return _Model.LengthB;
+            }
+        }
+
+        public DateTime ItemLastUpdateA
+        {
+            get
+            {
+                return _Model.LastUpdateA;
+            }
+        }
+
+        public DateTime ItemLastUpdateB
+        {
+            get
+            {
+                return _Model.LastUpdateB;
             }
         }
 
