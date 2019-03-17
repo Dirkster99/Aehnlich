@@ -110,9 +110,12 @@ namespace AehnlichLib.Dir
 
         public bool SetDiffBasedOnChildren(bool ignoreDirectoryComparison)
         {
-            // Is this a directory and we want to ignore directory diffs?
+            // Is this a directory and do we want to ignore directory diffs?
             if (IsFile == false && ignoreDirectoryComparison == true)
+            {
+                Different = false;
                 return Different;
+            }
 
             if (Different == false && ignoreDirectoryComparison == false && Subentries != null)
             {
