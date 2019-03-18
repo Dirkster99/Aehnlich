@@ -1,6 +1,5 @@
 ﻿namespace AehnlichViewLib.Events
 {
-    using AehnlichViewLib.Interfaces;
     using System;
     using System.Collections.Generic;
 

@@ -1,4 +1,4 @@
-﻿namespace AehnlichDirViewModelLib.Converters
+﻿namespace AehnlichViewLib.Converters
 {
     // Copyright © Microsoft Corporation.  All Rights Reserved.
     // This code released under the terms of the 

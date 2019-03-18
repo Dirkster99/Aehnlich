@@ -1,4 +1,4 @@
-﻿namespace AehnlichDirViewModelLib.Converters
+﻿namespace AehnlichViewLib.Converters
 {
     using System;
     using System.Globalization;

@@ -3,7 +3,6 @@
     using AehnlichDirViewModelLib.Models;
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
-    using System;
     using System.Collections.Generic;
     using System.Windows.Input;
 

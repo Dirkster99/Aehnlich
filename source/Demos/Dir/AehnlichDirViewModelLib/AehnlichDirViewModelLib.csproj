@@ -45,11 +45,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviors\BindingProxy .cs" />
-    <Compile Include="Behaviors\DoubleClickItemBehavior.cs" />
-    <Compile Include="Converters\AssociatedIconConverter.cs" />
-    <Compile Include="Converters\BoolToVisibilityPropConverter.cs" />
-    <Compile Include="Converters\DiffToBackgroundColorConverter.cs" />
     <Compile Include="Converters\MultiParToParConverter.cs" />
     <Compile Include="Models\FileSystemCommands.cs" />
     <Compile Include="Models\ShowDirDiffArgs.cs" />
@@ -66,6 +61,9 @@
       <Project>{C0D1E820-EB48-4B79-BCD6-C2DE7CC367F2}</Project>
       <Name>AehnlichLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Behaviors\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

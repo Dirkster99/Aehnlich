@@ -1,4 +1,4 @@
-﻿namespace AehnlichDirViewModelLib.Behaviors
+﻿namespace AehnlichViewLib.Behaviors
 {
     using System.Windows;
     using System.Windows.Controls;

@@ -1,6 +1,7 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
     using AehnlichDirViewModelLib.ViewModels.Base;
+    using System.IO;
     using System.Windows.Input;
 
     public class AppViewModel : Base.ViewModelBase
@@ -64,6 +65,25 @@
 
                         CompareFilesCommand_Executed(leftDir, rightDir);
                         NotifyPropertyChanged(() => DirDiffDoc);
+                    },(p) =>
+                    {
+                        string leftDir;
+                        string rightDir;
+
+                        if ((p is object[]) == true)
+                        {
+                            var param = p as object[];
+
+                            if (param.Length != 2)
+                                return false;
+
+                            leftDir = param[0] as string;
+                            rightDir = param[1] as string;
+                        }
+                        else
+                            return false;
+
+                        return CompareFilesCommand_CanExecut(leftDir, rightDir);
                     });
                 }
 
@@ -125,6 +145,30 @@
             var args = new Models.ShowDirDiffArgs(leftDir, rightDir);
 
             _DirDiffDoc.ShowDifferences(args);
+        }
+
+        private bool CompareFilesCommand_CanExecut(string leftDir, string rightDir)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(leftDir) == true || string.IsNullOrEmpty(rightDir) == true)
+                    return false;
+
+                if (leftDir.Length < 2 || rightDir.Length < 2)
+                    return false;
+
+                var leftDirInfo = new DirectoryInfo(leftDir);
+                var rightDirInfo = new DirectoryInfo(rightDir);
+
+                if (leftDirInfo.Exists == false || rightDirInfo.Exists == false)
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
         #endregion methods
     }
