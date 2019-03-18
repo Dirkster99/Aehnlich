@@ -336,36 +336,39 @@ namespace AehnlichLib.Dir
                     var dirA = new DirectoryInfo(sDirA);
                     var dirB = new DirectoryInfo(sDirB);
 
-                    // Get the arrays of files and merge them into 1 list
-                    FileInfo[] filesA, filesB;
-                    Merge.MergeIndex mergeIdx = null;
-                    if (filter == null)
+                    if (dirA.Exists && true && dirB.Exists == true)
                     {
-                        filesA = dirA.GetFiles();
-                        filesB = dirB.GetFiles();
+                        // Get the arrays of files and merge them into 1 list
+                        FileInfo[] filesA, filesB;
+                        Merge.MergeIndex mergeIdx = null;
+                        if (filter == null)
+                        {
+                            filesA = dirA.GetFiles();
+                            filesB = dirB.GetFiles();
 
-                        mergeIdx = new Merge.MergeIndex(filesA, filesB, false);
+                            mergeIdx = new Merge.MergeIndex(filesA, filesB, false);
+                        }
+                        else
+                        {
+                            filesA = filter.Filter(dirA);
+                            filesB = filter.Filter(dirB);
+
+                            // Assumption: Filter generates sorted entries
+                            mergeIdx = new Merge.MergeIndex(filesA, filesB, true);
+                        }
+
+                        // Merge and Diff them
+                        mergeIdx.Merge();
+                        long lengthSumA, lengthSumB;
+                        DiffFiles(mergeIdx, node, checkIfFilesAreDifferent, directoryA, directoryB,
+                                  out lengthSumA, out lengthSumB);
+
+                        // Add size of files to size of this directory (which includes size of sub-directories)
+                        node.LengthA += lengthSumA;
+                        node.LengthB += lengthSumB;
+
+                        node.SetDiffBasedOnChildren(_IgnoreDirectoryComparison);
                     }
-                    else
-                    {
-                        filesA = filter.Filter(dirA);
-                        filesB = filter.Filter(dirB);
-
-                        // Assumption: Filter generates sorted entries
-                        mergeIdx = new Merge.MergeIndex(filesA, filesB, true);
-                    }
-
-                    // Merge and Diff them
-                    mergeIdx.Merge();
-                    long lengthSumA, lengthSumB;
-                    DiffFiles(mergeIdx, node, checkIfFilesAreDifferent, directoryA, directoryB,
-                              out lengthSumA, out lengthSumB);
-
-                    // Add size of files to size of this directory (which includes size of sub-directories)
-                    node.LengthA += lengthSumA;
-                    node.LengthB += lengthSumB;
-
-                    node.SetDiffBasedOnChildren(_IgnoreDirectoryComparison);
                 }
 
                 toVisit.Pop();

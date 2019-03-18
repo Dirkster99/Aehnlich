@@ -94,7 +94,7 @@
                 Margin="0,3,0,3"
                 />
 
-            <ListBox Grid.Column="0" Grid.Row="2" Name="ListA"
+            <!--ListBox Grid.Column="0" Grid.Row="2" Name="ListA"
                      ItemsSource="{Binding DirDiffDoc.DirEntries}"
                      ScrollViewer.ScrollChanged="List_ScrollChanged"
                      SelectionChanged="List_SelectionChanged"
@@ -117,7 +117,7 @@
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.ItemContainerStyle>
-                    <!-- Color line according to its diff status of compared line in other directory -->
+                    - Color line according to its diff status of compared line in other directory -
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                         <Setter Property="Background">
                             <Setter.Value>
@@ -162,7 +162,6 @@
                                             </MultiBinding.ConverterParameter>
                                             <Binding Path="ItemPathA" />
                                             <Binding Path="ItemName" />
-                                            <!--Binding Path="IconResourceId" /-->
                                         </MultiBinding>
                                     </Image.Source>
                                 </Image>
@@ -196,7 +195,138 @@
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-            </ListBox>
+            </ListBox-->
+
+            <DataGrid Grid.Column="0" Grid.Row="2" Name="GridA"
+                      ItemsSource="{Binding DirDiffDoc.DirEntries}"
+                      ScrollViewer.ScrollChanged="Grid_ScrollChanged"
+                      SelectionChanged="Grid_SelectionChanged"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                      ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                      ScrollViewer.CanContentScroll="True"
+                      AutoGenerateColumns="False"
+                      GridLinesVisibility="None"
+                      Background="Transparent"
+                      ColumnWidth="*"
+                      behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
+                      behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=GridA,Path=SelectedItem}"
+            >
+                <DataGrid.Resources>
+                    <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter"/>
+                    <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"
+                                                        FalseValue="Hidden"
+                                                        TrueValue="Visible"/>
+                </DataGrid.Resources>
+                
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}">
+                                    <Binding Path="IsItemInA"/>
+                                    <Binding Path="IsItemInB"/>
+                                    <Binding Path="IsItemDifferent"/>
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Header="Open Containing Folder"
+                                              IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                              Command="{Binding Data.OpenContainingFolderCommand, Source={StaticResource DocumentContextProxy}}"
+                                              CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                    />
+                                    
+                                    <MenuItem Header="Copy Path to Clipboard"
+                                              IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                              Command="{Binding Data.CopyPathToClipboardCommand, Source={StaticResource DocumentContextProxy}}"
+                                              CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                    />
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.RowStyle>
+
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="*" Header="Name">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Visibility="{Binding IsItemInA,Converter={StaticResource BoolToVisibilityPropConverter}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Margin="3,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{x:Static conv:AssociatedIconConverter.Default}">
+                                                <MultiBinding.ConverterParameter>
+                                                    <conv:IconSize >Small</conv:IconSize>
+                                                </MultiBinding.ConverterParameter>
+                                                <Binding Path="ItemPathA" />
+                                                <Binding Path="ItemName" />
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+
+                                    <TextBlock Grid.Column="1" Text="{Binding ItemName}">
+                                        <TextBlock.ToolTip>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="3"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Column="0" Grid.Row="0" Text="Path:" HorizontalAlignment="Right"/>
+                                                <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding ItemPathA}" HorizontalAlignment="Left"/>
+
+                                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Size:" HorizontalAlignment="Right"/>
+                                                <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding ItemLengthA}" HorizontalAlignment="Left"/>
+
+                                                <TextBlock Grid.Column="0" Grid.Row="2" Text="Size:" HorizontalAlignment="Right"/>
+                                                <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding ItemLastUpdateA}" HorizontalAlignment="Left"/>
+                                            </Grid>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="Auto" Header="Size">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    Visibility="{Binding IsItemInA,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                                    Text="{Binding ItemLengthA}"
+                                           HorizontalAlignment="Right"
+                                           Margin="3,0,0,0"
+                                />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="Auto" Header="Modified">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    Visibility="{Binding IsItemInA,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                                    Text="{Binding ItemLastUpdateA}"
+                                    HorizontalAlignment="Right"
+                                    Margin="3,0,0,0"
+                                />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
             <!--ctrl:DiffDirView
                 Grid.Column="0" Grid.Row="3"
@@ -284,7 +414,7 @@
                 Margin="0,3,0,3"
                 />
 
-            <ListBox Grid.Column="2" Grid.Row="2" Name="ListB"
+            <!--ListBox Grid.Column="2" Grid.Row="2" Name="ListB"
                      ItemsSource="{Binding DirDiffDoc.DirEntries}"
                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                      ScrollViewer.ScrollChanged="List_ScrollChanged"
@@ -307,7 +437,7 @@
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.ItemContainerStyle>
-                    <!-- Color line according to its diff status of compared line in other directory -->
+                    - Color line according to its diff status of compared line in other directory -
                     <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                         <Setter Property="Background">
                             <Setter.Value>
@@ -351,7 +481,6 @@
                                             </MultiBinding.ConverterParameter>
                                             <Binding Path="ItemPathB" />
                                             <Binding Path="ItemName" />
-                                            <!--Binding Path="IconResourceId" /-->
                                         </MultiBinding>
                                     </Image.Source>
                                 </Image>
@@ -385,7 +514,137 @@
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-            </ListBox>
+            </ListBox-->
+
+            <DataGrid Grid.Column="2" Grid.Row="2" Name="GridB"
+                      ItemsSource="{Binding DirDiffDoc.DirEntries}"
+                      ScrollViewer.ScrollChanged="Grid_ScrollChanged"
+                      SelectionChanged="Grid_SelectionChanged"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                      ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                      ScrollViewer.CanContentScroll="True"
+                      AutoGenerateColumns="False"
+                      GridLinesVisibility="None"
+                      Background="Transparent"
+                      ColumnWidth="*"
+                      behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
+                      behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=GridB,Path=SelectedItem}"
+            >
+                <DataGrid.Resources>
+                    <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter"/>
+                    <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"
+                                                        FalseValue="Hidden"
+                                                        TrueValue="Visible"/>
+                </DataGrid.Resources>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}">
+                                    <Binding Path="IsItemInA"/>
+                                    <Binding Path="IsItemInB"/>
+                                    <Binding Path="IsItemDifferent"/>
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Header="Open Containing Folder"
+                                              IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                              Command="{Binding Data.OpenContainingFolderCommand, Source={StaticResource DocumentContextProxy}}"
+                                              CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                    />
+
+                                    <MenuItem Header="Copy Path to Clipboard"
+                                              IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                              Command="{Binding Data.CopyPathToClipboardCommand, Source={StaticResource DocumentContextProxy}}"
+                                              CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                    />
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.RowStyle>
+
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="*" Header="Name">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Visibility="{Binding IsItemInB,Converter={StaticResource BoolToVisibilityPropConverter}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Margin="3,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{x:Static conv:AssociatedIconConverter.Default}">
+                                                <MultiBinding.ConverterParameter>
+                                                    <conv:IconSize >Small</conv:IconSize>
+                                                </MultiBinding.ConverterParameter>
+                                                <Binding Path="ItemPathB" />
+                                                <Binding Path="ItemName" />
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+
+                                    <TextBlock Grid.Column="1" Text="{Binding ItemName}">
+                                        <TextBlock.ToolTip>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="3"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Column="0" Grid.Row="0" Text="Path:" HorizontalAlignment="Right"/>
+                                                <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding ItemPathB}" HorizontalAlignment="Left"/>
+
+                                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Size:" HorizontalAlignment="Right"/>
+                                                <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding ItemLengthB}" HorizontalAlignment="Left"/>
+
+                                                <TextBlock Grid.Column="0" Grid.Row="2" Text="Size:" HorizontalAlignment="Right"/>
+                                                <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding ItemLastUpdateB}" HorizontalAlignment="Left"/>
+                                            </Grid>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="Auto" Header="Size">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    Visibility="{Binding IsItemInB,Converter={StaticResource BoolToVisibilityPropConverter}}"                                    
+                                    Text="{Binding ItemLengthB}"
+                                           HorizontalAlignment="Right"
+                                           Margin="3,0,0,0"
+                                />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="Auto" Header="Modified">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    Visibility="{Binding IsItemInB,Converter={StaticResource BoolToVisibilityPropConverter}}"                                    
+                                    Text="{Binding ItemLastUpdateB}"
+                                    HorizontalAlignment="Right"
+                                    Margin="3,0,0,0"
+                                />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
         </Grid>
     </Grid>

@@ -10,8 +10,10 @@
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ScrollViewer _leftScrollViewer;
-        private ScrollViewer _rightScrollViewer;
+////        private ScrollViewer _leftScrollViewer;
+////        private ScrollViewer _rightScrollViewer;
+        private ScrollViewer _leftGridScrollViewer;
+        private ScrollViewer _rightGridScrollViewer;
 
         public MainWindow()
         {
@@ -29,8 +31,11 @@
             string leftDirPath = Properties.Settings.Default.LeftDirPath;
             string rightDirPath = Properties.Settings.Default.RightDirPath;
 
-            _leftScrollViewer = GetScrollViewer(ListA);
-            _rightScrollViewer = GetScrollViewer(ListB);
+////            _leftScrollViewer = GetScrollViewer(ListA);
+////            _rightScrollViewer = GetScrollViewer(ListB);
+
+            _leftGridScrollViewer = GetScrollViewer(GridA);
+            _rightGridScrollViewer = GetScrollViewer(GridB);
 
             // Construct AppViewModel and attach to datacontext
             var appVM = new AppViewModel();
@@ -52,60 +57,60 @@
             Properties.Settings.Default.Save();
         }
 
-        /// <summary>
-        /// Is invoked by the ListBox selection changed event handler
-        /// of the right or left ListBox A or B.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void List_SelectionChanged(object sender,
-                                            System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            ListBox listboxDestinationToSync = null;
-            ListBox listboxSourceToSync = null;
-
-            if (sender == ListA)
-            {
-                listboxDestinationToSync = ListB;
-                listboxSourceToSync = ListA;
-            }
-            else
-            {
-                if (sender == ListB)
-                {
-                    listboxDestinationToSync = ListA;
-                    listboxSourceToSync = ListB;
-                }
-            }
-
-            // Not sure who's been sending this so we can't process it
-            if (listboxDestinationToSync == null || listboxSourceToSync == null)
-                return;
-
-            if (listboxDestinationToSync.SelectedIndex != listboxSourceToSync.SelectedIndex)
-            {
-                listboxDestinationToSync.SelectedIndex = listboxSourceToSync.SelectedIndex;
-            }
-        }
-
-        private void List_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (_leftScrollViewer == null && _rightScrollViewer == null)
-                return;
-
-            ScrollViewer scrollToSync = null;
-
-            // Determine the scroller that has send the event so we know the scroller to sync
-            if (sender == ListB)
-                scrollToSync = _leftScrollViewer;
-            else
-                scrollToSync = _rightScrollViewer;
-
-            var src_scrollToSync = sender as ScrollViewer;  // Sync scrollviewers on both side of DiffControl
-
-            scrollToSync.ScrollToVerticalOffset(e.VerticalOffset);
-            scrollToSync.ScrollToHorizontalOffset(e.HorizontalOffset);
-        }
+////        /// <summary>
+////        /// Is invoked by the ListBox selection changed event handler
+////        /// of the right or left ListBox A or B.
+////        /// </summary>
+////        /// <param name="sender"></param>
+////        /// <param name="e"></param>
+////        private void List_SelectionChanged(object sender,
+////                                            System.Windows.Controls.SelectionChangedEventArgs e)
+////        {
+////            ListBox listboxDestinationToSync = null;
+////            ListBox listboxSourceToSync = null;
+////
+////            if (sender == ListA)
+////            {
+////                listboxDestinationToSync = ListB;
+////                listboxSourceToSync = ListA;
+////            }
+////            else
+////            {
+////                if (sender == ListB)
+////                {
+////                    listboxDestinationToSync = ListA;
+////                    listboxSourceToSync = ListB;
+////                }
+////            }
+////
+////            // Not sure who's been sending this so we can't process it
+////            if (listboxDestinationToSync == null || listboxSourceToSync == null)
+////                return;
+////
+////            if (listboxDestinationToSync.SelectedIndex != listboxSourceToSync.SelectedIndex)
+////            {
+////                listboxDestinationToSync.SelectedIndex = listboxSourceToSync.SelectedIndex;
+////            }
+////        }
+////
+////        private void List_ScrollChanged(object sender, ScrollChangedEventArgs e)
+////        {
+////            if (_leftScrollViewer == null && _rightScrollViewer == null)
+////                return;
+////
+////            ScrollViewer scrollToSync = null;
+////
+////            // Determine the scroller that has send the event so we know the scroller to sync
+////            if (sender == ListB)
+////                scrollToSync = _leftScrollViewer;
+////            else
+////                scrollToSync = _rightScrollViewer;
+////
+////            var src_scrollToSync = sender as ScrollViewer;  // Sync scrollviewers on both side of DiffControl
+////
+////            scrollToSync.ScrollToVerticalOffset(e.VerticalOffset);
+////            scrollToSync.ScrollToHorizontalOffset(e.HorizontalOffset);
+////        }
 
         private static ScrollViewer GetScrollViewer(UIElement element)
         {
@@ -127,6 +132,54 @@
             }
 
             return retour;
+        }
+
+        private void Grid_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (_leftGridScrollViewer == null && _rightGridScrollViewer == null)
+                return;
+
+            ScrollViewer scrollToSync = null;
+
+            // Determine the scroller that has send the event so we know the scroller to sync
+            if (sender == GridB)
+                scrollToSync = _leftGridScrollViewer;
+            else
+                scrollToSync = _rightGridScrollViewer;
+
+            var src_scrollToSync = sender as ScrollViewer;  // Sync scrollviewers on both side of DiffControl
+
+            scrollToSync.ScrollToVerticalOffset(e.VerticalOffset);
+            scrollToSync.ScrollToHorizontalOffset(e.HorizontalOffset);
+        }
+
+        private void Grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataGrid gridDestinationToSync = null;
+            DataGrid gridSourceToSync = null;
+
+            if (sender == GridA)
+            {
+                gridDestinationToSync = GridB;
+                gridSourceToSync = GridA;
+            }
+            else
+            {
+                if (sender == GridB)
+                {
+                    gridDestinationToSync = GridA;
+                    gridSourceToSync = GridB;
+                }
+            }
+
+            // Not sure who's been sending this so we can't process it
+            if (gridDestinationToSync == null || gridSourceToSync == null)
+                return;
+
+            if (gridDestinationToSync.SelectedIndex != gridSourceToSync.SelectedIndex)
+            {
+                gridDestinationToSync.SelectedIndex = gridSourceToSync.SelectedIndex;
+            }
         }
     }
 }

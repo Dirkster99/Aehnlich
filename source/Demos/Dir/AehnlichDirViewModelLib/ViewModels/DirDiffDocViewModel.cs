@@ -18,6 +18,8 @@
 
         private DirectoryDiffResults _Results;
         private ICommand _CopyPathToClipboardCommand;
+        private ICommand _OpenContainingFolderCommand;
+
         private readonly ObservableRangeCollection<DirEntryViewModel> _DirEntries;
         private readonly Stack<DirEntryViewModel> _DirPathStack;
         #endregion fields
@@ -170,7 +172,6 @@
             }
         }
 
-
         public ICommand CopyPathToClipboardCommand
         {
             get
@@ -194,7 +195,31 @@
 
                 return _CopyPathToClipboardCommand;
             }
-        }       
+        }
+
+        public ICommand OpenContainingFolderCommand
+        {
+            get
+            {
+                if (_OpenContainingFolderCommand == null)
+                {
+                    _OpenContainingFolderCommand = new RelayCommand<object>((p) =>
+                    {
+                        var param = (p as string);
+
+                        FileSystemCommands.OpenContainingFolder(param);
+
+                    }, (p) =>
+                    {
+                        return (p is string);
+                    }
+
+                    );
+                }
+
+                return _OpenContainingFolderCommand;
+            }
+        }
         #endregion properties
 
         #region methods
@@ -256,6 +281,10 @@
                                                             string currentPathB)
         {
             List<DirEntryViewModel> dirs = new List<DirEntryViewModel>();
+
+            if (entries == null)
+                return dirs;
+
             foreach (var item in entries)
             {
                 dirs.Add(new DirEntryViewModel(item, currentPathA, currentPathB));

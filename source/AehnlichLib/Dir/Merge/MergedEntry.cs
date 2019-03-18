@@ -40,7 +40,18 @@
                 if (dirA == null || dirB == null)
                     return false;
 
-                return dirA.GetDirectories().Any() && dirB.GetDirectories().Any();
+                try
+                {
+                    if (dirA.Exists == false || dirB.Exists == false)
+                        return false;
+
+                    return dirA.GetDirectories().Any() && dirB.GetDirectories().Any();
+                }
+                catch
+                {
+                    // GetDirectories() can throw exceptions
+                    return false;
+                }
             }
         }
 
