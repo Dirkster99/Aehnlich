@@ -166,9 +166,6 @@ namespace AehnlichLib.Dir
                 var queueItem = queue.Dequeue();
                 int iLevel = queueItem.Item1;
                 MergedEntry current = queueItem.Item2;
-
-                string nameA = (current.InfoA == null ? string.Empty : current.InfoA.Name);
-                string nameB = (current.InfoB == null ? string.Empty : current.InfoB.Name);
                 string basePath = string.Empty;
 
                 if (iLevel == 0)
@@ -179,7 +176,7 @@ namespace AehnlichLib.Dir
                     string parentPath = GetParentPath(basePath);
 
                     DirectoryDiffEntry parentItem;
-                    if(index.TryGetValue(parentPath, out parentItem) == true)
+                    if (index.TryGetValue(parentPath, out parentItem) == true)
                     {
                         var entry = ConvertDirEntry(basePath, current);
                         if (entry != null)
@@ -191,19 +188,29 @@ namespace AehnlichLib.Dir
                     }
                     else
                     {
-                        // parentPath should always been pushed before and be available here
-                        // Should never get here - There is something horribly going wrong if we got here
+                        // parentPath should always been pushed before since we do LEvel Order Traversal
+                        // So, it must be available here - something is horribly wrong if we ever got here
                         throw new NotSupportedException(string.Format("ParentPath '{0}', BasePath '{1}'"
                                                                     , parentPath, basePath));
                     }
                 }
 
-                // Process the node if both sub-directories have children
-                if (current.BothGotChildren && (_Recursive || iLevel == 0))
+                if (_Recursive || iLevel == 0)
                 {
+                    // Process the node if both sub-directories have children
+                    DirectoryInfo[] directoriesA = null;
+                    DirectoryInfo[] directoriesB = null;
+
                     // Get the arrays of subdirectories and merge them into 1 list
-                    DirectoryInfo[] directoriesA = ((DirectoryInfo)current.InfoA).GetDirectories();
-                    DirectoryInfo[] directoriesB = ((DirectoryInfo)current.InfoB).GetDirectories();
+                    if (current.InfoA != null)
+                        directoriesA = ((DirectoryInfo)current.InfoA).GetDirectories();
+                    else
+                        directoriesA = new DirectoryInfo[] { };
+
+                    if (current.InfoB != null)
+                        directoriesB = ((DirectoryInfo)current.InfoB).GetDirectories();
+                    else
+                        directoriesB = new DirectoryInfo[] { };
 
                     // Merge them and Diff them
                     var mergeIdx = new Merge.MergeIndex(directoriesA, directoriesB, false);
@@ -215,6 +222,13 @@ namespace AehnlichLib.Dir
             }
         }
 
+
+        /// <summary>
+        /// Gets the parent directory of a given directory based
+        /// on the last observed delimiter (if any).
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns>Parent directory or empty string if given path contains not delimiter.</returns>
         private string GetParentPath(string path)
         {
             if (path.Contains('\\') == false)
@@ -317,41 +331,86 @@ namespace AehnlichLib.Dir
                     visitedAncestors.Pop();
                 }
 
-                // Load files only if both directories are available and recursion is on
+                // Load files only if either directory is available and recursion is on
                 // -> Load files only for root directory if recursion is turned off
-                if (node.InA == true && node.InB == true && (this._Recursive || string.IsNullOrEmpty(node.BasePath)))
+                if ((node.InA == true || node.InB == true) && (this._Recursive || string.IsNullOrEmpty(node.BasePath)))
                 {
                     if (node.CountSubDirectories() > 0)
                     {
                         foreach (var item in node.Subentries) // Aggregate size of sub-directories up
                         {
-                            node.LengthA += item.LengthA;
-                            node.LengthB += item.LengthA;
+                            if (node.InA == true)
+                                node.LengthA += item.LengthA;
+
+                            if (node.InB == true)
+                                node.LengthB += item.LengthB;
                         }
                     }
 
-                    string sDirA = System.IO.Path.Combine(directoryA.FullName, node.BasePath);
-                    string sDirB = System.IO.Path.Combine(directoryB.FullName, node.BasePath);
+                    string sDirA, sDirB;
+                    DirectoryInfo dirA = null, dirB = null;
+                    bool dirA_Exists = false;
+                    bool dirB_Exists = false;
 
-                    var dirA = new DirectoryInfo(sDirA);
-                    var dirB = new DirectoryInfo(sDirB);
+                    try
+                    {
+                        if (node.InA)
+                        {
+                            sDirA = System.IO.Path.Combine(directoryA.FullName, node.BasePath);
+                            dirA = new DirectoryInfo(sDirA);
+                            dirA_Exists = dirA.Exists;
+                        }
+                    }
+                    catch // System.IO may throw on non-existing, authorization issues
+                    {    // So, we catch it it and ignore these for now
+                        dirA_Exists = false;
+                    }
 
-                    if (dirA.Exists && true && dirB.Exists == true)
+                    try
+                    {
+                        if (node.InB)
+                        {
+                            sDirB = System.IO.Path.Combine(directoryB.FullName, node.BasePath);
+                            dirB = new DirectoryInfo(sDirB);
+                            dirB_Exists = dirB.Exists;
+                        }
+                    }
+                    catch // System.IO may throw on non-existing, authorization issues
+                    {    // So, we catch it it and ignore these for now
+                        dirB_Exists = false;
+                    }
+
+
+                    if (dirA_Exists == true || dirB_Exists == true)
                     {
                         // Get the arrays of files and merge them into 1 list
                         FileInfo[] filesA, filesB;
                         Merge.MergeIndex mergeIdx = null;
                         if (filter == null)
                         {
-                            filesA = dirA.GetFiles();
-                            filesB = dirB.GetFiles();
+                            if (dirA_Exists)
+                                filesA = dirA.GetFiles();
+                            else
+                                filesA = new FileInfo[] { };
+
+                            if (dirB_Exists)
+                                filesB = dirB.GetFiles();
+                            else
+                                filesB = new FileInfo[] { };
 
                             mergeIdx = new Merge.MergeIndex(filesA, filesB, false);
                         }
                         else
                         {
-                            filesA = filter.Filter(dirA);
-                            filesB = filter.Filter(dirB);
+                            if (dirA_Exists)
+                                filesA = filter.Filter(dirA);
+                            else
+                                filesA = new FileInfo[] { };
+
+                            if (dirB_Exists)
+                                filesB = filter.Filter(dirB);
+                            else
+                                filesB = new FileInfo[] { };
 
                             // Assumption: Filter generates sorted entries
                             mergeIdx = new Merge.MergeIndex(filesA, filesB, true);
@@ -364,8 +423,15 @@ namespace AehnlichLib.Dir
                                   out lengthSumA, out lengthSumB);
 
                         // Add size of files to size of this directory (which includes size of sub-directories)
-                        node.LengthA += lengthSumA;
-                        node.LengthB += lengthSumB;
+                        if (dirA_Exists)
+                        {
+                            node.LengthA += lengthSumA;
+                        }
+
+                        if (dirB_Exists)
+                        {
+                            node.LengthB += lengthSumB;
+                        }
 
                         node.SetDiffBasedOnChildren(_IgnoreDirectoryComparison);
                     }

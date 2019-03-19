@@ -3,14 +3,14 @@ namespace AehnlichLib.Dir
     using System;
 
     public sealed class DirectoryDiffEntry
-	{
-		#region Private Data Members
+    {
+        #region Private Data Members
 
-		private bool _different;
-		private readonly bool _inA;
-		private readonly bool _inB;
-		private readonly bool _isFile;
-		private string _error;
+        private bool _different;
+        private readonly bool _inA;
+        private readonly bool _inB;
+        private readonly bool _isFile;
+        private string _error;
         private DirectoryDiffEntryCollection subentries;
 
         #endregion
@@ -34,7 +34,7 @@ namespace AehnlichLib.Dir
                             bool inA, bool inB,
                             DateTime lastUpdateA, DateTime lastUpdateB,
                             long lengthA, long lengthB)
-            : this(basePath, name, isFile, inA, inB,lastUpdateA, lastUpdateB)
+            : this(basePath, name, isFile, inA, inB, lastUpdateA, lastUpdateB)
         {
             this.LengthA = lengthA;
             this.LengthB = lengthB;
@@ -87,24 +87,24 @@ namespace AehnlichLib.Dir
         #region Public Properties
 
         public bool Different
-		{
-			get { return this._different; }
+        {
+            get { return this._different; }
 
-			internal set { this._different = value; }
-		}
+            internal set { this._different = value; }
+        }
 
-		public string Error
-		{
-			get { return this._error; }
+        public string Error
+        {
+            get { return this._error; }
 
-			internal set { this._error = value; }
-		}
+            internal set { this._error = value; }
+        }
 
-		public bool InA => this._inA;
+        public bool InA => this._inA;
 
-		public bool InB => this._inB;
+        public bool InB => this._inB;
 
-		public bool IsFile => this._isFile;
+        public bool IsFile => this._isFile;
 
         public string BasePath { get; }
 
@@ -131,17 +131,17 @@ namespace AehnlichLib.Dir
         public long LengthB { get; internal set; }
 
         public DirectoryDiffEntryCollection Subentries
-		{
-			get
-			{
-				if (this.subentries == null && !this._isFile)
-				{
-					this.subentries = new DirectoryDiffEntryCollection();
-				}
+        {
+            get
+            {
+                if (this.subentries == null && !this._isFile)
+                {
+                    this.subentries = new DirectoryDiffEntryCollection();
+                }
 
-				return this.subentries;
-			}
-		}
+                return this.subentries;
+            }
+        }
 
         #endregion properties
 
@@ -168,6 +168,17 @@ namespace AehnlichLib.Dir
                 return Different;
             }
 
+            // Items are already different so we need no further processing since difference is already determined
+            if (Different == true)
+                return Different;
+
+            if ((InA == true && InB == false) || (InA == false && InB == true))
+            {
+                Different = true;
+                return Different;
+            }
+
+            // This entry is different if one of its children is different
             if (Different == false && ignoreDirectoryComparison == false && Subentries != null)
             {
                 for (int i = 0; i < Subentries.Count; i++)

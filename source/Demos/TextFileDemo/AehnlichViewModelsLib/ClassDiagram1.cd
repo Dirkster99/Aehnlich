@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AehnlichViewModelsLib.Converters.BoolToVisibilityPropConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="6.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgQAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Converters\BoolToVisibilityPropConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AehnlichViewModelsLib.Converters.MultiParToParConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Converters\MultiParToParConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AehnlichViewModelsLib.Events.CaretPositionChangedEvent" Collapsed="true">
+    <Position X="19.25" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Events\CaretPositionChangedEvent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AehnlichViewModelsLib.Models.FileSystemCommands" Collapsed="true">
+    <Position X="19.25" Y="7.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAABAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\FileSystemCommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AehnlichViewModelsLib.Models.Options">
+    <Position X="0.5" Y="16.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BIgAwKICJABBAwAAFSCIQIQAAohAAIgABBAcAEQRAEQ=</HashCode>
+      <FileName>Models\Options.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AehnlichViewModelsLib.Models.ShowDiffArgs">
+    <Position X="5" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAIAEAAAA=</HashCode>
+      <FileName>Models\ShowDiffArgs.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DiffType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AehnlichViewModelsLib.ViewModels.AppViewModel">
+    <Position X="0.5" Y="4.5" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>gIACAAAAIAAAACcQAIAASAAAAgAAAYCAKAJAABAACAA=</HashCode>
+      <FileName>ViewModels\AppViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DiffCtrl" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AehnlichViewModelsLib.ViewModels.DiffDocViewModel">
+    <Position X="4.75" Y="4.5" Width="2.25" />
+    <AssociationLine Name="ViewA" Type="AehnlichViewModelsLib.ViewModels.DiffSideViewModel" FixedToPoint="true">
+      <Path>
+        <Point X="7" Y="7.05" />
+        <Point X="8" Y="7.05" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ViewB" Type="AehnlichViewModelsLib.ViewModels.DiffSideViewModel" FixedToPoint="true">
+      <Path>
+        <Point X="7" Y="8.101" />
+        <Point X="8" Y="8.101" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IIoAAQEDCYBAAGgHQWABAQJQEAJIgAQYgADAABAAEio=</HashCode>
+      <FileName>ViewModels\DiffDocViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_currentDiffArgs" />
+      <Property Name="ViewA" />
+      <Property Name="ViewB" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AehnlichViewModelsLib.ViewModels.DiffLineViewModel">
+    <Position X="10.75" Y="4.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AARAAgAGAgAAAEwAAJBAAAAAAAACAAAAUAAACAAAAIA=</HashCode>
+      <FileName>ViewModels\LineInfo\DiffLineViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_Model" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AehnlichViewModelsLib.ViewModels.DiffSideViewModel">
+    <Position X="8" Y="4.5" Width="2" />
+    <AssociationLine Name="ChangeDiffOptions" Type="AehnlichViewModelsLib.Enums.ChangeDiffOptions" FixedFromPoint="true">
+      <Path>
+        <Point X="8.625" Y="13.559" />
+        <Point X="8.625" Y="14.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.062" Y="0.2" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAEJIBBRBkACAogAAgJABKQAQAAAAgRCDiABgAhBAAg=</HashCode>
+      <FileName>ViewModels\DiffSideViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_position" />
+      <Property Name="ChangeDiffOptions" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AehnlichViewModelsLib.ViewModels.ObservableRangeCollection&lt;T&gt;">
+    <Position X="19.25" Y="9.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAIAEACA=</HashCode>
+      <FileName>ViewModels\ObservableRangeCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AehnlichViewModelsLib.ViewModels.Base.RelayCommand&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="8.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAACAAQAAEAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Base\RelayCommand.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AehnlichViewModelsLib.ViewModels.LineInfo.LinesFactory">
+    <Position X="10.75" Y="9.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="AehnlichViewModelsLib.ViewModels.LineInfo.LinesFactory.DiffLines" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModels\LineInfo\LinesFactory.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAADBAAAABAIAAAAAAAAAAAAAAAAKAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\LineInfo\LinesFactory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="LinesA" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AehnlichViewModelsLib.ViewModels.LineInfo.DiffViewLine">
+    <Position X="14.75" Y="4.5" Width="3" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="AehnlichViewModelsLib.ViewModels.LineInfo.DiffViewLine.CharList" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModels\LineInfo\DiffViewLine.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAQEgAAEIAAAAAAEAAEQAIEAAACAAAAAA=</HashCode>
+      <FileName>ViewModels\LineInfo\DiffViewLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="AehnlichViewModelsLib.ViewModels.DiffViewPosition">
+    <Position X="11" Y="12.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAgALAAgAAAAAAAIAAAAAAAAABByA=</HashCode>
+      <FileName>ViewModels\DiffViewPosition.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="AehnlichViewModelsLib.Interfaces.ISettingsNode">
+    <Position X="3.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAABAAIAAQAgAAAAAAAAAAABAAQAAAAAAAQAAQAAE=</HashCode>
+      <FileName>Interfaces\ISettingsNode.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="AehnlichViewModelsLib.Interfaces.IDiffLines">
+    <Position X="14" Y="9.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgQAAAAAAAAAAAAAAAABCAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IDiffLines.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="AehnlichViewModelsLib.Enums.ChangeDiffOptions">
+    <Position X="7.75" Y="14.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAEEAAAQ=</HashCode>
+      <FileName>Enums\ChangeDiffOptions.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AehnlichViewModelsLib.Enums.CompareType">
+    <Position X="3.5" Y="20.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCAAAAA=</HashCode>
+      <FileName>Enums\CompareType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AehnlichViewModelsLib.Enums.DiffType">
+    <Position X="8" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAEAAAAAAAACAAAABA=</HashCode>
+      <FileName>Enums\DiffType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AehnlichViewModelsLib.Events.CaretChangeType">
+    <Position X="6.75" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAACAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Events\CaretPositionChangedEvent.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

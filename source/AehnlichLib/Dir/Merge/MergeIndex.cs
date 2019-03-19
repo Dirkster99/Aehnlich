@@ -66,6 +66,7 @@
 
             if (IsSorted == false)
             {
+                // Are we sort/merging directories or files?
                 if (InfosA is DirectoryInfo[] && InfosB is DirectoryInfo[])
                 {
                     // Sort them
@@ -90,6 +91,7 @@
             int countA = InfosA.Length;
             int countB = InfosB.Length;
 
+            // Go through each line and align (merge) it with the other
             while (indexA < countA && indexB < countB)
             {
                 FileSystemInfo infoA = InfosA[indexA];
@@ -105,15 +107,13 @@
                 }
                 else if (compareResult < 0)
                 {
-                    // iCompareResult < 0
-                    // The item is only in A
+                    // iCompareResult < 0 -> the item is only in A
                     mergedEntries.Add(new MergedEntry(infoA, null));
                     indexA++;
                 }
                 else
                 {
-                    // iCompareResult > 0
-                    // The item is only in B
+                    // iCompareResult > 0 -> The item is only in B
                     mergedEntries.Add(new MergedEntry(null, infoB));
                     indexB++;
                 }

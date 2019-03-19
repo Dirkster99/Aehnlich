@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
-    using AehnlichLibViewModels.Models;
+    using AehnlichViewModelsLib.Models;
     using AehnlichViewLib.Enums;
     using ICSharpCode.AvalonEdit.Rendering;
     using Interfaces;

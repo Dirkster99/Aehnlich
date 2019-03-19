@@ -9,8 +9,8 @@ ECHO.
 ECHO AehnlichLib
 ECHO AehnlichLib_UnitTests
 ECHO AehnlichViewLib
-ECHO Demos\AehnlichLibViewModels
-ECHO Demos\AehnlichFileDemo
+ECHO Demos\TextFileDemo\AehnlichLibViewModels
+ECHO Demos\TextFileDemo\AehnlichFileDemo
 ECHO Demos\Dir\AehnlichDirDemo
 ECHO Demos\Dir\AehnlichDirViewModelLib
 ECHO.
@@ -48,8 +48,8 @@ RMDIR /S /Q "AehnlichViewLib\obj"
 ECHO.
 ECHO Deleting BIN and OBJ Folders in Demos/AehnlichLibViewModels
 ECHO.
-RMDIR /S /Q "Demos\AehnlichLibViewModels\bin"
-RMDIR /S /Q "Demos\AehnlichLibViewModels\obj"
+RMDIR /S /Q "Demos\TextFileDemo\AehnlichLibViewModels\bin"
+RMDIR /S /Q "Demos\TextFileDemo\AehnlichLibViewModels\obj"
 
 ECHO.
 ECHO Deleting BIN and OBJ Folders in Demos\AehnlichFileDemo

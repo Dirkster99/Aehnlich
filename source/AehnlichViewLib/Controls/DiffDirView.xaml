@@ -71,6 +71,12 @@
                                                           Command="{Binding Data.CopyPathToClipboardCommand, Source={StaticResource DocumentContextProxy}}"
                                                           CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                 />
+
+                                                <MenuItem Header="Open in Windows"
+                                                          IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                          Command="{Binding Data.OpenInWindowsCommand, Source={StaticResource DocumentContextProxy}}"
+                                                          CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                />
                                             </ContextMenu>
                                         </Setter.Value>
                                     </Setter>
@@ -207,6 +213,12 @@
                                                 <MenuItem Header="Copy Path to Clipboard"
                                                           IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                           Command="{Binding Data.CopyPathToClipboardCommand, Source={StaticResource DocumentContextProxy}}"
+                                                          CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                />
+
+                                                <MenuItem Header="Open in Windows"
+                                                          IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                          Command="{Binding Data.OpenInWindowsCommand, Source={StaticResource DocumentContextProxy}}"
                                                           CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                 />
                                             </ContextMenu>

@@ -18,6 +18,7 @@
         private DirectoryDiffResults _Results;
         private ICommand _CopyPathToClipboardCommand;
         private ICommand _OpenContainingFolderCommand;
+        private ICommand _OpenInWindowsCommand;
 
         private readonly ObservableRangeCollection<DirEntryViewModel> _DirEntries;
         private readonly Stack<DirEntryViewModel> _DirPathStack;
@@ -156,14 +157,14 @@
                         PathA = GetSubPath(_CompareOptions.LeftDir, _DirPathStack, true);
                         PathB = GetSubPath(_CompareOptions.RightDir, _DirPathStack, false);
 
-                    },(p) =>
+                    }, (p) =>
                     {
                         if (_DirPathStack.Count > 0)
                             return true;
 
                         return false;
                     }
-                    
+
                     );
                 }
 
@@ -219,6 +220,30 @@
                 return _OpenContainingFolderCommand;
             }
         }
+
+        public ICommand OpenInWindowsCommand
+        {
+            get
+            {
+                if (_OpenInWindowsCommand == null)
+                {
+                    _OpenInWindowsCommand = new RelayCommand<object>((p) =>
+                    {
+                        var param = (p as string);
+
+                        FileSystemCommands.OpenInWindows(param);
+
+                    }, (p) =>
+                    {
+                        return (p is string);
+                    }
+
+                    );
+                }
+
+                return _OpenInWindowsCommand;
+            }
+        }
         #endregion properties
 
         #region methods
@@ -253,8 +278,8 @@
             PathA = string.Empty;
             PathB = string.Empty;
 
-////            this.TreeA.SetData(results, true);
-////            this.TreeB.SetData(results, false);
+            ////            this.TreeA.SetData(results, true);
+            ////            this.TreeB.SetData(results, false);
 
             // Set a filter description
             if (results.Filter == null)
@@ -267,12 +292,12 @@
                 this.LblFilter = string.Format("{0}: {1}", filter.Include ? "Includes" : "Excludes", filter.FilterString);
             }
 
-////            this.UpdateButtons();
-////
-////            if (this.TreeA.Nodes.Count > 0)
-////            {
-////                this.TreeA.SelectedNode = this.TreeA.Nodes[0];
-////            }
+            ////            this.UpdateButtons();
+            ////
+            ////            if (this.TreeA.Nodes.Count > 0)
+            ////            {
+            ////                this.TreeA.SelectedNode = this.TreeA.Nodes[0];
+            ////            }
         }
 
         private List<DirEntryViewModel> SetDirectoryEntries(DirectoryDiffEntryCollection entries,
