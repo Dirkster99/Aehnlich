@@ -9,7 +9,7 @@
     /// the user scrolls the view outside of the matched lines area
     /// (which has initially zero lines).
     /// 
-    /// The rquest method below is used to initiate the computation and the
+    /// The request method below is used to initiate the computation and the
     /// result event is sent when the computation is finished and results in
     /// new highlightings.
     /// 

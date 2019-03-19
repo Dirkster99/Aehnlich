@@ -74,8 +74,16 @@
             if (string.IsNullOrEmpty(sFileName) == true)
                 return;
 
-            // re-throw to let caller know this was not a success
-            Process.Start(new ProcessStartInfo(sFileName));
+            try
+            {
+                // re-throw to let caller know this was not a success
+                Process.Start(new ProcessStartInfo(sFileName));
+            }
+            catch
+            {
+                // This can throw exception if there is no registered app
+                // So, we catch it to avoid killing the app because of this
+            }
         }
 
         /// <summary>

@@ -1,6 +1,8 @@
 ﻿namespace AehnlichViewLib.Controls
 {
     using AehnlichViewLib.Events;
+    using AehnlichViewLib.Interfaces;
+    using AehnlichViewLib.Models;
     using System;
     using System.Collections;
     using System.Collections.Specialized;
@@ -10,6 +12,8 @@
     using System.Windows.Media;
 
     /// <summary>
+    /// Control implements a directory diff view with a side by side list of directories and files
+    /// and their properties (size last update etc).
     /// </summary>
     [TemplatePart(Name = PART_GridA, Type = typeof(DataGrid))]
     [TemplatePart(Name = PART_GridB, Type = typeof(DataGrid))]
@@ -39,6 +43,64 @@
         public static readonly DependencyProperty ItemContainerStyleProperty =
             DependencyProperty.Register("ItemContainerStyle", typeof(Style),
                 typeof(DiffDirView), new PropertyMetadata(null));
+
+        #region Diff Color Definitions
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundBlank"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundBlankProperty =
+            DependencyProperty.Register("ColorBackgroundBlank", typeof(SolidColorBrush),
+                typeof(DiffDirView), new PropertyMetadata(default(SolidColorBrush), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundAdded"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundAddedProperty =
+            DependencyProperty.Register("ColorBackgroundAdded", typeof(SolidColorBrush),
+                typeof(DiffDirView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xba, 0xff)), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundDeleted"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundDeletedProperty =
+            DependencyProperty.Register("ColorBackgroundDeleted", typeof(SolidColorBrush),
+                typeof(DiffDirView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0x80, 0x80)), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundContext"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundContextProperty =
+            DependencyProperty.Register("ColorBackgroundContext", typeof(SolidColorBrush),
+                typeof(DiffDirView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80)), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundImaginaryLineAdded"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundImaginaryLineAddedProperty =
+            DependencyProperty.Register("ColorBackgroundImaginaryLineAdded", typeof(SolidColorBrush),
+                typeof(DiffDirView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x60, 0x00, 0xba, 0xff)), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorBackgroundImaginaryLineDeleted"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorBackgroundImaginaryLineDeletedProperty =
+            DependencyProperty.Register("ColorBackgroundImaginaryLineDeleted", typeof(SolidColorBrush),
+                typeof(DiffDirView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x60, 0xFF, 0x80, 0x80)), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="DiffColorDefinitions"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty DiffColorDefinitionsProperty =
+            DependencyProperty.Register("DiffColorDefinitions", typeof(IDiffColorDefinitions),
+                typeof(DiffDirView), new PropertyMetadata(null));
+        #endregion Diff Color Definitions
 
         #region Column A B Synchronization
         public static readonly DependencyProperty ColumnWidthAProperty =
@@ -108,6 +170,85 @@
             set { SetValue(ItemContainerStyleProperty, value); }
         }
 
+        #region Diff Color definitions
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies changed context (2 lines appear to be similar enough to align them
+        /// but still mark them as different).
+        /// </summary>
+        public SolidColorBrush ColorBackgroundContext
+        {
+            get { return (SolidColorBrush)GetValue(ColorBackgroundContextProperty); }
+            set { SetValue(ColorBackgroundContextProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies an element that is missing in one of the two (text) lines being compared.
+        /// </summary>
+        public SolidColorBrush ColorBackgroundDeleted
+        {
+            get { return (SolidColorBrush)GetValue(ColorBackgroundDeletedProperty); }
+            set { SetValue(ColorBackgroundDeletedProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies an element that is added in one of the two (text) lines being compared.
+        /// </summary>
+        public SolidColorBrush ColorBackgroundAdded
+        {
+            get { return (SolidColorBrush)GetValue(ColorBackgroundAddedProperty); }
+            set { SetValue(ColorBackgroundAddedProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies 2 blank lines in both of the two (text) lines being compared.
+        /// 
+        /// Normally, there should be no drawing required for this which is why the
+        /// default is default(<see cref="SolidColorBrush"/>) - but sometimes it may be useful
+        /// to color these lines which is why we have this property here.
+        /// </summary>
+        public SolidColorBrush ColorBackgroundBlank
+        {
+            get { return (SolidColorBrush)GetValue(ColorBackgroundBlankProperty); }
+            set { SetValue(ColorBackgroundBlankProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies an element that is missing in one of the two (text) lines being compared.
+        /// </summary>
+        public SolidColorBrush ColorBackgroundImaginaryLineDeleted
+        {
+            get { return (SolidColorBrush)GetValue(ColorBackgroundImaginaryLineDeletedProperty); }
+            set { SetValue(ColorBackgroundImaginaryLineDeletedProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies an element that is added as an imaginary line in one of the two
+		/// (text) lines being compared.
+        /// </summary>
+        public SolidColorBrush ColorBackgroundImaginaryLineAdded
+        {
+            get { return (SolidColorBrush)GetValue(ColorBackgroundImaginaryLineAddedProperty); }
+            set { SetValue(ColorBackgroundImaginaryLineAddedProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets a set of color definitions that can be bound to in one place to process all
+        /// color definition based on one object binding rather than 5-6 additional bindings.
+        /// </summary>
+        public IDiffColorDefinitions DiffColorDefinitions
+        {
+            get { return (IDiffColorDefinitions)GetValue(DiffColorDefinitionsProperty); }
+            set { SetValue(DiffColorDefinitionsProperty, value); }
+        }
+        #endregion Diff Color Definitions
+
+        #region Column A B Synchronization
         public GridLength ColumnWidthA
         {
             get { return (GridLength)GetValue(ColumnWidthAProperty); }
@@ -119,6 +260,7 @@
             get { return (GridLength)GetValue(ColumnWidthBProperty); }
             set { SetValue(ColumnWidthBProperty, value); }
         }
+        #endregion Column A B Synchronization
         #endregion properties
 
         #region methods
@@ -165,6 +307,9 @@
                 _PART_GridSplitter.DragCompleted += _PART_GridSplitter_DragCompleted;
                 _PART_GridSplitter.DragDelta += _PART_GridSplitter_DragDelta;
             }
+
+            // Initialize background color defintions for line background highlighting
+            OnColorChanged(null);
         }
 
         #region private statics
@@ -199,6 +344,11 @@
         {
             (d as DiffDirView).OnColumnWidthBChanged(e);
         }
+
+        private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DiffDirView)d).OnColorChanged(e.NewValue);
+        }
         #endregion private statics
 
         private void Grid_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -209,7 +359,7 @@
             ScrollViewer scrollToSync = null;
 
             // Determine the scroller that has send the event so we know the scroller to sync
-            if (sender == _PART_GridB)
+            if (sender == _rightGridScrollViewer)
                 scrollToSync = _leftGridScrollViewer;
             else
                 scrollToSync = _rightGridScrollViewer;
@@ -279,6 +429,17 @@
             }
         }
 
+        private void OnColorChanged(object newValue)
+        {
+            this.DiffColorDefinitions = new DiffColorDefinitions(ColorBackgroundBlank,
+                                                                ColorBackgroundAdded,
+                                                                ColorBackgroundDeleted,
+                                                                ColorBackgroundContext,
+                                                                ColorBackgroundImaginaryLineAdded,
+                                                                ColorBackgroundImaginaryLineDeleted);
+
+            this.InvalidateVisual();
+        }
         #endregion methods
     }
 }

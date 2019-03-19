@@ -50,10 +50,11 @@
                                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
                                     <Setter Property="Background">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}">
+                                            <MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}" ConverterParameter="fromA">
                                                 <Binding Path="IsItemInA"/>
                                                 <Binding Path="IsItemInB"/>
                                                 <Binding Path="IsItemDifferent"/>
+                                                <Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}"/>
                                             </MultiBinding>
                                         </Setter.Value>
                                     </Setter>
@@ -194,10 +195,11 @@
                                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
                                     <Setter Property="Background">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}">
+                                            <MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}" ConverterParameter="fromB">
                                                 <Binding Path="IsItemInA"/>
                                                 <Binding Path="IsItemInB"/>
                                                 <Binding Path="IsItemDifferent"/>
+                                                <Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}"/>
                                             </MultiBinding>
                                         </Setter.Value>
                                     </Setter>

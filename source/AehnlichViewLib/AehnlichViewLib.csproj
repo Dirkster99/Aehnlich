@@ -80,7 +80,9 @@
     <Compile Include="Events\DiffLineInfoChangedEvent.cs" />
     <Compile Include="Interfaces\IDiffLineInfo.cs" />
     <Compile Include="Interfaces\ILineDiffProvider.cs" />
+    <Compile Include="Models\DiffColorDefinitions.cs" />
     <Compile Include="Models\DiffViewPort.cs" />
+    <Compile Include="Interfaces\IDiffColorDefinitions.cs" />
     <Compile Include="Models\Segment.cs" />
     <Compile Include="Themes\ResourceKeys.cs" />
     <Page Include="Controls\DiffControl.xaml">

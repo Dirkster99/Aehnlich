@@ -16,7 +16,6 @@
     using AehnlichViewLib.Controls.AvalonEditEx;
     using ICSharpCode.AvalonEdit.Search;
     using AehnlichViewLib.Interfaces;
-    using System.Windows.Threading;
     using System.Linq;
 
     /// <summary>
@@ -33,75 +32,12 @@
             DependencyProperty.Register("ItemsSource", typeof(IEnumerable),
                 typeof(DiffView), new PropertyMetadata(new PropertyChangedCallback(ItemsSourceChanged)));
 
+        /// <summary>
+        /// Implements the backing store of the <see cref="LineDiffDataProvider"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty LineDiffDataProviderProperty =
             DependencyProperty.Register("LineDiffDataProvider", typeof(ILineDiffProvider),
                 typeof(DiffView), new PropertyMetadata(null, OnLineDiffDataProviderChanged));
-
-        private static void OnLineDiffDataProviderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            (d as DiffView).OnLineDiffDataProviderChanged(e);
-        }
-
-        private void OnLineDiffDataProviderChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if ((e.OldValue as ILineDiffProvider) != null)
-                (e.NewValue as ILineDiffProvider).DiffLineInfoChanged -= DiffView_DiffLineInfoChanged;
-
-            if ((e.NewValue as ILineDiffProvider) != null)
-                (e.NewValue as ILineDiffProvider).DiffLineInfoChanged += DiffView_DiffLineInfoChanged;
-        }
-
-        /// <summary>
-        /// Redraw additional line changed background highlighting segments since viewmodel
-        /// just computed these (they cannot have been drawn anytime before but user is looking at it).
-        /// 
-        /// Method execute when bound viewmodel sends the <see cref="Events.DiffLineInfoChangedEvent"/>.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DiffView_DiffLineInfoChanged(object sender, Events.DiffLineInfoChangedEvent e)
-        {
-            if (e.TypeOfInfoChange == Events.DiffLineInfoChange.LineEditScriptSegments)
-            {
-                var srcLineDiffs = this.ItemsSource as IReadOnlyList<IDiffLineInfo>;
-
-                if (srcLineDiffs == null)
-                    return;
-
-                int fline = -1;  // are newly computed lines within current view?
-                int lline = -1;
-                if (TextArea.TextView.VisualLines.Any())
-                {
-                    var firstline = this.TextArea.TextView.VisualLines.First();
-                    var lastline = this.TextArea.TextView.VisualLines.Last();
-
-                    fline = firstline.FirstDocumentLine.LineNumber;
-                    lline = lastline.LastDocumentLine.LineNumber;
-                }
-
-                if (fline == -1 && lline == -1)
-                    return;
-
-                for (int i = 0; i < e.LinesChanged.Count; i++)
-                {
-                    int linei = e.LinesChanged[i];          // Is linei within current view?
-                    if (fline > linei || lline < linei)
-                        continue;                         // No, look at next line then...
-
-                    if (srcLineDiffs[linei].LineEditScriptSegments != null)
-                    {
-                        foreach (var segment in srcLineDiffs[linei].LineEditScriptSegments)
-                            TextArea.TextView.Redraw(segment);    // invalidate this portion of document
-                    }
-                }
-            }
-        }
-
-        public ILineDiffProvider LineDiffDataProvider
-        {
-            get { return (ILineDiffProvider)GetValue(LineDiffDataProviderProperty); }
-            set { SetValue(LineDiffDataProviderProperty, value); }
-        }
 
         #region Diff Color Definitions
         /// <summary>
@@ -150,7 +86,7 @@
         /// </summary>
         public static readonly DependencyProperty ColorBackgroundImaginaryLineDeletedProperty =
             DependencyProperty.Register("ColorBackgroundImaginaryLineDeleted", typeof(SolidColorBrush),
-                typeof(DiffView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x60, 0x80, 0xFF, 0x80)), OnColorChanged));
+                typeof(DiffView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x60, 0xFF, 0x80, 0x80)), OnColorChanged));
         #endregion Diff Color Definitions
 
         #region EditorScrollOffsetXY
@@ -241,6 +177,16 @@
         {
             get { return (IEnumerable)GetValue(ItemsSourceProperty); }
             set { SetValue(ItemsSourceProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the linediff data provider which implements an <see cref="ILineDiffProvider"/>
+        /// interface to compute textual line diffs on demand (when lines are scrolled into view).
+        /// </summary>
+        public ILineDiffProvider LineDiffDataProvider
+        {
+            get { return (ILineDiffProvider)GetValue(LineDiffDataProviderProperty); }
+            set { SetValue(LineDiffDataProviderProperty, value); }
         }
 
         #region Diff Color definitions
@@ -440,6 +386,11 @@
         {
             ((DiffView)d).ItemsSourceChanged(e.NewValue);
         }
+
+        private static void OnLineDiffDataProviderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as DiffView).OnLineDiffDataProviderChanged(e);
+        }
         #endregion static handlers
 
         /// <summary>
@@ -603,6 +554,63 @@
         {
             ActivationTimeStamp = DateTime.Now;
         }
+
+        #region OnLineDiffDataProviderChanged
+        private void OnLineDiffDataProviderChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if ((e.OldValue as ILineDiffProvider) != null)
+                (e.NewValue as ILineDiffProvider).DiffLineInfoChanged -= DiffView_DiffLineInfoChanged;
+
+            if ((e.NewValue as ILineDiffProvider) != null)
+                (e.NewValue as ILineDiffProvider).DiffLineInfoChanged += DiffView_DiffLineInfoChanged;
+        }
+
+        /// <summary>
+        /// Redraw additional line changed background highlighting segments since viewmodel
+        /// just computed these (they cannot have been drawn anytime before but user is looking at it).
+        /// 
+        /// Method execute when bound viewmodel sends the <see cref="Events.DiffLineInfoChangedEvent"/>.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DiffView_DiffLineInfoChanged(object sender, Events.DiffLineInfoChangedEvent e)
+        {
+            if (e.TypeOfInfoChange == Events.DiffLineInfoChange.LineEditScriptSegments)
+            {
+                var srcLineDiffs = this.ItemsSource as IReadOnlyList<IDiffLineInfo>;
+
+                if (srcLineDiffs == null)
+                    return;
+
+                int fline = -1;  // are newly computed lines within current view?
+                int lline = -1;
+                if (TextArea.TextView.VisualLines.Any())
+                {
+                    var firstline = this.TextArea.TextView.VisualLines.First();
+                    var lastline = this.TextArea.TextView.VisualLines.Last();
+
+                    fline = firstline.FirstDocumentLine.LineNumber;
+                    lline = lastline.LastDocumentLine.LineNumber;
+                }
+
+                if (fline == -1 && lline == -1)
+                    return;
+
+                for (int i = 0; i < e.LinesChanged.Count; i++)
+                {
+                    int linei = e.LinesChanged[i];          // Is linei within current view?
+                    if (fline > linei || lline < linei)
+                        continue;                         // No, look at next line then...
+
+                    if (srcLineDiffs[linei].LineEditScriptSegments != null)
+                    {
+                        foreach (var segment in srcLineDiffs[linei].LineEditScriptSegments)
+                            TextArea.TextView.Redraw(segment);    // invalidate this portion of document
+                    }
+                }
+            }
+        }
+        #endregion OnLineDiffDataProviderChanged
         #endregion methods
     }
 }

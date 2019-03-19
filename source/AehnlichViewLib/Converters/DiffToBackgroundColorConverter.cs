@@ -1,34 +1,56 @@
 ﻿namespace AehnlichViewLib.Converters
 {
+    using AehnlichViewLib.Interfaces;
     using System;
     using System.Globalization;
+    using System.Windows;
     using System.Windows.Data;
     using System.Windows.Media;
 
-    public class DiffToBackgroundColorConverter : IMultiValueConverter
+    public class DiffToBackgroundColorConverter : DependencyObject, IMultiValueConverter
     {
+
+
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values == null)
                 return Binding.DoNothing;
 
-            if (values.Length != 3)
+            if (values.Length != 4)
                 return Binding.DoNothing;
+
+            bool IsFromA = true;
+            if ((string)parameter == "fromB")
+                IsFromA = false;
+            else
+                IsFromA = true;
 
             bool IsItemInA = (bool)values[0];
             bool IsItemInB = (bool)values[1];
             bool IsItemDifferent = (bool)values[2];
+            var colorDefs = values[3] as IDiffColorDefinitions;
+
+            if (colorDefs == null)
+                return Binding.DoNothing;
 
             if (IsItemDifferent && IsItemInA == true && IsItemInB == true)
-                return new SolidColorBrush(Colors.Green);
+                return colorDefs.ColorBackgroundContext; // new SolidColorBrush(Colors.Green);
 
             if (IsItemInA == true && IsItemInB == false)
-                return new SolidColorBrush(Colors.Blue);
+            {
+                if (IsFromA)
+                    return colorDefs.ColorBackgroundAdded; // new SolidColorBrush(Colors.Blue);
+                else
+                    return colorDefs.ColorBackgroundImaginaryLineAdded;
+            }
             else
             {
                 if (IsItemInA == false && IsItemInB == true)
                 {
-                    return new SolidColorBrush(Colors.Red);
+                    if (IsFromA)
+                        return colorDefs.ColorBackgroundImaginaryLineDeleted;
+                    else
+                        return colorDefs.ColorBackgroundDeleted; // new SolidColorBrush(Colors.Red);
                 }
             }
 
