@@ -11,3 +11,5 @@ The name Ähnlich is German for Similar. It is the name of a WPF Diff/Merge util
 ![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/00%20Docs/%C3%84hnlich2.png)
 
 ![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/DirDiffScreen.png)
+
+![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/DirDiffScreen_1.png)
