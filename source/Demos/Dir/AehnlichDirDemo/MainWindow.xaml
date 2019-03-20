@@ -4,13 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 
-        xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         xmlns:conv="clr-namespace:AehnlichViewLib.Converters;assembly=AehnlichViewLib"
         xmlns:behav="clr-namespace:AehnlichViewLib.Behaviors;assembly=AehnlichViewLib"
 
         xmlns:conv1="clr-namespace:AehnlichDirViewModelLib.Converters;assembly=AehnlichDirViewModelLib"
         
         xmlns:ctrl="clr-namespace:AehnlichViewLib.Controls;assembly=AehnlichViewLib"
+
+        xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
+        xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
 
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -23,12 +25,28 @@
         <Grid Grid.Column="0" Grid.Row="0">
             <Grid.Resources>
                 <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
+                <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
             </Grid.Resources>
             <ToolBar Grid.Column="0" VerticalAlignment="Center"
                      Background="Transparent"
                      ToolBarTray.IsLocked="True"  ToolBar.OverflowMode="Never"
                      MinHeight="16"
                      >
+                <Button
+                    Command="{Binding DirDiffDoc.OpenFileFromActiveViewCommand}"
+                    ToolTip="Open in Windows"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
+                    >
+                    <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_OpenFileKey}}"/>
+                    </Button.Background>
+                </Button>
+
+                <Separator />
+
                 <Button
                     Command="{Binding CompareDirectoriesCommand}"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
@@ -66,6 +84,57 @@
                     </Button.Background>
                 </Button>
 
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+							Visibility="{Binding DirDiffDoc.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+				>
+                    <Separator Margin="0,0,3,0" />
+
+                    <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+							Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
+							>
+                        <Grid ToolTip="Changed"
+							  HorizontalAlignment="Stretch"
+							  MinHeight="16" MinWidth="16"
+							  Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"/>
+                            </Grid.Background>
+                        </Grid>
+                    </Border>
+
+                    <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+							Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
+							>
+                        <Grid ToolTip="Deleted"
+							  HorizontalAlignment="Stretch"
+							  MinHeight="16" MinWidth="16"
+							  Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"/>
+                            </Grid.Background>
+                        </Grid>
+                    </Border>
+
+                    <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+							Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}">
+                        <Grid ToolTip="Inserted"
+							  HorizontalAlignment="Stretch"
+							  MinHeight="16" MinWidth="16"
+							  Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AddedKey}}"/>
+                            </Grid.Background>
+                        </Grid>
+                    </Border>
+
+                    <Separator Margin="0,0,3,0" />
+
+                    <TextBlock Text="{Binding DirDiffDoc.LblFilter}"
+							   ToolTip="Filter Criteria"
+					           Margin="0,0,3,0"
+					/>
+
+                </StackPanel>
             </ToolBar>
         </Grid>
 
@@ -127,6 +196,12 @@
                               Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3"
                               ItemsSource="{Binding DirDiffDoc.DirEntries}"
                               ColumnWidthChanged="DiffDir_ColumnWidthChanged"
+							  
+							  ActivationTimeStamp_A="{Binding DirDiffDoc.ViewActivation_A}"
+							  ActivationTimeStamp_B="{Binding DirDiffDoc.ViewActivation_B}"
+							  
+							  SelectedItem_A="{Binding DirDiffDoc.SelectedItem_A,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
+							  SelectedItem_B="{Binding DirDiffDoc.SelectedItem_B,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
                               >
             </ctrl:DiffDirView>
         </Grid>

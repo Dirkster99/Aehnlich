@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 
                     xmlns:local="clr-namespace:AehnlichViewLib.Controls"
-	                xmlns:editing="clr-namespace:ICSharpCode.AvalonEdit.Editing;assembly=ICSharpCode.AvalonEdit"
+                    xmlns:editing="clr-namespace:ICSharpCode.AvalonEdit.Editing;assembly=ICSharpCode.AvalonEdit"
                     xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes"
                     
                     xmlns:conv="clr-namespace:AehnlichViewLib.Converters"
@@ -15,10 +15,14 @@
                     <Grid>
                         <Grid.Resources>
                             <behav:BindingProxy x:Key="DocumentContextProxy" Data="{Binding DirDiffDoc}" />
+
                             <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter"/>
                             <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"
                                                                 FalseValue="Hidden"
                                                                 TrueValue="Visible"/>
+
+                            <conv:DoubleBytesToStringReadableSizeConverter x:Key="DoubleBytesToStringReadableSizeConverter" />
+                            <conv:SentinelConverter x:Key="SentinelConverter" />
                         </Grid.Resources>
 
                         <Grid.ColumnDefinitions>
@@ -28,13 +32,14 @@
                         </Grid.ColumnDefinitions>
 
                         <DataGrid Grid.Column="0" Grid.Row="0" Name="PART_GridA"
-						    Background="{TemplateBinding Background}"
-						    BorderBrush="{TemplateBinding BorderBrush}"
-						    BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
                         
                             ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
                             ItemTemplate="{TemplateBinding ItemTemplate}"
                             ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
+                            SelectedItem="{Binding SelectedItem_A,Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
                         
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
@@ -143,7 +148,7 @@
                                         <DataTemplate>
                                             <TextBlock
                                                 Visibility="{Binding IsItemInA,Converter={StaticResource BoolToVisibilityPropConverter}}"
-                                                Text="{Binding ItemLengthA}"
+                                                Text="{Binding ItemLengthA, Converter={StaticResource DoubleBytesToStringReadableSizeConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                                        HorizontalAlignment="Right"
                                                        Margin="3,0,0,0"
                                             />
@@ -174,6 +179,8 @@
 
                         <DataGrid Grid.Column="2" Grid.Row="0" Name="PART_GridB"
                                   ItemsSource="{Binding DirDiffDoc.DirEntries}"
+                                  SelectedItem="{Binding SelectedItem_B,Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
+                                  
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                   ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
                                   ScrollViewer.VerticalScrollBarVisibility="Auto" 
@@ -288,7 +295,7 @@
                                         <DataTemplate>
                                             <TextBlock
                                                 Visibility="{Binding IsItemInB,Converter={StaticResource BoolToVisibilityPropConverter}}"                                    
-                                                Text="{Binding ItemLengthB}"
+                                                Text="{Binding ItemLengthB, Converter={StaticResource DoubleBytesToStringReadableSizeConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                                        HorizontalAlignment="Right"
                                                        Margin="3,0,0,0"
                                             />

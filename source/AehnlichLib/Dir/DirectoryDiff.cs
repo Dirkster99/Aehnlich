@@ -418,7 +418,7 @@ namespace AehnlichLib.Dir
 
                         // Merge and Diff them
                         mergeIdx.Merge();
-                        long lengthSumA, lengthSumB;
+                        double lengthSumA, lengthSumB;
                         DiffFiles(mergeIdx, node, checkIfFilesAreDifferent, directoryA, directoryB,
                                   out lengthSumA, out lengthSumB);
 
@@ -469,7 +469,7 @@ namespace AehnlichLib.Dir
                                DirectoryDiffEntry entry,
                                bool checkIfFilesAreDifferent,
                                DirectoryInfo rootPathA, DirectoryInfo rootPathB,
-                               out long lengthSumA, out long lengthSumB)
+                               out double lengthSumA, out double lengthSumB)
         {
             lengthSumA = 0;
             lengthSumB = 0;
@@ -478,7 +478,7 @@ namespace AehnlichLib.Dir
             {
                 DateTime lastUpdateA = default(DateTime);
                 DateTime lastUpdateB = default(DateTime);
-                long lengthA = 0, lengthB = 0;
+                double lengthA = 0.0, lengthB = 0.0;
 
                 if (item.InfoA != null)
                 {
@@ -562,7 +562,7 @@ namespace AehnlichLib.Dir
                     if (this._ShowOnlyInA)
                     {
                         entry.AddSubEntry(new DirectoryDiffEntry(basePath, item.InfoA.Name, true, true, false,
-                                                                 lastUpdateA, default(DateTime), lengthA, 0));
+                                                                 lastUpdateA, default(DateTime), lengthA, 0.0));
 
                         // Mark directory as different if files are different
                         entry.Different = true;
@@ -574,7 +574,7 @@ namespace AehnlichLib.Dir
                     if (this._ShowOnlyInB)
                     {
                         entry.AddSubEntry(new DirectoryDiffEntry(basePath, item.InfoB.Name, true, false, true,
-                                                                 default(DateTime), lastUpdateB, 0, lengthB));
+                                                                 default(DateTime), lastUpdateB, 0.0, lengthB));
 
                         // Mark directory as different if files are different
                         entry.Different = true;

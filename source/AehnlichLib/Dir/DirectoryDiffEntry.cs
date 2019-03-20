@@ -33,7 +33,7 @@ namespace AehnlichLib.Dir
                             bool isFile,
                             bool inA, bool inB,
                             DateTime lastUpdateA, DateTime lastUpdateB,
-                            long lengthA, long lengthB)
+                            double lengthA, double lengthB)
             : this(basePath, name, isFile, inA, inB, lastUpdateA, lastUpdateB)
         {
             this.LengthA = lengthA;
@@ -123,12 +123,12 @@ namespace AehnlichLib.Dir
         /// <summary>
         /// Gets the size, in bytes, of the current file system item.
         /// </summary>
-        public long LengthA { get; internal set; }
+        public double LengthA { get; internal set; }
 
         /// <summary>
         /// Gets the size, in bytes, of the current file system item.
         /// </summary>
-        public long LengthB { get; internal set; }
+        public double LengthB { get; internal set; }
 
         public DirectoryDiffEntryCollection Subentries
         {

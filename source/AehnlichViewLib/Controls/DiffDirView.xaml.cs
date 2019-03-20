@@ -102,15 +102,53 @@
                 typeof(DiffDirView), new PropertyMetadata(null));
         #endregion Diff Color Definitions
 
-        #region Column A B Synchronization
+        #region ViewActivation
+        /// <summary>
+        /// Implements the backing store of the <see cref="ActivationTimeStamp_A"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ActivationTimeStamp_AProperty =
+            DependencyProperty.Register("ActivationTimeStamp_A", typeof(DateTime),
+                typeof(DiffDirView), new PropertyMetadata(default(DateTime)));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ActivationTimeStamp_B"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ActivationTimeStamp_BProperty =
+            DependencyProperty.Register("ActivationTimeStamp_B", typeof(DateTime),
+                typeof(DiffDirView), new PropertyMetadata(default(DateTime)));
+        #endregion ViewActivation
+
+        #region SelectedItem
+        /// <summary>
+        /// Implements the backing store of the <see cref="SelectedItem_A"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedItem_AProperty =
+            DependencyProperty.Register("SelectedItem_A", typeof(object),
+                typeof(DiffDirView), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="SelectedItem_B"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedItem_BProperty =
+            DependencyProperty.Register("SelectedItem_B", typeof(object),
+                typeof(DiffDirView), new PropertyMetadata(null));
+        #endregion SelectedItem
+
+        #region Column A B GridSplitter Synchronization
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColumnWidthA"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ColumnWidthAProperty =
             DependencyProperty.Register("ColumnWidthA", typeof(GridLength),
                 typeof(DiffDirView), new PropertyMetadata(default(GridLength), OnColumnWidthAChanged));
 
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColumnWidthB"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ColumnWidthBProperty =
             DependencyProperty.Register("ColumnWidthB", typeof(GridLength),
                 typeof(DiffDirView), new PropertyMetadata(default(GridLength), OnColumnWidthBChanged));
-        #endregion Column A B Synchronization
+        #endregion Column A B GridSplitter Synchronization
 
         private ColumnDefinition _PART_ColumnA, _PART_ColumnB;
         private GridSplitter _PART_GridSplitter;
@@ -130,6 +168,11 @@
         }
         #endregion ctors
 
+        /// <summary>
+        /// Implements an event that is invoked when the column view with columns A and B
+        /// (PART_GridA and PART_GridB separated by a GridSplitter) is being
+        /// resized in the way that the visible proportional width has been changed.
+        /// </summary>
         public event EventHandler<ColumnWidthChangedEvent> ColumnWidthChanged;
 
         #region properties
@@ -248,19 +291,65 @@
         }
         #endregion Diff Color Definitions
 
+        #region ViewActivation
+        /// <summary>
+        /// Gets the timestamp for the last time when the left view A was active (had received focus).
+        /// </summary>
+        public DateTime ActivationTimeStamp_A
+        {
+            get { return (DateTime)GetValue(ActivationTimeStamp_AProperty); }
+            set { SetValue(ActivationTimeStamp_AProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets the timestamp for the last time when the right view B was active (had received focus).
+        /// </summary>
+        public DateTime ActivationTimeStamp_B
+        {
+            get { return (DateTime)GetValue(ActivationTimeStamp_BProperty); }
+            set { SetValue(ActivationTimeStamp_BProperty, value); }
+        }
+        #endregion ViewActivation
+
         #region Column A B Synchronization
+        /// <summary>
+        /// Gets the width of column A in a view with columns A and B being separated by a GridSplitter.
+        /// </summary>
         public GridLength ColumnWidthA
         {
             get { return (GridLength)GetValue(ColumnWidthAProperty); }
             set { SetValue(ColumnWidthAProperty, value); }
         }
 
+        /// <summary>
+        /// Gets the width of column B in a view with columns A and B being separated by a GridSplitter.
+        /// </summary>
         public GridLength ColumnWidthB
         {
             get { return (GridLength)GetValue(ColumnWidthBProperty); }
             set { SetValue(ColumnWidthBProperty, value); }
         }
         #endregion Column A B Synchronization
+
+        #region SelectedItem
+        /// <summary>
+        /// Gets the selecteditem (if any) from the left PART_GridA.
+        /// </summary>
+        public object SelectedItem_A
+        {
+            get { return (object)GetValue(SelectedItem_AProperty); }
+            set { SetValue(SelectedItem_AProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets the selecteditem (if any) from the right PART_GridB.
+        /// </summary>
+        public object SelectedItem_B
+        {
+            get { return (object)GetValue(SelectedItem_BProperty); }
+            set { SetValue(SelectedItem_BProperty, value); }
+        }
+        #endregion SelectedItem
         #endregion properties
 
         #region methods
@@ -300,6 +389,10 @@
 
                 _PART_GridA.SelectionChanged += Grid_SelectionChanged;
                 _PART_GridB.SelectionChanged += Grid_SelectionChanged;
+
+                // Attach more event handlers
+                _PART_GridA.GotFocus += DiffView_GotFocus;
+                _PART_GridB.GotFocus += DiffView_GotFocus;
             }
 
             if (_PART_GridSplitter != null)
@@ -439,6 +532,24 @@
                                                                 ColorBackgroundImaginaryLineDeleted);
 
             this.InvalidateVisual();
+        }
+
+        /// <summary>
+        /// Method is invoked to record each time the left or right view has been focused.
+        /// To record its last time of activation in <see cref="ActivationTimeStamp_A"/>
+		/// or <see cref="ActivationTimeStamp_B"/> property.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DiffView_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender == _PART_GridA)
+                ActivationTimeStamp_A = DateTime.Now;
+            else
+            {
+                if (sender == _PART_GridB)
+                    ActivationTimeStamp_B = DateTime.Now;
+            }
         }
         #endregion methods
     }

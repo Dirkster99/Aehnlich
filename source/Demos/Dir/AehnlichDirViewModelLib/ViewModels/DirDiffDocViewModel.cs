@@ -3,6 +3,7 @@
     using AehnlichDirViewModelLib.Models;
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
+    using System;
     using System.Collections.Generic;
     using System.Windows.Input;
 
@@ -12,13 +13,18 @@
         private ShowDirDiffArgs _CompareOptions;
         private string _LblFilter;
         private string _PathB, _PathA;
+        private DateTime _ViewActivation_A, _ViewActivation_B;
+        private object _SelectedItem_A, _SelectedItem_B;
+
+        private bool _IsDiffDataAvailable;
+        private DirectoryDiffResults _Results;
+
         private ICommand _BrowseItemCommand;
         private ICommand _BrowseUpCommand;
-
-        private DirectoryDiffResults _Results;
         private ICommand _CopyPathToClipboardCommand;
         private ICommand _OpenContainingFolderCommand;
         private ICommand _OpenInWindowsCommand;
+        private ICommand _OpenFileFromActiveViewCommand;
 
         private readonly ObservableRangeCollection<DirEntryViewModel> _DirEntries;
         private readonly Stack<DirEntryViewModel> _DirPathStack;
@@ -32,10 +38,31 @@
         {
             _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
             _DirPathStack = new Stack<DirEntryViewModel>();
+
+            _ViewActivation_A = DateTime.MinValue;
+            _ViewActivation_B = DateTime.MinValue;
         }
         #endregion ctors
 
         #region properties
+        /// <summary>
+        /// Gets whether data binding should currently result in Diff data being available or not.
+        /// This can be a good indicator for command enable/disablement when these make sense
+        /// with the required data only.
+        /// </summary>
+        public bool IsDiffDataAvailable
+        {
+            get { return _IsDiffDataAvailable; }
+            private set
+            {
+                if (_IsDiffDataAvailable != value)
+                {
+                    _IsDiffDataAvailable = value;
+                    NotifyPropertyChanged(() => IsDiffDataAvailable);
+                }
+            }
+        }
+
         public IReadOnlyList<DirEntryViewModel> DirEntries
         {
             get
@@ -70,6 +97,77 @@
             }
         }
 
+        /// <summary>
+        /// Gets/set the time stamp of the last time when the attached view
+        /// has been activated (GotFocus).
+        /// </summary>
+        public DateTime ViewActivation_A
+        {
+            get
+            {
+                return _ViewActivation_A;
+            }
+
+            set
+            {
+                if (_ViewActivation_A != value)
+                {
+                    _ViewActivation_A = value;
+                    NotifyPropertyChanged(() => ViewActivation_A);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets/set the time stamp of the last time when the attached view
+        /// has been activated (GotFocus).
+        /// </summary>
+        public DateTime ViewActivation_B
+        {
+            get
+            {
+                return _ViewActivation_B;
+            }
+
+            set
+            {
+                if (_ViewActivation_B != value)
+                {
+                    _ViewActivation_B = value;
+                    NotifyPropertyChanged(() => ViewActivation_B);
+                }
+            }
+        }
+
+        public object SelectedItem_A
+        {
+            get { return _SelectedItem_A; }
+            set
+            {
+                if (_SelectedItem_A != value)
+                {
+                    _SelectedItem_A = value;
+                    NotifyPropertyChanged(() => SelectedItem_A);
+                }
+            }
+        }
+
+        public object SelectedItem_B
+        {
+            get { return _SelectedItem_B; }
+            set
+            {
+                if (_SelectedItem_B != value)
+                {
+                    _SelectedItem_B = value;
+                    NotifyPropertyChanged(() => SelectedItem_B);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a string that describes the currently applied filter criteria for display in UI.
+        /// </summary>
         public string LblFilter
         {
             get { return _LblFilter; }
@@ -244,25 +342,69 @@
                 return _OpenInWindowsCommand;
             }
         }
+
+        public ICommand OpenFileFromActiveViewCommand
+        {
+            get
+            {
+                if (_OpenFileFromActiveViewCommand == null)
+                {
+                    _OpenFileFromActiveViewCommand = new RelayCommand<object>((p) =>
+                    {
+                        bool? fromA;
+                        var param = GetSelectedItem(out fromA);
+                        if (param == null)
+                            return;
+
+                        string sPath;
+                        if ((bool)fromA)
+                            sPath = param.ItemPathA;
+                        else
+                            sPath = param.ItemPathB;
+
+                        FileSystemCommands.OpenInWindows(sPath);
+
+                    }, (p) =>
+                    {
+                        bool? fromA;
+                        var param = GetSelectedItem(out fromA);
+                        if (param == null)
+                            return false;
+
+                        return true;
+                    });
+                }
+
+                return _OpenFileFromActiveViewCommand;
+            }
+        }
         #endregion properties
 
         #region methods
         internal void ShowDifferences(ShowDirDiffArgs args)
         {
-            var diff = new DirectoryDiff(
-                args.ShowOnlyInA,
-                args.ShowOnlyInB,
-                args.ShowDifferent,
-                args.ShowSame,
-                args.Recursive,
-                args.IgnoreDirectoryComparison,
-                args.FileFilter);
+            try
+            {
+                var diff = new DirectoryDiff(args.ShowOnlyInA,
+                                             args.ShowOnlyInB,
+                                             args.ShowDifferent,
+                                             args.ShowSame,
+                                             args.Recursive,
+                                             args.IgnoreDirectoryComparison,
+                                             args.FileFilter);
 
-            DirectoryDiffResults results = diff.Execute(args.LeftDir, args.RightDir);
+                DirectoryDiffResults results = diff.Execute(args.LeftDir, args.RightDir);
 
-            SetData(results);
+                SetData(results);
 
-            _CompareOptions = args; // Record comparison options for later
+                _CompareOptions = args; // Record comparison options for later
+
+                IsDiffDataAvailable = true;
+            }
+            catch
+            {
+                IsDiffDataAvailable = false;
+            }
         }
 
         private void SetData(DirectoryDiffResults results)
@@ -278,9 +420,6 @@
             PathA = string.Empty;
             PathB = string.Empty;
 
-            ////            this.TreeA.SetData(results, true);
-            ////            this.TreeB.SetData(results, false);
-
             // Set a filter description
             if (results.Filter == null)
             {
@@ -291,13 +430,6 @@
                 DirectoryDiffFileFilter filter = results.Filter;
                 this.LblFilter = string.Format("{0}: {1}", filter.Include ? "Includes" : "Excludes", filter.FilterString);
             }
-
-            ////            this.UpdateButtons();
-            ////
-            ////            if (this.TreeA.Nodes.Count > 0)
-            ////            {
-            ////                this.TreeA.SelectedNode = this.TreeA.Nodes[0];
-            ////            }
         }
 
         private List<DirEntryViewModel> SetDirectoryEntries(DirectoryDiffEntryCollection entries,
@@ -340,6 +472,26 @@
 
             return subPath;
         }
+
+        /// <summary>
+        /// Gets the selected item (of the 2 side by side views) that was activated last
+        /// (had the focus the last time).
+        /// </summary>
+        /// <returns></returns>
+        internal DirEntryViewModel GetSelectedItem(out bool? fromA)
+        {
+            fromA = null;
+
+            if (ViewActivation_A < ViewActivation_B)
+            {
+                fromA = false;
+                return SelectedItem_B as DirEntryViewModel;
+            }
+
+            fromA = true;
+            return SelectedItem_A as DirEntryViewModel;
+        }
+
         #endregion methods
     }
 }

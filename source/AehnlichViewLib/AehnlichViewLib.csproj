@@ -73,8 +73,10 @@
     <Compile Include="Behaviors\BindingProxy .cs" />
     <Compile Include="Converters\BoolToVisibilityPropConverter.cs" />
     <Compile Include="Converters\DiffToBackgroundColorConverter.cs" />
+    <Compile Include="Converters\DoubleBytesToStringReadableSizeConverter.cs" />
     <Compile Include="Converters\NullToVisibilityPropConverter.cs" />
     <Compile Include="Converters\NullToEnabledPropConverter.cs" />
+    <Compile Include="Converters\SentinelConverter.cs" />
     <Compile Include="Enums\Focus.cs" />
     <Compile Include="Events\ColumnWidthChangedEvent.cs" />
     <Compile Include="Events\DiffLineInfoChangedEvent.cs" />
