@@ -32,20 +32,6 @@
                      ToolBarTray.IsLocked="True"  ToolBar.OverflowMode="Never"
                      MinHeight="16"
                      >
-                <Button
-                    Command="{Binding DirDiffDoc.OpenFileFromActiveViewCommand}"
-                    ToolTip="Open in Windows"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    >
-                    <Button.Background>
-                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_OpenFileKey}}"/>
-                    </Button.Background>
-                </Button>
-
-                <Separator />
 
                 <Button
                     Command="{Binding CompareDirectoriesCommand}"
@@ -68,6 +54,21 @@
                     </Button.Background>
                 </Button>
 
+                <Separator Margin="0,0,3,0" />
+
+                <Button
+                    Command="{Binding DirDiffDoc.OpenFileFromActiveViewCommand}"
+                    ToolTip="Open in Windows"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
+                    >
+                    <Button.Background>
+                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_OpenFileKey}}"/>
+                    </Button.Background>
+                </Button>
+
                 <Button
                     Command="{Binding DirDiffDoc.BrowseUpCommand}"
 
@@ -84,57 +85,51 @@
                     </Button.Background>
                 </Button>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
-							Visibility="{Binding DirDiffDoc.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
-				>
-                    <Separator Margin="0,0,3,0" />
+                <Separator Margin="3,0,3,0" />
 
-                    <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
-							Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
-							>
-                        <Grid ToolTip="Changed"
-							  HorizontalAlignment="Stretch"
-							  MinHeight="16" MinWidth="16"
-							  Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
-                            <Grid.Background>
-                                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"/>
-                            </Grid.Background>
-                        </Grid>
-                    </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
+						>
+                    <Grid ToolTip="Changed"
+							HorizontalAlignment="Stretch"
+							MinHeight="16" MinWidth="16"
+							Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"/>
+                        </Grid.Background>
+                    </Grid>
+                </Border>
 
-                    <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
-							Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
-							>
-                        <Grid ToolTip="Deleted"
-							  HorizontalAlignment="Stretch"
-							  MinHeight="16" MinWidth="16"
-							  Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
-                            <Grid.Background>
-                                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"/>
-                            </Grid.Background>
-                        </Grid>
-                    </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
+						>
+                    <Grid ToolTip="Deleted"
+							HorizontalAlignment="Stretch"
+							MinHeight="16" MinWidth="16"
+							Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"/>
+                        </Grid.Background>
+                    </Grid>
+                </Border>
 
-                    <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
-							Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}">
-                        <Grid ToolTip="Inserted"
-							  HorizontalAlignment="Stretch"
-							  MinHeight="16" MinWidth="16"
-							  Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
-                            <Grid.Background>
-                                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AddedKey}}"/>
-                            </Grid.Background>
-                        </Grid>
-                    </Border>
+                <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}">
+                    <Grid ToolTip="Inserted"
+							HorizontalAlignment="Stretch"
+							MinHeight="16" MinWidth="16"
+							Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AddedKey}}"/>
+                        </Grid.Background>
+                    </Grid>
+                </Border>
 
-                    <Separator Margin="0,0,3,0" />
+                <Separator Margin="3,0,3,0" />
 
-                    <TextBlock Text="{Binding DirDiffDoc.LblFilter}"
-							   ToolTip="Filter Criteria"
-					           Margin="0,0,3,0"
-					/>
-
-                </StackPanel>
+                <TextBlock Text="{Binding DirDiffDoc.LblFilter}"
+						ToolTip="Filter Criteria"
+					    Margin="0,0,3,0" />
             </ToolBar>
         </Grid>
 
