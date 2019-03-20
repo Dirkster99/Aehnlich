@@ -25,9 +25,13 @@
         <Grid Grid.Column="0" Grid.Row="0">
             <Grid.Resources>
                 <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
-                <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
+                <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"
+                                                    FalseValue="Hidden"
+                                                    TrueValue="Visible"
+                                                    />
             </Grid.Resources>
-            <ToolBar Grid.Column="0" VerticalAlignment="Center"
+            <ToolBar Grid.Column="0"
+                     VerticalAlignment="Center"
                      Background="Transparent"
                      ToolBarTray.IsLocked="True"  ToolBar.OverflowMode="Never"
                      MinHeight="16"
@@ -54,7 +58,13 @@
                     </Button.Background>
                 </Button>
 
-                <Separator Margin="0,0,3,0" />
+                <ToolBar Visibility="{Binding DirDiffDoc.IsDiffDataAvailable, Converter={StaticResource BoolToVisibilityPropConverter}}"
+                         VerticalAlignment="Center"
+                         Background="Transparent"
+                         ToolBarTray.IsLocked="True"  ToolBar.OverflowMode="Never"
+                         MinHeight="16"
+                >
+                <Separator Margin="3,0,3,0" />
 
                 <Button
                     Command="{Binding DirDiffDoc.OpenFileFromActiveViewCommand}"
@@ -130,6 +140,8 @@
                 <TextBlock Text="{Binding DirDiffDoc.LblFilter}"
 						ToolTip="Filter Criteria"
 					    Margin="0,0,3,0" />
+
+                </ToolBar>
             </ToolBar>
         </Grid>
 
