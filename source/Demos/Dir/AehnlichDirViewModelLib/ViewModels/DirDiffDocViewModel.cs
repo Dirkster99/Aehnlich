@@ -204,7 +204,7 @@
                         if (param.Subentries.Count == 0) // No more subentries to browse to
                             return;
 
-                        var dirs = SetDirectoryEntries(param.Subentries, param.ItemPathA, param.ItemPathB);
+                        var dirs = SetDirectoryEntries(param.Subentries, _Results.RootPathA, _Results.RootPathB);
                         _DirEntries.ReplaceRange(dirs);
 
                         _DirPathStack.Push(param);
@@ -236,7 +236,7 @@
                         _DirPathStack.Pop();
 
                         DirectoryDiffEntryCollection entries = null;
-                        string itemPathA = string.Empty, itemPathB = string.Empty;
+
                         if (_DirPathStack.Count > 0)
                         {
                             var param = _DirPathStack.Peek();
@@ -249,18 +249,14 @@
                             if (param.Subentries.Count == 0) // No more Sub-Entries to browse to
                                 return;
 
-                            itemPathA = param.ItemPathA;
-                            itemPathB = param.ItemPathB;
                             entries = param.Subentries;
                         }
                         else
                         {
-                            itemPathA = _Results.RootPathA; // Go back to root entries display
-                            itemPathB = _Results.RootPathB;
                             entries = _Results.RootEntry.Subentries;
                         }
 
-                        var dirs = SetDirectoryEntries(entries, itemPathA, itemPathB);
+                        var dirs = SetDirectoryEntries(entries, _Results.RootPathA, _Results.RootPathB);
                         _DirEntries.ReplaceRange(dirs);
                         PathA = GetSubPath(_CompareOptions.LeftDir, _DirPathStack, true);
                         PathB = GetSubPath(_CompareOptions.RightDir, _DirPathStack, false);
@@ -424,6 +420,7 @@
 
             var dirs = SetDirectoryEntries(results.RootEntry.Subentries, currentPathA, currentPathB);
             //var dirs = SetDirectoryEntries(results.DifferentFiles, currentPathA, currentPathB);
+
             _DirPathStack.Clear();
 
             _Results = results;

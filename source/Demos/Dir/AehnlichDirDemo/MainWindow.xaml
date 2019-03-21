@@ -204,8 +204,8 @@
                               ItemsSource="{Binding DirDiffDoc.DirEntries}"
                               ColumnWidthChanged="DiffDir_ColumnWidthChanged"
 							  
-							  ActivationTimeStamp_A="{Binding DirDiffDoc.ViewActivation_A}"
-							  ActivationTimeStamp_B="{Binding DirDiffDoc.ViewActivation_B}"
+							  ActivationTimeStamp_A="{Binding DirDiffDoc.ViewActivation_A,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
+							  ActivationTimeStamp_B="{Binding DirDiffDoc.ViewActivation_B,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
 							  
 							  SelectedItem_A="{Binding DirDiffDoc.SelectedItem_A,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
 							  SelectedItem_B="{Binding DirDiffDoc.SelectedItem_B,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"

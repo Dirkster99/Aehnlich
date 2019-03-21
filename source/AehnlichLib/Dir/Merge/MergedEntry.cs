@@ -24,7 +24,6 @@
         }
         #endregion ctors
 
-
         #region properties
         public FileSystemInfo InfoA { get; }
 

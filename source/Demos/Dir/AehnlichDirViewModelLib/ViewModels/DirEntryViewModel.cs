@@ -53,7 +53,7 @@
         {
             get
             {
-                return GetFullPath(_CurrentPathA, _Model.Name);
+                return GetFullPath(_CurrentPathA, _Model.BasePath);
             }
         }
 
@@ -65,7 +65,7 @@
         {
             get
             {
-                return GetFullPath(_CurrentPathB, _Model.Name);
+                return GetFullPath(_CurrentPathB, _Model.BasePath);
             }
         }
 
