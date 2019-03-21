@@ -5,12 +5,9 @@
     using System.Globalization;
     using System.Windows;
     using System.Windows.Data;
-    using System.Windows.Media;
 
     public class DiffToBackgroundColorConverter : DependencyObject, IMultiValueConverter
     {
-
-
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values == null)

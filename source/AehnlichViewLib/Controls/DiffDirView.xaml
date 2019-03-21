@@ -50,7 +50,8 @@
                             ColumnWidth="*"
                             behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
                             behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=PART_GridA,Path=SelectedItem}"
-                        >
+                            VirtualizingPanel.VirtualizationMode="Standard"
+                        ><!-- Do not use VirtualizingPanel.VirtualizationMode="Recycling" since recycled row coloring will cause wrong coloring -->
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
                                     <Setter Property="Background">
@@ -126,6 +127,7 @@
                                                                 <RowDefinition Height="Auto"/>
                                                                 <RowDefinition Height="Auto"/>
                                                                 <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="Auto"/>
                                                             </Grid.RowDefinitions>
 
                                                             <TextBlock Grid.Column="0" Grid.Row="0" Text="Path:" HorizontalAlignment="Right"/>
@@ -138,7 +140,7 @@
                                                             <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding ItemLastUpdateA}" HorizontalAlignment="Left"/>
                                                         </Grid>
                                                     </TextBlock.ToolTip>
-                                    </TextBlock>
+                                                </TextBlock>
                                             </Grid>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -191,7 +193,8 @@
                                   ColumnWidth="*"
                                   behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
                                   behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=PART_GridB,Path=SelectedItem}"
-                        >
+                                  VirtualizingPanel.VirtualizationMode="Standard"
+                        ><!-- Do not use VirtualizingPanel.VirtualizationMode="Recycling" since recycled row coloring will cause wrong coloring -->
                             <DataGrid.Resources>
                                 <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter"/>
                                 <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"

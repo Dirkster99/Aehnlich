@@ -1,6 +1,5 @@
 namespace AehnlichLib.Dir
 {
-    using System;
 	using AehnlichLib.Interfaces;
 
     internal sealed class DirectoryDiffRoot : IDirectoryDiffRoot
