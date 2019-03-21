@@ -61,19 +61,19 @@
         /// The relative path is equal for A and B if this directory occurs in A and B
         /// in the same relative spot.
         /// </summary>
-        /// <param name="fsItemA"></param>
-        /// <param name="fsItemB"></param>
+        /// <param name="sItemB"></param>
+        /// <param name="sItemA"></param>
         /// <returns></returns>
-        internal string GetBasePath(FileSystemInfo fsItemA, FileSystemInfo fsItemB)
+        internal string GetBasePath(string sItemA, string sItemB)
         {
             string nameA = (this.InfoA == null ? string.Empty : this.InfoA.FullName);
             string nameB = (this.InfoB == null ? string.Empty : this.InfoB.FullName);
             string basePath = string.Empty;
 
             if (string.IsNullOrEmpty(nameA) == false)
-                basePath = nameA.Substring(fsItemA.FullName.Length + 1);
+                basePath = nameA.Substring(sItemA.Length + 1);
             else
-                basePath = nameB.Substring(fsItemB.FullName.Length + 1);
+                basePath = nameB.Substring(sItemB.Length + 1);
 
             return basePath;
         }

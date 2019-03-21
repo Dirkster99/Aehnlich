@@ -95,16 +95,6 @@
       <FileName>Dir\DirectoryDiffFileFilter.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiffLib.Dir.DirectoryDiffResults">
-    <Position X="25" Y="0.5" Width="1.75" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAACAAAAAgkAAAAJAAAAAAAAAADAAAAAw=</HashCode>
-      <FileName>Dir\DirectoryDiffResults.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="DiffLib.Dir.FileSystemInfoComparer" BaseTypeListCollapsed="true">
     <Position X="17.5" Y="4.75" Width="2" />
     <TypeIdentifier>

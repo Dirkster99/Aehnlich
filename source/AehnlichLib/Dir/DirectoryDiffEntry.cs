@@ -1,8 +1,9 @@
 namespace AehnlichLib.Dir
 {
     using System;
+    using AehnlichLib.Interfaces;
 
-    public sealed class DirectoryDiffEntry
+    internal sealed class DirectoryDiffEntry : IDirectoryDiffEntry
     {
         #region Private Data Members
 
@@ -29,17 +30,16 @@ namespace AehnlichLib.Dir
         /// <param name="lengthA"></param>
         /// <param name="lengthB"></param>
         internal DirectoryDiffEntry(string basePath,
-                            string name,
-                            bool isFile,
-                            bool inA, bool inB,
-                            DateTime lastUpdateA, DateTime lastUpdateB,
-                            double lengthA, double lengthB)
+                                    string name,
+                                    bool isFile,
+                                    bool inA, bool inB,
+                                    DateTime lastUpdateA, DateTime lastUpdateB,
+                                    double lengthA, double lengthB)
             : this(basePath, name, isFile, inA, inB, lastUpdateA, lastUpdateB)
         {
             this.LengthA = lengthA;
             this.LengthB = lengthB;
         }
-
 
         /// <summary>
         /// Class constructor
@@ -73,7 +73,7 @@ namespace AehnlichLib.Dir
         /// <summary>
         /// Class constructor
         /// </summary>
-        public DirectoryDiffEntry()
+        internal DirectoryDiffEntry()
         {
             this.Name = string.Empty;
             this.BasePath = string.Empty;
@@ -90,21 +90,21 @@ namespace AehnlichLib.Dir
         {
             get { return this._different; }
 
-            internal set { this._different = value; }
+            set { this._different = value; }
         }
 
         public string Error
         {
             get { return this._error; }
 
-            internal set { this._error = value; }
+            set { this._error = value; }
         }
 
-        public bool InA => this._inA;
+        public bool InA { get { return this._inA; } }
 
-        public bool InB => this._inB;
+        public bool InB { get { return this._inB; } }
 
-        public bool IsFile => this._isFile;
+        public bool IsFile { get { return this._isFile; } }
 
         public string BasePath { get; }
 
@@ -113,7 +113,7 @@ namespace AehnlichLib.Dir
         /// <summary>
         /// Gets the last time this item has been changed through a write access.
         /// </summary>
-		public DateTime LastUpdateA { get; }
+        public DateTime LastUpdateA { get; }
 
         /// <summary>
         /// Gets the last time this item has been changed through a write access.
@@ -123,12 +123,12 @@ namespace AehnlichLib.Dir
         /// <summary>
         /// Gets the size, in bytes, of the current file system item.
         /// </summary>
-        public double LengthA { get; internal set; }
+        public double LengthA { get; set; }
 
         /// <summary>
         /// Gets the size, in bytes, of the current file system item.
         /// </summary>
-        public double LengthB { get; internal set; }
+        public double LengthB { get; set; }
 
         public DirectoryDiffEntryCollection Subentries
         {
@@ -146,7 +146,7 @@ namespace AehnlichLib.Dir
         #endregion properties
 
         #region methods
-        public void AddSubEntry(DirectoryDiffEntry entry)
+        public void AddSubEntry(IDirectoryDiffEntry entry)
         {
             if (this.subentries == null)
                 this.subentries = new DirectoryDiffEntryCollection();

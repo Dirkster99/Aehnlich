@@ -3,6 +3,7 @@
     using AehnlichDirViewModelLib.Models;
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
+    using AehnlichLib.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Windows.Input;
@@ -17,7 +18,7 @@
         private object _SelectedItem_A, _SelectedItem_B;
 
         private bool _IsDiffDataAvailable;
-        private DirectoryDiffResults _Results;
+        private IDirectoryDiffRoot _Results;
 
         private ICommand _BrowseItemCommand;
         private ICommand _BrowseUpCommand;
@@ -181,6 +182,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets a command to browse the current directory diff view by one level down
+		/// (if there is a current view and a remaining level down is available).
+        /// </summary>
         public ICommand BrowseItemCommand
         {
             get
@@ -212,6 +217,11 @@
             }
         }
 
+        /// <summary>
+        /// Gets a command to browse the current directory diff view by one level
+		/// up in the directory hierarchy
+		/// (if there is a current view and a remaining level up is available).
+        /// </summary>
         public ICommand BrowseUpCommand
         {
             get
@@ -236,7 +246,7 @@
                             if (param.IsFile == true)  // Todo Open a text file diff view for this
                                 return;
 
-                            if (param.Subentries.Count == 0) // No more subentries to browse to
+                            if (param.Subentries.Count == 0) // No more Sub-Entries to browse to
                                 return;
 
                             itemPathA = param.ItemPathA;
@@ -245,9 +255,9 @@
                         }
                         else
                         {
-                            itemPathA = _Results.DirectoryA.FullName; // Go back to root entries display
-                            itemPathB = _Results.DirectoryB.FullName;
-                            entries = _Results.Entries;
+                            itemPathA = _Results.RootPathA; // Go back to root entries display
+                            itemPathB = _Results.RootPathB;
+                            entries = _Results.RootEntry.Subentries;
                         }
 
                         var dirs = SetDirectoryEntries(entries, itemPathA, itemPathB);
@@ -393,7 +403,7 @@
                                              args.IgnoreDirectoryComparison,
                                              args.FileFilter);
 
-                DirectoryDiffResults results = diff.Execute(args.LeftDir, args.RightDir);
+                IDirectoryDiffRoot results = diff.Execute(args.LeftDir, args.RightDir);
 
                 SetData(results);
 
@@ -407,12 +417,13 @@
             }
         }
 
-        private void SetData(DirectoryDiffResults results)
+        private void SetData(IDirectoryDiffRoot results)
         {
-            string currentPathA = results.DirectoryA.FullName;
-            string currentPathB = results.DirectoryB.FullName;
+            string currentPathA = results.RootPathA;
+            string currentPathB = results.RootPathB;
 
-            var dirs = SetDirectoryEntries(results.Entries, currentPathA, currentPathB);
+            var dirs = SetDirectoryEntries(results.RootEntry.Subentries, currentPathA, currentPathB);
+            //var dirs = SetDirectoryEntries(results.DifferentFiles, currentPathA, currentPathB);
             _DirPathStack.Clear();
 
             _Results = results;

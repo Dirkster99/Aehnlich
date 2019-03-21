@@ -31,9 +31,9 @@ namespace AehnlichLib.Dir
 
 		#region Public Properties
 
-		public string FilterString => this.concatenatedFilters;
+		public string FilterString { get { return this.concatenatedFilters; } }
 
-		public bool Include => this.include;
+		public bool Include { get { return this.include; } }
 
 		#endregion
 

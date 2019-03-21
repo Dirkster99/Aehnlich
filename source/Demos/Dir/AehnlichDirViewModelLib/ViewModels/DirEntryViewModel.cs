@@ -1,12 +1,13 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
     using AehnlichLib.Dir;
+    using AehnlichLib.Interfaces;
     using System;
 
     public class DirEntryViewModel : Base.ViewModelBase
     {
         #region fields
-        private readonly DirectoryDiffEntry _Model;
+        private readonly IDirectoryDiffEntry _Model;
         private readonly string _CurrentPathA, _CurrentPathB;
         #endregion fields
 
@@ -14,7 +15,7 @@
         /// <summary>
         /// Class constructor
         /// </summary>
-        public DirEntryViewModel(DirectoryDiffEntry model,
+        public DirEntryViewModel(IDirectoryDiffEntry model,
                                  string currentPathA,
                                  string currentPathB)
             : this()

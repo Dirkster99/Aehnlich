@@ -2,13 +2,14 @@ namespace AehnlichLib.Dir
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using AehnlichLib.Interfaces;
 
-    public sealed class DirectoryDiffEntryCollection : ReadOnlyCollection<DirectoryDiffEntry>
+    public sealed class DirectoryDiffEntryCollection : ReadOnlyCollection<IDirectoryDiffEntry>
 	{
 		#region Constructors
 
 		internal DirectoryDiffEntryCollection()
-			: base(new List<DirectoryDiffEntry>())
+			: base(new List<IDirectoryDiffEntry>())
 		{
 		}
 
@@ -16,7 +17,7 @@ namespace AehnlichLib.Dir
 
 		#region Internal Methods
 
-		internal void Add(DirectoryDiffEntry entry)
+		internal void Add(IDirectoryDiffEntry entry)
 		{
 			this.Items.Add(entry);
 		}
