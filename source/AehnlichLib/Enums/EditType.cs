@@ -7,13 +7,13 @@
 	/// which to display differences (mergeing text). Typically, these differences are based
 	/// on a type of difference (insert, delete, change, none) which is denoted by this enumeration.
     /// </summary>
-    public enum EditType
+    public enum EditType : uint
     {
         /// <summary>
         /// The sequences in stringA and stringB are equal. Therefore, no edit operation is required
         /// to transform stringA into stringB.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// The sequences in stringA and stringB are NOT equal.
@@ -21,7 +21,7 @@
         /// in stringA is required to make stringA
         /// more equal in comparison towards stringB.
         /// </summary>
-        Delete,
+        Delete = 1,
 
         /// <summary>
         /// The sequences in stringA and stringB are NOT equal.
@@ -29,13 +29,13 @@
         /// in stringA is required to make stringA
         /// more equal in comparison towards stringB.
         /// </summary>
-        Insert,
+        Insert = 2,
 
         /// <summary>
         /// The sequences in stringA and stringB are NOT equal.
         /// An change operation (eg: exchange letter 'A' in position n with letter 'B')
         /// in stringA is required to make stringA more equal in comparison towards stringB.
         /// </summary>
-        Change
+        Change = 3
     }
 }

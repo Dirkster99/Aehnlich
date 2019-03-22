@@ -1,6 +1,8 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
+    using AehnlichDirViewModelLib.Enums;
     using AehnlichDirViewModelLib.ViewModels.Base;
+    using System.Collections.Generic;
     using System.IO;
     using System.Windows.Input;
 
@@ -9,8 +11,12 @@
         #region fields
         private string _RightDirPath;
         private string _LeftDirPath;
-        private ICommand _CompareDirectoriesCommand;
 
+        private ICommand _CompareDirectoriesCommand;
+        private ICommand _DiffViewModeSelectCommand;
+
+        private ListItemViewModel _DiffViewModeSelected;
+        private readonly List<ListItemViewModel> _DiffViewModes;
         private readonly DirDiffDocViewModel _DirDiffDoc;
         #endregion fields
 
@@ -21,6 +27,7 @@
         public AppViewModel()
         {
             _DirDiffDoc = new DirDiffDocViewModel();
+            _DiffViewModes = ResetViewModeDefaults();
         }
         #endregion ctors
 
@@ -131,6 +138,55 @@
             }
         }
 
+        public IReadOnlyList<ListItemViewModel> DiffViewModes
+        {
+            get { return _DiffViewModes;  }
+        }
+
+        public ListItemViewModel DiffViewModeSelected
+        {
+            get { return _DiffViewModeSelected; }
+
+            protected set
+            {
+                if (_DiffViewModeSelected != value)
+                {
+                    _DiffViewModeSelected = value;
+                    NotifyPropertyChanged(() => DiffViewModeSelected);
+                }
+            }
+        }
+
+        public ICommand DiffViewModeSelectCommand
+        {
+            get
+            {
+                if (_DiffViewModeSelectCommand == null)
+                {
+                    _DiffViewModeSelectCommand = new RelayCommand<object>((p) =>
+                    {
+                        var param = p as ListItemViewModel;
+
+                        if (param == null)
+                            return;
+
+                        if (param.Key == (int)DiffViewModeEnum.DirectoriesAndFiles)
+                        {
+                            DirDiffDoc.SetViewMode(DiffViewModeEnum.DirectoriesAndFiles);
+                        }
+                        else
+                        {
+                            if (param.Key == (int)DiffViewModeEnum.FilesOnly)
+                            {
+                                DirDiffDoc.SetViewMode(DiffViewModeEnum.FilesOnly);
+                            }
+                        }
+                    }, ((p) => { return DirDiffDoc.IsDiffDataAvailable; }));
+                }
+
+                return _DiffViewModeSelectCommand;
+            }
+        }
         #endregion properties
 
         #region methods
@@ -169,6 +225,18 @@
             }
 
             return true;
+        }
+
+        private List<ListItemViewModel> ResetViewModeDefaults()
+        {
+            var lst = new List<ListItemViewModel>();
+
+            lst.Add(new ListItemViewModel("Directories and Files", (int)DiffViewModeEnum.DirectoriesAndFiles));
+            lst.Add(new ListItemViewModel("Files only", (int)DiffViewModeEnum.FilesOnly));
+
+            DiffViewModeSelected = lst[0]; // Select default view mode
+
+            return lst;
         }
         #endregion methods
     }

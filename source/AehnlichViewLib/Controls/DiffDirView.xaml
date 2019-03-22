@@ -36,7 +36,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                         
-                            ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
+                            ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                             ItemTemplate="{TemplateBinding ItemTemplate}"
                             ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
                             SelectedItem="{Binding SelectedItem_A,Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
@@ -180,7 +180,7 @@
                             Width="6" />
 
                         <DataGrid Grid.Column="2" Grid.Row="0" Name="PART_GridB"
-                                  ItemsSource="{Binding DirDiffDoc.DirEntries}"
+                                  ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                                   SelectedItem="{Binding SelectedItem_B,Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
                                   
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"

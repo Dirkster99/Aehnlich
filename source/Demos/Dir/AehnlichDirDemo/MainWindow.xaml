@@ -6,6 +6,7 @@
 
         xmlns:conv="clr-namespace:AehnlichViewLib.Converters;assembly=AehnlichViewLib"
         xmlns:behav="clr-namespace:AehnlichViewLib.Behaviors;assembly=AehnlichViewLib"
+        xmlns:behav1="clr-namespace:AehnlichDirViewModelLib.Behaviors;assembly=AehnlichDirViewModelLib"
 
         xmlns:conv1="clr-namespace:AehnlichDirViewModelLib.Converters;assembly=AehnlichDirViewModelLib"
         
@@ -22,7 +23,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0" Grid.Row="0">
+        <Grid Grid.Row="0">
             <Grid.Resources>
                 <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
                 <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"
@@ -87,13 +88,42 @@
                     Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
                     Margin="0,0,3,0"
                     
-                    ToolTip="Go Back up"
+                    ToolTip="Go one folder up from current folder"
                     ToolTipService.ShowOnDisabled="true"
                     >
                     <Button.Background>
                         <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ArrowUpKey}}"/>
                     </Button.Background>
                 </Button>
+
+                <Button
+                    Command="{Binding DirDiffDoc.BrowseItemCommand}"
+
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
+                    
+                    ToolTip="Select a folder to browse it"
+                    ToolTipService.ShowOnDisabled="true"
+                    >
+                    <Button.Background>
+                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ArrowDownKey}}"/>
+                    </Button.Background>
+                </Button>
+
+                <ComboBox
+                    Name="ViewModeSelector"
+                    ItemsSource="{Binding DiffViewModes}"
+                    SelectedItem="{Binding DiffViewModeSelected,Mode=OneWay}"
+                    DisplayMemberPath="Name"
+                    Width="150"
+                    behav1:SelectionChangedCommand.ChangedCommand="{Binding DiffViewModeSelectCommand}"
+                    behav1:SelectionChangedCommand.CommandParameter="{Binding Path=SelectedItem, ElementName=ViewModeSelector}"
+                    IsEnabled="{Binding DirDiffDoc.IsDiffDataAvailable}"
+                    ToolTip="Change between hierarchical and simple file view"
+                    ToolTipService.ShowOnDisabled="true"
+                />
 
                 <Separator Margin="3,0,3,0" />
 
@@ -145,7 +175,7 @@
             </ToolBar>
         </Grid>
 
-        <Grid Grid.Column="0" Grid.Row="1" Margin="0,3,0,0">
+        <Grid Grid.Row="1" Margin="0,3,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"  Name="TopColumnA"/>
                 <ColumnDefinition Width="Auto"/>
@@ -201,7 +231,7 @@
 
             <ctrl:DiffDirView Name="DiffDir"
                               Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3"
-                              ItemsSource="{Binding DirDiffDoc.DirEntries}"
+                              ItemsSource="{Binding DirDiffDoc.DirEntries,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                               ColumnWidthChanged="DiffDir_ColumnWidthChanged"
 							  
 							  ActivationTimeStamp_A="{Binding DirDiffDoc.ViewActivation_A,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"

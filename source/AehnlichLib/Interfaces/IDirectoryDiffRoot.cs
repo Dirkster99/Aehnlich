@@ -14,13 +14,13 @@ namespace AehnlichLib.Interfaces
 
         /// <summary>
         /// Gets a hierarchical collection of directories (and their files)
-		/// that are different in the directories below <see cref="RootPathA"> and <see cref="RootPathB">.
+		/// that are different in the directories below <see cref="RootPathA"/> and <see cref="RootPathB"/>.
         /// </summary>
         IDirectoryDiffEntry RootEntry { get; }
 
         /// <summary>
         /// Gets a collection of files that are different in the directories below
-		/// <see cref="RootPathA"> and <see cref="RootPathB">.
+		/// <see cref="RootPathA"/> and <see cref="RootPathB"/>.
         /// </summary>
         DirectoryDiffEntryCollection DifferentFiles { get; }
     }

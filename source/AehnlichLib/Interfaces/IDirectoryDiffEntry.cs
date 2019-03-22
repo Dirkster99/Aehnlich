@@ -1,6 +1,7 @@
 namespace AehnlichLib.Interfaces
 {
     using AehnlichLib.Dir;
+    using AehnlichLib.Enums;
     using System;
 
     public interface IDirectoryDiffEntry
@@ -13,6 +14,12 @@ namespace AehnlichLib.Interfaces
         bool InA  { get; }
 
         bool InB  { get; }
+
+        /// <summary>
+        /// Gets the context of this diff (none, delete, add, change)
+        /// as an enumeration value.
+        /// </summary>
+        EditType EditContext { get; }
 
         bool IsFile  { get; }
 

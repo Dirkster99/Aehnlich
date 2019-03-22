@@ -1,11 +1,13 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
+    using AehnlichDirViewModelLib.Enums;
     using AehnlichDirViewModelLib.Models;
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
     using AehnlichLib.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Windows.Input;
 
     public class DirDiffDocViewModel : Base.ViewModelBase
@@ -20,6 +22,8 @@
         private bool _IsDiffDataAvailable;
         private IDirectoryDiffRoot _Results;
 
+        private DiffViewModeEnum _CurrentViewMode = DiffViewModeEnum.DirectoriesAndFiles;
+
         private ICommand _BrowseItemCommand;
         private ICommand _BrowseUpCommand;
         private ICommand _CopyPathToClipboardCommand;
@@ -27,7 +31,7 @@
         private ICommand _OpenInWindowsCommand;
         private ICommand _OpenFileFromActiveViewCommand;
 
-        private readonly ObservableRangeCollection<DirEntryViewModel> _DirEntries;
+        private ObservableRangeCollection<DirEntryViewModel> _DirEntries;
         private readonly Stack<DirEntryViewModel> _DirPathStack;
         #endregion fields
 
@@ -37,7 +41,7 @@
         /// </summary>
         public DirDiffDocViewModel()
         {
-            _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
+//            _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
             _DirPathStack = new Stack<DirEntryViewModel>();
 
             _ViewActivation_A = DateTime.MinValue;
@@ -184,7 +188,7 @@
 
         /// <summary>
         /// Gets a command to browse the current directory diff view by one level down
-		/// (if there is a current view and a remaining level down is available).
+        /// (if there is a current view and a remaining level down is available).
         /// </summary>
         public ICommand BrowseItemCommand
         {
@@ -196,7 +200,13 @@
                     {
                         var param = p as DirEntryViewModel;
                         if (param == null)
-                            return;
+                        {
+                            bool? fromA;
+                            param = GetSelectedItem(out fromA);
+
+                            if (param == null)
+                                return;
+                        }
 
                         if (param.IsFile == true)  // Todo Open a text file diff view for this
                             return;
@@ -204,13 +214,26 @@
                         if (param.Subentries.Count == 0) // No more subentries to browse to
                             return;
 
-                        var dirs = SetDirectoryEntries(param.Subentries, _Results.RootPathA, _Results.RootPathB);
-                        _DirEntries.ReplaceRange(dirs);
+                        var dirs = CreateViewModelEntries(param.Subentries, _Results.RootPathA, _Results.RootPathB);
+                        this.SetDirDiffCollectionData(dirs);
 
                         _DirPathStack.Push(param);
                         PathA = GetSubPath(_CompareOptions.LeftDir, _DirPathStack, true);
                         PathB = GetSubPath(_CompareOptions.RightDir, _DirPathStack, false);
-                    });
+                    },((p) =>
+                    {
+                        var param = p as DirEntryViewModel;
+                        if (param == null)
+                        {
+                            bool? fromA;
+                            param = GetSelectedItem(out fromA);
+
+                            if (param == null)
+                                return false;
+                        }
+
+                        return true;
+                    }));
                 }
 
                 return _BrowseItemCommand;
@@ -256,8 +279,8 @@
                             entries = _Results.RootEntry.Subentries;
                         }
 
-                        var dirs = SetDirectoryEntries(entries, _Results.RootPathA, _Results.RootPathB);
-                        _DirEntries.ReplaceRange(dirs);
+                        var dirs = CreateViewModelEntries(entries, _Results.RootPathA, _Results.RootPathB);
+                        this.SetDirDiffCollectionData(dirs);
                         PathA = GetSubPath(_CompareOptions.LeftDir, _DirPathStack, true);
                         PathB = GetSubPath(_CompareOptions.RightDir, _DirPathStack, false);
 
@@ -401,7 +424,8 @@
 
                 IDirectoryDiffRoot results = diff.Execute(args.LeftDir, args.RightDir);
 
-                SetData(results);
+                SetData(results, _CurrentViewMode);
+                _Results = results;
 
                 _CompareOptions = args; // Record comparison options for later
 
@@ -413,18 +437,44 @@
             }
         }
 
-        private void SetData(IDirectoryDiffRoot results)
+        internal void SetViewMode(DiffViewModeEnum requestedViewMode)
+        {
+            if (_Results == null)
+                return;
+
+            SetData(_Results, requestedViewMode);
+            _CurrentViewMode = requestedViewMode;
+        }
+
+        private void SetData(IDirectoryDiffRoot results,
+                             DiffViewModeEnum requestedViewMode)
         {
             string currentPathA = results.RootPathA;
             string currentPathB = results.RootPathB;
 
-            var dirs = SetDirectoryEntries(results.RootEntry.Subentries, currentPathA, currentPathB);
-            //var dirs = SetDirectoryEntries(results.DifferentFiles, currentPathA, currentPathB);
+            List<DirEntryViewModel> dirs = null;
+            switch (requestedViewMode)
+            {
+                case DiffViewModeEnum.DirectoriesAndFiles:
+                    dirs = CreateViewModelEntries(results.RootEntry.Subentries, currentPathA, currentPathB);
+                    break;
+
+                case DiffViewModeEnum.FilesOnly:
+                    // Sort list of different files by their type of difference and show them in UI
+                    var sortedList = results.DifferentFiles
+                                      .OrderByDescending(x => (int)(x.EditContext))
+                                      .ToList();
+
+                    dirs = CreateViewModelEntries(sortedList, currentPathA, currentPathB);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(requestedViewMode.ToString());
+            }
 
             _DirPathStack.Clear();
+            SetDirDiffCollectionData(dirs);
 
-            _Results = results;
-            _DirEntries.ReplaceRange(dirs);
             PathA = string.Empty;
             PathB = string.Empty;
 
@@ -440,9 +490,26 @@
             }
         }
 
-        private List<DirEntryViewModel> SetDirectoryEntries(DirectoryDiffEntryCollection entries,
-                                                            string currentPathA,
-                                                            string currentPathB)
+        /// <summary>
+        /// Adds the given list of items into a collection that
+        /// should be bound to a view (ListBox, ListView, GridView).
+        /// 
+        /// Using the NotifyPropertyChanged event since columns are otherwise not resized correctly:
+        /// https://stackoverflow.com/questions/55226831/resize-datagrid-column-onloaded-programatically/55299954#55299954
+        /// </summary>
+        /// <param name="dirs"></param>
+        private void SetDirDiffCollectionData(List<DirEntryViewModel> dirs)
+        {
+            if (_DirEntries == null)
+                _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
+
+            _DirEntries.ReplaceRange(dirs);
+            NotifyPropertyChanged(() => DirEntries);
+        }
+
+        private List<DirEntryViewModel> CreateViewModelEntries(IReadOnlyCollection<IDirectoryDiffEntry> entries,
+                                                               string currentPathA,
+                                                               string currentPathB)
         {
             List<DirEntryViewModel> dirs = new List<DirEntryViewModel>();
 

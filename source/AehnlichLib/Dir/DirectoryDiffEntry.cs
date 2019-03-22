@@ -1,6 +1,7 @@
 namespace AehnlichLib.Dir
 {
     using System;
+    using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
 
     internal sealed class DirectoryDiffEntry : IDirectoryDiffEntry
@@ -66,6 +67,21 @@ namespace AehnlichLib.Dir
 
             // Mark node as different if this entry either refers to A only or B only
             _different = (inA == true && inB == false || inA == false && inB == true);
+
+            // Edit context with an Enumeration
+            if (inA == true && inB == false)
+                EditContext = EditType.Delete;
+            else
+            {
+                if (inA == false && inB == true)
+                    EditContext = EditType.Insert;
+                else
+                {
+                    if (inA == true && inB == true && Different)
+                        EditContext = EditType.Change;
+                }
+            }
+
             this.LastUpdateA = lastUpdateA;
             this.LastUpdateB = lastUpdateB;
         }
@@ -103,6 +119,8 @@ namespace AehnlichLib.Dir
         public bool InA { get { return this._inA; } }
 
         public bool InB { get { return this._inB; } }
+
+        public EditType EditContext { get; }
 
         public bool IsFile { get { return this._isFile; } }
 
