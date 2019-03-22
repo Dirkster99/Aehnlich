@@ -21,6 +21,7 @@ in the toolbar to browse back up in the structure.
 This view shows only file that have been deleted, inserted, or changed in the **right view**
 when compared to the **left view**. You can use the tooltip or context menu entries to see
 the actual path of each file or open in the Explorer etc.
+
 ![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/DirDiffScreen_1.png)
 
 ## Comparing Text Files
