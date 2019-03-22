@@ -25,8 +25,12 @@ namespace AehnlichLib.Dir
 			
 			_Recursive = recursive;
 			_Filter = filter;
+
+            CountFilesAdded = 0;
+            CountFilesDeleted = 0;
+            CountFilesChanged = 0;
         }
-		
+
         /// <summary>
         /// Class constructor
         /// </summary>
@@ -47,7 +51,7 @@ namespace AehnlichLib.Dir
 		
         /// <summary>
         /// Gets a hierarchical collection of directories (and their files)
-		/// that are different in the directories below <see cref="RootPathA"> and <see cref="RootPathB">.
+		/// that are different in the directories below <see cref="RootPathA"/> and <see cref="RootPathB"/>.
         /// </summary>
         public IDirectoryDiffEntry RootEntry
         {
@@ -56,7 +60,7 @@ namespace AehnlichLib.Dir
 
         /// <summary>
         /// Gets a collection of files that are different in the directories below
-		/// <see cref="RootPathA"> and <see cref="RootPathB">.
+		/// <see cref="RootPathA"/> and <see cref="RootPathB"/>.
         /// </summary>
         public DirectoryDiffEntryCollection DifferentFiles
         {
@@ -65,12 +69,40 @@ namespace AehnlichLib.Dir
                 return _DifferentFiles;
             }
         }
-		
-		#region methods
-		internal void AddDiffFile(IDirectoryDiffEntry diffEntry)
+
+        public int CountFilesDeleted { get; private set; }
+
+        public int CountFilesAdded { get; private set; }
+
+        public int CountFilesChanged { get; private set; }
+
+        #region methods
+        /// <summary>
+        /// Adds another item into the collection of files
+        /// that are different between 2 sets of files.
+        /// </summary>
+        /// <param name="diffEntry"></param>
+        internal void AddDiffFile(IDirectoryDiffEntry diffEntry)
 		{
 			_DifferentFiles.Add(diffEntry);
-		}
+
+            switch (diffEntry.EditContext)
+            {
+                case Enums.EditType.Delete:
+                    CountFilesDeleted += 1;
+                    break;
+                case Enums.EditType.Insert:
+                    CountFilesAdded += 1;
+                    break;
+                case Enums.EditType.Change:
+                    CountFilesChanged += 1;
+                    break;
+
+                case Enums.EditType.None:
+                default:
+                    break;
+            }
+        }
 		#endregion methods
     }
 }

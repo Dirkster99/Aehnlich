@@ -23,5 +23,11 @@ namespace AehnlichLib.Interfaces
 		/// <see cref="RootPathA"/> and <see cref="RootPathB"/>.
         /// </summary>
         DirectoryDiffEntryCollection DifferentFiles { get; }
+
+        int CountFilesDeleted { get; }
+
+        int CountFilesAdded { get; }
+
+        int CountFilesChanged { get; }
     }
 }

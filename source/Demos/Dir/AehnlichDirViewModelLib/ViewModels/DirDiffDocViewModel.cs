@@ -32,6 +32,9 @@
         private ICommand _OpenFileFromActiveViewCommand;
 
         private ObservableRangeCollection<DirEntryViewModel> _DirEntries;
+        private int _CountFilesDeleted;
+        private int _CountFilesAdded;
+        private int _CountFilesChanged;
         private readonly Stack<DirEntryViewModel> _DirPathStack;
         #endregion fields
 
@@ -41,7 +44,6 @@
         /// </summary>
         public DirDiffDocViewModel()
         {
-//            _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
             _DirPathStack = new Stack<DirEntryViewModel>();
 
             _ViewActivation_A = DateTime.MinValue;
@@ -407,6 +409,57 @@
                 return _OpenFileFromActiveViewCommand;
             }
         }
+
+        /// <summary>
+        /// Gets the number of files that have been deleted in B
+        /// when comparing a set of files between A and B.
+        /// </summary>
+        public int CountFilesDeleted
+        {
+            get { return _CountFilesDeleted; }
+            private set
+            {
+                if (_CountFilesDeleted != value)
+                {
+                    _CountFilesDeleted = value;
+                    NotifyPropertyChanged(() => CountFilesDeleted);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of files that have been added in B
+        /// when comparing a set of files between A and B.
+        /// </summary>
+        public int CountFilesAdded
+        {
+            get { return _CountFilesAdded; }
+            private set
+            {
+                if (_CountFilesAdded != value)
+                {
+                    _CountFilesAdded = value;
+                    NotifyPropertyChanged(() => CountFilesAdded);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of files that have been changed in B or A
+        /// when comparing a set of files between A and B.
+        /// </summary>
+        public int CountFilesChanged
+        {
+            get { return _CountFilesChanged; }
+            private set
+            {
+                if (_CountFilesChanged != value)
+                {
+                    _CountFilesChanged = value;
+                    NotifyPropertyChanged(() => CountFilesChanged);
+                }
+            }
+        }
         #endregion properties
 
         #region methods
@@ -474,6 +527,10 @@
 
             _DirPathStack.Clear();
             SetDirDiffCollectionData(dirs);
+
+            CountFilesDeleted = results.CountFilesDeleted;
+            CountFilesAdded = results.CountFilesAdded;
+            CountFilesChanged = results.CountFilesChanged;
 
             PathA = string.Empty;
             PathB = string.Empty;

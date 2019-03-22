@@ -130,39 +130,48 @@
                 <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
 						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
 						>
-                    <Grid ToolTip="Changed"
-							HorizontalAlignment="Stretch"
-							MinHeight="16" MinWidth="16"
-							Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                    <Grid 
+                        HorizontalAlignment="Stretch"
+						MinHeight="16" MinWidth="16"
+						Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
                         <Grid.Background>
                             <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"/>
                         </Grid.Background>
+                        <Grid.ToolTip>
+                                <TextBlock><TextBlock Text="{Binding DirDiffDoc.CountFilesChanged}"/> <TextBlock Text="files changed."/></TextBlock>
+                        </Grid.ToolTip>
                     </Grid>
                 </Border>
 
                 <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
 						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
 						>
-                    <Grid ToolTip="Deleted"
-							HorizontalAlignment="Stretch"
-							MinHeight="16" MinWidth="16"
-							Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                    <Grid 
+                        HorizontalAlignment="Stretch"
+						MinHeight="16" MinWidth="16"
+						Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
                         <Grid.Background>
                             <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"/>
                         </Grid.Background>
+                        <Grid.ToolTip>
+                                <TextBlock><TextBlock Text="{Binding DirDiffDoc.CountFilesDeleted}"/> <TextBlock Text="files deleted."/></TextBlock>
+                        </Grid.ToolTip>
                     </Grid>
                 </Border>
 
                 <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
 						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}">
-                    <Grid ToolTip="Inserted"
-							HorizontalAlignment="Stretch"
-							MinHeight="16" MinWidth="16"
-							Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                    <Grid 
+                        HorizontalAlignment="Stretch"
+						MinHeight="16" MinWidth="16"
+						Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
                         <Grid.Background>
                             <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AddedKey}}"/>
                         </Grid.Background>
-                    </Grid>
+                        <Grid.ToolTip>
+                                <TextBlock><TextBlock Text="{Binding DirDiffDoc.CountFilesAdded}"/> <TextBlock Text="files added."/></TextBlock>
+                        </Grid.ToolTip>
+                        </Grid>
                 </Border>
 
                 <Separator Margin="3,0,3,0" />

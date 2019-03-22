@@ -70,14 +70,14 @@ namespace AehnlichLib.Dir
 
             // Edit context with an Enumeration
             if (inA == true && inB == false)
-                EditContext = EditType.Delete;
+                EditContext = EditType.Insert;
             else
             {
                 if (inA == false && inB == true)
-                    EditContext = EditType.Insert;
+                    EditContext = EditType.Delete;
                 else
                 {
-                    if (inA == true && inB == true && Different)
+                    if (inA == true && inB == true && Different == false)
                         EditContext = EditType.Change;
                 }
             }
@@ -97,6 +97,7 @@ namespace AehnlichLib.Dir
             _inA = true;
             _inB = true;
             _different = false;
+            EditContext = EditType.None;
         }
         #endregion
 
