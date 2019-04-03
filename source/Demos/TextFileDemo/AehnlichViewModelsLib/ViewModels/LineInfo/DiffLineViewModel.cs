@@ -26,11 +26,13 @@
         /// </summary>
         /// <param name="lineContext"></param>
         /// <param name="item"></param>
-        internal DiffLineViewModel(DiffContext lineContext, DiffViewLine item)
+        /// <param name="lineIndex"></param>
+        internal DiffLineViewModel(DiffContext lineContext, DiffViewLine item, int lineIndex)
             : this()
         {
             _Context = lineContext;
             _Model = item;
+            this.IndexLineNumber = lineIndex;
         }
 
         /// <summary>
@@ -67,6 +69,12 @@
                 return null;
             }
         }
+
+        /// <summary>
+        /// Gets the position at which this line is positioned in the total set of lines
+        /// (thats including imaginary lines to synchronize right and left text view)
+        /// </summary>
+        public int IndexLineNumber { get; }
 
         public IReadOnlyCollection<ISegment> LineEditScriptSegments
         {

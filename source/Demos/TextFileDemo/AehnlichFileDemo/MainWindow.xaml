@@ -334,7 +334,25 @@
                                       ViewportSize="{Binding NumberOfTextLinesInViewPort}"
                                       Minimum="0"
                                       Maximum="{Binding DiffCtrl.MaxNumberOfLines}"
-                                      Value="{Binding OverViewValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                      Value="{Binding OverViewValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                    <range:RangeItemsControl
+                        ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
+                        >
+                        <range:RangeItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Ellipse Name="elp" Fill="DarkRed" Width="8" Height="8"
+                                         range:RangePanel.Position="{Binding IndexLineNumber}"
+                                         range:RangePanel.Alignment="Center"
+                                         />
+                                <DataTemplate.Triggers>
+                                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                        <Setter TargetName="elp" Property="Fill" Value="DarkSalmon" />
+                                    </Trigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </range:RangeItemsControl.ItemTemplate>
+                    </range:RangeItemsControl>
+                </range:RangeScrollbar>
             </Grid>
 
             <ctrl:DiffControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2"
