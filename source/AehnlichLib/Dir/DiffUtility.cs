@@ -11,9 +11,12 @@ namespace AehnlichLib.Dir
     /// </summary>
     public static class DiffUtility
 	{
-		#region Public Members
+        #region Public Members
 
-		public static bool AreFilesDifferent(string fileName1, string fileName2) => AreFilesDifferent(new FileInfo(fileName1), new FileInfo(fileName2));
+        public static bool AreFilesDifferent(string fileName1, string fileName2)
+        {
+            return AreFilesDifferent(new FileInfo(fileName1), new FileInfo(fileName2));
+        }
 
         /// <summary>
         /// Returns false if both files are equal and true if they differ

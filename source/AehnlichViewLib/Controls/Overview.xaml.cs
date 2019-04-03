@@ -12,13 +12,20 @@
     using System.Collections.Specialized;
     using AehnlichViewLib.Interfaces;
     using System.Windows.Input;
+    using System.Windows.Controls.Primitives;
+    using System.ComponentModel;
 
     /// <summary>
     /// Implements the Overview control that contains the marker items that can be used
     /// to overview differences in a couple of files that are to be merged.
     /// </summary>
+    [DefaultEvent("ValueChanged")]
+    [DefaultProperty("Value")]
+    [Localizability(LocalizationCategory.Ignore)]
     [TemplatePart(Name = PART_ViewPortContainer, Type = typeof(Grid))]
     [TemplatePart(Name = PART_ImageViewport, Type = typeof(Image))]
+    [TemplatePart(Name = PART_Track, Type = typeof(Track))]
+    [TemplatePart(Name = PART_SelectionRange, Type = typeof(FrameworkElement))]
     public class Overview : Slider
     {
         #region fields
@@ -51,15 +58,13 @@
             DependencyProperty.Register("NumberOfTextLinesInViewPort", typeof(int),
                 typeof(Overview), new PropertyMetadata(0, OnViewPortLinesChanged));
 
+        /// <summary>
+        /// Implements the backing store of the <see cref="ValueChangedCommand"/>
+        /// dependency property.
+        /// </summary>
         public static readonly DependencyProperty ValueChangedCommandProperty =
             DependencyProperty.Register("ValueChangedCommand", typeof(ICommand),
                 typeof(Overview), new PropertyMetadata(null));
-
-        public ICommand ValueChangedCommand
-        {
-            get { return (ICommand)GetValue(ValueChangedCommandProperty); }
-            set { SetValue(ValueChangedCommandProperty, value); }
-        }
 
         #region Diff Color Definitions
         /// <summary>
@@ -96,6 +101,18 @@
         #endregion Diff Color Definitions
 
         /// <summary>
+        /// Defines the name of the <see cref="Track"/> object that is displayed
+        /// within this <see cref="Slider"/> control.
+        /// </summary>
+        public const string PART_Track = "PART_Track";
+
+        /// <summary>
+        /// Defines the name of the <see cref="FrameworkElement"/> that displayes
+        /// the slection range within this <see cref="Slider"/> control.
+        /// </summary>
+        public const string PART_SelectionRange = "PART_SelectionRange";
+
+        /// <summary>
         /// Defines the name of the grid that contains the overview image that is rendered from the
         /// available diff information.
         /// </summary>
@@ -108,6 +125,8 @@
 
         private Grid _PART_ViewPortContainer;
         private Image _PART_ImageViewport;
+////        private Track _Part_Track;
+////        private Thumb _thumb;
         private WriteableBitmap writeableBmp;
         private INotifyCollectionChanged _observeableDiffContext;
         #endregion fields
@@ -164,6 +183,15 @@
         {
             get { return (double)GetValue(MinThumbHeightProperty); }
             set { SetValue(MinThumbHeightProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets a bindable command that can be invoked when the overview control value has been changed.
+        /// </summary>
+        public ICommand ValueChangedCommand
+        {
+            get { return (ICommand)GetValue(ValueChangedCommandProperty); }
+            set { SetValue(ValueChangedCommandProperty, value); }
         }
 
         #region Diff Color definitions
@@ -225,7 +253,19 @@
 
             _PART_ViewPortContainer = GetTemplateChild(PART_ViewPortContainer) as Grid;
             _PART_ImageViewport = GetTemplateChild(PART_ImageViewport) as Image;
+
+////            _Part_Track = GetTemplateChild(PART_Track) as Track;
+////            if (_Part_Track != null)
+////                _thumb = _Part_Track.Thumb;
+////
+////            if (_Part_Track != null)
+////                _Part_Track.MouseEnter += new MouseEventHandler(Part_Track_MouseEnter);
         }
+
+////        private void Part_Track_MouseEnter(object sender, MouseEventArgs e)
+////        {
+////            Console.WriteLine(e.GetPosition(this));
+////        }
 
         protected override void OnValueChanged(double oldValue, double newValue)
         {
