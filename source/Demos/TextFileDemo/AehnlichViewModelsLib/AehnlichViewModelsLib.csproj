@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -88,6 +88,10 @@
     <ProjectReference Include="..\..\..\AehnlichViewLib\AehnlichViewLib.csproj">
       <Project>{342915ec-e1ca-4aad-bddb-810ee65e4233}</Project>
       <Name>AehnlichViewLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\WpfRangeControls\WpfRangeControls.csproj">
+      <Project>{8bd896f3-4860-4797-9fe5-78e2980b4f75}</Project>
+      <Name>WpfRangeControls</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
