@@ -159,7 +159,18 @@
                             NumberOfTextLinesInViewPort = (param.LastLine - param.FirstLine) - 1;
 
                             // Get value of first visible line and set it in Overview slider
-                            OverViewValue = param.FirstLine;
+                            uint overViewValue = (uint)param.FirstLine - 1;
+
+                            if (DiffCtrl != null)
+                            {
+                                if (DiffCtrl.MaxNumberOfLines > 0 && overViewValue > 0)
+                                {
+                                    float valueFactor = overViewValue / (float)DiffCtrl.MaxNumberOfLines;
+                                    overViewValue += (uint)(valueFactor * NumberOfTextLinesInViewPort);
+                                }
+                            }
+
+                            OverViewValue = overViewValue;
                         }
 
                         _LastViewPort = param;

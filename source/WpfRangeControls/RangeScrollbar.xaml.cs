@@ -7,6 +7,7 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Collections;
+    using System.Windows.Input;
 
     [TemplatePart(Name = "PART_RangeOverlay", Type = typeof(RangeItemsControl))]
     [ContentProperty("Items")]
@@ -19,19 +20,37 @@
         public static readonly DependencyProperty AlternationCountProperty =
             ItemsControl.AlternationCountProperty.AddOwner(typeof(RangeScrollbar));
 
+        public static readonly DependencyProperty ItemsSourceProperty =
+            ItemsControl.ItemsSourceProperty.AddOwner(typeof(RangeScrollbar));
+
+        public static readonly DependencyProperty ItemTemplateProperty =
+            ItemsControl.ItemTemplateProperty.AddOwner(typeof(RangeScrollbar));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ValueChangedCommand"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ValueChangedCommandProperty =
+            DependencyProperty.Register("ValueChangedCommand", typeof(ICommand),
+                typeof(RangeScrollbar), new PropertyMetadata(null));
+
         private RangeItemsControl _PART_RangeOverlay;
         private ObservableCollection<UIElement> _iItems = new ObservableCollection<UIElement>();
-        private IEnumerable _iItemsSource = null;
-        private DataTemplate _iItemTemplate = null;
         #endregion fields        
-        
+
         #region ctors
+        /// <summary>
+        /// Static class constructor
+        /// </summary>
         static RangeScrollbar()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RangeScrollbar),
                                                      new FrameworkPropertyMetadata(typeof(RangeScrollbar)));
         }
 
+        /// <summary>
+        /// Class constructor
+        /// </summary>
         public RangeScrollbar()
         {
         }
@@ -76,42 +95,19 @@
         [Bindable(true), Category("Content")]
         public IEnumerable ItemsSource
         {
-            get
-            {
-                if (_PART_RangeOverlay == null)
-                    return _iItemsSource;
-
-                return _PART_RangeOverlay.ItemsSource;
-            }
-
-            set
-            {
-                if (_PART_RangeOverlay == null)
-                    _iItemsSource = value;
-                else
-                    _PART_RangeOverlay.ItemsSource = value;
-            }
+            get { return (IEnumerable)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty, value); }
         }
 
         /// <summary>        
-        /// Gets/sets the item's data template of the items that can be bound to the RangeItemsControl hosted in this control.
+        /// Gets/sets the item's data template of the items that can be bound
+        /// to the RangeItemsControl hosted in this control.
         /// </summary>        
         [Bindable(true), Category("Content")]
         public DataTemplate ItemTemplate
         {
-            get
-            {
-                if (_PART_RangeOverlay == null)
-                    return _iItemTemplate;
-                return _PART_RangeOverlay.ItemTemplate;
-            }
-            set
-            {
-                if (_PART_RangeOverlay == null)
-                    _iItemTemplate = value;
-                else
-                    _PART_RangeOverlay.ItemTemplate = value;
-            }
+            get { return (DataTemplate)GetValue(ItemTemplateProperty); }
+            set { SetValue(ItemTemplateProperty, value); }
         }
 
         /// <summary>        
@@ -126,6 +122,15 @@
             get { return (int)GetValue(AlternationCountProperty); }
             set { SetValue(AlternationCountProperty, value); }
         }
+
+        /// <summary>
+        /// Gets/sets a bindable command that can be invoked when the overview control value has been changed.
+        /// </summary>
+        public ICommand ValueChangedCommand
+        {
+            get { return (ICommand)GetValue(ValueChangedCommandProperty); }
+            set { SetValue(ValueChangedCommandProperty, value); }
+        }
         #endregion properties
 
         #region methods
@@ -133,7 +138,6 @@
         {
             base.OnApplyTemplate();
             _PART_RangeOverlay = base.GetTemplateChild("PART_RangeOverlay") as RangeItemsControl;
-
 
             if (_PART_RangeOverlay == null)
                 return;
@@ -149,28 +153,30 @@
                     PropertyChanged(this, new PropertyChangedEventArgs("Items"));
 
                 _iItems = null;
-
             }
+        }
 
-            if (_iItemsSource != null)
+        protected override void OnValueChanged(double oldValue, double newValue)
+        {
+            base.OnValueChanged(oldValue, newValue);
+
+            if (ValueChangedCommand != null)
             {
-                _PART_RangeOverlay.ItemsSource = _iItemsSource;
-                _iItemsSource = null;
-
-                if (PropertyChanged != null)
-                    PropertyChanged(this, new PropertyChangedEventArgs("ItemsSource"));
+                if (ValueChangedCommand.CanExecute(newValue))
+                {
+                    // Check whether this attached behaviour is bound to a RoutedCommand
+                    if (ValueChangedCommand is RoutedCommand)
+                    {
+                        // Execute the routed command
+                        (ValueChangedCommand as RoutedCommand).Execute(newValue, this);
+                    }
+                    else
+                    {
+                        // Execute the Command as bound delegate
+                        ValueChangedCommand.Execute(newValue);
+                    }
+                }
             }
-
-            if (_iItemTemplate != null)
-            {
-                _PART_RangeOverlay.ItemTemplate = _iItemTemplate;
-                _iItemTemplate = null;
-
-                if (PropertyChanged != null)
-                    PropertyChanged(this, new PropertyChangedEventArgs("ItemTemplate"));
-
-            }
-
         }
         #endregion methods
     }

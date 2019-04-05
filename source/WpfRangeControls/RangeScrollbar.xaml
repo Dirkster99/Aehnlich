@@ -146,7 +146,9 @@
                                                          Minimum="{TemplateBinding Property=Minimum}" 
                                                          Maximum="{TemplateBinding Property=Maximum}" 
                                                          Orientation="{TemplateBinding Property=Orientation}" 
-                                />
+                                                         ItemsSource="{TemplateBinding Property=ItemsSource}"
+                                                         ItemTemplate="{TemplateBinding Property=ItemTemplate}"
+                                                      />
 
                                 <RepeatButton x:Name="PART_LineDownButton" Command="ScrollBar.LineDownCommand" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="2">
                                     <RepeatButton.Style>
@@ -370,7 +372,9 @@
                                 <local:RangeItemsControl x:Name="PART_RangeOverlay" Grid.Column="1" IsHitTestVisible="False"
                                     Minimum="{TemplateBinding Property=Minimum}" 
                                     Maximum="{TemplateBinding Property=Maximum}" 
-                                    Orientation="{TemplateBinding Property=Orientation}" 
+                                    Orientation="{TemplateBinding Property=Orientation}"
+                                    ItemsSource="{TemplateBinding Property=ItemsSource}"
+                                    ItemTemplate="{TemplateBinding Property=ItemTemplate}"
                                     />
 
                                 <RepeatButton x:Name="PART_LineRightButton" Grid.Column="2" Command="ScrollBar.LineRightCommand" IsEnabled="{TemplateBinding IsMouseOver}">
