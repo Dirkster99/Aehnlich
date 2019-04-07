@@ -317,11 +317,10 @@
             <range:RangeScrollbar Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="30" Margin="3"
                                   Name="OverviewCtrl"
                                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                                  ViewportSize="{Binding NumberOfTextLinesInViewPort}"
+                                  ViewportSize="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                   Minimum="0"
                                   Maximum="{Binding DiffCtrl.MaxNumberOfLines}"
-                                  Value="{Binding OverViewValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                  ValueChangedCommand="{Binding OverviewValueChangedCommand,Mode=OneWay}"
+                                  Value="{Binding OverViewValue, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                   ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
                                 >
                 <range:RangeScrollbar.ItemTemplate>

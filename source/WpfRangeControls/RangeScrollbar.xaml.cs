@@ -26,14 +26,6 @@
         public static readonly DependencyProperty ItemTemplateProperty =
             ItemsControl.ItemTemplateProperty.AddOwner(typeof(RangeScrollbar));
 
-        /// <summary>
-        /// Implements the backing store of the <see cref="ValueChangedCommand"/>
-        /// dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ValueChangedCommandProperty =
-            DependencyProperty.Register("ValueChangedCommand", typeof(ICommand),
-                typeof(RangeScrollbar), new PropertyMetadata(null));
-
         private RangeItemsControl _PART_RangeOverlay;
         private ObservableCollection<UIElement> _iItems = new ObservableCollection<UIElement>();
         #endregion fields        
@@ -122,15 +114,6 @@
             get { return (int)GetValue(AlternationCountProperty); }
             set { SetValue(AlternationCountProperty, value); }
         }
-
-        /// <summary>
-        /// Gets/sets a bindable command that can be invoked when the overview control value has been changed.
-        /// </summary>
-        public ICommand ValueChangedCommand
-        {
-            get { return (ICommand)GetValue(ValueChangedCommandProperty); }
-            set { SetValue(ValueChangedCommandProperty, value); }
-        }
         #endregion properties
 
         #region methods
@@ -153,29 +136,6 @@
                     PropertyChanged(this, new PropertyChangedEventArgs("Items"));
 
                 _iItems = null;
-            }
-        }
-
-        protected override void OnValueChanged(double oldValue, double newValue)
-        {
-            base.OnValueChanged(oldValue, newValue);
-
-            if (ValueChangedCommand != null)
-            {
-                if (ValueChangedCommand.CanExecute(newValue))
-                {
-                    // Check whether this attached behaviour is bound to a RoutedCommand
-                    if (ValueChangedCommand is RoutedCommand)
-                    {
-                        // Execute the routed command
-                        (ValueChangedCommand as RoutedCommand).Execute(newValue, this);
-                    }
-                    else
-                    {
-                        // Execute the Command as bound delegate
-                        ValueChangedCommand.Execute(newValue);
-                    }
-                }
             }
         }
         #endregion methods

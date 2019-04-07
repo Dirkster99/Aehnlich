@@ -16,11 +16,15 @@
         private ICommand _ViewPortChangedCommand;
         private ICommand _OpenFileFromActiveViewCommand;
         private ICommand _CopyTextSelectionFromActiveViewCommand;
-        private ICommand _OverviewValueChangedCommand;
         private ICommand _FindTextCommand;
         private ICommand _GotoLineCommand;
 
+        // Is set when viewmodel changes the OverViewValue
+        // This is necessary to break the recursion when the value was set by the viewmodel
+        // to reflect a changed position in the left/right view
+        private double _previewOverViewValue = 0;
         private double _OverViewValue = 0;
+
         private int _NumberOfTextLinesInViewPort = 0;
         private bool _IgnoreNextSliderValueChange = false;
         private int _LastLineToSync = 0;
@@ -170,6 +174,7 @@
                                 }
                             }
 
+                            _previewOverViewValue = overViewValue;
                             OverViewValue = overViewValue;
                         }
 
@@ -279,61 +284,20 @@
         public double OverViewValue
         {
             get { return _OverViewValue; }
-            private set
+            set
             {
                 if (Math.Abs(_OverViewValue - value) > 1)
                 {
                     _OverViewValue = value;
                     NotifyPropertyChanged(() => OverViewValue);
-                }
-            }
-        }
 
-        public ICommand OverviewValueChangedCommand
-        {
-            get
-            {
-                if (_OverviewValueChangedCommand == null)
-                {
-                    _OverviewValueChangedCommand = new RelayCommand<object>((p) =>
+                    // Value has been set by control and not by viewmodel -> Sync left/right views
+                    if (_previewOverViewValue != _OverViewValue)
                     {
-                        lock (_lockObject)
-                        {
-                            if ((p is double) == false)
-                                return;
-
-                            double param = (double)p;
-
-                            if (_IgnoreNextSliderValueChange == true)
-                            {
-                                if (_LastLineToSync == (int)param)
-                                    return;
-
-                                _IgnoreNextSliderValueChange = false;
-                                return;
-                            }
-
-                            _LastLineToSync = (int)param;
-////                            _IgnoreNextTextSyncValueChange = true;
-
-                            DiffSideViewModel nonActView;
-                            DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
-                            DiffViewPosition gotoPos = new DiffViewPosition((int)param, 0);
-                            DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
-                        }
-                    },
-                    (p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
-                        if (activeView == null)
-                            return false;
-
-                        return true;
-                    });
+                        if (OverviewValueChangedCanExecute())
+                           OverviewValueChanged(_OverViewValue);
+                    }
                 }
-
-                return _OverviewValueChangedCommand;
             }
         }
 
@@ -502,6 +466,46 @@
             ////base.Dispose(disposing);
         }
         #endregion IDisposable
+
+        #region OverviewValueChanged
+        private void OverviewValueChanged(object p)
+        {
+            lock (_lockObject)
+            {
+                if ((p is double) == false)
+                    return;
+
+                double param = (double)p;
+
+                if (_IgnoreNextSliderValueChange == true)
+                {
+                    if (_LastLineToSync == (int)param)
+                        return;
+
+                    _IgnoreNextSliderValueChange = false;
+                    return;
+                }
+
+                _LastLineToSync = (int)param;
+                ////                            _IgnoreNextTextSyncValueChange = true;
+
+                DiffSideViewModel nonActView;
+                DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+                DiffViewPosition gotoPos = new DiffViewPosition((int)param, 0);
+                DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
+            }
+        }
+
+        private bool OverviewValueChangedCanExecute()
+        {
+            DiffSideViewModel nonActView;
+            DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+            if (activeView == null)
+                return false;
+
+            return true;
+        }
+        #endregion OverviewValueChanged
         #endregion methods
     }
 }
