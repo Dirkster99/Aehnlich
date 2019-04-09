@@ -19,10 +19,6 @@
         private ICommand _FindTextCommand;
         private ICommand _GotoLineCommand;
 
-        // Is set when viewmodel changes the OverViewValue
-        // This is necessary to break the recursion when the value was set by the viewmodel
-        // to reflect a changed position in the left/right view
-        private double _previewOverViewValue = 0;
         private double _OverViewValue = 0;
 
         private int _NumberOfTextLinesInViewPort = 0;
@@ -174,7 +170,6 @@
                                 }
                             }
 
-                            _previewOverViewValue = overViewValue;
                             OverViewValue = overViewValue;
                         }
 
@@ -286,17 +281,13 @@
             get { return _OverViewValue; }
             set
             {
-                if (Math.Abs(_OverViewValue - value) > 1)
+                if ((int)(Math.Abs(_OverViewValue - value)) > 1)
                 {
                     _OverViewValue = value;
                     NotifyPropertyChanged(() => OverViewValue);
 
-                    // Value has been set by control and not by viewmodel -> Sync left/right views
-                    if (_previewOverViewValue != _OverViewValue)
-                    {
-                        if (OverviewValueChangedCanExecute())
-                           OverviewValueChanged(_OverViewValue);
-                    }
+                    if (OverviewValueChangedCanExecute())
+                        OverviewValueChanged(_OverViewValue);
                 }
             }
         }

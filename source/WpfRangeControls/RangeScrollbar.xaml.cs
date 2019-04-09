@@ -8,8 +8,11 @@
     using System.ComponentModel;
     using System.Collections;
     using System.Windows.Input;
+    using System.Windows.Shapes;
+    using System;
 
     [TemplatePart(Name = "PART_RangeOverlay", Type = typeof(RangeItemsControl))]
+    [TemplatePart(Name = "PART_Track", Type = typeof(Track))]
     [ContentProperty("Items")]
     public class RangeScrollbar : ScrollBar, INotifyPropertyChanged
     {
@@ -27,6 +30,7 @@
             ItemsControl.ItemTemplateProperty.AddOwner(typeof(RangeScrollbar));
 
         private RangeItemsControl _PART_RangeOverlay;
+        private Track _PART_Track;
         private ObservableCollection<UIElement> _iItems = new ObservableCollection<UIElement>();
         #endregion fields        
 
@@ -121,9 +125,13 @@
         {
             base.OnApplyTemplate();
             _PART_RangeOverlay = base.GetTemplateChild("PART_RangeOverlay") as RangeItemsControl;
+            _PART_Track = base.GetTemplateChild("PART_Track") as Track;
 
             if (_PART_RangeOverlay == null)
                 return;
+
+            if (_PART_Track != null)
+                this.PreviewMouseDown += _PART_RangeOverlay_PreviewMouseDown;
 
             // Are there any items specified for rendering in the contents property of this control?
             if (_iItems != null && _iItems.Count > 0)
@@ -136,6 +144,35 @@
                     PropertyChanged(this, new PropertyChangedEventArgs("Items"));
 
                 _iItems = null;
+            }
+        }
+
+        /// <summary>
+        /// Handles the mouse click event on the <see cref="Track"/> part of the control
+        /// to position the thumb right where the click ocurred.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _PART_RangeOverlay_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if ((e.LeftButton == MouseButtonState.Pressed) == false)
+                return;
+
+            Rectangle rect = Mouse.DirectlyOver as Rectangle;
+            if (rect != null)
+            {
+                var sv = sender as ScrollBar;
+
+                // Find the percentage value where the mouse click occured on the track
+                double trackHeight = _PART_Track.ActualHeight;
+                Point p = e.GetPosition(_PART_Track);
+                double factor = p.Y / _PART_Track.ActualHeight;
+
+                // Convert the percentage value into the actual value scale
+                double targetValue = Math.Abs(Maximum - Minimum) * factor;
+                this.Value = Minimum + targetValue;
+
+                e.Handled = true;
             }
         }
         #endregion methods
