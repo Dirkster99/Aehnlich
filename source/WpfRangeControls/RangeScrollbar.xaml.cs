@@ -32,6 +32,7 @@
         private RangeItemsControl _PART_RangeOverlay;
         private Track _PART_Track;
         private ObservableCollection<UIElement> _iItems = new ObservableCollection<UIElement>();
+        private bool _ThumbIsDragging;
         #endregion fields        
 
         #region ctors
@@ -131,7 +132,11 @@
                 return;
 
             if (_PART_Track != null)
+            {
+                _PART_Track.Thumb.DragEnter += Thumb_DragEnter;
+                _PART_Track.Thumb.DragLeave += Thumb_DragLeave;
                 this.PreviewMouseDown += _PART_RangeOverlay_PreviewMouseDown;
+            }
 
             // Are there any items specified for rendering in the contents property of this control?
             if (_iItems != null && _iItems.Count > 0)
@@ -147,6 +152,16 @@
             }
         }
 
+        private void Thumb_DragLeave(object sender, DragEventArgs e)
+        {
+            _ThumbIsDragging = false;
+        }
+
+        private void Thumb_DragEnter(object sender, DragEventArgs e)
+        {
+            _ThumbIsDragging = true;
+        }
+
         /// <summary>
         /// Handles the mouse click event on the <see cref="Track"/> part of the control
         /// to position the thumb right where the click ocurred.
@@ -158,22 +173,29 @@
             if ((e.LeftButton == MouseButtonState.Pressed) == false)
                 return;
 
-            Rectangle rect = Mouse.DirectlyOver as Rectangle;
-            if (rect != null)
-            {
-                var sv = sender as ScrollBar;
+            if (sender != this && _ThumbIsDragging == false)
+                return;
 
-                // Find the percentage value where the mouse click occured on the track
-                double trackHeight = _PART_Track.ActualHeight;
-                Point p = e.GetPosition(_PART_Track);
-                double factor = p.Y / _PART_Track.ActualHeight;
+            IInputElement inputElement = Mouse.DirectlyOver;
+            Rectangle rect = inputElement as Rectangle;
 
-                // Convert the percentage value into the actual value scale
-                double targetValue = Math.Abs(Maximum - Minimum) * factor;
-                this.Value = Minimum + targetValue;
+            // Lets keep the thumb draggable by ignoring thumb mouse clicks here
+            var thumbMousover = _PART_Track.Thumb.InputHitTest(e.GetPosition(_PART_Track.Thumb));
+            if (thumbMousover != null)
+                return;
 
-                e.Handled = true;
-            }
+            var sb = sender as ScrollBar;
+
+            // Find the percentage value where the mouse click occured on the track
+            double trackHeight = _PART_Track.ActualHeight;
+            Point p = e.GetPosition(_PART_Track);
+            double factor = p.Y / _PART_Track.ActualHeight;
+
+            // Convert the percentage value into the actual value scale
+            double targetValue = Math.Abs(Maximum - Minimum) * factor;
+            this.Value = Minimum + targetValue;
+
+            e.Handled = true;
         }
         #endregion methods
     }
