@@ -9,6 +9,8 @@
         xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         xmlns:conv="clr-namespace:AehnlichViewModelsLib.Converters;assembly=AehnlichViewModelsLib"
         xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
+        xmlns:vms="clr-namespace:AehnlichViewModelsLib.ViewModels;assembly=AehnlichViewModelsLib"
+        xmlns:range="clr-namespace:AehnlichViewLib.Controls.Overview;assembly=AehnlichViewLib"
         
         mc:Ignorable="d"
         Title="Ähnlich" Height="450" Width="800"
@@ -19,6 +21,12 @@
         <Grid.Resources>
             <conv:MultiParToParConverter x:Key="MultiParToParConverter"/>
             <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
+            <conv:DiffContextToVisibilityPropConverter x:Key="DiffContextToVisibilityPropConverter"/>
+            <conv:DiffContextToColorPropConverter x:Key="DiffContextToColorPropConverter"
+                                                  AddedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"
+                                                  DeletedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
+                                                  ContextValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
+                                                  />
             <conv:InlineDilaogToVisibilityPropConverter x:Key="InlineDilaogToVisibilityPropConverter"/>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
@@ -250,30 +258,36 @@
                 </StackPanel>
             </ToolBar>
             
-            <!-- Debugging Values -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed">
+            <!-- Debugging Values  Visibility="Collapsed"-->
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <TextBlock
                     Margin="3" VerticalAlignment="Center"
-                    Text="{Binding ElementName=OverviewSlider,Path=NumberOfTextLinesInViewPort}"
-                    ToolTip="NumberOfTextLinesInViewPort"
+                    Text="{Binding NumberOfTextLinesInViewPort}"
+                    ToolTip="AppVM.NumberOfTextLinesInViewPort"
+                />
+                
+                <TextBlock
+                    Margin="3" VerticalAlignment="Center"
+                    Text="{Binding DiffCtrl.MaxNumberOfLines}"
+                    ToolTip="AppVM.MaxNumberOfLines"
                 />
 
                 <TextBlock
                     Margin="3" VerticalAlignment="Center"
-                    Text="{Binding ElementName=OverviewSlider,Path=Value}"
-                    ToolTip="Value"
+                    Text="{Binding OverViewValue}"
+                    ToolTip="AppVM.OverViewValue"
                 />
 
                 <TextBlock
                     Margin="3" VerticalAlignment="Center"
-                    Text="{Binding ElementName=OverviewSlider,Path=Minimum}"
-                    ToolTip="Minimum"
+                    Text="{Binding ElementName=OverviewCtrl,Path=Minimum}"
+                    ToolTip="OverviewCtrl.Minimum"
                 />
 
                 <TextBlock
                     Margin="3" VerticalAlignment="Center"
-                    Text="{Binding ElementName=OverviewSlider,Path=Maximum}"
-                    ToolTip="Maximum"
+                    Text="{Binding ElementName=OverviewCtrl,Path=Maximum}"
+                    ToolTip="OverviewCtrl.Maximum"
                 />
 
             </StackPanel>
@@ -300,20 +314,30 @@
                 />
             </Grid>
 
-            <ctrl:Overview Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="3"
-                           Width="30"
-                           Name="OverviewSlider"
-                           ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
-                           
-                           Value="{Binding OverViewValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                           NumberOfTextLinesInViewPort="{Binding NumberOfTextLinesInViewPort}"
-                           ValueChangedCommand="{Binding OverviewValueChangedCommand,Mode=OneWay}"
-                           >
-                <!-- NumberOfLines -->
-                <!--ctrl:Overview.ToolTip>
-                    <TextBlock Text="{Binding NumberOfLines}"/>
-                </ctrl:Overview.ToolTip-->
-            </ctrl:Overview>
+            <range:RangeScrollbar Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="30" Margin="3"
+                                  Name="OverviewCtrl"
+                                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                  ViewportSize="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                  Minimum="0"
+                                  Maximum="{Binding DiffCtrl.MaxNumberOfLines}"
+                                  Value="{Binding OverViewValue, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                  ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
+                                  SmallChange="1"
+                                  LargeChange="35"
+                                >
+                <range:RangeScrollbar.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vms:DiffLineViewModel}">
+                        <Rectangle Name="elp"
+                                    Fill="{Binding Context,Converter={StaticResource DiffContextToColorPropConverter}}"
+                                    Width="{Binding ElementName=OverviewCtrl,Path=ActualWidth}" Height="1"
+                                    Visibility="{Binding Context,Converter={StaticResource DiffContextToVisibilityPropConverter}}"
+				                    range:RangePanel.Position="{Binding IndexLineNumber}"
+				                    range:RangePanel.Alignment="Begin"
+                                    HorizontalAlignment="Stretch"
+				                />
+                    </DataTemplate>
+                </range:RangeScrollbar.ItemTemplate>
+            </range:RangeScrollbar>
 
             <ctrl:DiffControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2"
                               Name="DiffCtrl"

@@ -259,10 +259,10 @@
                     _maxImaginaryLineNumber = line.Number.Value;
                 }
 
-                items.Add(TranslateLineContext(line));
+                items.Add(TranslateLineContext(line, items.Count));
             }
 
-            private DiffLineViewModel TranslateLineContext(DiffViewLine item)
+            private DiffLineViewModel TranslateLineContext(DiffViewLine item, int lineIndex)
             {
                 DiffContext lineContext = DiffContext.Blank;
                 switch (item.EditType)
@@ -282,7 +282,7 @@
                         break;
                 }
 
-                return new DiffLineViewModel(lineContext, item);
+                return new DiffLineViewModel(lineContext, item, lineIndex);
             }
 
             private string GetDocumentFromRawLines(IList<DiffLineViewModel> lines)

@@ -16,11 +16,11 @@
         private ICommand _ViewPortChangedCommand;
         private ICommand _OpenFileFromActiveViewCommand;
         private ICommand _CopyTextSelectionFromActiveViewCommand;
-        private ICommand _OverviewValueChangedCommand;
         private ICommand _FindTextCommand;
         private ICommand _GotoLineCommand;
 
         private double _OverViewValue = 0;
+
         private int _NumberOfTextLinesInViewPort = 0;
         private bool _IgnoreNextSliderValueChange = false;
         private int _LastLineToSync = 0;
@@ -159,7 +159,18 @@
                             NumberOfTextLinesInViewPort = (param.LastLine - param.FirstLine) - 1;
 
                             // Get value of first visible line and set it in Overview slider
-                            OverViewValue = param.FirstLine;
+                            uint overViewValue = (uint)param.FirstLine - 1;
+
+                            if (DiffCtrl != null)
+                            {
+                                if (DiffCtrl.MaxNumberOfLines > 0 && overViewValue > 0)
+                                {
+                                    float valueFactor = overViewValue / (float)DiffCtrl.MaxNumberOfLines;
+                                    overViewValue += (uint)(valueFactor * NumberOfTextLinesInViewPort);
+                                }
+                            }
+
+                            OverViewValue = overViewValue;
                         }
 
                         _LastViewPort = param;
@@ -268,61 +279,16 @@
         public double OverViewValue
         {
             get { return _OverViewValue; }
-            private set
+            set
             {
-                if (Math.Abs(_OverViewValue - value) > 1)
+                if ((int)(Math.Abs(_OverViewValue - value)) > 1)
                 {
                     _OverViewValue = value;
                     NotifyPropertyChanged(() => OverViewValue);
+
+                    if (OverviewValueChangedCanExecute())
+                        OverviewValueChanged(_OverViewValue);
                 }
-            }
-        }
-
-        public ICommand OverviewValueChangedCommand
-        {
-            get
-            {
-                if (_OverviewValueChangedCommand == null)
-                {
-                    _OverviewValueChangedCommand = new RelayCommand<object>((p) =>
-                    {
-                        lock (_lockObject)
-                        {
-                            if ((p is double) == false)
-                                return;
-
-                            double param = (double)p;
-
-                            if (_IgnoreNextSliderValueChange == true)
-                            {
-                                if (_LastLineToSync == (int)param)
-                                    return;
-
-                                _IgnoreNextSliderValueChange = false;
-                                return;
-                            }
-
-                            _LastLineToSync = (int)param;
-////                            _IgnoreNextTextSyncValueChange = true;
-
-                            DiffSideViewModel nonActView;
-                            DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
-                            DiffViewPosition gotoPos = new DiffViewPosition((int)param, 0);
-                            DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
-                        }
-                    },
-                    (p) =>
-                    {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
-                        if (activeView == null)
-                            return false;
-
-                        return true;
-                    });
-                }
-
-                return _OverviewValueChangedCommand;
             }
         }
 
@@ -491,6 +457,46 @@
             ////base.Dispose(disposing);
         }
         #endregion IDisposable
+
+        #region OverviewValueChanged
+        private void OverviewValueChanged(object p)
+        {
+            lock (_lockObject)
+            {
+                if ((p is double) == false)
+                    return;
+
+                double param = (double)p;
+
+                if (_IgnoreNextSliderValueChange == true)
+                {
+                    if (_LastLineToSync == (int)param)
+                        return;
+
+                    _IgnoreNextSliderValueChange = false;
+                    return;
+                }
+
+                _LastLineToSync = (int)param;
+                ////                            _IgnoreNextTextSyncValueChange = true;
+
+                DiffSideViewModel nonActView;
+                DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+                DiffViewPosition gotoPos = new DiffViewPosition((int)param, 0);
+                DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
+            }
+        }
+
+        private bool OverviewValueChangedCanExecute()
+        {
+            DiffSideViewModel nonActView;
+            DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+            if (activeView == null)
+                return false;
+
+            return true;
+        }
+        #endregion OverviewValueChanged
         #endregion methods
     }
 }

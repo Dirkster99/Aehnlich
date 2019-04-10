@@ -24,7 +24,7 @@
     {
         #region fields
         private ShowDiffArgs _Args;
-        private uint _NumberOfLines;
+        private uint _NumberOfLines, _MaxNumberOfLines;
 
         private readonly DiffSideViewModel _ViewA;
         private readonly DiffSideViewModel _ViewB;
@@ -374,14 +374,19 @@
         #endregion Goto Diff Commands
 
         /// <summary>
-        /// Gets the total number of lines that are avaiable.
-        /// This includes imaginary lines that may have
-        /// been inserted to being both texts into a synchronized
+        /// Gets the total number of labeled lines that are visible in the left view.
+        /// This count DOES NOT include imaginary lines that may have
+        /// been inserted to bring both texts into a synchronized
         /// view.
         /// 
-        /// This count applies therfore, to the right and left
-        /// view and is either equal (or more commonly) larger than
-        /// the actual number of lines in the original text.
+        /// This count applies therfore, to the maximum number of LABELED
+        /// lines in the left side view and is equal to the number of lines
+        /// number of lines in the original text.
+        /// 
+        /// This number is used to instruct the Goto Line dialog to jump to
+        /// a particular line and left and right side the view synchronization
+        /// ensures scrolling to the correct line even if that line label is different
+        /// in the right text view.
         /// </summary>
         public uint NumberOfLines
         {
@@ -396,6 +401,29 @@
                 {
                     _NumberOfLines = value;
                     NotifyPropertyChanged(() => NumberOfLines);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the total number of lines available in left and right text view.
+        /// 
+        /// This number includes Imaginary lines and is always applicable to the
+        /// left and right view since both view displays are synchronized via Meyers Diff.
+        /// </summary>
+        public uint MaxNumberOfLines
+        {
+            get
+            {
+                return _MaxNumberOfLines;
+            }
+
+            protected set
+            {
+                if (_MaxNumberOfLines != value)
+                {
+                    _MaxNumberOfLines = value;
+                    NotifyPropertyChanged(() => MaxNumberOfLines);
                 }
             }
         }
@@ -487,6 +515,7 @@
             SetData(a, b, script, args, ignoreCase, ignoreTextWhitespace, isBinaryCompare);
 
             this.NumberOfLines = (uint)a.Count;
+            this.MaxNumberOfLines = (uint)_ViewA.LineCount;
             _Args = args;
         }
 

@@ -53,9 +53,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WriteableBitmapEx.Wpf, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WriteableBitmapEx.1.6.2\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\DoubleClickItemBehavior.cs" />
@@ -66,6 +63,14 @@
     <Compile Include="Controls\AvalonEditEx\TextBoxController\ITextBoxController.cs" />
     <Compile Include="Controls\DiffDirView.xaml.cs">
       <DependentUpon>DiffDirView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overview\RangeAlignment.cs" />
+    <Compile Include="Controls\Overview\RangeItemsControl.xaml.cs">
+      <DependentUpon>RangeItemsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Overview\RangePanel.cs" />
+    <Compile Include="Controls\Overview\RangeScrollbar.xaml.cs">
+      <DependentUpon>RangeScrollbar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Utils\ExtensionMethods.cs" />
     <Compile Include="Controls\Utils\TextFormatterFactory.cs" />
@@ -107,13 +112,13 @@
       <DependentUpon>DiffView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\Overview.xaml.cs">
-      <DependentUpon>Overview.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Controls\Overview.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Controls\Overview\RangeItemsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Overview\RangeScrollbar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\SliderRepeatButtonStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
