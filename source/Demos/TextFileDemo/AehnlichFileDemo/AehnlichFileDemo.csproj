@@ -128,10 +128,6 @@
       <Project>{342915ec-e1ca-4aad-bddb-810ee65e4233}</Project>
       <Name>AehnlichViewLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\WpfRangeControls\WpfRangeControls.csproj">
-      <Project>{8bd896f3-4860-4797-9fe5-78e2980b4f75}</Project>
-      <Name>WpfRangeControls</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AehnlichViewModelsLib\AehnlichViewModelsLib.csproj">
       <Project>{4cdcebd2-5062-453e-b9af-f66811c3e31a}</Project>
       <Name>AehnlichViewModelsLib</Name>

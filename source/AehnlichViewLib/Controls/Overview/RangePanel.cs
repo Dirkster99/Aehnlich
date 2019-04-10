@@ -1,17 +1,13 @@
-﻿namespace WpfRangeControls
+﻿namespace AehnlichViewLib.Controls.Overview
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Controls.Primitives;
     using System.Windows.Media;
 
+    /// <summary>
+    /// Original Source: https://github.com/Ttxman/WpfRangeControls
+    /// </summary>
     public class RangePanel : Panel
     {
         #region fields

@@ -10,7 +10,7 @@
         xmlns:conv="clr-namespace:AehnlichViewModelsLib.Converters;assembly=AehnlichViewModelsLib"
         xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         xmlns:vms="clr-namespace:AehnlichViewModelsLib.ViewModels;assembly=AehnlichViewModelsLib"
-        xmlns:range="clr-namespace:WpfRangeControls;assembly=WpfRangeControls"
+        xmlns:range="clr-namespace:AehnlichViewLib.Controls.Overview;assembly=AehnlichViewLib"
         
         mc:Ignorable="d"
         Title="Ähnlich" Height="450" Width="800"

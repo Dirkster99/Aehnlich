@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:WpfRangeControls">
+    xmlns:local="clr-namespace:AehnlichViewLib.Controls.Overview">
 
     <Style TargetType="{x:Type local:RangeItemsControl}" BasedOn="{StaticResource {x:Type ItemsControl}}">
         <Setter Property="ItemsPanel">

@@ -1,9 +1,12 @@
-﻿namespace WpfRangeControls
+﻿namespace AehnlichViewLib.Controls.Overview
 {
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
 
+    /// <summary>
+    /// Original Source: https://github.com/Ttxman/WpfRangeControls
+    /// </summary>
     public class RangeItemsControl : ItemsControl
     {
         public static DependencyProperty OrientationProperty =

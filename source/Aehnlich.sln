@@ -22,8 +22,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AehnlichViewModelsLib", "De
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TextFiles", "TextFiles", "{C27D43D8-8EED-4A2F-AFD3-D717B79C7BE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfRangeControls", "WpfRangeControls\WpfRangeControls.csproj", "{8BD896F3-4860-4797-9FE5-78E2980B4F75}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,10 +56,6 @@ Global
 		{4CDCEBD2-5062-453E-B9AF-F66811C3E31A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CDCEBD2-5062-453E-B9AF-F66811C3E31A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CDCEBD2-5062-453E-B9AF-F66811C3E31A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8BD896F3-4860-4797-9FE5-78E2980B4F75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8BD896F3-4860-4797-9FE5-78E2980B4F75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8BD896F3-4860-4797-9FE5-78E2980B4F75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8BD896F3-4860-4797-9FE5-78E2980B4F75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

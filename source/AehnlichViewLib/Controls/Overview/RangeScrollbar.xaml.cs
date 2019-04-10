@@ -1,4 +1,4 @@
-﻿namespace WpfRangeControls
+﻿namespace AehnlichViewLib.Controls.Overview
 {
     using System.Windows;
     using System.Windows.Controls;
@@ -11,6 +11,9 @@
     using System.Windows.Shapes;
     using System;
 
+    /// <summary>
+    /// Original Source: https://github.com/Ttxman/WpfRangeControls
+    /// </summary>
     [TemplatePart(Name = "PART_RangeOverlay", Type = typeof(RangeItemsControl))]
     [TemplatePart(Name = "PART_Track", Type = typeof(Track))]
     [ContentProperty("Items")]
@@ -173,7 +176,7 @@
             if ((e.LeftButton == MouseButtonState.Pressed) == false)
                 return;
 
-            if (sender != this && _ThumbIsDragging == false)
+            if (sender != this || _ThumbIsDragging == true)
                 return;
 
             IInputElement inputElement = Mouse.DirectlyOver;

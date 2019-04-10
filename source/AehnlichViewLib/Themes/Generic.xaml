@@ -7,6 +7,7 @@
         <ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffDirView.xaml"/>
         <ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffView.xaml"/>
         <ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffControl.xaml"/>
-        <ResourceDictionary Source="/AehnlichViewLib;component/Controls/Overview.xaml"/>
+        <ResourceDictionary Source="/AehnlichViewLib;component/Controls/Overview/RangeItemsControl.xaml"/>
+        <ResourceDictionary Source="/AehnlichViewLib;component/Controls/Overview/RangeScrollbar.xaml"/>
     </ResourceDictionary.MergedDictionaries>    
 </ResourceDictionary>
