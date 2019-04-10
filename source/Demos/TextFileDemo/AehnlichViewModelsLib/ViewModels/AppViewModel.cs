@@ -31,7 +31,6 @@
         private InlineDialogMode _InlineDialog;
         private bool _disposed;
 
-        private bool _IgnoreNextTextSyncValueChange = true;
         private DiffViewPort _LastViewPort;
         private Focus _FocusControl;
         private readonly SuggestSourceViewModel _FilePathA, _FilePathB;
@@ -145,14 +144,8 @@
 
                         lock (_lockObject)
                         {
-                            if (_IgnoreNextTextSyncValueChange == true)
-                            {
-                                if (param.FirstLine == _LastLineToSync)
-                                    return;
-
-                                _IgnoreNextTextSyncValueChange = false;
+                            if (param.FirstLine == _LastLineToSync)
                                 return;
-                            }
 
                             NumberOfTextLinesInViewPort = (param.LastLine - param.FirstLine) - 1;
 
@@ -483,7 +476,6 @@
                 }
 
                 _LastLineToSync = (int)param;
-                ////                            _IgnoreNextTextSyncValueChange = true;
 
                 DiffSideViewModel nonActView;
                 DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
