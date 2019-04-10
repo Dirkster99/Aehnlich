@@ -154,8 +154,6 @@
                                 return;
                             }
 
-                            _IgnoreNextSliderValueChange = true;
-
                             NumberOfTextLinesInViewPort = (param.LastLine - param.FirstLine) - 1;
 
                             // Get value of first visible line and set it in Overview slider
@@ -170,7 +168,14 @@
                                 }
                             }
 
-                            OverViewValue = overViewValue;
+                            // This change was caused by left/right diff view
+                            // So, we do not need to sync it when the Overview says:
+                            // 'Hey, I've changed my value' to break recursive loops(!)
+                            if ((uint)_OverViewValue != overViewValue)
+                            {
+                                _IgnoreNextSliderValueChange = true;
+                                OverViewValue = overViewValue;
+                            }
                         }
 
                         _LastViewPort = param;
