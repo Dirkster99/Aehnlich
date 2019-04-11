@@ -13,11 +13,17 @@
         /// <param name="firstLine"></param>
         /// <param name="lastLine"></param>
         /// <param name="lineCount"></param>
-        public DiffViewPort(int firstLine, int lastLine, int lineCount)
+        /// <param name="caretLine"></param>
+        /// <param name="caretColumn"></param>
+        public DiffViewPort(int firstLine, int lastLine, int lineCount,
+                            int caretLine, int caretColumn)
         {
-            FirstLine = firstLine;
-            LastLine = lastLine;
-            LineCount = lineCount;
+            this.FirstLine = firstLine;
+            this.LastLine = lastLine;
+            this.LineCount = lineCount;
+
+            this.CaretLine = caretLine;
+            this.CaretColumn = caretColumn;
         }
 
         /// <summary>
@@ -34,5 +40,15 @@
         /// Gets the total number of all text lines in the text document.
         /// </summary>
         public int LineCount { get; }
+
+        /// <summary>
+        /// Gets the 1 based line number in which the cursor is currently positioned.
+        /// </summary>
+        public int CaretLine { get; }
+
+        /// <summary>
+        /// Gets the 1 based column number in which the cursor is currently positioned.
+        /// </summary>
+        public int CaretColumn { get; }
     }
 }

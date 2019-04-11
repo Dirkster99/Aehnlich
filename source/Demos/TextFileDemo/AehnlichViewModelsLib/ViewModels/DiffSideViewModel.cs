@@ -503,11 +503,15 @@
         /// where n should in the range of [1 ... max lines].
         /// </summary>
         /// <param name="n"></param>
-        internal void ScrollToLine(int n)
+        /// <param name="positionCursor"></param>
+        internal void ScrollToLine(int n, bool positionCursor)
         {
             DocumentLine line = Document.GetLineByNumber(n);
-            TxtControl.SelectText(line.Offset, 0);          // Select text with length 0 and scroll to where
-            TxtControl.ScrollToLine(n);                    // we are supposed to be at
+
+            if (positionCursor == true)                  // Position caret with
+                TxtControl.SelectText(line.Offset, 0);  // Text Selection length 0 and scroll to where
+
+            TxtControl.ScrollToLine(n);               // we are supposed to be at
         }
 
         /// <summary>

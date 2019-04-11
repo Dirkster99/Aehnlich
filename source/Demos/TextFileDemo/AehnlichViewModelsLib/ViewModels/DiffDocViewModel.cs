@@ -254,7 +254,7 @@
                         DiffSideViewModel nonActView;
                         DiffSideViewModel activeView = GetActiveView(out nonActView);
                         DiffViewPosition gotoPos = activeView.GetFirstDiffPosition();
-                        ScrollToLine(gotoPos, nonActView, activeView);
+                        ScrollToLine(gotoPos, nonActView, activeView, true);
                     },
                     (p) =>
                     {
@@ -287,7 +287,7 @@
                         DiffSideViewModel nonActView;
                         DiffSideViewModel activeView = GetActiveView(out nonActView);
                         DiffViewPosition gotoPos = activeView.GetNextDiffPosition();
-                        ScrollToLine(gotoPos, nonActView, activeView);
+                        ScrollToLine(gotoPos, nonActView, activeView, true);
                     },
                     (p) =>
                     {
@@ -320,7 +320,7 @@
                         DiffSideViewModel nonActView;
                         DiffSideViewModel activeView = GetActiveView(out nonActView);
                         DiffViewPosition gotoPos = activeView.GetPrevDiffPosition();
-                        ScrollToLine(gotoPos, nonActView, activeView);
+                        ScrollToLine(gotoPos, nonActView, activeView, true);
                     },
                     (p) =>
                     {
@@ -353,7 +353,7 @@
                         DiffSideViewModel nonActView;
                         DiffSideViewModel activeView = GetActiveView(out nonActView);
                         DiffViewPosition gotoPos = activeView.GetLastDiffPosition();
-                        ScrollToLine(gotoPos, nonActView, activeView);
+                        ScrollToLine(gotoPos, nonActView, activeView, true);
                     },
                     (p) =>
                     {
@@ -668,19 +668,21 @@
         /// <param name="gotoPos"></param>
         /// <param name="viewA"></param>
         /// <param name="viewB"></param>
+        /// <param name="positionCursor"></param>
         internal void ScrollToLine(DiffViewPosition gotoPos,
                                    DiffSideViewModel viewA,
-                                   DiffSideViewModel viewB)
+                                   DiffSideViewModel viewB,
+                                   bool positionCursor)
         {
             if (viewA != null)
             {
-                viewA.ScrollToLine(gotoPos.Line + 1);
+                viewA.ScrollToLine(gotoPos.Line + 1, positionCursor);
                 viewA.SetPosition(gotoPos);
             }
 
             if (viewB != null)
             {
-                viewB.ScrollToLine(gotoPos.Line + 1);
+                viewB.ScrollToLine(gotoPos.Line + 1, positionCursor);
                 viewB.SetPosition(gotoPos);
             }
         }

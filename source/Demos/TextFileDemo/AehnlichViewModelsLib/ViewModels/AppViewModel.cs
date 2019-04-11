@@ -152,22 +152,23 @@
                             // Get value of first visible line and set it in Overview slider
                             uint overViewValue = (uint)param.FirstLine - 1;
 
-                            if (DiffCtrl != null)
-                            {
-                                if (DiffCtrl.MaxNumberOfLines > 0 && overViewValue > 0)
-                                {
-                                    float valueFactor = overViewValue / (float)DiffCtrl.MaxNumberOfLines;
-                                    overViewValue += (uint)(valueFactor * NumberOfTextLinesInViewPort);
-                                }
-                            }
+////                            if (DiffCtrl != null)
+////                            {
+////                                if (DiffCtrl.MaxNumberOfLines > 0 && overViewValue > 0)
+////                                {
+////                                    float valueFactor = overViewValue / (float)DiffCtrl.MaxNumberOfLines;
+////                                    overViewValue += (uint)(valueFactor * NumberOfTextLinesInViewPort);
+////                                }
+////                            }
 
                             // This change was caused by left/right diff view
                             // So, we do not need to sync it when the Overview says:
                             // 'Hey, I've changed my value' to break recursive loops(!)
-                            if ((uint)_OverViewValue != overViewValue)
+                            if ((uint)_OverViewValue < ((uint)param.FirstLine - 1) ||
+                                (uint)_OverViewValue > ((uint)param.LastLine - 1))
                             {
                                 _IgnoreNextSliderValueChange = true;
-                                OverViewValue = overViewValue;
+                                OverViewValue = ((uint)param.FirstLine - 1);
                             }
                         }
 
@@ -279,7 +280,7 @@
             get { return _OverViewValue; }
             set
             {
-                if ((int)(Math.Abs(_OverViewValue - value)) > 1)
+                if ((int)(Math.Abs(_OverViewValue - value)) >= 1)
                 {
                     _OverViewValue = value;
                     NotifyPropertyChanged(() => OverViewValue);
@@ -480,7 +481,7 @@
                 DiffSideViewModel nonActView;
                 DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
                 DiffViewPosition gotoPos = new DiffViewPosition((int)param, 0);
-                DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView);
+                DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView, false);
             }
         }
 

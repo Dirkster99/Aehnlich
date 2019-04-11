@@ -1,10 +1,14 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:AehnlichViewLib.Controls.Overview">
+    xmlns:local="clr-namespace:AehnlichViewLib.Controls.Overview"
+    xmlns:conv="clr-namespace:AehnlichViewLib.Converters"
+    >
 
     <Style TargetType="{x:Type local:RangeScrollbar}" BasedOn="{StaticResource {x:Type ScrollBar}}">
-
+        <Style.Resources>
+            <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
+        </Style.Resources>
         <Style.Triggers>
             <!-- ScrollBar layout for vertical orientation (from top to bottom) -->
             <Trigger Property="Orientation" Value="Vertical">
@@ -13,17 +17,18 @@
                         <ControlTemplate TargetType="{x:Type local:RangeScrollbar}">
                             <Grid x:Name="Bg" SnapsToDevicePixels="True">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"
-                                                   Height="0"/>
+                                    <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
                                     <RowDefinition Height="1E-05*"/>
-                                    <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"
-                                                   Height="0"/>
+                                    <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
                                 </Grid.RowDefinitions>
                                 <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1"/>
-                                <RepeatButton x:Name="PART_LineUpButton" Command="ScrollBar.LineUpCommand" IsEnabled="{TemplateBinding IsMouseOver}">
+                                <RepeatButton x:Name="PART_LineUpButton"
+                                              Command="{x:Static ScrollBar.LineUpCommand}"
+                                              IsEnabled="{TemplateBinding IsMouseOver}">
                                     <RepeatButton.Style>
                                         <Style TargetType="{x:Type RepeatButton}">
-                                            <Setter Property="Visibility" Value="Collapsed"/> <!-- Always hide Decrease Increase Repeat Buttons by default -->
+                                            <!-- Hide Decrease Increase Repeat Button through dependency property -->
+                                            <Setter Property="Visibility" Value="{Binding IsRepeatButtonVisible,Converter={StaticResource BoolToVisibilityPropConverter},RelativeSource={RelativeSource AncestorType={x:Type local:RangeScrollbar}},UpdateSourceTrigger=PropertyChanged}"/>
                                             <Setter Property="BorderThickness" Value="1"/>
                                             <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -150,10 +155,13 @@
                                                          ItemTemplate="{TemplateBinding Property=ItemTemplate}"
                                                       />
 
-                                <RepeatButton x:Name="PART_LineDownButton" Command="ScrollBar.LineDownCommand" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="2">
+                                <RepeatButton x:Name="PART_LineDownButton"
+                                              Command="{x:Static ScrollBar.LineDownCommand}"
+                                              IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="2">
                                     <RepeatButton.Style>
                                         <Style TargetType="{x:Type RepeatButton}">
-                                            <Setter Property="Visibility" Value="Collapsed"/> <!-- Always hide Decrease Increase Repeat Buttons by default -->
+                                            <!-- Hide Decrease Increase Repeat Buttons though dependency property -->
+                                            <Setter Property="Visibility" Value="{Binding IsRepeatButtonVisible,Converter={StaticResource BoolToVisibilityPropConverter},RelativeSource={RelativeSource AncestorType={x:Type local:RangeScrollbar}},UpdateSourceTrigger=PropertyChanged}"/>
                                             <Setter Property="BorderThickness" Value="1"/>
                                             <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -253,7 +261,9 @@
                                     <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}"/>
                                 </Grid.ColumnDefinitions>
                                 <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Column="1"/>
-                                <RepeatButton x:Name="PART_LineLeftButton" Command="ScrollBar.LineLeftCommand" IsEnabled="{TemplateBinding IsMouseOver}">
+                                <RepeatButton x:Name="PART_LineLeftButton"
+                                              Command="{x:Static ScrollBar.LineLeftCommand}"
+                                              IsEnabled="{TemplateBinding IsMouseOver}">
                                     <RepeatButton.Style>
                                         <Style TargetType="{x:Type RepeatButton}">
                                             <Setter Property="FocusVisualStyle">

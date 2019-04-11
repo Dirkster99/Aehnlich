@@ -322,8 +322,9 @@
                                   Maximum="{Binding DiffCtrl.MaxNumberOfLines}"
                                   Value="{Binding OverViewValue, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                   ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
-                                  SmallChange="1"
-                                  LargeChange="35"
+                                  SmallChange="1.00"
+                                  LargeChange="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                  IsRepeatButtonVisible="False"
                                 >
                 <range:RangeScrollbar.ItemTemplate>
                     <DataTemplate DataType="{x:Type vms:DiffLineViewModel}">

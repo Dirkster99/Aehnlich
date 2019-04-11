@@ -32,6 +32,19 @@
         public static readonly DependencyProperty ItemTemplateProperty =
             ItemsControl.ItemTemplateProperty.AddOwner(typeof(RangeScrollbar));
 
+        public bool IsRepeatButtonVisible
+        {
+            get { return (bool)GetValue(IsRepeatButtonVisibleProperty); }
+            set { SetValue(IsRepeatButtonVisibleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsRepeatButtonVisible.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsRepeatButtonVisibleProperty =
+            DependencyProperty.Register("IsRepeatButtonVisible", typeof(bool),
+                typeof(RangeScrollbar), new PropertyMetadata(true));
+
+
+
         private RangeItemsControl _PART_RangeOverlay;
         private Track _PART_Track;
         private ObservableCollection<UIElement> _iItems = new ObservableCollection<UIElement>();
@@ -192,13 +205,37 @@
             // Find the percentage value where the mouse click occured on the track
             double trackHeight = _PART_Track.ActualHeight;
             Point p = e.GetPosition(_PART_Track);
-            double factor = p.Y / _PART_Track.ActualHeight;
 
-            // Convert the percentage value into the actual value scale
-            double targetValue = Math.Abs(Maximum - Minimum) * factor;
-            this.Value = Minimum + targetValue;
+            // Filter out clicks on repeat button (or other elements below or above Track)
+            if (Orientation == Orientation.Vertical)
+            {
+                if (p.Y > _PART_Track.ActualHeight || p.Y < 0)
+                    return;
 
-            e.Handled = true;
+                double factor = p.Y / _PART_Track.ActualHeight;
+
+                // Convert the percentage value into the actual value scale
+                double targetValue = Math.Abs(Maximum - Minimum) * factor;
+                this.Value = Minimum + targetValue;
+
+                e.Handled = true;
+            }
+            else
+            {
+                if (Orientation == Orientation.Horizontal)
+                {
+                    if (p.X > _PART_Track.ActualWidth || p.X < 0)
+                        return;
+
+                    double factor = p.X / _PART_Track.ActualWidth;
+
+                    // Convert the percentage value into the actual value scale
+                    double targetValue = Math.Abs(Maximum - Minimum) * factor;
+                    this.Value = Minimum + targetValue;
+
+                    e.Handled = true;
+                }
+            }
         }
         #endregion methods
     }

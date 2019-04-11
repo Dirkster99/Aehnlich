@@ -226,9 +226,12 @@
                 int fline = firstline.FirstDocumentLine.LineNumber;
                 int lline = lastline.LastDocumentLine.LineNumber;
 
+                int caretLine = sourceToSync.TextArea.Caret.Line;
+                int caretCol = sourceToSync.TextArea.Caret.Column;
+
                 if (ViewPortChangedCommand != null)
                 {
-                    var currentViewPort = new DiffViewPort(fline, lline, sourceToSync.LineCount);
+                    var currentViewPort = new DiffViewPort(fline, lline, sourceToSync.LineCount, caretLine, caretCol);
 
                     if (ViewPortChangedCommand.CanExecute(currentViewPort))
                     {
