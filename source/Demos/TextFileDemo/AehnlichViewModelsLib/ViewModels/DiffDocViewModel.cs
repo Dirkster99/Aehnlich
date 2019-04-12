@@ -44,6 +44,7 @@
         private ICommand _GoToFirstDifferenceCommand;
         private string _StatusText;
         private bool _disposed;
+        private int _CountInserts, _CountDeletes, _CountChanges;
         private readonly TextEditorOptions _DiffViewOptions;
         #endregion fields
 
@@ -471,6 +472,57 @@
                 }
             }
         }
+
+        public int CountInserts
+        {
+            get
+            {
+                return _CountInserts;
+            }
+
+            protected set
+            {
+                if (_CountInserts != value)
+                {
+                    _CountInserts = value;
+                    NotifyPropertyChanged(() => CountInserts);
+                }
+            }
+        }
+
+        public int CountDeletes
+        {
+            get
+            {
+                return _CountDeletes;
+            }
+
+            protected set
+            {
+                if (_CountDeletes != value)
+                {
+                    _CountDeletes = value;
+                    NotifyPropertyChanged(() => CountDeletes);
+                }
+            }
+        }
+
+        public int CountChanges
+        {
+            get
+            {
+                return _CountChanges;
+            }
+
+            protected set
+            {
+                if (_CountChanges != value)
+                {
+                    _CountChanges = value;
+                    NotifyPropertyChanged(() => CountChanges);
+                }
+            }
+        }
         #endregion properties
 
         #region methods
@@ -514,8 +566,34 @@
 
             SetData(a, b, script, args, ignoreCase, ignoreTextWhitespace, isBinaryCompare);
 
+            // Update the stats
             this.NumberOfLines = (uint)a.Count;
             this.MaxNumberOfLines = (uint)_ViewA.LineCount;
+            int iDeletes = 0, iChanges = 0, iInserts = 0;
+
+            foreach (var item in script)
+            {
+                switch (item.EditType)
+                {
+                    case AehnlichLib.Enums.EditType.Delete:
+                        iDeletes++;
+                        break;
+                    case AehnlichLib.Enums.EditType.Insert:
+                        iInserts++;
+                        break;
+                    case AehnlichLib.Enums.EditType.Change:
+                        iChanges++;
+                        break;
+                    case AehnlichLib.Enums.EditType.None:
+                    default:
+                        break;
+                }
+            }
+
+            this.CountInserts = iInserts;
+            this.CountDeletes = iDeletes;
+            this.CountChanges = iChanges;
+
             _Args = args;
         }
 

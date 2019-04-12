@@ -188,11 +188,13 @@
                 <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
                         Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
                         >
-                    <Grid ToolTip="Changed"
-                      HorizontalAlignment="Stretch"
-                      MinHeight="16" MinWidth="16"
-                      Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"                        
+                    <Grid HorizontalAlignment="Stretch"
+                          MinHeight="16" MinWidth="16"
+                          Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"                        
                     >
+                        <Grid.ToolTip>
+                            <TextBlock Text="{Binding DiffCtrl.CountChanges, StringFormat=Changed: {0}}" />
+                        </Grid.ToolTip>
                         <Grid.Background>
                             <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"/>
                         </Grid.Background>
@@ -202,11 +204,13 @@
                 <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
                         Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
                         >
-                    <Grid ToolTip="Deleted"
-                      HorizontalAlignment="Stretch"
-                      MinHeight="16" MinWidth="16"
-                      Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
-                    <Grid.Background>
+                    <Grid HorizontalAlignment="Stretch"
+                          MinHeight="16" MinWidth="16"
+                          Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                        <Grid.ToolTip>
+                            <TextBlock Text="{Binding DiffCtrl.CountDeletes, StringFormat=Deleted: {0}}" />
+                        </Grid.ToolTip>
+                        <Grid.Background>
                         <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"/>
                     </Grid.Background>
                 </Grid>
@@ -216,11 +220,13 @@
                 <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
                         Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"
                         >
-                    <Grid ToolTip="Inserted"
-                      HorizontalAlignment="Stretch"
-                      MinHeight="16" MinWidth="16"
-                      Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"                        
+                    <Grid HorizontalAlignment="Stretch"
+                          MinHeight="16" MinWidth="16"
+                          Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"                        
                     >
+                        <Grid.ToolTip>
+                            <TextBlock Text="{Binding DiffCtrl.CountInserts, StringFormat=Added: {0}}" />
+                        </Grid.ToolTip>
                         <Grid.Background>
                             <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AddedKey}}"/>
                         </Grid.Background>
