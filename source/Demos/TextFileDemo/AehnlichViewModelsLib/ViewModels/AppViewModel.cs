@@ -130,6 +130,13 @@
             }
         }
 
+        /// <summary>
+        /// Gets a command that should be invoked:
+        /// - when either of the synchronized left or right text diff view changes its display line or 
+        /// - when the size (width and/or height) of the text diff view changes
+        /// 
+        /// to sync with the Overview control and update parts of the application.
+        /// </summary>
         public ICommand ViewPortChangedCommand
         {
             get
@@ -150,25 +157,27 @@
                             NumberOfTextLinesInViewPort = (param.LastLine - param.FirstLine) - 1;
 
                             // Get value of first visible line and set it in Overview slider
-                            uint overViewValue = (uint)param.FirstLine - 1;
+                            double overViewValue = (uint)param.FirstLine - 1;
 
-////                            if (DiffCtrl != null)
-////                            {
-////                                if (DiffCtrl.MaxNumberOfLines > 0 && overViewValue > 0)
-////                                {
-////                                    float valueFactor = overViewValue / (float)DiffCtrl.MaxNumberOfLines;
-////                                    overViewValue += (uint)(valueFactor * NumberOfTextLinesInViewPort);
-////                                }
-////                            }
+                            // Weight the visible first line with the viewport height towards
+                            // the beginning and end of the document
+                            // (make sure the Overview scrolls all the way down when scrolling to end of document)
+                            if (DiffCtrl != null)
+                            {
+                                if (((double)DiffCtrl.MaxNumberOfLines - NumberOfTextLinesInViewPort) > 0)
+                                {
+                                    double valueFactor = overViewValue / ((double)DiffCtrl.MaxNumberOfLines - NumberOfTextLinesInViewPort);
+                                    overViewValue += (valueFactor * (double)NumberOfTextLinesInViewPort);
+                                }
+                            }
 
                             // This change was caused by left/right diff view
                             // So, we do not need to sync it when the Overview says:
                             // 'Hey, I've changed my value' to break recursive loops(!)
-                            if ((uint)_OverViewValue < ((uint)param.FirstLine - 1) ||
-                                (uint)_OverViewValue > ((uint)param.LastLine - 1))
+                            if ((uint)(Math.Abs(_OverViewValue - overViewValue)) >= 1)
                             {
                                 _IgnoreNextSliderValueChange = true;
-                                OverViewValue = ((uint)param.FirstLine - 1);
+                                OverViewValue = (uint)overViewValue;
                             }
                         }
 

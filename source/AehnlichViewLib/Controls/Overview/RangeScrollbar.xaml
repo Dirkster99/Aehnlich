@@ -6,6 +6,7 @@
     >
 
     <Style TargetType="{x:Type local:RangeScrollbar}" BasedOn="{StaticResource {x:Type ScrollBar}}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Style.Resources>
             <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
         </Style.Resources>
@@ -126,10 +127,15 @@
                                                     <Setter Property="Template">
                                                         <Setter.Value>
                                                             <ControlTemplate TargetType="{x:Type Thumb}">
-                                                                <Rectangle x:Name="rectangle" Fill="#FFCDCDCD"
-                                                                           Height="{TemplateBinding Height}"
+                                                                <Border BorderBrush="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                                                                        BorderThickness="3,0,3,0">
+                                                                <Rectangle x:Name="rectangle"
+                                                                           Fill="#FFCDCDCD"
                                                                            SnapsToDevicePixels="True"
-                                                                           Width="{TemplateBinding Width}"/>
+                                                                           Height="{TemplateBinding Height}"
+                                                                           Width="{TemplateBinding Width}"
+                                                                           />
+                                                                </Border>
                                                                 <ControlTemplate.Triggers>
                                                                     <Trigger Property="IsMouseOver" Value="True">
                                                                         <Setter Property="Fill" TargetName="rectangle" Value="#FFA6A6A6"/>
@@ -361,7 +367,13 @@
                                                     <Setter Property="Template">
                                                         <Setter.Value>
                                                             <ControlTemplate TargetType="{x:Type Thumb}">
-                                                                <Rectangle x:Name="rectangle" Fill="#FFCDCDCD" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}"/>
+                                                                <Border BorderBrush="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                                                                        BorderThickness="0,3,0,3">
+                                                                    <Rectangle x:Name="rectangle" Fill="#FFCDCDCD"
+                                                                               SnapsToDevicePixels="True"
+                                                                               Height="{TemplateBinding Height}"
+                                                                               Width="{TemplateBinding Width}"/>
+                                                                </Border>
                                                                 <ControlTemplate.Triggers>
                                                                     <Trigger Property="IsMouseOver" Value="True">
                                                                         <Setter Property="Fill" TargetName="rectangle" Value="#FFA6A6A6"/>

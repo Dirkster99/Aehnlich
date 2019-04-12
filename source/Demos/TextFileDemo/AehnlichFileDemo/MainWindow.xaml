@@ -258,8 +258,8 @@
                 </StackPanel>
             </ToolBar>
             
-            <!-- Debugging Values  Visibility="Collapsed"-->
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <!-- Debugging Values -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed">
                 <TextBlock
                     Margin="3" VerticalAlignment="Center"
                     Text="{Binding NumberOfTextLinesInViewPort}"
@@ -329,12 +329,13 @@
                 <range:RangeScrollbar.ItemTemplate>
                     <DataTemplate DataType="{x:Type vms:DiffLineViewModel}">
                         <Rectangle Name="elp"
-                                    Fill="{Binding Context,Converter={StaticResource DiffContextToColorPropConverter}}"
-                                    Width="{Binding ElementName=OverviewCtrl,Path=ActualWidth}" Height="1"
-                                    Visibility="{Binding Context,Converter={StaticResource DiffContextToVisibilityPropConverter}}"
-				                    range:RangePanel.Position="{Binding IndexLineNumber}"
-				                    range:RangePanel.Alignment="Begin"
-                                    HorizontalAlignment="Stretch"
+                                   Fill="{Binding Context,Converter={StaticResource DiffContextToColorPropConverter}}"
+                                   Width="{Binding ElementName=OverviewCtrl,Path=ActualWidth}" Height="1"
+                                   Visibility="{Binding Context,Converter={StaticResource DiffContextToVisibilityPropConverter}}"
+				                   range:RangePanel.Position="{Binding IndexLineNumber}"
+				                   range:RangePanel.Alignment="Begin"
+                                   HorizontalAlignment="Stretch"
+                                   Margin="3,0,3,0"
 				                />
                     </DataTemplate>
                 </range:RangeScrollbar.ItemTemplate>

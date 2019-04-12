@@ -32,18 +32,12 @@
         public static readonly DependencyProperty ItemTemplateProperty =
             ItemsControl.ItemTemplateProperty.AddOwner(typeof(RangeScrollbar));
 
-        public bool IsRepeatButtonVisible
-        {
-            get { return (bool)GetValue(IsRepeatButtonVisibleProperty); }
-            set { SetValue(IsRepeatButtonVisibleProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for IsRepeatButtonVisible.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// Implements the backing store of the <see cref="IsRepeatButtonVisible"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty IsRepeatButtonVisibleProperty =
             DependencyProperty.Register("IsRepeatButtonVisible", typeof(bool),
                 typeof(RangeScrollbar), new PropertyMetadata(true));
-
-
 
         private RangeItemsControl _PART_RangeOverlay;
         private Track _PART_Track;
@@ -69,6 +63,11 @@
         }
         #endregion ctors
 
+        /// <summary>
+        /// Implements a change notification to inform a bound object if the
+        /// <see cref="Items"/> collection is updated with elements from the
+        /// content of this control.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region properties
@@ -135,12 +134,27 @@
             get { return (int)GetValue(AlternationCountProperty); }
             set { SetValue(AlternationCountProperty, value); }
         }
+
+        /// <summary>
+        /// Gets/sets a dependency property to determine whether the repeat buttons
+        /// are visible or not.
+        /// </summary>
+        [Bindable(true), Category("Content")]
+        public bool IsRepeatButtonVisible
+        {
+            get { return (bool)GetValue(IsRepeatButtonVisibleProperty); }
+            set { SetValue(IsRepeatButtonVisibleProperty, value); }
+        }
         #endregion properties
 
         #region methods
+        /// <summary>
+        /// Creates the visual tree for the <see cref="ScrollBar"/>.
+        /// </summary>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+
             _PART_RangeOverlay = base.GetTemplateChild("PART_RangeOverlay") as RangeItemsControl;
             _PART_Track = base.GetTemplateChild("PART_Track") as Track;
 
@@ -152,6 +166,8 @@
                 _PART_Track.Thumb.DragEnter += Thumb_DragEnter;
                 _PART_Track.Thumb.DragLeave += Thumb_DragLeave;
                 this.PreviewMouseDown += _PART_RangeOverlay_PreviewMouseDown;
+
+                this.MouseWheel += RangeScrollbar_MouseWheel;
             }
 
             // Are there any items specified for rendering in the contents property of this control?
@@ -168,11 +184,21 @@
             }
         }
 
+        /// <summary>
+        /// User finished dragging the thumb control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Thumb_DragLeave(object sender, DragEventArgs e)
         {
             _ThumbIsDragging = false;
         }
 
+        /// <summary>
+        /// User started to drag the thumb control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Thumb_DragEnter(object sender, DragEventArgs e)
         {
             _ThumbIsDragging = true;
@@ -186,9 +212,11 @@
         /// <param name="e"></param>
         private void _PART_RangeOverlay_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            // The user should still be able to use right mouse button (context menu)
             if ((e.LeftButton == MouseButtonState.Pressed) == false)
                 return;
 
+            // The user should still be able to drag the thumb to update displays in synced fashion
             if (sender != this || _ThumbIsDragging == true)
                 return;
 
@@ -199,8 +227,6 @@
             var thumbMousover = _PART_Track.Thumb.InputHitTest(e.GetPosition(_PART_Track.Thumb));
             if (thumbMousover != null)
                 return;
-
-            var sb = sender as ScrollBar;
 
             // Find the percentage value where the mouse click occured on the track
             double trackHeight = _PART_Track.ActualHeight;
@@ -234,6 +260,34 @@
                     this.Value = Minimum + targetValue;
 
                     e.Handled = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Lets the user scroll the thumb with the mouse wheel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RangeScrollbar_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            double largeChange = Math.Abs(LargeChange);
+
+            if (e.Delta > 0)
+            {
+                if (Minimum < (Value - largeChange))
+                    Value -= largeChange;
+                else
+                    Value = Minimum;
+            }
+            else
+            {
+                if (e.Delta < 0)
+                {
+                    if (Maximum > (Value + largeChange))
+                        Value += largeChange;
+                    else
+                        Value = Maximum;
                 }
             }
         }
