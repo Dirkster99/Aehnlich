@@ -27,19 +27,17 @@
     
     
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                            ResourceId=VerticalSLideThumbForegroundBrushKey}"
+                     ResourceId=VerticalSLideThumbForegroundBrushKey}"
                      Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
                      Opacity="0.35"
     />
 
-    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ButtonNormalOuterBorderKey}"
-                    Color="#FF707070"
-                    options:Freeze="true" />
-
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=ControlTextBrushKey}"
-                     Color="Black"/>
+                     ResourceId=ButtonNormalOuterBorderKey}"
+                     Color="#FF707070"
+                     options:Freeze="true" />
 
+    <!-- Background -->
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=ColorBackgroundContextBrushKey}"
                      Color="#80FF80"
@@ -47,7 +45,7 @@
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=ColorBackgroundDeletedBrushKey}"
-                     Color="#FF8080"
+                     Color="#ff8080"
                      options:Freeze="true" />
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
@@ -57,7 +55,7 @@
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=ColorBackgroundImaginaryDeletedBrushKey}"
-                     Color="#00baff"
+                     Color="#FF8080"
                      Opacity=".4"
                      options:Freeze="true" />
 
@@ -66,6 +64,24 @@
                      Color="#00baff"
                      Opacity=".4"
                      options:Freeze="true" />
+    <!-- Background -->
+
+    <!-- Foreground -->
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=ColorForegroundContextBrushKey}"
+                     Color="Black"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=ColorForegroundDeletedBrushKey}"
+                     Color="White"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=ColorForegroundAddedBrushKey}"
+                     Color="White"
+                     options:Freeze="true" />
+    <!-- Foreground -->
 
     <!-- Current Line Highlighting Keys -->
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},

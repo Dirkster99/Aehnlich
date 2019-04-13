@@ -32,9 +32,6 @@
         public static readonly ComponentResourceKey VerticalSLideThumbForegroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "VerticalSLideThumbForegroundBrushKey");
 
         public static readonly ComponentResourceKey ButtonNormalOuterBorderKey = new ComponentResourceKey(typeof(ResourceKeys), "ButtonNormalOuterBorderKey");
-
-        public static readonly ComponentResourceKey ControlTextBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlTextBrushKey");
-
         #endregion Brush Keys
 
         #region DiffView Currentline Keys
@@ -93,10 +90,17 @@
         #endregion ICONs
 
         #region Diff Colors
+        #region Background
         public static readonly ComponentResourceKey ColorBackgroundContextBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundContextBrushKey");
-
         public static readonly ComponentResourceKey ColorBackgroundDeletedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundDeletedBrushKey");
         public static readonly ComponentResourceKey ColorBackgroundAddedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundAddedBrushKey");
+        #endregion Background
+
+        #region Foreground
+        public static readonly ComponentResourceKey ColorForegroundContextBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorForegroundContextBrushKey");
+        public static readonly ComponentResourceKey ColorForegroundDeletedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorForegroundDeletedBrushKey");
+        public static readonly ComponentResourceKey ColorForegroundAddedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorForegroundAddedBrushKey");
+        #endregion Foreground
 
         public static readonly ComponentResourceKey ColorBackgroundImaginaryDeletedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundImaginaryDeletedBrushKey");
         public static readonly ComponentResourceKey ColorBackgroundImaginaryAddedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundImaginaryAddedBrushKey");

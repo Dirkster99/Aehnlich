@@ -45,6 +45,7 @@
                 typeof(DiffDirView), new PropertyMetadata(null));
 
         #region Diff Color Definitions
+        #region Background
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundBlank"/>
         /// dependency property.
@@ -76,6 +77,41 @@
         public static readonly DependencyProperty ColorBackgroundContextProperty =
             DependencyProperty.Register("ColorBackgroundContext", typeof(SolidColorBrush),
                 typeof(DiffDirView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x80, 0xFF, 0x80)), OnColorChanged));
+        #endregion Background
+
+        #region Foreground
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorForegroundBlank"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorForegroundBlankProperty =
+            DependencyProperty.Register("ColorForegroundBlank", typeof(SolidColorBrush),
+                typeof(DiffDirView), new PropertyMetadata(default(SolidColorBrush), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorForegroundAdded"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorForegroundAddedProperty =
+            DependencyProperty.Register("ColorForegroundAdded", typeof(SolidColorBrush),
+                typeof(DiffDirView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x00, 0x00)), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorForegroundDeleted"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorForegroundDeletedProperty =
+            DependencyProperty.Register("ColorForegroundDeleted", typeof(SolidColorBrush),
+                typeof(DiffDirView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x00, 0x00)), OnColorChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ColorForegroundContext"/>
+        /// dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ColorForegroundContextProperty =
+            DependencyProperty.Register("ColorForegroundContext", typeof(SolidColorBrush),
+                typeof(DiffDirView), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x00, 0x00)), OnColorChanged));
+        #endregion Foreground
 
         /// <summary>
         /// Implements the backing store of the <see cref="ColorBackgroundImaginaryLineAdded"/>
@@ -214,6 +250,21 @@
         }
 
         #region Diff Color definitions
+        #region Background
+        /// <summary>
+        /// Gets/sets the background color that is applied when drawing areas that
+        /// signifies 2 blank lines in both of the two (text) lines being compared.
+        /// 
+        /// Normally, there should be no drawing required for this which is why the
+        /// default is default(<see cref="SolidColorBrush"/>) - but sometimes it may be useful
+        /// to color these lines which is why we have this property here.
+        /// </summary>
+        public SolidColorBrush ColorBackgroundBlank
+        {
+            get { return (SolidColorBrush)GetValue(ColorBackgroundBlankProperty); }
+            set { SetValue(ColorBackgroundBlankProperty, value); }
+        }
+
         /// <summary>
         /// Gets/sets the background color that is applied when drawing areas that
         /// signifies changed context (2 lines appear to be similar enough to align them
@@ -247,20 +298,6 @@
 
         /// <summary>
         /// Gets/sets the background color that is applied when drawing areas that
-        /// signifies 2 blank lines in both of the two (text) lines being compared.
-        /// 
-        /// Normally, there should be no drawing required for this which is why the
-        /// default is default(<see cref="SolidColorBrush"/>) - but sometimes it may be useful
-        /// to color these lines which is why we have this property here.
-        /// </summary>
-        public SolidColorBrush ColorBackgroundBlank
-        {
-            get { return (SolidColorBrush)GetValue(ColorBackgroundBlankProperty); }
-            set { SetValue(ColorBackgroundBlankProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets/sets the background color that is applied when drawing areas that
         /// signifies an element that is missing in one of the two (text) lines being compared.
         /// </summary>
         public SolidColorBrush ColorBackgroundImaginaryLineDeleted
@@ -279,6 +316,54 @@
             get { return (SolidColorBrush)GetValue(ColorBackgroundImaginaryLineAddedProperty); }
             set { SetValue(ColorBackgroundImaginaryLineAddedProperty, value); }
         }
+        #endregion Background
+
+        #region Foreground
+        /// <summary>
+        /// Gets/sets the Foreground color that is applied when drawing areas that
+        /// signifies 2 blank lines in both of the two (text) lines being compared.
+        /// 
+        /// Normally, there should be no drawing required for this which is why the
+        /// default is default(<see cref="SolidColorBrush"/>) - but sometimes it may be useful
+        /// to color these lines which is why we have this property here.
+        /// </summary>
+        public SolidColorBrush ColorForegroundBlank
+        {
+            get { return (SolidColorBrush)GetValue(ColorForegroundBlankProperty); }
+            set { SetValue(ColorForegroundBlankProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the Foreground color that is applied when drawing areas that
+        /// signifies changed context (2 lines appear to be similar enough to align them
+        /// but still mark them as different).
+        /// </summary>
+        public SolidColorBrush ColorForegroundContext
+        {
+            get { return (SolidColorBrush)GetValue(ColorForegroundContextProperty); }
+            set { SetValue(ColorForegroundContextProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the Foreground color that is applied when drawing areas that
+        /// signifies an element that is missing in one of the two (text) lines being compared.
+        /// </summary>
+        public SolidColorBrush ColorForegroundDeleted
+        {
+            get { return (SolidColorBrush)GetValue(ColorForegroundDeletedProperty); }
+            set { SetValue(ColorForegroundDeletedProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the Foreground color that is applied when drawing areas that
+        /// signifies an element that is added in one of the two (text) lines being compared.
+        /// </summary>
+        public SolidColorBrush ColorForegroundAdded
+        {
+            get { return (SolidColorBrush)GetValue(ColorForegroundAddedProperty); }
+            set { SetValue(ColorForegroundAddedProperty, value); }
+        }
+        #endregion Foreground
 
         /// <summary>
         /// Gets a set of color definitions that can be bound to in one place to process all
@@ -525,11 +610,16 @@
         private void OnColorChanged(object newValue)
         {
             this.DiffColorDefinitions = new DiffColorDefinitions(ColorBackgroundBlank,
-                                                                ColorBackgroundAdded,
-                                                                ColorBackgroundDeleted,
-                                                                ColorBackgroundContext,
-                                                                ColorBackgroundImaginaryLineAdded,
-                                                                ColorBackgroundImaginaryLineDeleted);
+                                                                 ColorBackgroundAdded,
+                                                                 ColorBackgroundDeleted,
+                                                                 ColorBackgroundContext,
+                                                                 ColorBackgroundImaginaryLineAdded,
+                                                                 ColorBackgroundImaginaryLineDeleted,
+
+                                                                 ColorForegroundBlank,
+                                                                 ColorForegroundAdded,
+                                                                 ColorForegroundDeleted,
+                                                                 ColorForegroundContext);
 
             this.InvalidateVisual();
         }

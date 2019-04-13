@@ -35,10 +35,6 @@
                     Color="#FF666666"
                     options:Freeze="true" />
 
-    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=ControlTextBrushKey}"
-                     Color="Gray"/>
-
     <!-- Current Line Highlighting Keys -->
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=DiffViewCurrentLineBackgroundBrushKey}"

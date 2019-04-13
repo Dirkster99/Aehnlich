@@ -75,6 +75,7 @@
     <Compile Include="Converters\AssociatedIconConverter.cs" />
     <Compile Include="Behaviors\BindingProxy .cs" />
     <Compile Include="Converters\BoolToVisibilityPropConverter.cs" />
+    <Compile Include="Converters\DiffToForegroundColorConverter.cs" />
     <Compile Include="Converters\DiffToBackgroundColorConverter.cs" />
     <Compile Include="Converters\DoubleBytesToStringReadableSizeConverter.cs" />
     <Compile Include="Converters\NullToVisibilityPropConverter.cs" />

@@ -8,9 +8,9 @@
 
     /// <summary>
     /// Considers all arguments of difference between two compared items and
-    /// converts it into an associated background color key.
+    /// converts it into an associated Foreground color key.
     /// </summary>
-    public class DiffToBackgroundColorConverter : DependencyObject, IMultiValueConverter
+    public class DiffToForegroundColorConverter : DependencyObject, IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -35,23 +35,23 @@
                 return Binding.DoNothing;
 
             if (IsItemDifferent && IsItemInA == true && IsItemInB == true)
-                return colorDefs.ColorBackgroundContext; // new SolidColorBrush(Colors.Green);
+                return colorDefs.ColorForegroundContext; // new SolidColorBrush(Colors.Green);
 
             if (IsItemInA == false && IsItemInB == true)
             {
                 if (IsFromA)
-                    return colorDefs.ColorBackgroundImaginaryLineAdded;
+                    return Binding.DoNothing;        // Imaginary Lines do not have a foreground item
                 else
-                    return colorDefs.ColorBackgroundAdded; // new SolidColorBrush(Colors.Blue);
+                    return colorDefs.ColorForegroundAdded; // new SolidColorBrush(Colors.Blue);
             }
             else
             {
                 if (IsItemInA == true && IsItemInB == false)
                 {
                     if (IsFromA)
-                        return colorDefs.ColorBackgroundDeleted; // new SolidColorBrush(Colors.Red);
+                        return colorDefs.ColorForegroundDeleted; // new SolidColorBrush(Colors.Red);
                     else
-                        return colorDefs.ColorBackgroundImaginaryLineDeleted;
+                        return Binding.DoNothing;   // Imaginary Lines do not have a foreground item
                 }
             }
 

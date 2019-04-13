@@ -150,7 +150,11 @@
                         HorizontalAlignment="Stretch"
 						MinHeight="16" MinWidth="16"
 						Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
-                        <Grid.Background>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="7*"/>
+                                <RowDefinition Height="2*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.Background>
                             <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"/>
                         </Grid.Background>
                         <Grid.ToolTip>
