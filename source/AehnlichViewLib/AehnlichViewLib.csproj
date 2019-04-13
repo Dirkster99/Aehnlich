@@ -61,6 +61,7 @@
     <Compile Include="Controls\DiffDirView.xaml.cs">
       <DependentUpon>DiffDirView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overview\DoublesToVisibilityConverter.cs" />
     <Compile Include="Controls\Overview\RangeAlignment.cs" />
     <Compile Include="Controls\Overview\RangeItemsControl.xaml.cs">
       <DependentUpon>RangeItemsControl.xaml</DependentUpon>

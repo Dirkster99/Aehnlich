@@ -39,6 +39,21 @@
             DependencyProperty.Register("IsRepeatButtonVisible", typeof(bool),
                 typeof(RangeScrollbar), new PropertyMetadata(true));
 
+
+
+        public double DocumentSize
+        {
+            get { return (double)GetValue(DocumentSizeProperty); }
+            set { SetValue(DocumentSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for DocumentSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DocumentSizeProperty =
+            DependencyProperty.Register("DocumentSize", typeof(double),
+                typeof(RangeScrollbar), new PropertyMetadata(0d));
+
+
+
         private RangeItemsControl _PART_RangeOverlay;
         private Track _PART_Track;
         private ObservableCollection<UIElement> _iItems = new ObservableCollection<UIElement>();

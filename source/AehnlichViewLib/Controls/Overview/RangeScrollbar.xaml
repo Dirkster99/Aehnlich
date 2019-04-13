@@ -9,6 +9,7 @@
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Style.Resources>
             <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
+            <conv:DoublesToVisibilityConverter x:Key="DoublesToVisibilityConverter"/>
         </Style.Resources>
         <Style.Triggers>
             <!-- ScrollBar layout for vertical orientation (from top to bottom) -->
@@ -77,7 +78,6 @@
                                     </RepeatButton.Style>
                                     <Path x:Name="ArrowTop" Data="M0,4C0,4 0,6 0,6 0,6 3.5,2.5 3.5,2.5 3.5,2.5 7,6 7,6 7,6 7,4 7,4 7,4 3.5,0.5 3.5,0.5 3.5,0.5 0,4 0,4z" Fill="#FF606060" Margin="3,4,3,3" Stretch="Uniform"/>
                                 </RepeatButton>
-
 
                                 <Track x:Name="PART_Track" IsDirectionReversed="True" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
                                     <Track.DecreaseRepeatButton>
@@ -149,6 +149,18 @@
                                                     </Setter>
                                                 </Style>
                                             </Thumb.Style>
+                                            <Thumb.Visibility>
+                                                <MultiBinding Converter="{StaticResource DoublesToVisibilityConverter}">
+                                                    <Binding Path="ViewportSize"
+                                                             RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType={x:Type local:RangeScrollbar}}"
+                                                             UpdateSourceTrigger="PropertyChanged"
+                                                             Mode="OneWay"/>
+                                                    <Binding Path="DocumentSize"
+                                                             RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType={x:Type local:RangeScrollbar}}"
+                                                             UpdateSourceTrigger="PropertyChanged"
+                                                             Mode="OneWay"/>
+                                                </MultiBinding>
+                                            </Thumb.Visibility>
                                         </Thumb>
                                     </Track.Thumb>
                                 </Track>
@@ -387,6 +399,18 @@
                                                     </Setter>
                                                 </Style>
                                             </Thumb.Style>
+                                            <Thumb.Visibility>
+                                                <MultiBinding Converter="{StaticResource DoublesToVisibilityConverter}">
+                                                    <Binding Path="ViewportSize"
+                                                             RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType={x:Type local:RangeScrollbar}}"
+                                                             UpdateSourceTrigger="PropertyChanged"
+                                                             Mode="OneWay"/>
+                                                    <Binding Path="DocumentSize"
+                                                             RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType={x:Type local:RangeScrollbar}}"
+                                                             UpdateSourceTrigger="PropertyChanged"
+                                                             Mode="OneWay"/>
+                                                </MultiBinding>
+                                            </Thumb.Visibility>
                                         </Thumb>
                                     </Track.Thumb>
                                 </Track>

@@ -325,11 +325,12 @@
             <range:RangeScrollbar Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="30" Margin="3"
                                   Name="OverviewCtrl"
                                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                  DocumentSize="{Binding DiffCtrl.MaxNumberOfLines,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                   ViewportSize="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                   Minimum="0"
-                                  Maximum="{Binding DiffCtrl.MaxNumberOfLines}"
+                                  Maximum="{Binding DiffCtrl.MaxNumberOfLines,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                   Value="{Binding OverViewValue, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                  ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
+                                  ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                   SmallChange="1.00"
                                   LargeChange="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                   IsRepeatButtonVisible="False"
@@ -369,7 +370,6 @@
                         ValidText="{Binding FilePathA.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                         TextChangedCommand="{Binding FilePathA.SuggestTextChangedCommand}"
                         ItemsSource="{Binding FilePathA.ListQueryResult}"
-                        
                         behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
                     />
                     
@@ -386,7 +386,6 @@
                         ValidText="{Binding FilePathB.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                         TextChangedCommand="{Binding FilePathB.SuggestTextChangedCommand}"
                         ItemsSource="{Binding FilePathB.ListQueryResult}"
-                        
                         behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
                     />
                 </Grid>

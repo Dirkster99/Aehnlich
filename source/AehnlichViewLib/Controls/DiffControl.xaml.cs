@@ -11,7 +11,7 @@
     using System.Windows.Media;
 
     /// <summary>
-    ///
+    /// Implements a Text Diff control with syncronized left and rights view.
     /// </summary>
     [TemplatePart(Name = PART_LeftDiffView, Type = typeof(DiffView))]
     [TemplatePart(Name = PART_RightDiffView, Type = typeof(DiffView))]
