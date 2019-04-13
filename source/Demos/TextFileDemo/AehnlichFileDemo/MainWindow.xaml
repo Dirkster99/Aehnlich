@@ -11,6 +11,9 @@
         xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         xmlns:vms="clr-namespace:AehnlichViewModelsLib.ViewModels;assembly=AehnlichViewModelsLib"
         xmlns:range="clr-namespace:AehnlichViewLib.Controls.Overview;assembly=AehnlichViewLib"
+        xmlns:behav="clr-namespace:AehnlichViewModelsLib.Behaviors;assembly=AehnlichViewModelsLib"
+                        
+        xmlns:sc="clr-namespace:SuggestBoxLib;assembly=SuggestBoxLib"
         
         mc:Ignorable="d"
         Title="Ähnlich" Height="450" Width="800"
@@ -316,8 +319,7 @@
             <Grid Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="0" Margin="3,0,3,3"
                   Visibility="{Binding InlineDialog, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InlineDilaogToVisibilityPropConverter}}"
               >
-                <usctrl:GotoControl DataContext="{Binding GotoLineController}"
-                />
+                <usctrl:GotoControl DataContext="{Binding GotoLineController}" />
             </Grid>
 
             <range:RangeScrollbar Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="30" Margin="3"
@@ -347,17 +349,64 @@
                 </range:RangeScrollbar.ItemTemplate>
             </range:RangeScrollbar>
 
-            <ctrl:DiffControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2"
-                              Name="DiffCtrl"
-                              LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                              RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                              ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
-                              DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                              SetFocus="{Binding FocusControl, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                              
-                              NextLeftTargetLocation="{Binding CompareFilesCommand}"
-                              NextRightTargetLocation="{Binding CompareFilesCommand}"
-                              Margin="3,0,3,3"/>
+            <Grid Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid  Grid.Column="0" Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" Name="ColumnA"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" Name="ColumnB"/>
+                    </Grid.ColumnDefinitions>
+
+                    <sc:SuggestBox
+                        x:Name="PART_LeftFileNameTextBox" Grid.Column="0" Grid.Row="0" Margin="0,3"
+                        Hint="Enter a file system path"
+                        Text="{Binding FilePathA.FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        ValidText="{Binding FilePathA.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        TextChangedCommand="{Binding FilePathA.SuggestTextChangedCommand}"
+                        ItemsSource="{Binding FilePathA.ListQueryResult}"
+                        
+                        behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
+                    />
+                    
+                    <GridSplitter
+                        Grid.Column="1" Grid.Row="0"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        Width="6" />
+
+                    <sc:SuggestBox
+                        x:Name="PART_RightFileNameTextBox" Grid.Column="2" Grid.Row="0" Margin="0,3"
+                        Hint="Enter a file system path"
+                        Text="{Binding FilePathB.FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        ValidText="{Binding FilePathB.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        TextChangedCommand="{Binding FilePathB.SuggestTextChangedCommand}"
+                        ItemsSource="{Binding FilePathB.ListQueryResult}"
+                        
+                        behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
+                    />
+                </Grid>
+
+                <ctrl:DiffControl Name="DiffCtrl" Grid.Column="0" Grid.Row="1"
+                                  LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                  RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                  ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
+                                  DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                  SetFocus="{Binding FocusControl, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                  
+                                  WidthColumnA="{Binding ElementName=ColumnA,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                  WidthColumnB="{Binding ElementName=ColumnB,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                  
+                                  Margin="3,0,3,0"/>
+                <!--
+                    NextLeftTargetLocation="{Binding CompareFilesCommand}"
+                    NextRightTargetLocation="{Binding CompareFilesCommand}"
+                -->
+            </Grid>
         </Grid>
 
         <GridSplitter
@@ -366,7 +415,7 @@
                 Background="Transparent"
                 Height="6" />
 
-        <!-- ViewLineDiff -->
+        <!-- Horizontal ViewLineDiff with 2 text diff lines in each line -->
         <ctrl:DiffView
             Grid.Column="0" Grid.Row="3" Margin="3"
             DataContext="{Binding DiffCtrl.ViewLineDiff}"

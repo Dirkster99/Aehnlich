@@ -15,16 +15,11 @@
     /// </summary>
     [TemplatePart(Name = PART_LeftDiffView, Type = typeof(DiffView))]
     [TemplatePart(Name = PART_RightDiffView, Type = typeof(DiffView))]
-    [TemplatePart(Name = PART_RightFileNameTextBox, Type = typeof(TextBox))]
-    [TemplatePart(Name = PART_LeftFileNameTextBox, Type = typeof(TextBox))]
     public class DiffControl : Control
     {
         #region fields
-        public const string PART_RightDiffView = "TextRight";
-        public const string PART_RightFileNameTextBox = "PART_RightFileNameTextBox";
-
-        public const string PART_LeftDiffView = "TextLeft";
-        public const string PART_LeftFileNameTextBox = "PART_LeftFileNameTextBox";
+        public const string PART_RightDiffView = "PART_TextRight";
+        public const string PART_LeftDiffView = "PART_TextLeft";
 
         /// <summary>
         /// Implements the backing store of the <see cref="SetFocus"/> dependency property.
@@ -58,18 +53,23 @@
             DependencyProperty.Register("DiffViewOptions", typeof(TextEditorOptions),
                 typeof(DiffControl), new PropertyMetadata(new TextEditorOptions { IndentationSize = 4, ShowTabs = false, ConvertTabsToSpaces = true }));
 
-        // Using a DependencyProperty as the backing store for NextLeftTargetLocation.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty NextLeftTargetLocationProperty =
-            DependencyProperty.Register("NextLeftTargetLocation", typeof(ICommand),
-                typeof(DiffControl), new PropertyMetadata(null));
+        #region GridColumn Sync
+        /// <summary>
+        /// Implements the backing store of the <see cref="WidthColumnA"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty WidthColumnAProperty =
+            DependencyProperty.Register("WidthColumnA", typeof(GridLength),
+                typeof(DiffControl), new PropertyMetadata(new GridLength(1, GridUnitType.Star)));
 
-        // Using a DependencyProperty as the backing store for NextRightTargetLocation.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty NextRightTargetLocationProperty =
-            DependencyProperty.Register("NextRightTargetLocation", typeof(ICommand),
-                typeof(DiffControl), new PropertyMetadata(null));
+        /// <summary>
+        /// Implements the backing store of the <see cref="WidthColumnB"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty WidthColumnBProperty =
+            DependencyProperty.Register("WidthColumnB", typeof(GridLength),
+                typeof(DiffControl), new PropertyMetadata(new GridLength(1, GridUnitType.Star)));
+        #endregion GridColumn Sync
 
         private DiffView _PART_LeftDiffView, _PART_RightDiffView;
-        private SuggestBoxLib.SuggestBox _PART_LeftFileNameTextBox, _PART_RightFileNameTextBox;
         private ScrollViewer _leftScrollViewer, _rightScrollViewer;
         #endregion fields
 
@@ -117,18 +117,20 @@
             set { SetValue(SetFocusProperty, value); }
         }
 
-        public ICommand NextLeftTargetLocation
+        #region GridColumn Sync
+        public GridLength WidthColumnA
         {
-            get { return (ICommand)GetValue(NextLeftTargetLocationProperty); }
-            set { SetValue(NextLeftTargetLocationProperty, value); }
+            get { return (GridLength)GetValue(WidthColumnAProperty); }
+            set { SetValue(WidthColumnAProperty, value); }
         }
 
-        public ICommand NextRightTargetLocation
+        public GridLength WidthColumnB
         {
-            get { return (ICommand)GetValue(NextRightTargetLocationProperty); }
-            set { SetValue(NextRightTargetLocationProperty, value); }
+            get { return (GridLength)GetValue(WidthColumnBProperty); }
+            set { SetValue(WidthColumnBProperty, value); }
         }
-        #endregion properties
+        #endregion
+        #endregion GridColumn Sync
 
         #region methods
         public override void OnApplyTemplate()
@@ -139,9 +141,6 @@
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            _PART_LeftFileNameTextBox = GetTemplateChild(PART_LeftFileNameTextBox) as SuggestBoxLib.SuggestBox;
-            _PART_RightFileNameTextBox = GetTemplateChild(PART_RightFileNameTextBox) as SuggestBoxLib.SuggestBox;
-
             _PART_LeftDiffView = GetTemplateChild(PART_LeftDiffView) as DiffView;
             _PART_RightDiffView = GetTemplateChild(PART_RightDiffView) as DiffView;
 
@@ -153,39 +152,6 @@
 
             if (_rightScrollViewer != null)
                 _rightScrollViewer.ScrollChanged += Scrollviewer_ScrollChanged;
-
-            if (_PART_LeftFileNameTextBox != null)
-                _PART_LeftFileNameTextBox.NewLocationRequestEvent += _PART_FileNameTextBox_NewLocationRequestEvent;
-
-            if (_PART_RightFileNameTextBox != null)
-                _PART_RightFileNameTextBox.NewLocationRequestEvent += _PART_FileNameTextBox_NewLocationRequestEvent;
-
-        }
-
-        private void _PART_FileNameTextBox_NewLocationRequestEvent(object sender,
-                                                                   SuggestBoxLib.Events.NextTargetLocationArgs e)
-        {
-            ICommand commandToExec = null;
-
-            if (sender == _PART_LeftFileNameTextBox)
-                commandToExec = NextLeftTargetLocation;
-
-            if (sender == _PART_RightFileNameTextBox)
-                commandToExec = NextRightTargetLocation;
-
-            if (commandToExec == null)
-                return;
-
-            if (commandToExec is RoutedCommand)
-            {
-                if (((RoutedCommand)commandToExec).CanExecute(e, this))
-                    ((RoutedCommand)commandToExec).Execute(e, this);
-            }
-            else
-            {
-                if (commandToExec.CanExecute(e))
-                    commandToExec.Execute(e);
-            }
         }
 
         /// <summary>
@@ -290,14 +256,6 @@
 
             switch ((Enums.Focus)e.NewValue)
             {
-                case Enums.Focus.LeftFilePath:
-                    elementToFocus = _PART_LeftFileNameTextBox;
-                    break;
-
-                case Enums.Focus.RightFilePath:
-                    elementToFocus = _PART_RightFileNameTextBox;
-                    break;
-
                 case Enums.Focus.LeftView:
                     elementToFocus = _PART_LeftDiffView;
                     break;
