@@ -12,15 +12,15 @@ The module that compares directories and files supports 2 views:
 ### Directories and Files
 This view has the usual side by side view of folders and files being highlighted when
 they have been added, deleted, or changed in the **right view** when compared to the **left view**.
-You can double click each directory to browe into the directory structure or use the arrow up button
+You can double click each directory to browse into the directory structure or use the arrow up button
 in the toolbar to browse back up in the structure.
 
 ![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/DirDiffScreen.png)
 
 ### Files Summary
-This view shows only file that have been deleted, inserted, or changed in the **right view**
+This view shows only files that have been deleted, inserted, or changed in the **right view**
 when compared to the **left view**. You can use the tooltip or context menu entries to see
-the actual path of each file or open in the Explorer etc.
+the actual path of each file or open it in the Explorer etc.
 
 ![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/DirDiffScreen_1.png)
 
