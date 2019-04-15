@@ -313,7 +313,6 @@
 
                         FileSystemCommands.CopyString(param);
 
-
                     }, (p) =>
                     {
                         return true;

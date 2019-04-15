@@ -4,8 +4,10 @@
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
     using AehnlichLib.Interfaces;
+    using AehnlichLib.Progress;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading.Tasks;
     using System.Windows.Input;
 
     public class AppViewModel : Base.ViewModelBase
@@ -18,6 +20,7 @@
         private ICommand _DiffViewModeSelectCommand;
 
         private ListItemViewModel _DiffViewModeSelected;
+        private readonly DiffProgressViewModel _DiffProgress;
         private readonly List<ListItemViewModel> _DiffViewModes;
         private readonly DirDiffDocViewModel _DirDiffDoc;
         #endregion fields
@@ -30,6 +33,7 @@
         {
             _DirDiffDoc = new DirDiffDocViewModel();
             _DiffViewModes = ResetViewModeDefaults();
+            _DiffProgress = new DiffProgressViewModel();
         }
         #endregion ctors
 
@@ -52,7 +56,7 @@
             {
                 if (_CompareDirectoriesCommand == null)
                 {
-                    _CompareDirectoriesCommand = new RelayCommand<object>((p) =>
+                    _CompareDirectoriesCommand = new RelayCommand<object>(async (p) =>
                     {
                         string leftDir;
                         string rightDir;
@@ -73,7 +77,7 @@
                         if (leftDir == null || rightDir == null)
                             return;
 
-                        CompareFilesCommand_Executed(leftDir, rightDir);
+                        await CompareFilesCommand_ExecutedAsync(leftDir, rightDir);
                         NotifyPropertyChanged(() => DirDiffDoc);
                     },
                     (p) =>
@@ -191,6 +195,14 @@
                 return _DiffViewModeSelectCommand;
             }
         }
+
+        public IDiffProgress DiffProgress
+        {
+            get
+            {
+                return _DiffProgress;
+            }
+        }
         #endregion properties
 
         #region methods
@@ -206,7 +218,7 @@
         }
 
         #region Compare Files Command
-        private void CompareFilesCommand_Executed(string leftDir, string rightDir)
+        private async Task CompareFilesCommand_ExecutedAsync(string leftDir, string rightDir)
         {
             var args = new Models.ShowDirDiffArgs(leftDir, rightDir);
 
@@ -216,9 +228,20 @@
                                          args.IgnoreDirectoryComparison,
                                          args.FileFilter);
 
-            IDirectoryDiffRoot diffResults = diff.Execute(args.LeftDir, args.RightDir);
+            _DiffProgress.ResetProgressValues();
 
-            _DirDiffDoc.ShowDifferences(args, diffResults);
+            try
+            {
+                var iprogress = await diff.ExecuteAsync(args.LeftDir, args.RightDir, _DiffProgress);
+
+                var diffResults = iprogress.ResultData as IDirectoryDiffRoot;
+
+                _DirDiffDoc.ShowDifferences(args, diffResults);
+            }
+            catch
+            {
+
+            }
         }
 
         private bool CompareFilesCommand_CanExecut(string leftDir, string rightDir)

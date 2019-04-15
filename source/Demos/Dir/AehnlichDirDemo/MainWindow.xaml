@@ -18,7 +18,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="3">
+        <Grid.Resources>
+            <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -188,7 +192,40 @@
             </ToolBar>
         </Grid>
 
-        <Grid Grid.Row="1" Margin="0,3,0,0">
+        <!-- Show a progress-bar to indicate long running processing -->
+        <Grid Grid.Row="1"
+              DataContext="{Binding DiffProgress}"
+              Visibility="{Binding IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityPropConverter}}"
+              >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <ProgressBar
+                Height="3" Margin="0,3,0,0"
+                IsIndeterminate="{Binding IsIndeterminate, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                Value="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                Minimum="{Binding MinimumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                Maximum="{Binding MaximumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+            />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Min:">
+                  <TextBlock Text="{Binding MinimumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </TextBlock>
+                <TextBlock Text=", Max:">
+                  <TextBlock Text="{Binding MaximumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </TextBlock>
+
+                <TextBlock Text=", Value:">
+                  <TextBlock Text="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+        
+        <Grid Grid.Row="2" Margin="0,3,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"  Name="TopColumnA"/>
                 <ColumnDefinition Width="Auto"/>

@@ -54,6 +54,7 @@
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
     <Compile Include="ViewModels\Base\ViewModelBase.cs" />
+    <Compile Include="ViewModels\DiffProgressViewModel.cs" />
     <Compile Include="ViewModels\ListItemViewModel.cs" />
     <Compile Include="ViewModels\DirDiffDocViewModel.cs" />
     <Compile Include="ViewModels\DirEntryViewModel.cs" />

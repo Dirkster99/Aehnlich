@@ -63,6 +63,7 @@
     <Compile Include="Interfaces\IAddCopy.cs" />
     <Compile Include="Interfaces\IDirectoryDiffEntry.cs" />
     <Compile Include="Interfaces\IDirectoryDiffRoot.cs" />
+    <Compile Include="Progress\IDiffProgress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Text\DiagonalVector.cs" />
     <Compile Include="Text\Edit.cs" />

@@ -2,10 +2,12 @@ namespace AehnlichLib.Dir
 {
     using AehnlichLib.Dir.Merge;
     using AehnlichLib.Interfaces;
+    using AehnlichLib.Progress;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Compares sub-directories and files in 2 given folders and returns the result of the comparison
@@ -107,16 +109,94 @@ namespace AehnlichLib.Dir
         /// </summary>
         /// <param name="directoryA"></param>
         /// <param name="directoryB"></param>
-        /// <returns></returns>
+        /// <returns>Null if an unkown error occured or if either directory cannot be accessed
+        /// (or does not exist), otherwise returns a <see cref="IDiffProgress"/> object
+        /// where the <see cref="IDiffProgress.ResultData"/> property contains a
+        /// <see cref="IDirectoryDiffRoot"/> data structure that describes the directory
+        /// differences in detail.</returns>
+        public Task<IDiffProgress> ExecuteAsync(string directoryA,
+                                                string directoryB,
+                                                IDiffProgress progress)
+        {
+            try
+            {
+                var dirA = new DirectoryInfo(directoryA);
+                var dirB = new DirectoryInfo(directoryB);
+
+                return this.ExecuteAsync(dirA, dirB, progress);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Compares <paramref name="directoryA"/> with <paramref name="directoryB"/> using the comparison
+        /// options as defined in the constructor of this class.
+        /// </summary>
+        /// <param name="directoryA"></param>
+        /// <param name="directoryB"></param>
+        /// <returns>Null if an unkown error occured or if either directory cannot be accessed
+        /// (or does not exist), otherwise returns a <see cref="IDiffProgress"/> object
+        /// where the <see cref="IDiffProgress.ResultData"/> property contains a
+        /// <see cref="IDirectoryDiffRoot"/> data structure that describes the directory
+        /// differences in detail.</returns>
+        public Task<IDiffProgress> ExecuteAsync(DirectoryInfo directoryA,
+                                                DirectoryInfo directoryB,
+                                                IDiffProgress progress)
+        {
+            return Task.Run<IDiffProgress>(() =>
+            {
+                try
+                {
+                    // Create a faux base entry to pass to Execute
+                    DirectoryDiffRoot diffRoot = new DirectoryDiffRoot(directoryA.FullName,
+                                                                       directoryB.FullName,
+                                                                       _Recursive, _Filter);
+
+                    progress.ResultData = diffRoot;
+                    progress.ShowIndeterminatedProgress();
+
+                    if (directoryA.Exists == false || directoryB.Exists == false)
+                        return null;
+
+                    // directory diff match
+                    int directories = this.BuildSubDirs(directoryA, directoryB,
+                                                        _Recursive, _Filter, diffRoot);
+
+                    progress.ShowDeterminatedProgress(0, 0, directories);
+                    this.AddFiles(diffRoot, progress);
+
+                    return progress;
+                }
+                catch (Exception exp)
+                {
+                    progress.LogException(exp);
+                    return null;
+                }
+                finally
+                {
+                    progress.ProgressDisplayOff();
+                }
+            });
+        }
+
+        /// <summary>
+        /// Compares <paramref name="directoryA"/> with <paramref name="directoryB"/> using the comparison
+        /// options as defined in the constructor of this class.
+        /// </summary>
+        /// <param name="directoryA"></param>
+        /// <param name="directoryB"></param>
+        /// <returns>Null if an unkown error occured or if either directory cannot be accessed
+        /// (or does not exist), otherwise the <see cref="IDirectoryDiffRoot"/> data structure
+        /// that describes the directory differences.</returns>
         public IDirectoryDiffRoot Execute(string directoryA, string directoryB)
         {
             try
             {
                 var dirA = new DirectoryInfo(directoryA);
                 var dirB = new DirectoryInfo(directoryB);
-                
-                if (dirA.Exists == false || dirB.Exists == false)
-                    return null;
                 
                 return this.Execute(dirA, dirB);
             }
@@ -132,16 +212,32 @@ namespace AehnlichLib.Dir
         /// </summary>
         /// <param name="directoryA"></param>
         /// <param name="directoryB"></param>
-        /// <returns></returns>
+        /// <returns>Null if an unkown error occured or if either directory cannot be accessed
+        /// (or does not exist), otherwise the <see cref="IDirectoryDiffRoot"/> data structure
+        /// that describes the directory differences.</returns>
         public IDirectoryDiffRoot Execute(DirectoryInfo directoryA, DirectoryInfo directoryB)
         {
-            // Non-recursive diff match
-            var diffRoot = this.BuildSubDirs(directoryA, directoryB, _Recursive, _Filter);
-            this.AddFiles(diffRoot);
+            try
+            {
+                // Create a faux base entry to pass to Execute
+                DirectoryDiffRoot diffRoot = new DirectoryDiffRoot(directoryA.FullName,
+                                                                   directoryB.FullName,
+                                                                   _Recursive, _Filter);
 
-            return diffRoot;
+                if (directoryA.Exists == false || directoryB.Exists == false)
+                    return null;
+
+                // directory diff match
+                this.BuildSubDirs(directoryA, directoryB, _Recursive, _Filter, diffRoot);
+                this.AddFiles(diffRoot);
+
+                return diffRoot;
+            }
+            catch
+            {
+                return null;
+            }
         }
-
         #endregion
 
         #region Private Methods
@@ -160,17 +256,16 @@ namespace AehnlichLib.Dir
         /// <param name="directoryB"></param>
         /// <param name="recursive"></param>
         /// <param name="filter"></param>
+        /// <param name="diffRoot"></param>
         /// <returns>A root diff entry that describes directory differences through its properties.</returns>
-        private DirectoryDiffRoot BuildSubDirs(DirectoryInfo directoryA,
-                                               DirectoryInfo directoryB,
-											   bool recursive,
-											   DirectoryDiffFileFilter filter)
+        private int BuildSubDirs(DirectoryInfo directoryA,
+                                 DirectoryInfo directoryB,
+								 bool recursive,
+								 DirectoryDiffFileFilter filter,
+                                 DirectoryDiffRoot diffRoot)
         {
             var queue = new Queue<Tuple<int, MergedEntry>>();
             var index = new Dictionary<string, IDirectoryDiffEntry>();
-
-            // Create a faux base entry to pass to Execute
-            DirectoryDiffRoot diffRoot = new DirectoryDiffRoot(directoryA.FullName, directoryB.FullName, recursive, filter);
 
             // Associate root level entry with empty path since path associations
             // below works with RELATIVE path references to given root entries
@@ -234,11 +329,13 @@ namespace AehnlichLib.Dir
                     mergeIdx.Merge();
 
                     foreach (var item in mergeIdx.MergedEntries)
+                    {
                         queue.Enqueue(new Tuple<int, MergedEntry>(iLevel + 1, item));
+                    }
                 }
             }
-            
-            return diffRoot;
+
+            return index.Count;
         }
 
 
@@ -323,6 +420,22 @@ namespace AehnlichLib.Dir
         /// <param name="root"></param>
         private void AddFiles(DirectoryDiffRoot root)
         {
+            AddFiles(root, null);
+        }
+
+        /// <summary>
+        /// Adds files into a given <paramref name="root"/> directory structure of sub-directories
+        /// and re-evaluates their status in terms of difference.
+        /// 
+        /// The algorithm used implements a Post-Order traversal algorithm which also allows us
+        /// to aggregate results (sub-directory is different, size) up-wards through the hierarchy.
+        /// </summary>
+        /// <param name="root"></param>
+        private void AddFiles(DirectoryDiffRoot root,
+                              IDiffProgress progress)
+        {
+            int CountDirs = 0;
+
             // If the base paths are the same, we don't need to check for file differences.
             bool checkIfFilesAreDifferent = string.Compare(root.RootPathA, root.RootPathB, true) != 0;
 
@@ -353,6 +466,10 @@ namespace AehnlichLib.Dir
                     {
                         foreach (var item in node.Subentries) // Aggregate size of sub-directories up
                         {
+                            CountDirs++;
+                            if (progress != null)
+                                progress.UpdateDeterminatedProgress(CountDirs);
+
                             if (node.InA == true)
                                 node.LengthA += item.LengthA;
 
@@ -393,7 +510,6 @@ namespace AehnlichLib.Dir
                     {    // So, we catch it it and ignore these for now
                         dirB_Exists = false;
                     }
-
 
                     if (dirA_Exists == true || dirB_Exists == true)
                     {

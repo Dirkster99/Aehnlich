@@ -71,7 +71,7 @@
                 {
                     // Sort them
                     Array.Sort((DirectoryInfo[])InfosA, FileSystemInfoComparer.DirectoryComparer);
-                    Array.Sort((DirectoryInfo[])InfosA, FileSystemInfoComparer.DirectoryComparer);
+                    Array.Sort((DirectoryInfo[])InfosB, FileSystemInfoComparer.DirectoryComparer);
                 }
                 else
                 {
