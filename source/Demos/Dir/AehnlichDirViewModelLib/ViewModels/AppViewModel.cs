@@ -2,6 +2,8 @@
 {
     using AehnlichDirViewModelLib.Enums;
     using AehnlichDirViewModelLib.ViewModels.Base;
+    using AehnlichLib.Dir;
+    using AehnlichLib.Interfaces;
     using System.Collections.Generic;
     using System.IO;
     using System.Windows.Input;
@@ -41,7 +43,8 @@
         }
 
         /// <summary>
-        /// Gets a command that refreshs (reloads) the comparison of 2 textfiles.
+        /// Gets a command that refreshs (reloads) the comparison of
+        /// two directories (sub-directories) and their files.
         /// </summary>
         public ICommand CompareDirectoriesCommand
         {
@@ -72,7 +75,8 @@
 
                         CompareFilesCommand_Executed(leftDir, rightDir);
                         NotifyPropertyChanged(() => DirDiffDoc);
-                    },(p) =>
+                    },
+                    (p) =>
                     {
                         string leftDir;
                         string rightDir;
@@ -190,17 +194,31 @@
         #endregion properties
 
         #region methods
+        /// <summary>
+        /// Initializes the left and right dir from the last application session (if any)
+        /// </summary>
+        /// <param name="leftDirPath"></param>
+        /// <param name="rightDirPath"></param>
         public void Initialize(string leftDirPath, string rightDirPath)
         {
             LeftDirPath = leftDirPath;
             RightDirPath = rightDirPath;
         }
 
+        #region Compare Files Command
         private void CompareFilesCommand_Executed(string leftDir, string rightDir)
         {
             var args = new Models.ShowDirDiffArgs(leftDir, rightDir);
 
-            _DirDiffDoc.ShowDifferences(args);
+            var diff = new DirectoryDiff(args.ShowOnlyInA, args.ShowOnlyInB,
+                                         args.ShowDifferent, args.ShowSame,
+                                         args.Recursive,
+                                         args.IgnoreDirectoryComparison,
+                                         args.FileFilter);
+
+            IDirectoryDiffRoot diffResults = diff.Execute(args.LeftDir, args.RightDir);
+
+            _DirDiffDoc.ShowDifferences(args, diffResults);
         }
 
         private bool CompareFilesCommand_CanExecut(string leftDir, string rightDir)
@@ -226,6 +244,7 @@
 
             return true;
         }
+        #endregion Compare Files Command
 
         private List<ListItemViewModel> ResetViewModeDefaults()
         {

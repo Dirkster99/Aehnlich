@@ -136,7 +136,7 @@ namespace AehnlichLib.Dir
         public IDirectoryDiffRoot Execute(DirectoryInfo directoryA, DirectoryInfo directoryB)
         {
             // Non-recursive diff match
-            var diffRoot = this.BuildSubDirs(directoryA, directoryB, this._Recursive, this._Filter);
+            var diffRoot = this.BuildSubDirs(directoryA, directoryB, _Recursive, _Filter);
             this.AddFiles(diffRoot);
 
             return diffRoot;

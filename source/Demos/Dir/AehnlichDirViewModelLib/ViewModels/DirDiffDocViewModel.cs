@@ -316,7 +316,8 @@
 
                     }, (p) =>
                     {
-                        return (p is string);
+                        return true;
+                        //return (p is string);
                     }
 
                     );
@@ -463,22 +464,14 @@
         #endregion properties
 
         #region methods
-        internal void ShowDifferences(ShowDirDiffArgs args)
+        internal void ShowDifferences(ShowDirDiffArgs args,
+                                      IDirectoryDiffRoot diffResults
+                                      )
         {
             try
             {
-                var diff = new DirectoryDiff(args.ShowOnlyInA,
-                                             args.ShowOnlyInB,
-                                             args.ShowDifferent,
-                                             args.ShowSame,
-                                             args.Recursive,
-                                             args.IgnoreDirectoryComparison,
-                                             args.FileFilter);
-
-                IDirectoryDiffRoot results = diff.Execute(args.LeftDir, args.RightDir);
-
-                SetData(results, _CurrentViewMode);
-                _Results = results;
+                SetData(diffResults, _CurrentViewMode);
+                _Results = diffResults;
 
                 _CompareOptions = args; // Record comparison options for later
 

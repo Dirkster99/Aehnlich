@@ -53,6 +53,7 @@
                             ItemTemplate="{TemplateBinding ItemTemplate}"
                             ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
                             SelectedItem="{Binding SelectedItem_A,Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
+                            SelectionMode="Single"
                         
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
@@ -227,6 +228,7 @@
 
                             ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                             SelectedItem="{Binding SelectedItem_B,Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
+                            SelectionMode="Single"
                                   
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             ScrollViewer.HorizontalScrollBarVisibility="Hidden" 

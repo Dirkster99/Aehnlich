@@ -2,6 +2,14 @@ namespace AehnlichLib.Dir
 {
 	using AehnlichLib.Interfaces;
 
+    /// <summary>
+    /// Implements an object root of an object data graph that models directories
+    /// A (left side) and B (right side), their sub-directories, and their files.
+    /// 
+    /// The data in this structure captures directory and file differences in either
+    /// (sub-)directory in terms of directories and/or files that have beend:
+    /// deleted, added, changed, or appear to be equal in both.
+    /// </summary>
     internal sealed class DirectoryDiffRoot : IDirectoryDiffRoot
     {
         #region fields
@@ -15,6 +23,10 @@ namespace AehnlichLib.Dir
         /// <summary>
         /// Class constructor
         /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="recursive"></param>
+        /// <param name="rootPathA"></param>
+        /// <param name="rootPathB"></param>
         public DirectoryDiffRoot(string rootPathA, string rootPathB,
 								 bool recursive,
 								 DirectoryDiffFileFilter filter)
@@ -40,11 +52,21 @@ namespace AehnlichLib.Dir
 			_DifferentFiles = new DirectoryDiffEntryCollection();
         }
         #endregion Constructors
-		
+
+		/// <summary>
+        /// Gets the root directory level path of the diff directory A (left side).
+        /// </summary>
 		public string RootPathA { get; }
 
+        /// <summary>
+        /// Gets the root directory level path of directory B (right side).
+        /// </summary>
 		public string RootPathB { get; }
 
+        /// <summary>
+        /// Gets whether this root represents a diff between two directories
+        /// with more than one level (false) or multiple levels of sub-directories (true).
+        /// </summary>
 		public bool Recursive { get { return _Recursive; } }
 
 		public DirectoryDiffFileFilter Filter { get { return _Filter; } }
@@ -70,10 +92,22 @@ namespace AehnlichLib.Dir
             }
         }
 
+        /// <summary>
+        /// Gets the number of files deleted in directory A (left side)
+        /// when comparing directory A (left side) with directory B (right side).
+        /// </summary>
         public int CountFilesDeleted { get; private set; }
 
+        /// <summary>
+        /// Gets the number of files added in directory B (left side)
+        /// when comparing directory A (left side) with directory B (right side).
+        /// </summary>
         public int CountFilesAdded { get; private set; }
 
+        /// <summary>
+        /// Gets the number of changes files in directory A and B
+        /// when comparing directory A (left side) with directory B (right side).
+        /// </summary>
         public int CountFilesChanged { get; private set; }
 
         #region methods
