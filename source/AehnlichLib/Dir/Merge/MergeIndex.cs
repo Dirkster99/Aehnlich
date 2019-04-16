@@ -69,13 +69,13 @@
                 // Are we sort/merging directories or files?
                 if (InfosA is DirectoryInfo[] && InfosB is DirectoryInfo[])
                 {
-                    // Sort them
+                    // Sort directories
                     Array.Sort((DirectoryInfo[])InfosA, FileSystemInfoComparer.DirectoryComparer);
                     Array.Sort((DirectoryInfo[])InfosB, FileSystemInfoComparer.DirectoryComparer);
                 }
                 else
                 {
-                    // Sort them
+                    // Sort files
                     Array.Sort((FileInfo[])InfosA, FileSystemInfoComparer.FileComparer);
                     Array.Sort((FileInfo[])InfosB, FileSystemInfoComparer.FileComparer);
                 }

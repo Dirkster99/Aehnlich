@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -60,6 +60,7 @@
     <Compile Include="Dir\Merge\MergeIndex.cs" />
     <Compile Include="Enums\EditType.cs" />
     <Compile Include="Enums\HashType.cs" />
+    <Compile Include="Enums\DiffDirFileMode.cs" />    
     <Compile Include="Interfaces\IAddCopy.cs" />
     <Compile Include="Interfaces\IDirectoryDiffEntry.cs" />
     <Compile Include="Interfaces\IDirectoryDiffRoot.cs" />
@@ -72,7 +73,6 @@
     <Compile Include="Text\StringHasher.cs" />
     <Compile Include="Text\SubArray.cs" />
     <Compile Include="Text\TextDiff.cs" />
-    <Compile Include="Util\DiffUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Docs\Readme.txt" />

@@ -1,6 +1,7 @@
 namespace AehnlichLib.Dir
 {
     using AehnlichLib.Dir.Merge;
+    using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
     using AehnlichLib.Progress;
     using System;
@@ -24,7 +25,7 @@ namespace AehnlichLib.Dir
         private readonly bool _ShowOnlyInB;
         private readonly bool _ShowSame;
         private readonly DirectoryDiffFileFilter _Filter;
-
+        private readonly DiffDirFileMode _DiffMode;
         #endregion
 
         #region Constructors
@@ -70,13 +71,17 @@ namespace AehnlichLib.Dir
         /// Setting it to false leads to generating entries with a hint towards difference even for directories.</param>
         /// <param name="filter">
         /// This can be used to setup a file filter that determines the type of file(s)
-        /// that can be included or excluded in the comaparison of directories.
+        /// that can be included or excluded in the comparison of directories.
         /// 
         /// Setting this for instance to DirectoryDiffFileFilter("*.cs", true) leads
         /// to comparing only C-Sharp files (all other files are ignored).
         /// 
         /// And directories are equal if they contain the same sub-directory structure
         /// and either no C-Sharp files or equal C-Sharp files.
+        /// </param>
+        /// <param name="diffMode">
+        /// Determines the modus operandi per <see cref="DiffDirFileMode"/> that is used to
+        /// compare two files and pronounce them as different or equal.
         /// </param>
         public DirectoryDiff(
             bool showOnlyInA,
@@ -85,7 +90,8 @@ namespace AehnlichLib.Dir
             bool showSame,
             bool recursive,
             bool ignoreDirectoryComparison,
-            DirectoryDiffFileFilter filter)
+            DirectoryDiffFileFilter filter,
+            DiffDirFileMode diffMode)
         {
             _ShowOnlyInA = showOnlyInA;
             _ShowOnlyInB = showOnlyInB;
@@ -94,6 +100,7 @@ namespace AehnlichLib.Dir
             _Recursive = recursive;
             _IgnoreDirectoryComparison = ignoreDirectoryComparison;
             _Filter = filter;
+            _DiffMode = diffMode;
         }
 
         /// <summary>
@@ -151,9 +158,9 @@ namespace AehnlichLib.Dir
                 try
                 {
                     // Create a faux base entry to pass to Execute
-                    DirectoryDiffRoot diffRoot = new DirectoryDiffRoot(directoryA.FullName,
-                                                                       directoryB.FullName,
-                                                                       _Recursive, _Filter);
+                    var diffRoot = new DirectoryDiffRoot(directoryA.FullName,
+                                                         directoryB.FullName,
+                                                         _Recursive, _Filter, _DiffMode);
 
                     progress.ResultData = diffRoot;
                     progress.ShowIndeterminatedProgress();
@@ -197,7 +204,7 @@ namespace AehnlichLib.Dir
             {
                 var dirA = new DirectoryInfo(directoryA);
                 var dirB = new DirectoryInfo(directoryB);
-                
+
                 return this.Execute(dirA, dirB);
             }
             catch
@@ -220,9 +227,9 @@ namespace AehnlichLib.Dir
             try
             {
                 // Create a faux base entry to pass to Execute
-                DirectoryDiffRoot diffRoot = new DirectoryDiffRoot(directoryA.FullName,
-                                                                   directoryB.FullName,
-                                                                   _Recursive, _Filter);
+                var diffRoot = new DirectoryDiffRoot(directoryA.FullName,
+                                                     directoryB.FullName,
+                                                     _Recursive, _Filter, _DiffMode);
 
                 if (directoryA.Exists == false || directoryB.Exists == false)
                     return null;
@@ -260,8 +267,8 @@ namespace AehnlichLib.Dir
         /// <returns>A root diff entry that describes directory differences through its properties.</returns>
         private int BuildSubDirs(DirectoryInfo directoryA,
                                  DirectoryInfo directoryB,
-								 bool recursive,
-								 DirectoryDiffFileFilter filter,
+                                 bool recursive,
+                                 DirectoryDiffFileFilter filter,
                                  DirectoryDiffRoot diffRoot)
         {
             var queue = new Queue<Tuple<int, MergedEntry>>();
@@ -646,16 +653,32 @@ namespace AehnlichLib.Dir
 
                 string basePath = item.GetBasePath(root.RootPathA, root.RootPathB);
                 IDirectoryDiffEntry newEntry = null;
-                
+
+                // The item is in both directories
                 if (item.InfoA != null && item.InfoB != null)
                 {
-                    // The item is in both directories
                     if (_ShowDifferent || _ShowSame)
                     {
                         bool different = false;
+
+                        // Are these different by byte length and/or time stamp already?
+                        if ((root.DiffMode & DiffDirFileMode.ByteLength) != 0)
+                        {
+                            different = !((lengthA == lengthB));
+                        }
+
+                        if ((root.DiffMode & DiffDirFileMode.LastUpdate) != 0)
+                        {
+                            different = different && !(lastUpdateA == lastUpdateB);
+                        }
+
                         Exception except = null;
 
-                        if (checkIfFilesAreDifferent)
+                        // Byte by Byte checking is rather slow. Do it only if faster checks have not
+                        // determined in-equality and byte-by-byte diff mode is active
+                        if (checkIfFilesAreDifferent
+                            && different == false
+                            && (root.DiffMode & DiffDirFileMode.AllBytes) != 0)
                         {
                             try
                             {
@@ -677,7 +700,7 @@ namespace AehnlichLib.Dir
                                                               lastUpdateA, lastUpdateB, lengthA, lengthB);
 
                             newEntry.Different = different;
-                            
+
                             if (except != null)
                                 newEntry.Error = string.Format("'{0}' -> '{1}'", except.Message, except.StackTrace);
                         }
@@ -699,10 +722,10 @@ namespace AehnlichLib.Dir
                     {
                         newEntry = new DirectoryDiffEntry(basePath, item.InfoB.Name, true, false, true,
                                                           default(DateTime), lastUpdateB, 0.0, lengthB);
-                        
+
                     }
                 }
-                
+
                 if (newEntry != null)
                 {
                     // Mark directory as different if containing files are different
@@ -711,7 +734,7 @@ namespace AehnlichLib.Dir
                         entry.Different = true;
                         root.AddDiffFile(newEntry);   // Add into collection of different files
                     }
-                    
+
                     entry.AddSubEntry(newEntry);
                 }
             }

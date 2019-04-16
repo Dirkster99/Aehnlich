@@ -3,6 +3,7 @@
     using AehnlichDirViewModelLib.Enums;
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
+    using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
     using AehnlichLib.Progress;
     using System.Collections.Generic;
@@ -226,7 +227,8 @@
                                          args.ShowDifferent, args.ShowSame,
                                          args.Recursive,
                                          args.IgnoreDirectoryComparison,
-                                         args.FileFilter);
+                                         args.FileFilter,
+                                         DiffDirFileMode.ByteLength);
 
             _DiffProgress.ResetProgressValues();
 

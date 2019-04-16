@@ -222,7 +222,7 @@
                         _DirPathStack.Push(param);
                         PathA = GetSubPath(_CompareOptions.LeftDir, _DirPathStack, true);
                         PathB = GetSubPath(_CompareOptions.RightDir, _DirPathStack, false);
-                    },((p) =>
+                    }, ((p) =>
                     {
                         var param = p as DirEntryViewModel;
                         if (param == null)
@@ -315,8 +315,7 @@
 
                     }, (p) =>
                     {
-                        return true;
-                        //return (p is string);
+                        return (p is string);
                     }
 
                     );
