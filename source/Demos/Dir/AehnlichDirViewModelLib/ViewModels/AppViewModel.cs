@@ -21,9 +21,11 @@
         private ICommand _DiffViewModeSelectCommand;
 
         private ListItemViewModel _DiffViewModeSelected;
+        private DiffFileModeItemViewModel _DiffFileModeSelected;
         private readonly DiffProgressViewModel _DiffProgress;
         private readonly List<ListItemViewModel> _DiffViewModes;
         private readonly DirDiffDocViewModel _DirDiffDoc;
+        private readonly List<DiffFileModeItemViewModel> _DiffFileModes;
         #endregion fields
 
         #region ctors
@@ -35,6 +37,27 @@
             _DirDiffDoc = new DirDiffDocViewModel();
             _DiffViewModes = ResetViewModeDefaults();
             _DiffProgress = new DiffProgressViewModel();
+
+            _DiffFileModes = new List<DiffFileModeItemViewModel>();
+            _DiffFileModeSelected = new DiffFileModeItemViewModel("All Bytes",
+                "Compare each file by their length, last update, and byte by byte sequence",
+                DiffDirFileMode.ByteLength_LastUpdate_AllBytes);
+
+            _DiffFileModes.Add(
+                new DiffFileModeItemViewModel("Last Change",
+                "Compare last time of change of each file",
+                DiffDirFileMode.LastUpdate));
+
+            _DiffFileModes.Add(
+                new DiffFileModeItemViewModel("Byte Length",
+                "Compare the byte length of each file",
+                DiffDirFileMode.ByteLength));
+
+            _DiffFileModes.Add(new DiffFileModeItemViewModel("Byte Length + Last Change",
+                "Compare the byte length and last time of change of each file",
+                DiffDirFileMode.ByteLength_LastUpdate));
+
+            _DiffFileModes.Add(_DiffFileModeSelected);
         }
         #endregion ctors
 
@@ -46,6 +69,33 @@
                 return _DirDiffDoc;
             }
         }
+
+        #region Diff File Mode Selection
+        public List<DiffFileModeItemViewModel> DiffFileModes
+        {
+            get
+            {
+                return _DiffFileModes;
+            }
+        }
+
+        public DiffFileModeItemViewModel DiffFileModeSelected
+        {
+            get
+            {
+                return _DiffFileModeSelected;
+            }
+
+            set
+            {
+                if (_DiffFileModeSelected != value)
+                {
+                    _DiffFileModeSelected = value;
+                    NotifyPropertyChanged(() => DiffFileModeSelected);
+                }
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Gets a command that refreshs (reloads) the comparison of
@@ -78,11 +128,14 @@
                         if (leftDir == null || rightDir == null)
                             return;
 
-                        await CompareFilesCommand_ExecutedAsync(leftDir, rightDir);
+                        await CompareFilesCommand_ExecutedAsync(leftDir, rightDir, _DiffFileModeSelected.ModeKey);
                         NotifyPropertyChanged(() => DirDiffDoc);
                     },
                     (p) =>
                     {
+                        if (DiffProgress.IsProgressbarVisible == true)
+                            return false;
+
                         string leftDir;
                         string rightDir;
 
@@ -219,7 +272,9 @@
         }
 
         #region Compare Files Command
-        private async Task CompareFilesCommand_ExecutedAsync(string leftDir, string rightDir)
+        private async Task CompareFilesCommand_ExecutedAsync(string leftDir,
+                                                             string rightDir,
+                                                             DiffDirFileMode dirFileMode)
         {
             var args = new Models.ShowDirDiffArgs(leftDir, rightDir);
 
@@ -228,7 +283,7 @@
                                          args.Recursive,
                                          args.IgnoreDirectoryComparison,
                                          args.FileFilter,
-                                         DiffDirFileMode.ByteLength_LastUpdate);
+                                         dirFileMode);
 
             _DiffProgress.ResetProgressValues();
 
@@ -242,7 +297,6 @@
             }
             catch
             {
-
             }
         }
 

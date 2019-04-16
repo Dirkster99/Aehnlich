@@ -20,6 +20,17 @@
     <Grid Margin="3">
         <Grid.Resources>
             <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
+            <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter1"
+                                                    FalseValue="Hidden"
+                                                    TrueValue="Visible"
+                                                    />
+            <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter2"
+                                                    FalseValue="Collapsed"
+                                                    TrueValue="Visible"
+                                                    />
+            <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
+            <conv1:BooleanInvertConverter x:Key="BooleanInvertConverter"/>
+            <conv1:MultiBoolToVisibilityPropConverter x:Key="MultiBoolToVisibilityPropConverter"/>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -28,13 +39,6 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <Grid.Resources>
-                <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
-                <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"
-                                                    FalseValue="Hidden"
-                                                    TrueValue="Visible"
-                                                    />
-            </Grid.Resources>
             <ToolBar Grid.Column="0"
                      VerticalAlignment="Center"
                      Background="Transparent"
@@ -63,12 +67,35 @@
                     </Button.Background>
                 </Button>
 
-                <ToolBar Visibility="{Binding DirDiffDoc.IsDiffDataAvailable, Converter={StaticResource BoolToVisibilityPropConverter}}"
-                         VerticalAlignment="Center"
+                <ComboBox
+                    ItemsSource="{Binding DiffFileModes}"
+                    SelectedItem="{Binding DiffFileModeSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    DisplayMemberPath="Name"
+                    IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                    Width="200"
+                    ToolTipService.ShowOnDisabled="true"
+                    >
+                    <ComboBox.ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="Select a diff file mode to determine speed and quality of file comparison"/>
+                            <Separator/>
+                            <TextBlock Text="{Binding DiffFileModeSelected.Description,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </ComboBox.ToolTip>
+                </ComboBox>
+                
+                <ToolBar VerticalAlignment="Center"
                          Background="Transparent"
                          ToolBarTray.IsLocked="True"  ToolBar.OverflowMode="Never"
                          MinHeight="16"
                 >
+                <ToolBar.Visibility>
+                    <MultiBinding Converter="{StaticResource MultiBoolToVisibilityPropConverter}">
+                        <Binding Path="DirDiffDoc.IsDiffDataAvailable" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                        <Binding Path="DiffProgress.IsProgressbarVisible" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MultiBinding>
+                </ToolBar.Visibility>
+
                 <Separator Margin="3,0,3,0" />
 
                 <Button
@@ -187,23 +214,31 @@
                 <TextBlock Text="{Binding DirDiffDoc.LblFilter}"
 						ToolTip="Filter Criteria"
 					    Margin="0,0,3,0" />
-
                 </ToolBar>
             </ToolBar>
         </Grid>
 
-        <!-- Show a progress-bar to indicate long running processing -->
         <Grid Grid.Row="1"
               DataContext="{Binding DiffProgress}"
               Visibility="{Binding IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityPropConverter}}"
-              >
+              Margin="3"
+            >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,3,0,0">
+                <TextBlock Text="Scanning directory: ">
+                  <TextBlock Text="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                  <TextBlock Text="of ">
+                  <TextBlock Text="{Binding MaximumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                  </TextBlock>
+                </TextBlock>
+            </StackPanel>
+
             <ProgressBar
-                Height="3" Margin="0,3,0,0"
+                Grid.Row="1" Height="3" Margin="0,3,0,0"
                 IsIndeterminate="{Binding IsIndeterminate, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                 Value="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                 Minimum="{Binding MinimumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
@@ -211,21 +246,16 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Bottom"
             />
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Min:">
-                  <TextBlock Text="{Binding MinimumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </TextBlock>
-                <TextBlock Text=", Max:">
-                  <TextBlock Text="{Binding MaximumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </TextBlock>
-
-                <TextBlock Text=", Value:">
-                  <TextBlock Text="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </TextBlock>
-            </StackPanel>
         </Grid>
         
-        <Grid Grid.Row="2" Margin="0,3,0,0">
+        <Grid Grid.Row="2" Margin="0,3,0,0"
+              >
+            <Grid.Visibility>
+                <MultiBinding Converter="{StaticResource MultiBoolToVisibilityPropConverter}">
+                    <Binding Path="DirDiffDoc.IsDiffDataAvailable" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                    <Binding Path="DiffProgress.IsProgressbarVisible" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                </MultiBinding>
+            </Grid.Visibility>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"  Name="TopColumnA"/>
                 <ColumnDefinition Width="Auto"/>
