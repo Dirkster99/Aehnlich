@@ -228,7 +228,7 @@
                                          args.Recursive,
                                          args.IgnoreDirectoryComparison,
                                          args.FileFilter,
-                                         DiffDirFileMode.ByteLength);
+                                         DiffDirFileMode.ByteLength_LastUpdate);
 
             _DiffProgress.ResetProgressValues();
 

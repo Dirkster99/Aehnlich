@@ -669,7 +669,7 @@ namespace AehnlichLib.Dir
 
                         if ((root.DiffMode & DiffDirFileMode.LastUpdate) != 0)
                         {
-                            different = different && !(lastUpdateA == lastUpdateB);
+                            different = different && !(DateTime.Compare(lastUpdateA, lastUpdateB) == 0);
                         }
 
                         Exception except = null;
