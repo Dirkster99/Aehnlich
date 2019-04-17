@@ -3,6 +3,7 @@
     using AehnlichLib.Progress;
     using System;
     using System.ComponentModel;
+    using System.Threading;
 
     /// <summary>
     /// Exposes the properties of a Progress Display (ProgressBar) to enable
@@ -19,6 +20,8 @@
         private object _ResultData;
         private Exception _ErrorException;
         private string _ErrorMessage;
+
+        private CancellationToken _Token;
         #endregion fields
 
         #region ctors
@@ -169,6 +172,14 @@
                 }
             }
         }
+
+        public CancellationToken Token
+        {
+            get
+            {
+                return _Token;
+            }
+        }
         #endregion properties
 
         #region methods
@@ -224,8 +235,10 @@
             IsProgressbarVisible = false;
         }
 
-        internal void ResetProgressValues()
+        internal void ResetProgressValues(CancellationToken token)
         {
+            _Token = token;
+
             IsIndeterminate = true;
             IsProgressbarVisible = false;
             ProgressValue = 0;
@@ -233,7 +246,6 @@
             MaximumProgressValue = 0;
             ResultData = null;
         }
-
 
         public void LogException(Exception exp)
         {

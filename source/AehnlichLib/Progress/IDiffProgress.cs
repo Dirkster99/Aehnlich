@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace AehnlichLib.Progress
 {
@@ -50,6 +51,8 @@ namespace AehnlichLib.Progress
         Exception ErrorException { get; }
 
         string ErrorMessage { get; }
+
+        CancellationToken Token { get; }
         #endregion properties
 
         #region methods

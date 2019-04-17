@@ -121,16 +121,16 @@ namespace AehnlichLib.Dir
         /// where the <see cref="IDiffProgress.ResultData"/> property contains a
         /// <see cref="IDirectoryDiffRoot"/> data structure that describes the directory
         /// differences in detail.</returns>
-        public Task<IDiffProgress> ExecuteAsync(string directoryA,
-                                                string directoryB,
-                                                IDiffProgress progress)
+        public IDiffProgress Execute(string directoryA,
+                                     string directoryB,
+                                     IDiffProgress progress)
         {
             try
             {
                 var dirA = new DirectoryInfo(directoryA);
                 var dirB = new DirectoryInfo(directoryB);
 
-                return this.ExecuteAsync(dirA, dirB, progress);
+                return this.Execute(dirA, dirB, progress);
             }
             catch
             {
@@ -149,44 +149,41 @@ namespace AehnlichLib.Dir
         /// where the <see cref="IDiffProgress.ResultData"/> property contains a
         /// <see cref="IDirectoryDiffRoot"/> data structure that describes the directory
         /// differences in detail.</returns>
-        public Task<IDiffProgress> ExecuteAsync(DirectoryInfo directoryA,
-                                                DirectoryInfo directoryB,
-                                                IDiffProgress progress)
+        public IDiffProgress Execute(DirectoryInfo directoryA,
+                                     DirectoryInfo directoryB,
+                                     IDiffProgress progress)
         {
-            return Task.Run<IDiffProgress>(() =>
+            try
             {
-                try
-                {
-                    // Create a faux base entry to pass to Execute
-                    var diffRoot = new DirectoryDiffRoot(directoryA.FullName,
-                                                         directoryB.FullName,
-                                                         _Recursive, _Filter, _DiffMode);
+                // Create a faux base entry to pass to Execute
+                var diffRoot = new DirectoryDiffRoot(directoryA.FullName,
+                                                        directoryB.FullName,
+                                                        _Recursive, _Filter, _DiffMode);
 
-                    progress.ResultData = diffRoot;
-                    progress.ShowIndeterminatedProgress();
+                progress.ResultData = diffRoot;
+                progress.ShowIndeterminatedProgress();
 
-                    if (directoryA.Exists == false || directoryB.Exists == false)
-                        return null;
-
-                    // directory diff match
-                    int directories = this.BuildSubDirs(directoryA, directoryB,
-                                                        _Recursive, _Filter, diffRoot);
-
-                    progress.ShowDeterminatedProgress(0, 0, directories);
-                    this.AddFiles(diffRoot, progress);
-
-                    return progress;
-                }
-                catch (Exception exp)
-                {
-                    progress.LogException(exp);
+                if (directoryA.Exists == false || directoryB.Exists == false)
                     return null;
-                }
-                finally
-                {
-                    progress.ProgressDisplayOff();
-                }
-            });
+
+                // directory diff match
+                int directories = this.BuildSubDirs(directoryA, directoryB,
+                                                    _Recursive, _Filter, diffRoot);
+
+                progress.ShowDeterminatedProgress(0, 0, directories);
+                this.AddFiles(diffRoot, progress);
+
+                return progress;
+            }
+            catch (Exception exp)
+            {
+                progress.LogException(exp);
+                return null;
+            }
+            finally
+            {
+                progress.ProgressDisplayOff();
+            }
         }
 
         /// <summary>
@@ -452,6 +449,9 @@ namespace AehnlichLib.Dir
             toVisit.Push(root.RootEntry);
             while (toVisit.Count > 0)
             {
+                if (progress.Token.IsCancellationRequested)
+                    progress.Token.ThrowIfCancellationRequested();
+
                 var node = toVisit.Peek();
                 if (node.CountSubDirectories() > 0)
                 {
@@ -473,6 +473,9 @@ namespace AehnlichLib.Dir
                     {
                         foreach (var item in node.Subentries) // Aggregate size of sub-directories up
                         {
+                            if (progress.Token.IsCancellationRequested)
+                                progress.Token.ThrowIfCancellationRequested();
+
                             CountDirs++;
                             if (progress != null)
                                 progress.UpdateDeterminatedProgress(CountDirs);

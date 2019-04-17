@@ -6,18 +6,23 @@
     using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
     using AehnlichLib.Progress;
+    using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Input;
 
-    public class AppViewModel : Base.ViewModelBase
+    public class AppViewModel : Base.ViewModelBase //, IDisposable
     {
         #region fields
         private string _RightDirPath;
         private string _LeftDirPath;
 
+        private CancellationTokenSource _cancelTokenSource;
+
         private ICommand _CompareDirectoriesCommand;
+        private ICommand _CancelCompareCommand;
         private ICommand _DiffViewModeSelectCommand;
 
         private ListItemViewModel _DiffViewModeSelected;
@@ -34,6 +39,8 @@
         /// </summary>
         public AppViewModel()
         {
+            _cancelTokenSource = new CancellationTokenSource();
+
             _DirDiffDoc = new DirDiffDocViewModel();
             _DiffViewModes = ResetViewModeDefaults();
             _DiffProgress = new DiffProgressViewModel();
@@ -97,6 +104,7 @@
         }
         #endregion
 
+        #region CompareCommand
         /// <summary>
         /// Gets a command that refreshs (reloads) the comparison of
         /// two directories (sub-directories) and their files.
@@ -107,7 +115,7 @@
             {
                 if (_CompareDirectoriesCommand == null)
                 {
-                    _CompareDirectoriesCommand = new RelayCommand<object>(async (p) =>
+                    _CompareDirectoriesCommand = new RelayCommand<object>((p) =>
                     {
                         string leftDir;
                         string rightDir;
@@ -128,7 +136,7 @@
                         if (leftDir == null || rightDir == null)
                             return;
 
-                        await CompareFilesCommand_ExecutedAsync(leftDir, rightDir, _DiffFileModeSelected.ModeKey);
+                        CompareFilesCommand_Executed(leftDir, rightDir, _DiffFileModeSelected.ModeKey);
                         NotifyPropertyChanged(() => DirDiffDoc);
                     },
                     (p) =>
@@ -159,6 +167,41 @@
                 return _CompareDirectoriesCommand;
             }
         }
+
+        public ICommand CancelCompareCommand
+        {
+            get
+            {
+                if (_CancelCompareCommand == null)
+                {
+                    _CancelCompareCommand = new RelayCommand<object>((p) =>
+                    {
+                        if (_cancelTokenSource != null)
+                        {
+                            if (_cancelTokenSource.IsCancellationRequested == false)
+                                _cancelTokenSource.Cancel();
+                        }
+                    },
+                    (p) =>
+                    {
+                        if (DiffProgress.IsProgressbarVisible == true)
+                        {
+                            if (_cancelTokenSource != null)
+                            {
+                                if (_cancelTokenSource.IsCancellationRequested == false)
+                                    return true;
+                            }
+                        }
+
+                        return false;
+                    });
+                }
+
+                return _CancelCompareCommand;
+            }
+        }
+
+        #endregion CompareCommand
 
         /// <summary>
         /// Gets the left directory path.
@@ -202,7 +245,7 @@
 
         public IReadOnlyList<ListItemViewModel> DiffViewModes
         {
-            get { return _DiffViewModes;  }
+            get { return _DiffViewModes; }
         }
 
         public ListItemViewModel DiffViewModeSelected
@@ -272,10 +315,20 @@
         }
 
         #region Compare Files Command
-        private async Task CompareFilesCommand_ExecutedAsync(string leftDir,
-                                                             string rightDir,
-                                                             DiffDirFileMode dirFileMode)
+        private void CompareFilesCommand_Executed(string leftDir,
+                                                  string rightDir,
+                                                  DiffDirFileMode dirFileMode)
         {
+            if (_cancelTokenSource != null)
+            {
+                if (_cancelTokenSource.IsCancellationRequested == true)
+                    return;
+            }
+            else
+            {
+                _cancelTokenSource = new CancellationTokenSource();
+            }
+
             var args = new Models.ShowDirDiffArgs(leftDir, rightDir);
 
             var diff = new DirectoryDiff(args.ShowOnlyInA, args.ShowOnlyInB,
@@ -285,15 +338,42 @@
                                          args.FileFilter,
                                          dirFileMode);
 
-            _DiffProgress.ResetProgressValues();
-
             try
             {
-                var iprogress = await diff.ExecuteAsync(args.LeftDir, args.RightDir, _DiffProgress);
+                var token = _cancelTokenSource.Token;
+                _DiffProgress.ResetProgressValues(token);
 
-                var diffResults = iprogress.ResultData as IDirectoryDiffRoot;
+                Task.Factory.StartNew<IDiffProgress>(
+                        (p) => diff.Execute(args.LeftDir, args.RightDir, _DiffProgress)
+                      , TaskCreationOptions.LongRunning, token)
+                .ContinueWith((r) =>
+                {
+                    bool onError = false;
 
-                _DirDiffDoc.ShowDifferences(args, diffResults);
+                    if (r.Result == null)
+                        onError = true;
+                    else
+                    {
+                        if (r.Result.ResultData == null)
+                            onError = true;
+                    }
+
+                    if (onError == false)
+                    {
+                        var diffResults = r.Result.ResultData as IDirectoryDiffRoot;
+                        _DirDiffDoc.ShowDifferences(args, diffResults);
+                    }
+                    else
+                    {
+                        if (_cancelTokenSource != null)
+                        {
+                            _cancelTokenSource.Dispose();
+                            _cancelTokenSource = null;
+                        }
+
+                        // Display Error
+                    }
+                });
             }
             catch
             {
