@@ -138,9 +138,10 @@
                         string[] resourceId = iconResourceId.Split(',');
                         if (resourceId.Length == 2)
                         {
-                            int iconIndex = int.Parse(resourceId[1]);
+                            int iconIndex = -1;
+                            bool bParse = int.TryParse(resourceId[1], out iconIndex);
 
-                            if (resourceId != null && resourceId.Length == 2)
+                            if (bParse == true && resourceId.Length == 2)
                             {
                                 if (string.IsNullOrEmpty(resourceId[0]) == false)
                                 {

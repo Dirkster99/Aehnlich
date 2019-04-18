@@ -667,12 +667,14 @@ namespace AehnlichLib.Dir
                         // Are these different by byte length and/or time stamp already?
                         if ((root.DiffMode & DiffDirFileMode.ByteLength) != 0)
                         {
-                            different = !((lengthA == lengthB));
+                            if (lengthA != lengthB)
+                                different = true;
                         }
 
                         if ((root.DiffMode & DiffDirFileMode.LastUpdate) != 0)
                         {
-                            different = different && !(DateTime.Compare(lastUpdateA, lastUpdateB) == 0);
+                            if (DateTime.Compare(lastUpdateA, lastUpdateB) != 0)
+                                different = true;
                         }
 
                         Exception except = null;
@@ -685,7 +687,8 @@ namespace AehnlichLib.Dir
                         {
                             try
                             {
-                                different = DiffUtility.AreFilesDifferent((FileInfo)item.InfoA, (FileInfo)item.InfoB);
+                                if (DiffUtility.AreFilesDifferent((FileInfo)item.InfoA, (FileInfo)item.InfoB) == true)
+                                    different = true;
                             }
                             catch (IOException ex)
                             {

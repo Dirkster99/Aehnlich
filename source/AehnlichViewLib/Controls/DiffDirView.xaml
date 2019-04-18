@@ -159,7 +159,7 @@
                                                             <TextBlock Grid.Column="0" Grid.Row="1" Text="Size:" HorizontalAlignment="Right"/>
                                                             <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding ItemLengthA}" HorizontalAlignment="Left"/>
 
-                                                            <TextBlock Grid.Column="0" Grid.Row="2" Text="Size:" HorizontalAlignment="Right"/>
+                                                            <TextBlock Grid.Column="0" Grid.Row="2" Text="Last Update:" HorizontalAlignment="Right"/>
                                                             <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding ItemLastUpdateA}" HorizontalAlignment="Left"/>
                                                         </Grid>
                                                     </TextBlock.ToolTip>
@@ -341,11 +341,11 @@
                                                             <TextBlock Grid.Column="0" Grid.Row="1" Text="Size:" HorizontalAlignment="Right"/>
                                                             <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding ItemLengthB}" HorizontalAlignment="Left"/>
 
-                                                            <TextBlock Grid.Column="0" Grid.Row="2" Text="Size:" HorizontalAlignment="Right"/>
+                                                            <TextBlock Grid.Column="0" Grid.Row="2" Text="Last Update:" HorizontalAlignment="Right"/>
                                                             <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding ItemLastUpdateB}" HorizontalAlignment="Left"/>
                                                         </Grid>
                                                     </TextBlock.ToolTip>
-                                    </TextBlock>
+                                                </TextBlock>
                                             </Grid>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>

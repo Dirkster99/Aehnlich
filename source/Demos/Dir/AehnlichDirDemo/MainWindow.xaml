@@ -230,7 +230,9 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" >
+            <Grid Grid.Row="0"
+                  Margin="3"
+                  >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -241,10 +243,9 @@
                     Command="{Binding CancelCompareCommand}"
                     MinHeight="23" MinWidth="85"
                     Content="Cancel"
-                    Margin="3"
                     VerticalAlignment="Top"/>
 
-                <Grid Grid.Column="1">
+                <Grid Grid.Column="1" Margin="6,3">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -252,10 +253,11 @@
 
                     <StackPanel Orientation="Horizontal" Margin="0,3,0,0"
                                 DataContext="{Binding DiffProgress}">
-                        <TextBlock Text="Scanning directory: ">
+                        <TextBlock Text="Scanning ">
                         <TextBlock Text="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBlock Text="of ">
                         <TextBlock Text="{Binding MaximumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Text="directories... "/>
                         </TextBlock>
                       </TextBlock>
                   </StackPanel>
@@ -274,7 +276,7 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="2" Margin="0,3,0,0"
+        <Grid Grid.Row="2" Margin="3"
               >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"  Name="TopColumnA"/>

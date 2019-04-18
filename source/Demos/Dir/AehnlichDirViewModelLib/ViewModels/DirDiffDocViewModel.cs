@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Windows;
     using System.Windows.Input;
 
     public class DirDiffDocViewModel : Base.ViewModelBase
@@ -577,7 +578,11 @@
             if (_DirEntries == null)
                 _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
 
-            _DirEntries.ReplaceRange(dirs);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                _DirEntries.ReplaceRange(dirs);
+            });
+
             NotifyPropertyChanged(() => DirEntries);
         }
 
