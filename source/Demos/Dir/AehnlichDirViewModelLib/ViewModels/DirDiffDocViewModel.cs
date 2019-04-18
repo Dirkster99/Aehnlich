@@ -7,6 +7,7 @@
     using AehnlichLib.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows.Input;
 
@@ -48,6 +49,9 @@
 
             _ViewActivation_A = DateTime.MinValue;
             _ViewActivation_B = DateTime.MinValue;
+
+            SelectedItemsA = new ObservableCollection<DirEntryViewModel>();
+            SelectedItemsB = new ObservableCollection<DirEntryViewModel>();
         }
         #endregion ctors
 
@@ -311,19 +315,45 @@
                     {
                         var param = (p as string);
 
-                        FileSystemCommands.CopyString(param);
+                        if (param != null)
+                            FileSystemCommands.CopyString(param);
+                        else
+                        {
+                            var list = p as IEnumerable<DirEntryViewModel>;
+                            if (list != null)
+                            {
+                                string scopy = string.Empty;
+                                foreach (var item in list)
+                                {
+                                    if (item.ItemPathA != null)
+                                    {
+                                        scopy += item.ItemPathA + '\n';
+                                    }
+                                }
+
+                                FileSystemCommands.CopyString(scopy);
+                            }
+                        }
 
                     }, (p) =>
                     {
-                        return (p is string);
-                    }
-
-                    );
+                        return ((p is string) || (p is IEnumerable<DirEntryViewModel>));
+                    });
                 }
 
                 return _CopyPathToClipboardCommand;
             }
         }
+
+        /// <summary>
+        /// Get set of currently selected items (when multiple items are selected).
+        /// </summary>
+        public ObservableCollection<DirEntryViewModel> SelectedItemsA { get; }
+
+        /// <summary>
+        /// Get set of currently selected items (when multiple items are selected).
+        /// </summary>
+        public ObservableCollection<DirEntryViewModel> SelectedItemsB { get; }
 
         public ICommand OpenContainingFolderCommand
         {
@@ -340,9 +370,7 @@
                     }, (p) =>
                     {
                         return (p is string);
-                    }
-
-                    );
+                    });
                 }
 
                 return _OpenContainingFolderCommand;
@@ -364,9 +392,7 @@
                     }, (p) =>
                     {
                         return (p is string);
-                    }
-
-                    );
+                    });
                 }
 
                 return _OpenInWindowsCommand;

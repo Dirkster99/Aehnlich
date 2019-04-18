@@ -53,7 +53,7 @@
                             ItemTemplate="{TemplateBinding ItemTemplate}"
                             ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
                             SelectedItem="{Binding SelectedItem_A,Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
-                            SelectionMode="Single"
+                            SelectionMode="Extended"
                         
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
@@ -90,7 +90,7 @@
                                                 <MenuItem Header="Copy Path to Clipboard"
                                                           IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                           Command="{Binding Data.CopyPathToClipboardCommand, Source={StaticResource DocumentContextProxy}}"
-                                                          CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                          CommandParameter="{Binding Data.SelectedItemsA, Source={StaticResource DocumentContextProxy}}"
                                                 />
 
                                                 <MenuItem Header="Open in Windows"
@@ -228,7 +228,7 @@
 
                             ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                             SelectedItem="{Binding SelectedItem_B,Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
-                            SelectionMode="Single"
+                            SelectionMode="Extended"
                                   
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
@@ -273,7 +273,7 @@
                                                 <MenuItem Header="Copy Path to Clipboard"
                                                           IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                           Command="{Binding Data.CopyPathToClipboardCommand, Source={StaticResource DocumentContextProxy}}"
-                                                          CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                          CommandParameter="{Binding Data.SelectedItemsB, Source={StaticResource DocumentContextProxy}}"
                                                 />
 
                                                 <MenuItem Header="Open in Windows"

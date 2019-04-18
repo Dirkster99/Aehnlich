@@ -343,6 +343,9 @@
 							  
 							  SelectedItem_A="{Binding DirDiffDoc.SelectedItem_A,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
 							  SelectedItem_B="{Binding DirDiffDoc.SelectedItem_B,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
+                              
+                              SelectedItemsSourceA="{Binding DirDiffDoc.SelectedItemsA,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
+                              SelectedItemsSourceB="{Binding DirDiffDoc.SelectedItemsB,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                               >
                 <ctrl:DiffDirView.Visibility>
                     <MultiBinding Converter="{StaticResource MultiBoolToVisibilityPropConverter}">
