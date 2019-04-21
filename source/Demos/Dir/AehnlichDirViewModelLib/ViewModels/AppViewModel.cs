@@ -357,28 +357,38 @@
                 .ContinueWith((r) =>
                 {
                     bool onError = false;
+                    bool taskCancelled = false;
 
-                    if (r.Result == null)
-                        onError = true;
-                    else
+                    if (_cancelTokenSource != null)
                     {
-                        if (r.Result.ResultData == null)
-                            onError = true;
+                        // Re-create cancellation token if this task was cancelled
+                        // to support cancelable tasks in the future
+                        if (_cancelTokenSource.IsCancellationRequested)
+                        {
+                            taskCancelled = true;
+                            _cancelTokenSource.Dispose();
+                            _cancelTokenSource = new CancellationTokenSource();
+                        }
                     }
 
-                    if (onError == false)
+                    if (taskCancelled == false)
+                    {
+                        if (r.Result == null)
+                            onError = true;
+                        else
+                        {
+                            if (r.Result.ResultData == null)
+                                onError = true;
+                        }
+                    }
+
+                    if (onError == false && taskCancelled == false)
                     {
                         var diffResults = r.Result.ResultData as IDirectoryDiffRoot;
                         _DirDiffDoc.ShowDifferences(args, diffResults);
                     }
                     else
                     {
-                        if (_cancelTokenSource != null)
-                        {
-                            _cancelTokenSource.Dispose();
-                            _cancelTokenSource = new CancellationTokenSource();
-                        }
-
                         // Display Error
                     }
                 });
@@ -469,23 +479,23 @@
             DiffFileModeItemViewModel defaultItem = null;
 
             diffFileModes.Add(
-                new DiffFileModeItemViewModel("Byte Length",
+                new DiffFileModeItemViewModel("File Length",
                 "Compare the byte length of each file",
                 DiffDirFileMode.ByteLength));
 
             diffFileModes.Add(
                 new DiffFileModeItemViewModel("Last Change",
-                "Compare last time of change of each file",
+                "Compare last modification time of change of each file",
                 DiffDirFileMode.LastUpdate));
 
-            defaultItem = new DiffFileModeItemViewModel("Byte Length + Last Change",
-                "Compare the byte length and last time of change of each file",
+            defaultItem = new DiffFileModeItemViewModel("File Length + Last Change",
+                "Compare the byte length and last modification time of each file",
                 DiffDirFileMode.ByteLength_LastUpdate);
 
             diffFileModes.Add(defaultItem);
 
             diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes",
-                "Compare each file by their length, last update, and byte by byte sequence",
+                "Compare each file by their length, last modification time, and byte-by-byte sequence",
                 DiffDirFileMode.ByteLength_LastUpdate_AllBytes));
 
             return defaultItem;
