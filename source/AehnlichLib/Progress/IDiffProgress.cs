@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading;
-
-namespace AehnlichLib.Progress
+﻿namespace AehnlichLib.Progress
 {
+    using System;
+    using System.Threading;
+
     /// <summary>
     /// Exposes the properties of a Progress Display (ProgressBar) to enable
     /// UI feedback on long running processings.
@@ -48,10 +48,22 @@ namespace AehnlichLib.Progress
         /// </summary>
         object ResultData { get; set; }
 
+        /// <summary>
+        /// Gets an <see cref="Exception"/> (if set by background task)
+        /// that can be used to displayed advanced error messages in the UI.
+        /// </summary>
         Exception ErrorException { get; }
 
+        /// <summary>
+        /// Gets an error message string (if set by background task)
+        /// that can be used to display error messages in the UI.
+        /// </summary>
         string ErrorMessage { get; }
 
+        /// <summary>
+        /// Gets a cancellation token (if any is set by the caller) that can be used
+        /// to cancel the current processing (if it was setup a background task).
+        /// </summary>
         CancellationToken Token { get; }
         #endregion properties
 
@@ -87,8 +99,18 @@ namespace AehnlichLib.Progress
         /// </summary>
         void ProgressDisplayOff();
 
+        /// <summary>
+        /// This method can be called by the backgound task to log an exception
+        /// for later display in the UI.
+        /// </summary>
+        /// <param name="exp"></param>
         void LogException(Exception exp);
 
+        /// <summary>
+        /// This method can be called by the backgound task to log an error message
+        /// for later display in the UI.
+        /// </summary>
+        /// <param name="error"></param>
         void LogErrorMessage(string error);
         #endregion methods
     }

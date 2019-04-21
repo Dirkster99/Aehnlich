@@ -10,6 +10,7 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Data;
     using System.Windows.Input;
 
     public class DirDiffDocViewModel : Base.ViewModelBase
@@ -33,7 +34,9 @@
         private ICommand _OpenInWindowsCommand;
         private ICommand _OpenFileFromActiveViewCommand;
 
-        private ObservableRangeCollection<DirEntryViewModel> _DirEntries;
+        private readonly ObservableRangeCollection<DirEntryViewModel> _DirEntries;
+        private object _itemsLock;
+
         private int _CountFilesDeleted;
         private int _CountFilesAdded;
         private int _CountFilesChanged;
@@ -46,6 +49,10 @@
         /// </summary>
         public DirDiffDocViewModel()
         {
+            _itemsLock = new object();
+            _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
+            BindingOperations.EnableCollectionSynchronization(_DirEntries, _itemsLock);
+
             _DirPathStack = new Stack<DirEntryViewModel>();
 
             _ViewActivation_A = DateTime.MinValue;
@@ -575,15 +582,7 @@
         /// <param name="dirs"></param>
         private void SetDirDiffCollectionData(List<DirEntryViewModel> dirs)
         {
-            if (_DirEntries == null)
-                _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
-
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                _DirEntries.ReplaceRange(dirs);
-            });
-
-            NotifyPropertyChanged(() => DirEntries);
+            _DirEntries.ReplaceRange(dirs);
         }
 
         private List<DirEntryViewModel> CreateViewModelEntries(IReadOnlyCollection<IDirectoryDiffEntry> entries,

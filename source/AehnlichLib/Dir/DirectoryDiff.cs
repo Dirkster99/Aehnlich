@@ -8,7 +8,6 @@ namespace AehnlichLib.Dir
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Compares sub-directories and files in 2 given folders and returns the result of the comparison
@@ -17,7 +16,6 @@ namespace AehnlichLib.Dir
     public sealed class DirectoryDiff
     {
         #region Private Data Members
-
         private readonly bool _IgnoreDirectoryComparison;
         private readonly bool _Recursive;
         private readonly bool _ShowDifferent;
@@ -462,8 +460,11 @@ namespace AehnlichLib.Dir
             toVisit.Push(root.RootEntry);
             while (toVisit.Count > 0)
             {
-                if (progress.Token.IsCancellationRequested)
-                    progress.Token.ThrowIfCancellationRequested();
+                if (progress != null)
+                {
+                    if (progress.Token.IsCancellationRequested)
+                        progress.Token.ThrowIfCancellationRequested();
+                }
 
                 var node = toVisit.Peek();
                 if (node.CountSubDirectories() > 0)
@@ -486,12 +487,18 @@ namespace AehnlichLib.Dir
                     {
                         foreach (var item in node.Subentries) // Aggregate size of sub-directories up
                         {
-                            if (progress.Token.IsCancellationRequested)
-                                progress.Token.ThrowIfCancellationRequested();
+                            if (progress != null)
+                            {
+                                if (progress.Token.IsCancellationRequested)
+                                    progress.Token.ThrowIfCancellationRequested();
+                            }
 
                             CountDirs++;
                             if (progress != null)
-                                progress.UpdateDeterminatedProgress(CountDirs);
+                            {
+                                if (progress != null)
+                                    progress.UpdateDeterminatedProgress(CountDirs);
+                            }
 
                             if (node.InA == true)
                                 node.LengthA += item.LengthA;

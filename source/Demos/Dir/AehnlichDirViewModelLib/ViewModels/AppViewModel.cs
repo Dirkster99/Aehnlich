@@ -7,19 +7,16 @@
     using AehnlichLib.Interfaces;
     using AehnlichLib.Progress;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Input;
 
-    public class AppViewModel : Base.ViewModelBase //, IDisposable
+    public class AppViewModel : Base.ViewModelBase, System.IDisposable
     {
         #region fields
         private string _RightDirPath;
         private string _LeftDirPath;
-
-        private CancellationTokenSource _cancelTokenSource;
 
         private ICommand _CompareDirectoriesCommand;
         private ICommand _CancelCompareCommand;
@@ -27,6 +24,8 @@
 
         private ListItemViewModel _DiffViewModeSelected;
         private DiffFileModeItemViewModel _DiffFileModeSelected;
+        private bool _Disposed;
+        private CancellationTokenSource _cancelTokenSource;
         private readonly DiffProgressViewModel _DiffProgress;
         private readonly List<ListItemViewModel> _DiffViewModes;
         private readonly DirDiffDocViewModel _DirDiffDoc;
@@ -46,29 +45,15 @@
             _DiffProgress = new DiffProgressViewModel();
 
             _DiffFileModes = new List<DiffFileModeItemViewModel>();
-            _DiffFileModeSelected = new DiffFileModeItemViewModel("All Bytes",
-                "Compare each file by their length, last update, and byte by byte sequence",
-                DiffDirFileMode.ByteLength_LastUpdate_AllBytes);
-
-            _DiffFileModes.Add(
-                new DiffFileModeItemViewModel("Last Change",
-                "Compare last time of change of each file",
-                DiffDirFileMode.LastUpdate));
-
-            _DiffFileModes.Add(
-                new DiffFileModeItemViewModel("Byte Length",
-                "Compare the byte length of each file",
-                DiffDirFileMode.ByteLength));
-
-            _DiffFileModes.Add(new DiffFileModeItemViewModel("Byte Length + Last Change",
-                "Compare the byte length and last time of change of each file",
-                DiffDirFileMode.ByteLength_LastUpdate));
-
-            _DiffFileModes.Add(_DiffFileModeSelected);
+            _DiffFileModeSelected = CreateCompateFileModes(_DiffFileModes);
         }
         #endregion ctors
 
         #region properties
+        /// <summary>
+        /// Gets the viewmodel for the document that contains the diff information
+        /// on a left directory (A) and a right directory (B) and its contents.
+        /// </summary>
         public DirDiffDocViewModel DirDiffDoc
         {
             get
@@ -78,6 +63,10 @@
         }
 
         #region Diff File Mode Selection
+        /// <summary>
+        /// Gets a list of modies that can be used to compare one directory
+        /// and its contents, to the other directory.
+        /// </summary>
         public List<DiffFileModeItemViewModel> DiffFileModes
         {
             get
@@ -86,6 +75,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets/sets the mode that is currently used to compare one directory
+        /// and its contents with the other directory.
+        /// </summary>
         public DiffFileModeItemViewModel DiffFileModeSelected
         {
             get
@@ -168,6 +161,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets a command that can be used to cancel the directory comparison
+        /// currently being processed (if any).
+        /// </summary>
         public ICommand CancelCompareCommand
         {
             get
@@ -243,11 +240,20 @@
             }
         }
 
+        #region File DiffMode
+        /// <summary>
+        /// Gets a list of view modes by which the results of the
+        /// directory and file comparison can be viewed
+        /// (eg.: directories and files or files only).
+        /// </summary>
         public IReadOnlyList<ListItemViewModel> DiffViewModes
         {
             get { return _DiffViewModes; }
         }
 
+        /// <summary>
+        /// Gets the currently selected view mode for the display of diff results.
+        /// </summary>
         public ListItemViewModel DiffViewModeSelected
         {
             get { return _DiffViewModeSelected; }
@@ -262,6 +268,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets a command that can be used to change the
+        /// currently selected view mode for displaying diff results.
+        /// </summary>
         public ICommand DiffViewModeSelectCommand
         {
             get
@@ -292,7 +302,12 @@
                 return _DiffViewModeSelectCommand;
             }
         }
+        #endregion File DiffMode
 
+        /// <summary>
+        /// Gets a viewmodel that manages progress display in terms of min, value, max or
+        /// indeterminate progress display.
+        /// </summary>
         public IDiffProgress DiffProgress
         {
             get
@@ -319,15 +334,8 @@
                                                   string rightDir,
                                                   DiffDirFileMode dirFileMode)
         {
-            if (_cancelTokenSource != null)
-            {
-                if (_cancelTokenSource.IsCancellationRequested == true)
-                    return;
-            }
-            else
-            {
-                _cancelTokenSource = new CancellationTokenSource();
-            }
+            if (_cancelTokenSource.IsCancellationRequested == true)
+                return;
 
             var args = new Models.ShowDirDiffArgs(leftDir, rightDir);
 
@@ -368,7 +376,7 @@
                         if (_cancelTokenSource != null)
                         {
                             _cancelTokenSource.Dispose();
-                            _cancelTokenSource = null;
+                            _cancelTokenSource = new CancellationTokenSource();
                         }
 
                         // Display Error
@@ -405,6 +413,44 @@
         }
         #endregion Compare Files Command
 
+        #region IDisposeable
+        /// <summary>
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_Disposed == false)
+            {
+                if (disposing == true)
+                {
+                    if (_cancelTokenSource != null)
+                    {
+                        _cancelTokenSource.Dispose();
+                        _cancelTokenSource = null;
+                    }
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _Disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion IDisposeable
+
         private List<ListItemViewModel> ResetViewModeDefaults()
         {
             var lst = new List<ListItemViewModel>();
@@ -415,6 +461,34 @@
             DiffViewModeSelected = lst[0]; // Select default view mode
 
             return lst;
+        }
+
+        private DiffFileModeItemViewModel CreateCompateFileModes(
+            IList<DiffFileModeItemViewModel> diffFileModes)
+        {
+            DiffFileModeItemViewModel defaultItem = null;
+
+            diffFileModes.Add(
+                new DiffFileModeItemViewModel("Byte Length",
+                "Compare the byte length of each file",
+                DiffDirFileMode.ByteLength));
+
+            diffFileModes.Add(
+                new DiffFileModeItemViewModel("Last Change",
+                "Compare last time of change of each file",
+                DiffDirFileMode.LastUpdate));
+
+            defaultItem = new DiffFileModeItemViewModel("Byte Length + Last Change",
+                "Compare the byte length and last time of change of each file",
+                DiffDirFileMode.ByteLength_LastUpdate);
+
+            diffFileModes.Add(defaultItem);
+
+            diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes",
+                "Compare each file by their length, last update, and byte by byte sequence",
+                DiffDirFileMode.ByteLength_LastUpdate_AllBytes));
+
+            return defaultItem;
         }
         #endregion methods
     }
