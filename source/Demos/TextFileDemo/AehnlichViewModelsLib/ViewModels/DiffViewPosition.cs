@@ -139,7 +139,7 @@
         {
             var other = obj as DiffViewPosition;
 
-            return Equals(obj);
+            return Equals(other);
         }
 
         public override int GetHashCode()

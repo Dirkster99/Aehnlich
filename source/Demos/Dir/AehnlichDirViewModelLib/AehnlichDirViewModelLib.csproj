@@ -46,7 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\SelectionChangedCommand.cs" />
+    <Compile Include="Converters\MultiBoolToVisibilityPropConverter.cs" />
     <Compile Include="Converters\MultiParToParConverter.cs" />
+    <Compile Include="Converters\BooleanInvertConverter.cs" />
     <Compile Include="Enums\DiffViewModeEnum.cs" />
     <Compile Include="Models\FileSystemCommands.cs" />
     <Compile Include="Models\ShowDirDiffArgs.cs" />
@@ -54,6 +56,8 @@
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
     <Compile Include="ViewModels\Base\ViewModelBase.cs" />
+    <Compile Include="ViewModels\DiffFileModeItemViewModel.cs" />
+    <Compile Include="ViewModels\DiffProgressViewModel.cs" />
     <Compile Include="ViewModels\ListItemViewModel.cs" />
     <Compile Include="ViewModels\DirDiffDocViewModel.cs" />
     <Compile Include="ViewModels\DirEntryViewModel.cs" />

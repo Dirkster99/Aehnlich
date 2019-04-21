@@ -7,7 +7,10 @@
     using AehnlichLib.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Windows;
+    using System.Windows.Data;
     using System.Windows.Input;
 
     public class DirDiffDocViewModel : Base.ViewModelBase
@@ -31,7 +34,9 @@
         private ICommand _OpenInWindowsCommand;
         private ICommand _OpenFileFromActiveViewCommand;
 
-        private ObservableRangeCollection<DirEntryViewModel> _DirEntries;
+        private readonly ObservableRangeCollection<DirEntryViewModel> _DirEntries;
+        private object _itemsLock;
+
         private int _CountFilesDeleted;
         private int _CountFilesAdded;
         private int _CountFilesChanged;
@@ -44,10 +49,17 @@
         /// </summary>
         public DirDiffDocViewModel()
         {
+            _itemsLock = new object();
+            _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
+            BindingOperations.EnableCollectionSynchronization(_DirEntries, _itemsLock);
+
             _DirPathStack = new Stack<DirEntryViewModel>();
 
             _ViewActivation_A = DateTime.MinValue;
             _ViewActivation_B = DateTime.MinValue;
+
+            SelectedItemsA = new ObservableCollection<DirEntryViewModel>();
+            SelectedItemsB = new ObservableCollection<DirEntryViewModel>();
         }
         #endregion ctors
 
@@ -222,7 +234,7 @@
                         _DirPathStack.Push(param);
                         PathA = GetSubPath(_CompareOptions.LeftDir, _DirPathStack, true);
                         PathB = GetSubPath(_CompareOptions.RightDir, _DirPathStack, false);
-                    },((p) =>
+                    }, ((p) =>
                     {
                         var param = p as DirEntryViewModel;
                         if (param == null)
@@ -311,21 +323,45 @@
                     {
                         var param = (p as string);
 
-                        FileSystemCommands.CopyString(param);
+                        if (param != null)
+                            FileSystemCommands.CopyString(param);
+                        else
+                        {
+                            var list = p as IEnumerable<DirEntryViewModel>;
+                            if (list != null)
+                            {
+                                string scopy = string.Empty;
+                                foreach (var item in list)
+                                {
+                                    if (item.ItemPathA != null)
+                                    {
+                                        scopy += item.ItemPathA + '\n';
+                                    }
+                                }
 
+                                FileSystemCommands.CopyString(scopy);
+                            }
+                        }
 
                     }, (p) =>
                     {
-                        return true;
-                        //return (p is string);
-                    }
-
-                    );
+                        return ((p is string) || (p is IEnumerable<DirEntryViewModel>));
+                    });
                 }
 
                 return _CopyPathToClipboardCommand;
             }
         }
+
+        /// <summary>
+        /// Get set of currently selected items (when multiple items are selected).
+        /// </summary>
+        public ObservableCollection<DirEntryViewModel> SelectedItemsA { get; }
+
+        /// <summary>
+        /// Get set of currently selected items (when multiple items are selected).
+        /// </summary>
+        public ObservableCollection<DirEntryViewModel> SelectedItemsB { get; }
 
         public ICommand OpenContainingFolderCommand
         {
@@ -342,9 +378,7 @@
                     }, (p) =>
                     {
                         return (p is string);
-                    }
-
-                    );
+                    });
                 }
 
                 return _OpenContainingFolderCommand;
@@ -366,9 +400,7 @@
                     }, (p) =>
                     {
                         return (p is string);
-                    }
-
-                    );
+                    });
                 }
 
                 return _OpenInWindowsCommand;
@@ -550,11 +582,7 @@
         /// <param name="dirs"></param>
         private void SetDirDiffCollectionData(List<DirEntryViewModel> dirs)
         {
-            if (_DirEntries == null)
-                _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
-
             _DirEntries.ReplaceRange(dirs);
-            NotifyPropertyChanged(() => DirEntries);
         }
 
         private List<DirEntryViewModel> CreateViewModelEntries(IReadOnlyCollection<IDirectoryDiffEntry> entries,

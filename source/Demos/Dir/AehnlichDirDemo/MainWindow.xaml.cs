@@ -34,14 +34,32 @@
 
         private void MainWindow_Closed(object sender, System.EventArgs e)
         {
-            var appVM = DataContext as AppViewModel;
-            if (appVM == null)
-                return;
+            try
+            {
+                var appVM = DataContext as AppViewModel;
+                if (appVM == null)
+                    return;
 
-            Properties.Settings.Default.LeftDirPath = appVM.LeftDirPath;
-            Properties.Settings.Default.RightDirPath = appVM.RightDirPath;
+                Properties.Settings.Default.LeftDirPath = appVM.LeftDirPath;
+                Properties.Settings.Default.RightDirPath = appVM.RightDirPath;
 
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.Save();
+            }
+            catch
+            {
+            }
+
+            try
+            {
+                var appVM = DataContext as System.IDisposable;
+                if (appVM != null)
+                    appVM.Dispose();
+
+                DataContext = null;
+            }
+            catch
+            {
+            }
         }
 
         #region Column Width A B Synchronization

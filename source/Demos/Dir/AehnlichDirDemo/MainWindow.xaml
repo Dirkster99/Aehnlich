@@ -18,19 +18,27 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Margin="3">
+        <Grid.Resources>
+            <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
+            <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter1"
+                                                    FalseValue="Hidden"
+                                                    TrueValue="Visible"
+                                                    />
+            <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter2"
+                                                    FalseValue="Collapsed"
+                                                    TrueValue="Visible"
+                                                    />
+            <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
+            <conv1:BooleanInvertConverter x:Key="BooleanInvertConverter"/>
+            <conv1:MultiBoolToVisibilityPropConverter x:Key="MultiBoolToVisibilityPropConverter"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <Grid.Resources>
-                <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
-                <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"
-                                                    FalseValue="Hidden"
-                                                    TrueValue="Visible"
-                                                    />
-            </Grid.Resources>
             <ToolBar Grid.Column="0"
                      VerticalAlignment="Center"
                      Background="Transparent"
@@ -59,93 +67,118 @@
                     </Button.Background>
                 </Button>
 
-                <ToolBar Visibility="{Binding DirDiffDoc.IsDiffDataAvailable, Converter={StaticResource BoolToVisibilityPropConverter}}"
-                         VerticalAlignment="Center"
+                <ComboBox
+                    ItemsSource="{Binding DiffFileModes}"
+                    SelectedItem="{Binding DiffFileModeSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    DisplayMemberPath="Name"
+                    IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                    Width="200"
+                    ToolTipService.ShowOnDisabled="true"
+                    >
+                    <ComboBox.ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="Select a diff file mode to determine speed and quality of file comparison"/>
+                            <Separator/>
+                            <TextBlock Text="{Binding DiffFileModeSelected.Description,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </ComboBox.ToolTip>
+                </ComboBox>
+
+                <ToolBar VerticalAlignment="Center"
                          Background="Transparent"
                          ToolBarTray.IsLocked="True"  ToolBar.OverflowMode="Never"
                          MinHeight="16"
                 >
-                <Separator Margin="3,0,3,0" />
+                    <ToolBar.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiBoolToVisibilityPropConverter}">
+                            <Binding Path="DirDiffDoc.IsDiffDataAvailable" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                            <Binding Path="DiffProgress.IsProgressbarVisible" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                        </MultiBinding>
+                    </ToolBar.Visibility>
 
-                <Button
-                    Command="{Binding DirDiffDoc.OpenFileFromActiveViewCommand}"
-                    ToolTip="Open in Windows"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
+                    <Separator Margin="3,0,3,0" />
+
+                    <Button
+                        Command="{Binding DirDiffDoc.OpenFileFromActiveViewCommand}"
+                        ToolTip="Open in Windows"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
                     >
-                    <Button.Background>
-                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_OpenFileKey}}"/>
-                    </Button.Background>
-                </Button>
+                        <Button.Background>
+                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_OpenFileKey}}"/>
+                        </Button.Background>
+                    </Button>
 
-                <Button
-                    Command="{Binding DirDiffDoc.BrowseUpCommand}"
+                    <Button
+                        Command="{Binding DirDiffDoc.BrowseUpCommand}"
 
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
                     
-                    ToolTip="Go one folder up from current folder"
-                    ToolTipService.ShowOnDisabled="true"
+                        ToolTip="Go one folder up from current folder"
+                        ToolTipService.ShowOnDisabled="true"
                     >
-                    <Button.Background>
-                        <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ArrowUpKey}}"/>
-                    </Button.Background>
-                </Button>
+                        <Button.Background>
+                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ArrowUpKey}}"/>
+                        </Button.Background>
+                    </Button>
 
-                <Button
-                    Command="{Binding DirDiffDoc.BrowseItemCommand}"
+                    <Button
+                        Command="{Binding DirDiffDoc.BrowseItemCommand}"
 
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
                     
-                    ToolTip="Select a folder to browse it"
-                    ToolTipService.ShowOnDisabled="true"
+                        ToolTip="Select a folder to browse it"
+                        ToolTipService.ShowOnDisabled="true"
                     >
-                    <Button.Background>
+                        <Button.Background>
                             <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ArrowDownKey}}"/>
-                    </Button.Background>
-                </Button>
+                        </Button.Background>
+                    </Button>
 
-                <ComboBox
-                    Name="ViewModeSelector"
-                    ItemsSource="{Binding DiffViewModes}"
-                    SelectedItem="{Binding DiffViewModeSelected,Mode=OneWay}"
-                    DisplayMemberPath="Name"
-                    Width="150"
-                    behav1:SelectionChangedCommand.ChangedCommand="{Binding DiffViewModeSelectCommand}"
-                    behav1:SelectionChangedCommand.CommandParameter="{Binding Path=SelectedItem, ElementName=ViewModeSelector}"
-                    IsEnabled="{Binding DirDiffDoc.IsDiffDataAvailable}"
-                    ToolTip="Change between hierarchical and simple file view"
-                    ToolTipService.ShowOnDisabled="true"
-                />
+                    <ComboBox
+                        Name="ViewModeSelector"
+                        ItemsSource="{Binding DiffViewModes}"
+                        SelectedItem="{Binding DiffViewModeSelected,Mode=OneWay}"
+                        DisplayMemberPath="Name"
+                        Width="150"
+                        behav1:SelectionChangedCommand.ChangedCommand="{Binding DiffViewModeSelectCommand}"
+                        behav1:SelectionChangedCommand.CommandParameter="{Binding Path=SelectedItem, ElementName=ViewModeSelector}"
+                        IsEnabled="{Binding DirDiffDoc.IsDiffDataAvailable,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        ToolTip="Change between hierarchical and simple file view"
+                        ToolTipService.ShowOnDisabled="true"
+                    />
 
-                <Separator Margin="3,0,3,0" />
+                    <Separator Margin="3,0,3,0" />
 
-                <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+                    <Border
+                        BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
 						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
-						>
+					>
                     <Grid 
                         HorizontalAlignment="Stretch"
 						MinHeight="16" MinWidth="16"
 						Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
-                        <Grid.Background>
-                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"/>
-                        </Grid.Background>
-                        <Grid.ToolTip>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"/>
+                            </Grid.Background>
+                            <Grid.ToolTip>
                                 <TextBlock><TextBlock Text="{Binding DirDiffDoc.CountFilesChanged}"/> <TextBlock Text="files changed."/></TextBlock>
-                        </Grid.ToolTip>
-                    </Grid>
-                </Border>
+                            </Grid.ToolTip>
+                        </Grid>
+                    </Border>
 
-                <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+                    <Border
+                        BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
 						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
-						>
+					>
                     <Grid 
                         HorizontalAlignment="Stretch"
 						MinHeight="16" MinWidth="16"
@@ -155,40 +188,96 @@
                                 <RowDefinition Height="2*"/>
                             </Grid.RowDefinitions>
                             <Grid.Background>
-                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"/>
-                        </Grid.Background>
-                        <Grid.ToolTip>
+                                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"/>
+                            </Grid.Background>
+                            <Grid.ToolTip>
                                 <TextBlock><TextBlock Text="{Binding DirDiffDoc.CountFilesDeleted}"/> <TextBlock Text="files deleted."/></TextBlock>
-                        </Grid.ToolTip>
-                    </Grid>
-                </Border>
+                            </Grid.ToolTip>
+                        </Grid>
+                    </Border>
 
-                <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+                    <Border
+                        BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
 						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}">
                     <Grid 
                         HorizontalAlignment="Stretch"
 						MinHeight="16" MinWidth="16"
 						Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
-                        <Grid.Background>
-                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AddedKey}}"/>
-                        </Grid.Background>
-                        <Grid.ToolTip>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AddedKey}}"/>
+                            </Grid.Background>
+                            <Grid.ToolTip>
                                 <TextBlock><TextBlock Text="{Binding DirDiffDoc.CountFilesAdded}"/> <TextBlock Text="files added."/></TextBlock>
-                        </Grid.ToolTip>
+                            </Grid.ToolTip>
                         </Grid>
-                </Border>
+                    </Border>
 
-                <Separator Margin="3,0,3,0" />
+                    <Separator Margin="3,0,3,0" />
 
-                <TextBlock Text="{Binding DirDiffDoc.LblFilter}"
+                    <TextBlock
+                        Text="{Binding DirDiffDoc.LblFilter}"
 						ToolTip="Filter Criteria"
 					    Margin="0,0,3,0" />
-
                 </ToolBar>
             </ToolBar>
         </Grid>
 
-        <Grid Grid.Row="1" Margin="0,3,0,0">
+        <Grid Grid.Row="1"
+              Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityPropConverter}}"
+              Margin="3"
+            >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0"
+                  Margin="3"
+                  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    Grid.Column="0"
+                    Command="{Binding CancelCompareCommand}"
+                    MinHeight="23" MinWidth="85"
+                    Content="Cancel"
+                    VerticalAlignment="Top"/>
+
+                <Grid Grid.Column="1" Margin="6,3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,3,0,0"
+                                DataContext="{Binding DiffProgress}">
+                        <TextBlock Text="Scanning ">
+                        <TextBlock Text="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Text="of ">
+                        <TextBlock Text="{Binding MaximumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Text="directories... "/>
+                        </TextBlock>
+                      </TextBlock>
+                  </StackPanel>
+
+                    <ProgressBar
+                        Grid.Row="1" Height="3" Margin="0,3,0,0"
+                        DataContext="{Binding DiffProgress}"
+                        IsIndeterminate="{Binding IsIndeterminate, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        Value="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        Minimum="{Binding MinimumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        Maximum="{Binding MaximumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                    />
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="3"
+              >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"  Name="TopColumnA"/>
                 <ColumnDefinition Width="Auto"/>
@@ -205,6 +294,7 @@
                 Name="LeftDirPath"
                 Grid.Column="0" Grid.Row="0"
                 Text="{Binding LeftDirPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 Margin="0,0,0,3"
                 />
@@ -213,6 +303,7 @@
                 Grid.Column="0" Grid.Row="1"
                 Text="{Binding DirDiffDoc.PathA,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
+                Visibility="{Binding ElementName=DiffDir, Path=Visibility,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 Margin="0,3,0,3"
                 />
@@ -230,6 +321,7 @@
                 Name="RightDirPath"
                 Grid.Column="2" Grid.Row="0"
                 Text="{Binding RightDirPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 Margin="0,0,0,3"
                 />
@@ -238,6 +330,7 @@
                 Grid.Column="2" Grid.Row="1"
                 Text="{Binding DirDiffDoc.PathB,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                 IsReadOnly="True"
+                Visibility="{Binding ElementName=DiffDir, Path=Visibility,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 Margin="0,3,0,3"
                 />
@@ -252,7 +345,16 @@
 							  
 							  SelectedItem_A="{Binding DirDiffDoc.SelectedItem_A,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
 							  SelectedItem_B="{Binding DirDiffDoc.SelectedItem_B,UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}"
+                              
+                              SelectedItemsSourceA="{Binding DirDiffDoc.SelectedItemsA,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
+                              SelectedItemsSourceB="{Binding DirDiffDoc.SelectedItemsB,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                               >
+                <ctrl:DiffDirView.Visibility>
+                    <MultiBinding Converter="{StaticResource MultiBoolToVisibilityPropConverter}">
+                        <Binding Path="DirDiffDoc.IsDiffDataAvailable" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                        <Binding Path="DiffProgress.IsProgressbarVisible" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                    </MultiBinding>
+                </ctrl:DiffDirView.Visibility>
             </ctrl:DiffDirView>
         </Grid>
     </Grid>
