@@ -336,7 +336,7 @@
                                          args.Recursive,
                                          args.IgnoreDirectoryComparison,
                                          args.FileFilter,
-                                         dirFileMode);
+                                         dirFileMode, args.LastUpDateFilePrecision);
 
             try
             {

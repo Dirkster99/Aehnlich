@@ -26,6 +26,7 @@ namespace AehnlichLib.Dir
         private readonly bool _ShowSame;
         private readonly DirectoryDiffFileFilter _Filter;
         private readonly DiffDirFileMode _DiffMode;
+        private double _LastUpDatePrecision;
         #endregion
 
         #region Constructors
@@ -83,6 +84,16 @@ namespace AehnlichLib.Dir
         /// Determines the modus operandi per <see cref="DiffDirFileMode"/> that is used to
         /// compare two files and pronounce them as different or equal.
         /// </param>
+        /// <param name="lastUpDatePrecision">
+        /// Gets the precision (in secondes) of the last modifiaction date time comparison
+        /// between two files. The default for this value is 2 seconds since some file systems
+        /// such as, FAT/VFAT (https://superuser.com/questions/937380/get-creation-time-of-file-in-milliseconds)
+        /// store their time information in that precision only.
+        /// 
+        /// The creation timestamp of a file in windows depends on the file system:
+        /// -FAT/VFAT has a maximum resolution of 2s
+        /// -NTFS has a maximum resolution of 100 ns
+        /// </param>
         public DirectoryDiff(
             bool showOnlyInA,
             bool showOnlyInB,
@@ -91,7 +102,8 @@ namespace AehnlichLib.Dir
             bool recursive,
             bool ignoreDirectoryComparison,
             DirectoryDiffFileFilter filter,
-            DiffDirFileMode diffMode)
+            DiffDirFileMode diffMode,
+            double lastUpDatePrecision)
         {
             _ShowOnlyInA = showOnlyInA;
             _ShowOnlyInB = showOnlyInB;
@@ -101,6 +113,7 @@ namespace AehnlichLib.Dir
             _IgnoreDirectoryComparison = ignoreDirectoryComparison;
             _Filter = filter;
             _DiffMode = diffMode;
+            _LastUpDatePrecision = lastUpDatePrecision;
         }
 
         /// <summary>
@@ -558,6 +571,7 @@ namespace AehnlichLib.Dir
 
                         // Merge and Diff them
                         mergeIdx.Merge();
+
                         double lengthSumA, lengthSumB;
                         DiffFiles(root, mergeIdx, node, checkIfFilesAreDifferent, out lengthSumA, out lengthSumB);
 
@@ -595,17 +609,17 @@ namespace AehnlichLib.Dir
 
         /// <summary>
         /// Compares 2 sets of aligned <see cref="FileSystemInfo"/> objects and returns their
-        /// status in terms of difference in the <paramref name="entry"/> parameter.
+        /// status in terms of difference in the <paramref name="node"/> parameter.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="mergeIndex">Contains the 2 sets of objects to compare in a merged sorted list</param>
-        /// <param name="entry">Contains the resulting list</param>
+        /// <param name="node">Contains the directory base entry and resulting list of files</param>
         /// <param name="checkIfFilesAreDifferent"></param>
         /// <param name="lengthSumA"></param>
         /// <param name="lengthSumB"></param>
         private void DiffFiles(DirectoryDiffRoot root,
                                Merge.MergeIndex mergeIndex,
-                               IDirectoryDiffEntry entry,
+                               IDirectoryDiffEntry node,
                                bool checkIfFilesAreDifferent,
                                out double lengthSumA, out double lengthSumB)
         {
@@ -673,7 +687,9 @@ namespace AehnlichLib.Dir
 
                         if ((root.DiffMode & DiffDirFileMode.LastUpdate) != 0)
                         {
-                            if (DateTime.Compare(lastUpdateA, lastUpdateB) != 0)
+                            // Precision of TimeStamp depends on backend filesystem
+                            // https://superuser.com/questions/937380/get-creation-time-of-file-in-milliseconds
+                            if (Math.Abs(Math.Round((lastUpdateA - lastUpdateB).TotalSeconds)) > this._LastUpDatePrecision)
                                 different = true;
                         }
 
@@ -737,11 +753,11 @@ namespace AehnlichLib.Dir
                     // Mark directory as different if containing files are different
                     if (newEntry.Different == true)
                     {
-                        entry.Different = true;
+                        node.Different = true;
                         root.AddDiffFile(newEntry);   // Add into collection of different files
                     }
 
-                    entry.AddSubEntry(newEntry);
+                    node.AddSubEntry(newEntry);
                 }
             }
         }

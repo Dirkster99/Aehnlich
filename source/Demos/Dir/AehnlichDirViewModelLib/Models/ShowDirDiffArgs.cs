@@ -28,6 +28,8 @@
             ShowSame = true;
             Recursive = true;
             IgnoreDirectoryComparison = false;
+
+            LastUpDateFilePrecision = 2.0;
         }
         #endregion ctors
 
@@ -109,6 +111,18 @@
         /// and either no C-Sharp files or equal C-Sharp files.
         /// </summary>
         public DirectoryDiffFileFilter FileFilter { get; set; }
+
+        /// <summary>
+        /// Gets the precision (in secondes) of the last modifiaction date time comparison
+        /// between two files. The default for this value is 2 seconds since some file systems
+        /// such as, FAT/VFAT (https://superuser.com/questions/937380/get-creation-time-of-file-in-milliseconds)
+        /// store their time information in that precision only.
+        /// 
+        /// The creation timestamp of a file in windows depends on the file system:
+        /// -FAT/VFAT has a maximum resolution of 2s
+        /// -NTFS has a maximum resolution of 100 ns
+        /// </summary>
+        public double LastUpDateFilePrecision { get; internal set; }
         #endregion properties
     }
 }
