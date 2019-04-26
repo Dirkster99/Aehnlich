@@ -7,10 +7,10 @@
     using AehnlichViewModelsLib.Models;
     using AehnlichViewModelsLib.ViewModels.LineInfo;
     using AehnlichViewLib.Enums;
-    using AehnlichViewLib.Interfaces;
     using ICSharpCode.AvalonEdit.Document;
+    using AehnlichViewModelsLib.Interfaces;
 
-    public class DiffLineViewModel : Base.ViewModelBase, IDiffLineInfo
+    internal class DiffLineViewModel : Base.ViewModelBase, IDiffLineViewModel
     {
         #region fields
         private DiffContext _Context;
@@ -108,7 +108,11 @@
             }
         }
 
-        internal DiffViewLine Counterpart
+        /// <summary>
+        /// Gets the equivalent line from the left view to the right view
+        /// and vice versa.
+        /// </summary>
+        public DiffViewLine Counterpart
         {
             get
             {
@@ -119,6 +123,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets the original text that was used when comparing this line to its
+        /// <see cref="Counterpart"/> line.
+        /// </summary>
         public string Text
         {
             get
@@ -173,7 +181,7 @@
         /// <param name="changeDiffOptions"></param>
         /// <param name="spacesPerTab"></param>
         /// <returns></returns>
-        internal EditScript GetChangeEditScript(ChangeDiffOptions changeDiffOptions, int spacesPerTab)
+        public EditScript GetChangeEditScript(ChangeDiffOptions changeDiffOptions, int spacesPerTab)
         {
             var editScript = _Model.GetChangeEditScript(changeDiffOptions);
 

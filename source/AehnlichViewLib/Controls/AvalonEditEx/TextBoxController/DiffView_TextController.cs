@@ -56,8 +56,6 @@
                 return;
             ////throw new ArgumentNullException("Object of type FileDocument is not available!");
 
-            var txtBox = fileDoc as DiffView;
-
             // Remove event handler from old if OldValue is available
             if (e.OldValue is ITextBoxController)
             {
@@ -94,7 +92,7 @@
                     newController.GetSelectedTextEvent -= DiffView.GetSelectedText;
                 }
 
-                elements.Add(newController, txtBox);
+                elements.Add(newController, fileDoc);
                 newController.SelectAll += SelectAll;
                 newController.Select += Select;
                 newController.ScrollToLineEvent += ScrollToLine;
@@ -132,7 +130,7 @@
             if (!elements.TryGetValue(sender, out element))
                 throw new ArgumentException("sender");
 
-            // element.Focus();
+            ////element.Focus();
 
             element.Select(start, length);
             TextLocation loc = element.Document.GetLocation(start);
@@ -173,7 +171,7 @@
             length = element.SelectionLength;
             IsRectangularSelection = element.TextArea.Selection.EnableVirtualSpace;
 
-            // element.TextArea.Selection = RectangleSelection.Create(element.TextArea, start, length);
+            ////element.TextArea.Selection = RectangleSelection.Create(element.TextArea, start, length);
         }
 
         private static void BeginChange(ITextBoxController sender)

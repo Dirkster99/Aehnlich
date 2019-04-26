@@ -103,6 +103,10 @@
             #endregion ctors
 
             #region properties
+            /// <summary>
+            /// Gets a collection of viewmodel objects that describe each line of text
+            /// and whether they are equal or inequal and what the degree of equality is ...
+            /// </summary>
             public IReadOnlyCollection<DiffLineViewModel> DocLineDiffs
             {
                 get
@@ -216,6 +220,7 @@
             /// <param name="end">index+1 of last item to be added</param>
             /// <param name="fromA">Set to true if this data represents the reference view
             /// (left view also known as ViewA) otherwise false.</param>
+            /// <param name="items"></param>
             /// <returns>the actual number of added lines</returns>
             private int AddUneditedLines(IList<string> stringList, int current, int end, bool fromA,
                                          List<DiffLineViewModel> items)
@@ -241,6 +246,7 @@
             /// <param name="editType"></param>
             /// <param name="fromA">Set to true if this data represents the reference view
             /// (left view also known as ViewA) otherwise false.</param>
+            /// <param name="items"></param>
             /// <returns></returns>
             private void AddLine(string text, int? number, EditType editType, bool fromA,
                                  List<DiffLineViewModel> items)
@@ -252,6 +258,7 @@
             /// Adds another line in into the inherited Items collection.
             /// </summary>
             /// <param name="line"></param>
+            /// <param name="items"></param>
             private void AddLine(DiffViewLine line, List<DiffLineViewModel> items)
             {
                 if (line.Number.HasValue && line.Number.Value > _maxImaginaryLineNumber)

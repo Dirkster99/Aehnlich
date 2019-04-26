@@ -88,7 +88,8 @@
         /// <param name="IsRectengularSelection"></param>
         public void CurrentSelection(out int start, out int length, out bool IsRectengularSelection)
         {
-            start = length = 0;
+            start = 0;
+            length = 0;
             IsRectengularSelection = false;
 
             if (this.CurrentSelectionEvent != null)

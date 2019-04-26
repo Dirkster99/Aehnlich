@@ -12,6 +12,7 @@
     using AehnlichLib.Text;
     using AehnlichViewModelsLib.Enums;
     using AehnlichViewModelsLib.Events;
+    using AehnlichViewModelsLib.Interfaces;
     using AehnlichViewModelsLib.Models;
     using AehnlichViewModelsLib.ViewModels.Base;
     using AehnlichViewModelsLib.ViewModels.LineInfo;
@@ -19,8 +20,15 @@
 
     /// <summary>
     /// Implements a viewmodel that services both views viewA and viewB (left and right).
+    ///
+    /// Defines the properties and methods of a viewmodel document that displays diff
+    /// information using a synchronized
+    /// - <see cref="ViewA"/> (left view) and
+    /// - <see cref="ViewB"/> (left view)
+    /// 
+    /// with additional highlighting information.
     /// </summary>
-    public class DiffDocViewModel : Base.ViewModelBase, IDisposable
+    internal class DiffDocViewModel : Base.ViewModelBase, IDiffDocViewModel
     {
         #region fields
         private ShowDiffArgs _Args;
@@ -65,6 +73,10 @@
         #endregion ctors
 
         #region properties
+        /// <summary>
+        /// Gets the text editor display options that control the left and right text diff view.
+        /// Both diff views are bound to one options object to ensure consistent displays.
+        /// </summary>
         public TextEditorOptions DiffViewOptions
         {
             get
@@ -73,12 +85,18 @@
             }
         }
 
-        public DiffSideViewModel ViewA
+        /// <summary>
+        /// Gets the viemodel that represents the left side of the diff view.
+        /// </summary>
+        public IDiffSideViewModel ViewA
         {
             get { return _ViewA; }
         }
 
-        public DiffSideViewModel ViewB
+        /// <summary>
+        /// Gets the viemodel that represents the right side of the diff view.
+        /// </summary>
+        public IDiffSideViewModel ViewB
         {
             get { return _ViewB; }
         }
@@ -95,7 +113,11 @@
             }
         }
 
-        #region Caret Position
+        #region Synchronized Caret Position
+        /// <summary>
+        /// Gets/sets the caret positions column from the last time when the
+        /// caret position in the left view has been synchronzied with the right view (or vice versa).
+        /// </summary>
         public int SynchronizedColumn
         {
             get
@@ -113,6 +135,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets/sets the caret positions line from the last time when the
+        /// caret position in the left view has been synchronzied with the right view (or vice versa).
+        /// </summary>
         public int SynchronizedLine
         {
             get
@@ -129,10 +155,11 @@
                 }
             }
         }
-        #endregion Caret Position
+        #endregion Synchronized Caret Position
 
         /// <summary>
-        /// Gets the similarity value (0% - 100%) between 2 things shown in toolbar
+        /// Gets the similarity value (0% - 100%) between 2 as formated text things
+        /// to be shown as tooltip in toolbar.
         /// </summary>
         public string Similarity_Text
         {
@@ -214,7 +241,14 @@
         }
         #endregion Left and Right File Name Labels
 
-        public DiffSideViewModel ViewLineDiff
+        /// <summary>
+        /// Gets the <see cref="IDiffSideViewModel"/> that drives the diff view
+        /// that contains always exactly 2 lines.
+        /// 
+        /// This diff view shows the currently selected line from the left view A
+        /// and the right view B on top of each other.
+        /// </summary>
+        public IDiffSideViewModel ViewLineDiff
         {
             get { return _ViewLineDiff; }
         }
@@ -252,15 +286,15 @@
                 {
                     _GoToFirstDifferenceCommand = new RelayCommand<object>((p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = GetActiveView(out nonActView);
-                        DiffViewPosition gotoPos = activeView.GetFirstDiffPosition();
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = GetActiveView(out nonActView);
+                        var gotoPos = activeView.GetFirstDiffPosition();
                         ScrollToLine(gotoPos, nonActView, activeView, true);
                     },
                     (p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = GetActiveView(out nonActView);
                         if (activeView == null)
                             return false;
 
@@ -285,15 +319,15 @@
                 {
                     _GoToNextDifferenceCommand = new RelayCommand<object>((p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = GetActiveView(out nonActView);
-                        DiffViewPosition gotoPos = activeView.GetNextDiffPosition();
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = GetActiveView(out nonActView);
+                        IDiffViewPosition gotoPos = activeView.GetNextDiffPosition();
                         ScrollToLine(gotoPos, nonActView, activeView, true);
                     },
                     (p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = GetActiveView(out nonActView);
                         if (activeView == null)
                             return false;
 
@@ -318,15 +352,15 @@
                 {
                     _GoToPrevDifferenceCommand = new RelayCommand<object>((p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = GetActiveView(out nonActView);
-                        DiffViewPosition gotoPos = activeView.GetPrevDiffPosition();
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = GetActiveView(out nonActView);
+                        var gotoPos = activeView.GetPrevDiffPosition();
                         ScrollToLine(gotoPos, nonActView, activeView, true);
                     },
                     (p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = GetActiveView(out nonActView);
                         if (activeView == null)
                             return false;
 
@@ -351,15 +385,15 @@
                 {
                     _GoToLastDifferenceCommand = new RelayCommand<object>((p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = GetActiveView(out nonActView);
-                        DiffViewPosition gotoPos = activeView.GetLastDiffPosition();
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = GetActiveView(out nonActView);
+                        var gotoPos = activeView.GetLastDiffPosition();
                         ScrollToLine(gotoPos, nonActView, activeView, true);
                     },
                     (p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = GetActiveView(out nonActView);
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = GetActiveView(out nonActView);
                         if (activeView == null)
                             return false;
 
@@ -441,6 +475,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets a string that contains the file name and path of the left and right view
+        /// (each in a seperate line) formated in one string.
+        /// 
+        /// This information can be used as tool tip or other descriptive text in the UI.
+        /// </summary>
         public string ToolTipText
         {
             get
@@ -456,6 +496,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets the current status of the viewmodel formated as string for
+        /// display in tooltip or statusbar or such.
+        /// </summary>
         public string StatusText
         {
             get
@@ -473,6 +517,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets the number of inserts visible in the current view.
+        /// </summary>
         public int CountInserts
         {
             get
@@ -490,6 +537,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets the number of deletes visible in the current view.
+        /// </summary>
         public int CountDeletes
         {
             get
@@ -507,6 +557,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets the number of changes visible in the current view.
+        /// </summary>
         public int CountChanges
         {
             get
@@ -526,6 +579,10 @@
         #endregion properties
 
         #region methods
+        /// <summary>
+        /// Updates the diff view with the supplied information.
+        /// </summary>
+        /// <param name="args"></param>
         public void ShowDifferences(ShowDiffArgs args)
         {
             IList<string> a, b;
@@ -597,24 +654,84 @@
             _Args = args;
         }
 
-        internal void GotoTextLine(uint thisLine)
+        /// <summary>
+        /// Gets the view (of the 2 side by side views) that was activated last
+        /// (had the focus the last time)
+        /// </summary>
+        /// <returns></returns>
+        public IDiffSideViewModel GetActiveView(out IDiffSideViewModel nonActiveView)
+        {
+            nonActiveView = null;
+
+            if (ViewA == null && ViewB == null)
+                return null;
+
+            if (ViewA == null)
+                return ViewB;
+
+            if (ViewB == null)
+                return ViewA;
+
+            if (ViewA.ViewActivation < ViewB.ViewActivation)
+            {
+                nonActiveView = ViewA;
+                return ViewB;
+            }
+
+            nonActiveView = ViewB;
+            return ViewA;
+        }
+
+        /// <summary>
+        /// Navigates both views A (right) and B (left) to line number n.
+        /// </summary>
+        /// <param name="thisLine"></param>
+        public void GotoTextLine(uint thisLine)
         {
             if (ViewA != null && ViewB != null)
             {
-                int realLineA = ViewA.FindThisTextLine((int)thisLine);
-                var modelLineA = ViewA.GotoTextLine(realLineA);
+                var vmViewA = ViewA as DiffSideViewModel;
+                var vmViewB = ViewB as DiffSideViewModel;
+
+                int realLineA = vmViewA.FindThisTextLine((int)thisLine);
+                var modelLineA = vmViewA.GotoTextLine(realLineA);
 
                 if (modelLineA.Counterpart.Number.HasValue)
                 {
                     int counterPartLine = Math.Min((int)modelLineA.Counterpart.Number+1, ViewB.DocLineDiffs.Count);
-                    int realLineB = ViewB.FindThisTextLine(counterPartLine);
-                    ViewB.GotoTextLine((int)realLineB);
+                    int realLineB = vmViewB.FindThisTextLine(counterPartLine);
+                    vmViewB.GotoTextLine((int)realLineB);
                 }
                 else
                 {
-                    int realLineB = ViewB.FindThisTextLine((int)thisLine);
-                    ViewB.GotoTextLine((int)realLineB);
+                    int realLineB = vmViewB.FindThisTextLine((int)thisLine);
+                    vmViewB.GotoTextLine((int)realLineB);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Moves both views to the requested line position.
+        /// </summary>
+        /// <param name="gotoPos"></param>
+        /// <param name="viewA"></param>
+        /// <param name="viewB"></param>
+        /// <param name="positionCursor"></param>
+        public void ScrollToLine(IDiffViewPosition gotoPos,
+                                   IDiffSideViewModel viewA,
+                                   IDiffSideViewModel viewB,
+                                   bool positionCursor)
+        {
+            if (viewA != null)
+            {
+                viewA.ScrollToLine(gotoPos.Line + 1, positionCursor);
+                viewA.SetPosition(gotoPos);
+            }
+
+            if (viewB != null)
+            {
+                viewB.ScrollToLine(gotoPos.Line + 1, positionCursor);
+                viewB.SetPosition(gotoPos);
             }
         }
 
@@ -702,67 +819,14 @@
 
             this.currentDiffLine = line;
 
-            DiffLineViewModel lineOneVM = null;
-            DiffLineViewModel lineTwoVM = null;
+            IDiffLineViewModel lineOneVM = null;
+            IDiffLineViewModel lineTwoVM = null;
 
-            lineOneVM = this.ViewA.GetLine(line);
-            lineTwoVM = this.ViewB.GetLine(line);
+            lineOneVM = (this.ViewA as DiffSideViewModel).GetLine(line);
+            lineTwoVM = (this.ViewB as DiffSideViewModel).GetLine(line);
 
             if (lineOneVM != null && lineTwoVM != null)
                 this._ViewLineDiff.SetData(lineOneVM, lineTwoVM, spacesPerTab);
-        }
-
-        /// <summary>
-        /// Gets the view (of the 2 side by side views) that was activated last
-        /// (had the focus the last time)
-        /// </summary>
-        /// <returns></returns>
-        internal DiffSideViewModel GetActiveView(out DiffSideViewModel nonActiveView)
-        {
-            nonActiveView = null;
-
-            if (ViewA == null && ViewB == null)
-                return null;
-
-            if (ViewA == null)
-                return ViewB;
-
-            if (ViewB == null)
-                return ViewA;
-
-            if (ViewA.ViewActivation < ViewB.ViewActivation)
-            {
-                nonActiveView = ViewA;
-                return ViewB;
-            }
-
-            nonActiveView = ViewB;
-            return ViewA;
-        }
-
-        /// <summary>
-        /// Moves both views to the requested line position.
-        /// </summary>
-        /// <param name="gotoPos"></param>
-        /// <param name="viewA"></param>
-        /// <param name="viewB"></param>
-        /// <param name="positionCursor"></param>
-        internal void ScrollToLine(DiffViewPosition gotoPos,
-                                   DiffSideViewModel viewA,
-                                   DiffSideViewModel viewB,
-                                   bool positionCursor)
-        {
-            if (viewA != null)
-            {
-                viewA.ScrollToLine(gotoPos.Line + 1, positionCursor);
-                viewA.SetPosition(gotoPos);
-            }
-
-            if (viewB != null)
-            {
-                viewB.ScrollToLine(gotoPos.Line + 1, positionCursor);
-                viewB.SetPosition(gotoPos);
-            }
         }
 
         /// <summary>
@@ -826,7 +890,7 @@
         }
 
         private void UpdateOtherView(CaretPositionChangedEvent e,
-                                     DiffSideViewModel otherView)
+                                     IDiffSideViewModel otherView)
         {
             if (otherView != null)
             {

@@ -274,8 +274,8 @@
                 int result = NativeMethods.SHGetImageList((int)iconSize, ref iidImageList, ref imageListHandle);
                 if (result != 0)
                 {
+                    ////throw new COMException("SHGetImageList failed.", result);
                     return null;
-                    // throw new COMException("SHGetImageList failed.", result);
                 }
 
                 // Get the icon index
@@ -285,8 +285,8 @@
                 iconHandle = NativeMethods.ImageList_GetIcon(imageListHandle, iconIndex, (uint)ILD.TRANSPARENT);
                 if (iconHandle == IntPtr.Zero)
                 {
+                    ////throw new Exception("ImageList_GetIcon failed.");
                     return null;
-                    // throw new Exception("ImageList_GetIcon failed.");
                 }
 
                 return GetPngImage(iconHandle);
@@ -323,8 +323,8 @@
 
             if (bitmapDecoder == null || bitmapDecoder.Frames == null || bitmapDecoder.Frames.Count == 0)
             {
+                ////throw new Exception("Failed to decode icon.");
                 return null;
-                // throw new Exception("Failed to decode icon.");
             }
 
             // Return the icon

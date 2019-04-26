@@ -24,7 +24,7 @@ namespace AehnlichLib.Dir
         private readonly bool _ShowSame;
         private readonly DirectoryDiffFileFilter _Filter;
         private readonly DiffDirFileMode _DiffMode;
-        private double _LastUpDatePrecision;
+        private readonly double _LastUpDatePrecision;
         #endregion
 
         #region Constructors

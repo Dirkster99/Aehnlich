@@ -3,7 +3,7 @@
     using AehnlichLib.Enums;
     using AehnlichViewModelsLib.Enums;
 
-    public class ShowDiffArgs
+    internal class ShowDiffArgs
     {
         #region Constructors
         /// <summary>
@@ -69,7 +69,9 @@
         public int LeadingCharactersToIgnore { get; }
 
         public bool IgnoreCase { get; }
+
         public bool IgnoreTextWhitespace { get; }
+
         public bool ShowChangeAsDeleteInsert { get; }
 
         public bool IgnoreXmlWhitespace { get; }

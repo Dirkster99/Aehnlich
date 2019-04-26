@@ -32,17 +32,26 @@
         #region properties
         /// <summary>
         /// Gets/sets the <see cref="Visibility"/> value that is associated
-        /// (converted into) with the boolean true value.
+        /// (converted into) with the <see cref="BlankValue"/> value.
         /// </summary>
         public Visibility BlankValue { get; set; }
 
         /// <summary>
         /// Gets/sets the <see cref="Visibility"/> value that is associated
-        /// (converted into) with the boolean false value.
+        /// (converted into) with the <see cref="AddedValue"/> value.
         /// </summary>
         public Visibility AddedValue { get; set; }
 
+        /// <summary>
+        /// Gets/sets the <see cref="Visibility"/> value that is associated
+        /// (converted into) with the <see cref="DeleteValue"/> value.
+        /// </summary>
         public Visibility DeleteValue { get; set; }
+
+        /// <summary>
+        /// Gets/sets the <see cref="Visibility"/> value that is associated
+        /// (converted into) with the <see cref="ContextValue"/> value.
+        /// </summary>
         public Visibility ContextValue { get; set; }
         #endregion properties
 

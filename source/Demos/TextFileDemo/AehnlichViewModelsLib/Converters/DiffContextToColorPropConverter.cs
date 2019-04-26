@@ -17,18 +17,34 @@
     public sealed class DiffContextToColorPropConverter : DependencyObject, IValueConverter
     {
         #region fields
+        /// <summary>
+        /// Implements the backing store of the <see cref="BlankValue"/>
+        /// dependency property.
+        /// </summary>
         public static readonly DependencyProperty BlankValueProperty =
             DependencyProperty.Register("BlankValue", typeof(SolidColorBrush),
                 typeof(DiffContextToColorPropConverter), new PropertyMetadata(null));
 
+        /// <summary>
+        /// Implements the backing store of the <see cref="AddedValue"/>
+        /// dependency property.
+        /// </summary>
         public static readonly DependencyProperty AddedValueProperty =
             DependencyProperty.Register("AddedValue", typeof(SolidColorBrush),
                 typeof(DiffContextToColorPropConverter), new PropertyMetadata(null));
 
+        /// <summary>
+        /// Implements the backing store of the <see cref="DeletedValue"/>
+        /// dependency property.
+        /// </summary>
         public static readonly DependencyProperty DeletedValueProperty =
             DependencyProperty.Register("DeletedValue", typeof(SolidColorBrush),
                 typeof(DiffContextToColorPropConverter), new PropertyMetadata(null));
 
+        /// <summary>
+        /// Implements the backing store of the <see cref="ContextValue"/>
+        /// dependency property.
+        /// </summary>
         public static readonly DependencyProperty ContextValueProperty =
             DependencyProperty.Register("ContextValue", typeof(SolidColorBrush),
                 typeof(DiffContextToColorPropConverter), new PropertyMetadata(null));
@@ -44,24 +60,39 @@
         #endregion constructor
 
         #region properties
+        /// <summary>
+        /// Gets/sets the solid color brush that represent equal text in comparison to the other text.
+        /// (Default is default(SolidColorBrush) to indicate no additional coloring required).
+        /// </summary>
         public SolidColorBrush BlankValue
         {
             get { return (SolidColorBrush)GetValue(BlankValueProperty); }
             set { SetValue(BlankValueProperty, value); }
         }
 
+        /// <summary>
+        /// Gets/sets the solid color brush that represent added text in comparison to the other text.
+        /// </summary>
         public SolidColorBrush AddedValue
         {
             get { return (SolidColorBrush)GetValue(AddedValueProperty); }
             set { SetValue(AddedValueProperty, value); }
         }
 
+        /// <summary>
+        /// Gets/sets the solid color brush that represent deleted text in comparison to the other text.
+        /// </summary>
         public SolidColorBrush DeletedValue
         {
             get { return (SolidColorBrush)GetValue(DeletedValueProperty); }
             set { SetValue(DeletedValueProperty, value); }
         }
 
+        /// <summary>
+        /// Gets/sets the solid color brush that represents
+        /// text with the same context but changed values
+        /// in comparison to the other text.
+        /// </summary>
         public SolidColorBrush ContextValue
         {
             get { return (SolidColorBrush)GetValue(ContextValueProperty); }

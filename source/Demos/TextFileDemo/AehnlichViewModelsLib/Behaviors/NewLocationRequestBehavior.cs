@@ -12,7 +12,7 @@
     {
         #region fields
         /// <summary>
-        /// Implements the backing store of the <see cref="Command"/>
+        /// Implements the backing store of the Command
         /// attached dependency property.
         /// </summary>
         public static readonly DependencyProperty CommandProperty =
@@ -20,7 +20,7 @@
                 typeof(NewLocationRequestBehavior), new PropertyMetadata(null, OnCommandChanged));
 
         /// <summary>
-        /// Implements the backing store of the <see cref="CommandParameter"/>
+        /// Implements the backing store of the CommandParameter
         /// attached dependency property.
         /// </summary>
         public static readonly DependencyProperty CommandParameterProperty =

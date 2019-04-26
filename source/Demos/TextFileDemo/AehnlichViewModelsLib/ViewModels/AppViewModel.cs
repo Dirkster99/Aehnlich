@@ -8,8 +8,9 @@
     using AehnlichViewLib.Models;
     using System;
     using System.Windows.Input;
+    using AehnlichViewModelsLib.Interfaces;
 
-    public class AppViewModel : Base.ViewModelBase, IDisposable
+    internal class AppViewModel : Base.ViewModelBase, IAppViewModel
     {
         #region fields
         private ICommand _CompareFilesCommand;
@@ -74,8 +75,8 @@
                 {
                     _CompareFilesCommand = new RelayCommand<object>((p) =>
                     {
-                        SuggestSourceViewModel fileA;
-                        SuggestSourceViewModel fileB;
+                        ISuggestSourceViewModel fileA;
+                        ISuggestSourceViewModel fileB;
 
                         if ((p is object[]) == false)
                         {
@@ -204,8 +205,8 @@
                 {
                     _OpenFileFromActiveViewCommand = new RelayCommand<object>((p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
 
                         if (activeView != null)
                             FileSystemCommands.OpenInWindows(activeView.FileName);
@@ -216,8 +217,8 @@
                         }
                     }, (p) =>
                      {
-                         DiffSideViewModel nonActView;
-                         DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+                         IDiffSideViewModel nonActView;
+                         IDiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
 
                          if (activeView != null)
                          {
@@ -250,15 +251,15 @@
                 {
                     _CopyTextSelectionFromActiveViewCommand = new RelayCommand<object>((p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
 
                         string textSelection = activeView.TxtControl.GetSelectedText();
                         FileSystemCommands.CopyString(textSelection);
                     }, (p) =>
                     {
-                        DiffSideViewModel nonActView;
-                        DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+                        IDiffSideViewModel nonActView;
+                        IDiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
 
                         if (activeView != null)
                             return (string.IsNullOrEmpty(activeView.TxtControl.GetSelectedText()) == false);
@@ -271,6 +272,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets the number of text lines currently visible in the text view
+        /// of the left view A and the right view B.
+        /// </summary>
         public int NumberOfTextLinesInViewPort
         {
             get { return _NumberOfTextLinesInViewPort; }
@@ -284,6 +289,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets/sets the current overview value shown in a seperate overview diff control.
+        /// This control is similar to a scrollbar - it can be used to scroll to a certain
+        /// postion - but its thumb and color background also indicates the current cursor
+        /// line within a birds eye view.
+        /// </summary>
         public double OverViewValue
         {
             get { return _OverViewValue; }
@@ -300,7 +311,11 @@
             }
         }
 
-        public DiffDocViewModel DiffCtrl
+        /// <summary>
+        /// Gets the document viewmodel that manages left and right viewmodel
+        /// which drive the synchronized diff text view.
+        /// </summary>
+        public IDiffDocViewModel DiffCtrl
         {
             get { return _DiffCtrl; }
         }
@@ -308,7 +323,7 @@
         /// <summary>
         /// Gets the path of file A in the comparison.
         /// </summary>
-        public SuggestSourceViewModel FilePathA
+        public ISuggestSourceViewModel FilePathA
         {
             get
             {
@@ -319,7 +334,7 @@
         /// <summary>
         /// Gets the path of file B in the comparison.
         /// </summary>
-        public SuggestSourceViewModel FilePathB
+        public ISuggestSourceViewModel FilePathB
         {
             get
             {
@@ -351,6 +366,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets a command to scroll the view to a certain line within the available lines.
+        /// </summary>
         public ICommand GotoLineCommand
         {
             get
@@ -370,6 +388,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets/sets the current inline dialog mode.
+        /// </summary>
         public InlineDialogMode InlineDialog
         {
             get { return _InlineDialog; }
@@ -383,7 +404,10 @@
             }
         }
 
-        public GotoLineControllerViewModel GotoLineController
+        /// <summary>
+        /// Gets view model that drives the Goto Line inline dialog view.
+        /// </summary>
+        public IGotoLineControllerViewModel GotoLineController
         {
             get
             {
@@ -487,17 +511,17 @@
 
                 _LastLineToSync = (int)param;
 
-                DiffSideViewModel nonActView;
-                DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
-                DiffViewPosition gotoPos = new DiffViewPosition((int)param, 0);
+                IDiffSideViewModel nonActView;
+                IDiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+                var gotoPos = new DiffViewPosition((int)param, 0);
                 DiffCtrl.ScrollToLine(gotoPos, nonActView, activeView, false);
             }
         }
 
         private bool OverviewValueChangedCanExecute()
         {
-            DiffSideViewModel nonActView;
-            DiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
+            IDiffSideViewModel nonActView;
+            IDiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
             if (activeView == null)
                 return false;
 

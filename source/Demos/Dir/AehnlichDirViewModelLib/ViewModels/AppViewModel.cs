@@ -6,6 +6,7 @@
     using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
     using AehnlichLib.Progress;
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Threading;
@@ -126,7 +127,11 @@
                         else
                             return;
 
-                        if (leftDir == null || rightDir == null)
+                        leftDir = PathUtil.GetPathIfDirExists(leftDir);
+                        rightDir = PathUtil.GetPathIfDirExists(rightDir);
+
+                        if (string.IsNullOrEmpty(leftDir) == true ||
+                            string.IsNullOrEmpty(rightDir) == true)
                             return;
 
                         CompareFilesCommand_Executed(leftDir, rightDir, _DiffFileModeSelected.ModeKey);
@@ -402,24 +407,18 @@
         {
             try
             {
+                leftDir = PathUtil.GetPathIfDirExists(leftDir);
+                rightDir = PathUtil.GetPathIfDirExists(rightDir);
+
                 if (string.IsNullOrEmpty(leftDir) == true || string.IsNullOrEmpty(rightDir) == true)
                     return false;
 
-                if (leftDir.Length < 2 || rightDir.Length < 2)
-                    return false;
-
-                var leftDirInfo = new DirectoryInfo(leftDir);
-                var rightDirInfo = new DirectoryInfo(rightDir);
-
-                if (leftDirInfo.Exists == false || rightDirInfo.Exists == false)
-                    return false;
+                return true;
             }
             catch
             {
                 return false;
             }
-
-            return true;
         }
         #endregion Compare Files Command
 

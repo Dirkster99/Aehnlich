@@ -3,10 +3,13 @@
     using System.Windows.Controls;
 
     /// <summary>
-    /// Interaction logic for FindControl.xaml
+    /// Interaction logic for GotoControl.xaml
     /// </summary>
     public partial class GotoControl : UserControl
     {
+        /// <summary>
+        /// Class constructor
+        /// </summary>
         public GotoControl()
         {
             InitializeComponent();

@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\AehnlichViewModelsLib.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\AehnlichViewModelsLib.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
@@ -63,7 +68,9 @@
     <Compile Include="Enums\CompareType.cs" />
     <Compile Include="Enums\DiffType.cs" />
     <Compile Include="Events\CaretPositionChangedEvent.cs" />
+    <Compile Include="Interfaces\IDiffDocViewModel.cs" />
     <Compile Include="Interfaces\IDiffLines.cs" />
+    <Compile Include="Interfaces\IDiffLineViewModel.cs" />
     <Compile Include="Models\FileSystemCommands.cs" />
     <Compile Include="Enums\InlineDialogMode.cs" />
     <Compile Include="Models\ShowDiffArgs.cs" />
@@ -73,13 +80,19 @@
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
     <Compile Include="ViewModels\Base\ViewModelBase.cs" />
     <Compile Include="ViewModels\DiffDocViewModel.cs" />
+    <Compile Include="ViewModels\Factory.cs" />
     <Compile Include="ViewModels\GotoLineControllerViewModel.cs" />
+    <Compile Include="Interfaces\IGotoLineControllerViewModel.cs" />
+    <Compile Include="Interfaces\IDiffViewPosition.cs" />
+    <Compile Include="Interfaces\IDiffSideViewModel.cs" />
+    <Compile Include="Interfaces\IAppViewModel.cs" />
     <Compile Include="ViewModels\LineInfo\DiffLineViewModel.cs" />
     <Compile Include="ViewModels\LineInfo\DiffViewLine.cs" />
     <Compile Include="ViewModels\DiffSideViewModel.cs" />
     <Compile Include="ViewModels\DiffViewPosition.cs" />
     <Compile Include="ViewModels\LineInfo\LinesFactory.cs" />
     <Compile Include="ViewModels\ObservableRangeCollection.cs" />
+    <Compile Include="ViewModels\Suggest\ISuggestSourceViewModel.cs" />
     <Compile Include="ViewModels\Suggest\SuggestQueryResultModel.cs" />
     <Compile Include="ViewModels\Suggest\SuggestSourceViewModel.cs" />
     <Compile Include="Views\GotoControl.xaml.cs">

@@ -11,31 +11,59 @@
     public static class OnEnterToCommandBehavior
     {
         #region fields
+        /// <summary>
+        /// Implements the backing store of the CommandParameter
+        /// attached dependency property.
+        /// </summary>
         public static readonly DependencyProperty CommandParameterProperty =
             DependencyProperty.RegisterAttached("CommandParameter", typeof(object),
                 typeof(OnEnterToCommandBehavior), new PropertyMetadata(null));
 
+        /// <summary>
+        /// Implements the backing store of the Command
+        /// attached dependency property.
+        /// </summary>
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.RegisterAttached("Command", typeof(ICommand),
                 typeof(OnEnterToCommandBehavior), new PropertyMetadata(null, OnCommandChanged));
         #endregion fields
 
         #region methods
+        /// <summary>
+        /// Gets the command of the attached command property.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static ICommand GetCommand(DependencyObject obj)
         {
             return (ICommand)obj.GetValue(CommandProperty);
         }
 
+        /// <summary>
+        /// Sets the command of the attached command property.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="value"></param>
         public static void SetCommand(DependencyObject obj, ICommand value)
         {
             obj.SetValue(CommandProperty, value);
         }
 
+        /// <summary>
+        /// Gets the command parameter of the attached command parameter property.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static object GetCommandParameter(DependencyObject obj)
         {
             return (object)obj.GetValue(CommandParameterProperty);
         }
 
+        /// <summary>
+        /// Sets the command parameter of the attached command parameter property.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="value"></param>
         public static void SetCommandParameter(DependencyObject obj, object value)
         {
             obj.SetValue(CommandParameterProperty, value);

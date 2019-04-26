@@ -9,7 +9,7 @@
     /// <summary>
     /// Implements a viewmodel that drives the functionality for a Goto Line dialog.
     /// </summary>
-    public class GotoLineControllerViewModel : Base.ViewModelBase
+    internal class GotoLineControllerViewModel : Base.ViewModelBase, IGotoLineControllerViewModel
     {
         #region fields
         private uint _MaxLineValue;
@@ -30,7 +30,7 @@
         /// <param name="closeFunc"></param>
         public GotoLineControllerViewModel(Action<uint> gotoLine,
                                            Func<InlineDialogMode, InlineDialogMode> closeFunc)
-            : this(gotoLine)                      
+            : this(gotoLine)
         {
             _closeFunc = closeFunc;
         }
@@ -157,13 +157,13 @@
                             }
                         }
 
-                    },(p) =>
-                    {
-                        if (MinLineValue < MaxLineValue)
-                            return true;
+                    }, (p) =>
+                     {
+                         if (MinLineValue < MaxLineValue)
+                             return true;
 
-                        return false;
-                    });
+                         return false;
+                     });
                 }
 
                 return _GotoThisLineCommand;

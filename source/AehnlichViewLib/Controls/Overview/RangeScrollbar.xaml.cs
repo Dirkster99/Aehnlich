@@ -236,15 +236,13 @@
                 return;
 
             IInputElement inputElement = Mouse.DirectlyOver;
-            Rectangle rect = inputElement as Rectangle;
 
             // Lets keep the thumb draggable by ignoring thumb mouse clicks here
             var thumbMousover = _PART_Track.Thumb.InputHitTest(e.GetPosition(_PART_Track.Thumb));
             if (thumbMousover != null)
                 return;
 
-            // Find the percentage value where the mouse click occured on the track
-            double trackHeight = _PART_Track.ActualHeight;
+            // Find the percentage value where the mouse click occurred on the track
             Point p = e.GetPosition(_PART_Track);
 
             // Filter out clicks on repeat button (or other elements below or above Track)

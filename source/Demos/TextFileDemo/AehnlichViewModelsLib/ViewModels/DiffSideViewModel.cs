@@ -15,7 +15,12 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class DiffSideViewModel : Base.ViewModelBase, ILineDiffProvider, IDisposable
+    /// <summary>
+    /// Implements the viewmodel that controls one side of a text diff view with two sides
+    /// (left view A and right view B) where both views are synchronized towards the displayed
+    /// line numbers and content being highlighted to visual differences (add, remove, change, no chaneg).
+    /// </summary>
+    internal class DiffSideViewModel : Base.ViewModelBase, IDiffSideViewModel
     {
         #region fields
         private ChangeDiffOptions _ChangeDiffOptions;
@@ -33,7 +38,7 @@
         private OneTaskLimitedScheduler _oneTaskScheduler;
 
         #region DiffLines
-        private readonly ObservableRangeCollection<DiffLineViewModel> _DocLineDiffs;
+        private readonly ObservableRangeCollection<IDiffLineViewModel> _DocLineDiffs;
 
         private int[] _diffEndLines = null;
         private int[] _diffStartLines = null;
@@ -54,8 +59,8 @@
         /// </summary>
         public DiffSideViewModel()
         {
-            _position = new DiffViewPosition(0,0);
-            _DocLineDiffs = new ObservableRangeCollection<DiffLineViewModel>();
+            _position = new DiffViewPosition(0, 0);
+            _DocLineDiffs = new ObservableRangeCollection<IDiffLineViewModel>();
             _Line = 0;
             _Column = 0;
 
@@ -66,6 +71,10 @@
         }
         #endregion ctors
 
+        #region Events
+        /// <summary>
+        /// Event is raised when the cursor position in the attached view is changed.
+        /// </summary>
         public event EventHandler<CaretPositionChangedEvent> CaretPositionChanged;
 
         /// <summary>
@@ -75,8 +84,13 @@
         /// <seealso cref="ILineDiffProvider"/>
         /// </summary>
         public event EventHandler<DiffLineInfoChangedEvent> DiffLineInfoChanged;
+        #endregion Events
 
         #region properties
+        /// <summary>
+        /// Gets/sets the <see cref="TextDocument"/> viewmodel of the attached AvalonEdit
+        /// text editor control.
+        /// </summary>
         public TextDocument Document
         {
             get { return this._document; }
@@ -130,6 +144,9 @@
         }
 
         #region Caret Position
+        /// <summary>
+        /// Gets/sets the column of a display position.
+        /// </summary>
         public int Column
         {
             get
@@ -150,6 +167,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets/sets the line of a display position.
+        /// </summary>
         public int Line
         {
             get
@@ -171,6 +191,10 @@
         }
         #endregion Caret Position
 
+        /// <summary>
+        /// Gets/sets whether the currently shown text in the textedior has been changed
+        /// without saving or not.
+        /// </summary>
         public bool IsDirty
         {
             get { return _isDirty; }
@@ -184,6 +208,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets Text/binary specific diff options (eg. ignore white space) which are applied
+        /// to compute the text differences shown in the view.
+        /// </summary>
         public ChangeDiffOptions ChangeDiffOptions
         {
             get
@@ -201,21 +229,28 @@
             }
         }
 
+        /// <summary>
+        /// Gets the name of the file from which the content in this viewmodel was red.
+        /// </summary>
         public string FileName
         {
-            get { return this._FileName; }
-            set
+            get { return _FileName; }
+            protected set
             {
-                if (this._FileName != value)
+                if (_FileName != value)
                 {
-                    this._FileName = value;
+                    _FileName = value;
                     NotifyPropertyChanged(() => FileName);
                 }
             }
         }
 
         #region DiffLines
-        public IReadOnlyList<DiffLineViewModel> DocLineDiffs
+        /// <summary>
+        /// Gets a list of line information towards their difference when
+        /// compared to the other document.
+        /// </summary>
+        public IReadOnlyList<IDiffLineViewModel> DocLineDiffs
         {
             get
             {
@@ -223,13 +258,32 @@
             }
         }
 
-        public int LineCount => DocLineDiffs.Count;
+        /// <summary>
+        /// Gets the number of line items available in the <see cref="DocLineDiffs"/> property.
+        /// </summary>
+        public int LineCount { get { return DocLineDiffs.Count; } }
 
-        public int[] DiffStartLines => this._diffStartLines;
-        public int[] DiffEndLines => this._diffEndLines;
-        public int MaxLineNumber => this._maxImaginaryLineNumber;
+        /// <summary>
+        /// Gets the line where a diff identified by an index i starts.
+        /// (eg. the diff starts i=0 start at line 4 then we have DiffStartLines[0] == 4 )
+        /// see also <see cref="DiffEndLines"/>
+        /// </summary>
+        public int[] DiffStartLines { get { return _diffStartLines; } }
+
+        /// <summary>
+        /// Gets the line where a diff identified by an index i ends.
+        /// (eg. the diff starts i=0 start at line 4 then we have DiffEndLines[0] == 4 )
+        /// see also <see cref="DiffStartLines"/>
+        /// </summary>
+        public int[] DiffEndLines { get { return _diffEndLines; } }
         #endregion DiffLines
 
+        /// <summary>
+        /// Gets a maximum imaginary line number which incorporates not only real text lines
+        /// but also imaginary line that where inserted on either side of the comparison
+        /// view to sync both sides into a consistent display.
+        /// </summary>
+        public int MaxLineNumber { get { return _maxImaginaryLineNumber; } }
         #endregion properties
 
         #region methods
@@ -281,86 +335,6 @@
                 }
             },
             uiScheduler);
-        }
-
-        /// <summary>
-        /// Used to setup the ViewA/ViewB view that shows the left and right text views
-        /// with the textual content and imaginary lines.
-        /// each other.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="lines"></param>
-        /// <param name="text"></param>
-        internal void SetData(string filename,
-                              IDiffLines lines, string text, int spacesPerTab)
-        {
-            this.FileName = filename;
-            _position.SetPosition(0, 0);
-            _spacesPerTab = spacesPerTab;
-            Line = 0;
-            Column = 0;
-
-            if (lines != null)
-            {
-                _diffEndLines = lines.DiffEndLines;
-                _diffStartLines = lines.DiffStartLines;
-                _maxImaginaryLineNumber = lines.MaxImaginaryLineNumber;
-
-                _DocLineDiffs.ReplaceRange(lines.DocLineDiffs);
-            }
-            else
-            {
-                _diffEndLines = null;
-                _diffStartLines = null;
-                _maxImaginaryLineNumber = 1;
-                _DocLineDiffs.Clear();
-            }
-
-            Document = new TextDocument(text);
-            NotifyPropertyChanged(() => Document);
-        }
-
-        /// <summary>
-        /// Used to setup the ViewLineDiff view that shows only 2 lines over each other
-        /// representing the currently active line from the left/right side views under
-        /// each other.
-        /// </summary>
-        /// <param name="lineOneVM"></param>
-        /// <param name="lineTwoVM"></param>
-        internal void SetData(DiffLineViewModel lineOneVM,
-                              DiffLineViewModel lineTwoVM,
-                              int spacesPerTab)
-        {
-            _spacesPerTab = spacesPerTab;
-            var documentLineDiffs = new List<DiffLineViewModel>();
-
-            string text = string.Empty;
-
-            if (lineOneVM != null && lineOneVM.LineEditScriptSegmentsIsDirty == true)
-                lineOneVM.GetChangeEditScript(this.ChangeDiffOptions, spacesPerTab);
-
-            if (lineTwoVM != null && lineTwoVM.LineEditScriptSegmentsIsDirty == true)
-                lineTwoVM.GetChangeEditScript(this.ChangeDiffOptions, spacesPerTab);
-
-            if (lineOneVM != null && lineTwoVM != null)
-            {
-                documentLineDiffs.Add(lineOneVM);
-                text += lineOneVM.Text + '\n';
-
-                documentLineDiffs.Add(lineTwoVM);
-                text += lineTwoVM.Text + "\n";
-            }
-
-            text = text.Replace("\t", "    ");
-
-            // Update LineInfo viewmodels
-            _DocLineDiffs.Clear();
-            _DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
-            NotifyPropertyChanged(() => DocLineDiffs);
-
-            // Update text document
-            Document = new TextDocument(text);
-            NotifyPropertyChanged(() => Document);
         }
 
         #region FirstDiff NextDiff PrevDiff LastDiff
@@ -429,7 +403,11 @@
             return result;
         }
 
-        internal void SetPosition(DiffViewPosition gotoPos)
+        /// <summary>
+        /// (re)Sets the current caret position (column and line) in the text editor view.
+        /// </summary>
+        /// <param name="gotoPos"></param>
+        public void SetPosition(IDiffViewPosition gotoPos)
         {
             _position.SetPosition(gotoPos.Line, gotoPos.Column);
         }
@@ -438,16 +416,16 @@
         /// Gets the position of the first difference in the text.
         /// </summary>
         /// <returns></returns>
-        internal DiffViewPosition GetFirstDiffPosition()
+        public IDiffViewPosition GetFirstDiffPosition()
         {
-           return new DiffViewPosition(DiffStartLines[0], _position.Column);
+            return new DiffViewPosition(DiffStartLines[0], _position.Column);
         }
 
         /// <summary>
         /// Gets the position of the next difference in the text.
         /// </summary>
         /// <returns></returns>
-        internal DiffViewPosition GetNextDiffPosition()
+        public IDiffViewPosition GetNextDiffPosition()
         {
             int[] starts = DiffStartLines;
             int numStarts = starts.Length;
@@ -468,7 +446,7 @@
         /// Gets the position of the previous difference in the text.
         /// </summary>
         /// <returns></returns>
-        internal DiffViewPosition GetPrevDiffPosition()
+        public IDiffViewPosition GetPrevDiffPosition()
         {
             int[] ends = DiffEndLines;
             int numEnds = ends.Length;
@@ -490,7 +468,7 @@
         /// Gets the position of the last difference in the text.
         /// </summary>
         /// <returns></returns>
-        internal DiffViewPosition GetLastDiffPosition()
+        public IDiffViewPosition GetLastDiffPosition()
         {
             int[] starts = DiffStartLines;
 
@@ -504,7 +482,7 @@
         /// </summary>
         /// <param name="n"></param>
         /// <param name="positionCursor"></param>
-        internal void ScrollToLine(int n, bool positionCursor)
+        public void ScrollToLine(int n, bool positionCursor)
         {
             DocumentLine line = Document.GetLineByNumber(n);
 
@@ -515,11 +493,93 @@
         }
 
         /// <summary>
+        /// Used to setup the ViewA/ViewB view that shows the left and right text views
+        /// with the textual content and imaginary lines.
+        /// each other.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="lines"></param>
+        /// <param name="text"></param>
+        /// <param name="spacesPerTab"></param>
+        internal void SetData(string filename,
+                              IDiffLines lines, string text, int spacesPerTab)
+        {
+            this.FileName = filename;
+            _position.SetPosition(0, 0);
+            _spacesPerTab = spacesPerTab;
+            Line = 0;
+            Column = 0;
+
+            if (lines != null)
+            {
+                _diffEndLines = lines.DiffEndLines;
+                _diffStartLines = lines.DiffStartLines;
+                _maxImaginaryLineNumber = lines.MaxImaginaryLineNumber;
+
+                _DocLineDiffs.ReplaceRange(lines.DocLineDiffs);
+            }
+            else
+            {
+                _diffEndLines = null;
+                _diffStartLines = null;
+                _maxImaginaryLineNumber = 1;
+                _DocLineDiffs.Clear();
+            }
+
+            Document = new TextDocument(text);
+            NotifyPropertyChanged(() => Document);
+        }
+
+        /// <summary>
+        /// Used to setup the ViewLineDiff view that shows only 2 lines over each other
+        /// representing the currently active line from the left/right side views under
+        /// each other.
+        /// </summary>
+        /// <param name="lineOneVM"></param>
+        /// <param name="lineTwoVM"></param>
+        /// <param name="spacesPerTab"></param>
+        internal void SetData(IDiffLineViewModel lineOneVM,
+                              IDiffLineViewModel lineTwoVM,
+                              int spacesPerTab)
+        {
+            _spacesPerTab = spacesPerTab;
+            var documentLineDiffs = new List<IDiffLineViewModel>();
+
+            string text = string.Empty;
+
+            if (lineOneVM != null && lineOneVM.LineEditScriptSegmentsIsDirty == true)
+                lineOneVM.GetChangeEditScript(this.ChangeDiffOptions, spacesPerTab);
+
+            if (lineTwoVM != null && lineTwoVM.LineEditScriptSegmentsIsDirty == true)
+                lineTwoVM.GetChangeEditScript(this.ChangeDiffOptions, spacesPerTab);
+
+            if (lineOneVM != null && lineTwoVM != null)
+            {
+                documentLineDiffs.Add(lineOneVM);
+                text += lineOneVM.Text + '\n';
+
+                documentLineDiffs.Add(lineTwoVM);
+                text += lineTwoVM.Text + "\n";
+            }
+
+            text = text.Replace("\t", "    ");
+
+            // Update LineInfo viewmodels
+            _DocLineDiffs.Clear();
+            _DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
+            NotifyPropertyChanged(() => DocLineDiffs);
+
+            // Update text document
+            Document = new TextDocument(text);
+            NotifyPropertyChanged(() => Document);
+        }
+
+        /// <summary>
         /// Gets the n-th line of the diff stored in this viewmodel and returns it.
         /// </summary>
         /// <param name="lineN"></param>
         /// <returns></returns>
-        internal DiffLineViewModel GetLine(int lineN)
+        internal IDiffLineViewModel GetLine(int lineN)
         {
             if (lineN >= LineCount || LineCount == 0)
                 return null;
@@ -527,20 +587,20 @@
             return DocLineDiffs[lineN];
         }
 
-        internal DiffLineViewModel GotoTextLine(int thisLine)
+        internal IDiffLineViewModel GotoTextLine(int thisLine)
         {
             DocumentLine line = Document.GetLineByNumber(thisLine);
 
             TxtControl.SelectText(line.Offset, 0);  // Select text with length 0 and scroll to where
             TxtControl.ScrollToLine(thisLine);     // we are supposed to be at
 
-            return _DocLineDiffs[thisLine-1];
+            return _DocLineDiffs[thisLine - 1];
         }
 
         internal int FindThisTextLine(int thisLine)
         {
             // Translate given line number into real line number (adding virtual lines if any)
-            int idx = Math.Min(thisLine, _DocLineDiffs.Count-1);
+            int idx = Math.Min(thisLine, _DocLineDiffs.Count - 1);
             if (idx < 0)
                 idx = 0;
 

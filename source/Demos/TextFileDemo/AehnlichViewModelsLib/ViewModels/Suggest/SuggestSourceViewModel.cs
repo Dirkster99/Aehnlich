@@ -13,7 +13,7 @@
     /// Defines a suggestion object to generate suggestions
     /// based on sub entries of specified string.
     /// </summary>
-    public class SuggestSourceViewModel : Base.ViewModelBase, IDisposable
+    internal class SuggestSourceViewModel : Base.ViewModelBase, ISuggestSourceViewModel
     {
         #region fields
         private readonly Dictionary<string, CancellationTokenSource> _Queue;

@@ -11,7 +11,7 @@
     using System.Windows.Media;
 
     /// <summary>
-    /// Implements a Text Diff control with syncronized left and rights view.
+    /// Implements a Text Diff control with synchronized left and rights view.
     /// </summary>
     [TemplatePart(Name = PART_LeftDiffView, Type = typeof(DiffView))]
     [TemplatePart(Name = PART_RightDiffView, Type = typeof(DiffView))]
@@ -74,6 +74,9 @@
         #endregion fields
 
         #region ctors
+        /// <summary>
+        /// Static class constructor
+        /// </summary>
         static DiffControl()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DiffControl),
@@ -177,8 +180,6 @@
                 scrollToSync = _rightScrollViewer;
                 sourceToSync = _PART_RightDiffView;
             }
-
-            var src_scrollToSync = sender as ScrollViewer;  // Sync scrollviewers on both side of DiffControl
 
             scrollToSync.ScrollToVerticalOffset(e.VerticalOffset);
             scrollToSync.ScrollToHorizontalOffset(e.HorizontalOffset);

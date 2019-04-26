@@ -189,31 +189,31 @@
         #endregion Column A B GridSplitter Synchronization
 
         #region SelectedItems
-        public INotifyCollectionChanged SelectedItemsSourceA
-        {
-            get { return (INotifyCollectionChanged)GetValue(SelectedItemsSourceAProperty); }
-            set { SetValue(SelectedItemsSourceAProperty, value); }
-        }
+        // Use each source list's hashcode as the key so that we don't hold on
+        // to any references in case the DataGrid gets disposed without telling
+        // to remove the source list from our registry.
+        private readonly Dictionary<int, DataGridsAndInitiatedSelectionChange> selectedItemsSources;
 
         public static readonly DependencyProperty SelectedItemsSourceAProperty =
             DependencyProperty.Register("SelectedItemsSourceA",
                 typeof(INotifyCollectionChanged),
                 typeof(DiffDirView), new PropertyMetadata(null, SelectedItemsSourceAChanged));
 
+        public static readonly DependencyProperty SelectedItemsSourceBProperty =
+            DependencyProperty.Register("SelectedItemsSourceB", typeof(INotifyCollectionChanged),
+                typeof(DiffDirView), new PropertyMetadata(null, SelectedItemsSourceBChanged));
+
+        public INotifyCollectionChanged SelectedItemsSourceA
+        {
+            get { return (INotifyCollectionChanged)GetValue(SelectedItemsSourceAProperty); }
+            set { SetValue(SelectedItemsSourceAProperty, value); }
+        }
+
         public INotifyCollectionChanged SelectedItemsSourceB
         {
             get { return (INotifyCollectionChanged)GetValue(SelectedItemsSourceBProperty); }
             set { SetValue(SelectedItemsSourceBProperty, value); }
         }
-
-        public static readonly DependencyProperty SelectedItemsSourceBProperty =
-            DependencyProperty.Register("SelectedItemsSourceB", typeof(INotifyCollectionChanged),
-                typeof(DiffDirView), new PropertyMetadata(null, SelectedItemsSourceBChanged));
-
-        // Use each source list's hashcode as the key so that we don't hold on
-        // to any references in case the DataGrid gets disposed without telling
-        // to remove the source list from our registry.
-        private Dictionary<int, DataGridsAndInitiatedSelectionChange> selectedItemsSources = new Dictionary<int, DataGridsAndInitiatedSelectionChange>();
 
         private static void SelectedItemsSourceAChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -409,7 +409,7 @@
             // If the source list initiated the changes then don't pass the DataGrid's changes back down to the source list
             if (!this.selectedItemsSources[selectedItemsSource.GetHashCode()].InitiatedSelectionChange)
             {
-                //DataGridMultipleSelection.SetInitiatedSelectionChange(dataGrid, true);
+                ////DataGridMultipleSelection.SetInitiatedSelectionChange(dataGrid, true);
 
                 foreach (object removedItem in selectionChangedArgs.RemovedItems)
                 {
@@ -422,10 +422,9 @@
                         selectedItemsSource.Add(addedItem);
                 }
 
-                //DataGridMultipleSelection.SetInitiatedSelectionChange(dataGrid, false);
+                ////DataGridMultipleSelection.SetInitiatedSelectionChange(dataGrid, false);
             }
         }
-
 
         /// <summary>
         /// Compare a generic collection and determine whether its item-type matches
@@ -471,6 +470,14 @@
             DefaultStyleKeyProperty.OverrideMetadata(
                 typeof(DiffDirView),
                 new FrameworkPropertyMetadata(typeof(DiffDirView)));
+        }
+
+        /// <summary>
+        /// Standard class constructor
+        /// </summary>
+        public DiffDirView()
+        {
+            selectedItemsSources = new Dictionary<int, DataGridsAndInitiatedSelectionChange>();
         }
         #endregion ctors
 
@@ -811,8 +818,6 @@
                 scrollToSync = _leftGridScrollViewer;
             else
                 scrollToSync = _rightGridScrollViewer;
-
-            var src_scrollToSync = sender as ScrollViewer;  // Sync scrollviewers on both side of DiffControl
 
             scrollToSync.ScrollToVerticalOffset(e.VerticalOffset);
             scrollToSync.ScrollToHorizontalOffset(e.HorizontalOffset);

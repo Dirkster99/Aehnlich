@@ -9,7 +9,7 @@
         xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         xmlns:conv="clr-namespace:AehnlichViewModelsLib.Converters;assembly=AehnlichViewModelsLib"
         xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
-        xmlns:vms="clr-namespace:AehnlichViewModelsLib.ViewModels;assembly=AehnlichViewModelsLib"
+        xmlns:vms="clr-namespace:AehnlichViewModelsLib.Interfaces;assembly=AehnlichViewModelsLib"
         xmlns:range="clr-namespace:AehnlichViewLib.Controls.Overview;assembly=AehnlichViewLib"
         xmlns:behav="clr-namespace:AehnlichViewModelsLib.Behaviors;assembly=AehnlichViewModelsLib"
                         
@@ -336,7 +336,7 @@
                                   IsRepeatButtonVisible="False"
                                 >
                 <range:RangeScrollbar.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vms:DiffLineViewModel}">
+                    <DataTemplate DataType="{x:Type vms:IDiffLineViewModel}">
                         <Rectangle Name="elp"
                                    Fill="{Binding Context,Converter={StaticResource DiffContextToColorPropConverter}}"
                                    Width="{Binding ElementName=OverviewCtrl,Path=ActualWidth}" Height="1"
@@ -371,13 +371,20 @@
                         TextChangedCommand="{Binding FilePathA.SuggestTextChangedCommand}"
                         ItemsSource="{Binding FilePathA.ListQueryResult}"
                         behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
+                        
+                        ToolTipService.IsEnabled="True"
+                        ToolTip="{Binding FilePathA.FilePath, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                     />
                     
                     <GridSplitter
                         Grid.Column="1" Grid.Row="0"
                         HorizontalAlignment="Stretch"
                         Background="Transparent"
-                        Width="6" />
+                        Width="6"
+                        
+                        ToolTipService.IsEnabled="True"
+                        ToolTip="{Binding DiffCtrl.ToolTipText, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        />
 
                     <sc:SuggestBox
                         x:Name="PART_RightFileNameTextBox" Grid.Column="2" Grid.Row="0" Margin="0,3"
@@ -387,6 +394,9 @@
                         TextChangedCommand="{Binding FilePathB.SuggestTextChangedCommand}"
                         ItemsSource="{Binding FilePathB.ListQueryResult}"
                         behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
+                        
+                        ToolTipService.IsEnabled="True"
+                        ToolTip="{Binding FilePathB.FilePath, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                     />
                 </Grid>
 
@@ -401,10 +411,6 @@
                                   WidthColumnB="{Binding ElementName=ColumnB,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                   
                                   Margin="3,0,3,0"/>
-                <!--
-                    NextLeftTargetLocation="{Binding CompareFilesCommand}"
-                    NextRightTargetLocation="{Binding CompareFilesCommand}"
-                -->
             </Grid>
         </Grid>
 

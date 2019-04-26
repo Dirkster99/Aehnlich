@@ -30,14 +30,14 @@
             string path = Uri.UnescapeDataString(uri.Path);
             var fspath = System.IO.Path.GetDirectoryName(path);
 
-            //var appVM = new AppViewModel(fspath + @"\DemoTestFiles\ClassTemplate.txt",
-            //                             fspath + @"\DemoTestFiles\Empty.txt");
+            //var appVM = Factory.ConstructAppViewModel(fspath + @"\DemoTestFiles\ClassTemplate.txt",
+            //                                          fspath + @"\DemoTestFiles\Empty.txt");
 
-            var appVM = new AppViewModel(fspath + @"\DemoTestFiles\MyersDiff.txt",
-                                         fspath + @"\DemoTestFiles\MyersDiff_V1.txt");
+            var appVM = Factory.ConstructAppViewModel(fspath + @"\DemoTestFiles\MyersDiff.txt",
+                                                      fspath + @"\DemoTestFiles\MyersDiff_V1.txt");
 
-            //var appVM = new AppViewModel(fspath + @"\DemoTestFiles\ClassTemplate.txt",
-            //                             fspath + @"\DemoTestFiles\ClassTemplate1.txt");
+            //var appVM = Factory.ConstructAppViewModel(fspath + @"\DemoTestFiles\ClassTemplate.txt",
+            //                                          fspath + @"\DemoTestFiles\ClassTemplate1.txt");
 
             this.DataContext = appVM;
         }

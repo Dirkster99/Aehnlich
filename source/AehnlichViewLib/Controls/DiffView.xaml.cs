@@ -138,7 +138,7 @@
 
         public static readonly DependencyProperty EditorCurrentLineBorderThicknessProperty =
             DependencyProperty.Register("EditorCurrentLineBorderThickness", typeof(double),
-                typeof(DiffView), new PropertyMetadata((double)2.0d));
+                typeof(DiffView), new PropertyMetadata(2.0d));
         #endregion EditorCurrentLine Highlighting Colors
 
         private INotifyCollectionChanged _observeableDiffContext;
@@ -155,14 +155,6 @@
             DefaultStyleKeyProperty.OverrideMetadata(
                 typeof(DiffView),
                 new FrameworkPropertyMetadata(typeof(DiffView)));
-        }
-
-        /// <summary>
-        /// Class constructor
-        /// </summary>
-        public DiffView()
-            : base()
-        {
         }
         #endregion ctors
 
@@ -255,7 +247,7 @@
             get { return (SolidColorBrush)GetValue(ColorBackgroundImaginaryLineAddedProperty); }
             set { SetValue(ColorBackgroundImaginaryLineAddedProperty, value); }
         }
-       
+
         #endregion Diff Color Definitions
 
         #region EditorScrollOffsetXY

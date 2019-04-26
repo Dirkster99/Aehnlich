@@ -9,12 +9,14 @@
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
+    /// <summary>
+    /// Implements a viewmodel that defines one line diff, its type of diff, and text content.
+    /// </summary>
     [DebuggerDisplay("Number = {Number}, EditType = {EditType}, Text = {Text}, FromA = {FromA}")]
-    internal sealed class DiffViewLine
+    public sealed class DiffViewLine
     {
         #region Public Fields
-
-        public static readonly DiffViewLine Empty = new DiffViewLine();
+        ////public static readonly DiffViewLine Empty = new DiffViewLine();
 
         #endregion
 
@@ -69,14 +71,14 @@
         /// - to match both compared texts) or not.
         /// </summary>
         [SuppressMessage("", "SA1101", Justification = "The EditType reference is to the type not to this.EditType.")]
-        public bool Edited => this._editType != EditType.None;
+        public bool Edited { get { return _editType != EditType.None; } }
 
         /// <summary>
         /// Gets the type of edit operation (delete, insert, change, none)
         /// to signal how this line compares to its equivalent line linked
         /// in the <see cref="Counterpart"/> property.
         /// </summary>
-        public EditType EditType => this._editType;
+        public EditType EditType { get { return _editType; } }
 
         /// <summary>
         /// Gets whether this line represents the reference view
@@ -93,13 +95,13 @@
         /// 
         /// Therefore, not all lines have an imaginary line number (this property is nullable).
         /// </summary>
-        public int? Number => this.number;
+        public int? Number { get { return this.number; } }
 
         /// <summary>
         /// Gets the original text that was used when comparing this line to its
         /// <see cref="Counterpart"/> line.
         /// </summary>
-        public string Text => this.text;
+        public string Text { get { return this.text; } }
         #endregion
 
         #region Public Methods

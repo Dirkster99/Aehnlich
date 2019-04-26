@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Text;
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
@@ -330,16 +331,16 @@
                             var list = p as IEnumerable<DirEntryViewModel>;
                             if (list != null)
                             {
-                                string scopy = string.Empty;
+                                var scopy = new StringBuilder(); ;
                                 foreach (var item in list)
                                 {
                                     if (item.ItemPathA != null)
                                     {
-                                        scopy += item.ItemPathA + '\n';
+                                        scopy.Append(item.ItemPathA + '\n');
                                     }
                                 }
 
-                                FileSystemCommands.CopyString(scopy);
+                                FileSystemCommands.CopyString(scopy.ToString());
                             }
                         }
 
