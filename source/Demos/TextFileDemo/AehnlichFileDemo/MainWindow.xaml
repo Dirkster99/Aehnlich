@@ -7,7 +7,8 @@
         xmlns:ctrl="clr-namespace:AehnlichViewLib.Controls;assembly=AehnlichViewLib"
         xmlns:usctrl="clr-namespace:AehnlichViewModelsLib.Views;assembly=AehnlichViewModelsLib"
         xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
-        xmlns:conv="clr-namespace:AehnlichViewModelsLib.Converters;assembly=AehnlichViewModelsLib"
+        xmlns:conv="clr-namespace:AehnlichViewLib.Converters;assembly=AehnlichViewLib"
+        xmlns:conv1="clr-namespace:AehnlichViewModelsLib.Converters;assembly=AehnlichViewModelsLib"
         xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
         xmlns:vms="clr-namespace:AehnlichViewModelsLib.Interfaces;assembly=AehnlichViewModelsLib"
         xmlns:range="clr-namespace:AehnlichViewLib.Controls.Overview;assembly=AehnlichViewLib"
@@ -22,15 +23,20 @@
     
     <Grid Margin="3">
         <Grid.Resources>
-            <conv:MultiParToParConverter x:Key="MultiParToParConverter"/>
+            <conv:BoolToVisibilityPropConverter x:Key="ProgressVisibilityPropConverter"
+                                                FalseValue="Visible"
+                                                TrueValue="Collapsed"
+                                                />
             <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
-            <conv:DiffContextToVisibilityPropConverter x:Key="DiffContextToVisibilityPropConverter"/>
-            <conv:DiffContextToColorPropConverter x:Key="DiffContextToColorPropConverter"
+            <conv:BooleanInvertConverter x:Key="BooleanInvertConverter"/>
+            <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
+            <conv1:DiffContextToVisibilityPropConverter x:Key="DiffContextToVisibilityPropConverter"/>
+            <conv1:DiffContextToColorPropConverter x:Key="DiffContextToColorPropConverter"
                                                   AddedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"
                                                   DeletedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
                                                   ContextValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
                                                   />
-            <conv:InlineDilaogToVisibilityPropConverter x:Key="InlineDilaogToVisibilityPropConverter"/>
+            <conv1:InlineDilaogToVisibilityPropConverter x:Key="InlineDilaogToVisibilityPropConverter"/>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -334,6 +340,7 @@
                                   SmallChange="1.00"
                                   LargeChange="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                   IsRepeatButtonVisible="False"
+                                  Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
                                 >
                 <range:RangeScrollbar.ItemTemplate>
                     <DataTemplate DataType="{x:Type vms:IDiffLineViewModel}">
@@ -370,6 +377,8 @@
                         ValidText="{Binding FilePathA.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                         TextChangedCommand="{Binding FilePathA.SuggestTextChangedCommand}"
                         ItemsSource="{Binding FilePathA.ListQueryResult}"
+                        
+                        IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                         behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
                         
                         ToolTipService.IsEnabled="True"
@@ -393,6 +402,8 @@
                         ValidText="{Binding FilePathB.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                         TextChangedCommand="{Binding FilePathB.SuggestTextChangedCommand}"
                         ItemsSource="{Binding FilePathB.ListQueryResult}"
+                        
+                        IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                         behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
                         
                         ToolTipService.IsEnabled="True"
@@ -400,17 +411,67 @@
                     />
                 </Grid>
 
-                <ctrl:DiffControl Name="DiffCtrl" Grid.Column="0" Grid.Row="1"
-                                  LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                  RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                  ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
-                                  DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                  SetFocus="{Binding FocusControl, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                <Grid Grid.Row="1"
+                      Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityPropConverter}}"
+                      Margin="3"
+                    >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0"
+                          Margin="3"
+                          >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                            Grid.Column="0"
+                            Command="{Binding CancelTextCompareCommand}"
+                            MinHeight="23" MinWidth="85"
+                            Content="Cancel"
+                            VerticalAlignment="Top"/>
+
+                        <Grid Grid.Column="1" Margin="6,3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0"
+                                        DataContext="{Binding DiffProgress}">
+                                <TextBlock Text="We are working on it ... "/>
+                            </StackPanel>
+
+                          <ProgressBar
+                                Grid.Row="1" Height="3" Margin="0,3,0,0"
+                                DataContext="{Binding DiffProgress}"
+                                IsIndeterminate="{Binding IsIndeterminate, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                Value="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                Minimum="{Binding MinimumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                Maximum="{Binding MaximumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Bottom"
+                            />
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <ctrl:DiffControl
+                    Name="DiffCtrl" Grid.Row="1"
+                    LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                    RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                    ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
+                    DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                    SetFocus="{Binding FocusControl, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                   
-                                  WidthColumnA="{Binding ElementName=ColumnA,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                  WidthColumnB="{Binding ElementName=ColumnB,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                  
-                                  Margin="3,0,3,0"/>
+                    WidthColumnA="{Binding ElementName=ColumnA,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    WidthColumnB="{Binding ElementName=ColumnB,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+
+                    Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
+                    Margin="3,0,3,0"/>
             </Grid>
         </Grid>
 
@@ -421,30 +482,32 @@
                 Height="6" />
 
         <!-- Horizontal ViewLineDiff with 2 text diff lines in each line -->
-        <ctrl:DiffView
-            Grid.Column="0" Grid.Row="3" Margin="3"
-            DataContext="{Binding DiffCtrl.ViewLineDiff}"
-            Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
-            ItemsSource="{Binding DocLineDiffs}"
-            ShowLineNumbers="True"
-			IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            IsReadOnly="True"
+        <Grid Grid.Column="0" Grid.Row="3" Margin="3"
+              Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
+              >
+            <ctrl:DiffView
+                DataContext="{Binding DiffCtrl.ViewLineDiff}"
+                Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding DocLineDiffs}"
+                ShowLineNumbers="True"
+			    IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                IsReadOnly="True"
 
-            Options="{Binding ElementName=DiffCtrl,Path=DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                Options="{Binding ElementName=DiffCtrl,Path=DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
             
-            Column="{Binding Column, Mode=OneWayToSource}"
-            Line="{Binding Line, Mode=OneWayToSource}"
-            TextBoxController="{Binding TxtControl}"
-            EditorCurrentLineBackground="{x:Null}"
-            EditorCurrentLineBorderThickness="0"
+                Column="{Binding Column, Mode=OneWayToSource}"
+                Line="{Binding Line, Mode=OneWayToSource}"
+                TextBoxController="{Binding TxtControl}"
+                EditorCurrentLineBackground="{x:Null}"
+                EditorCurrentLineBorderThickness="0"
             
-            Focusable="False"
+                Focusable="False"
 
-            FontFamily="Consolas"
-            FontSize="12pt"
-            HorizontalScrollBarVisibility="Visible"
-            VerticalScrollBarVisibility="Visible"
+                FontFamily="Consolas"
+                FontSize="12pt"
+                HorizontalScrollBarVisibility="Visible"
+                VerticalScrollBarVisibility="Visible"
             />
-
+        </Grid>
     </Grid>
 </Window>

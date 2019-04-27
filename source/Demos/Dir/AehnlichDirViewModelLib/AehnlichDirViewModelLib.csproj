@@ -50,7 +50,6 @@
     <Compile Include="Behaviors\SelectionChangedCommand.cs" />
     <Compile Include="Converters\MultiBoolToVisibilityPropConverter.cs" />
     <Compile Include="Converters\MultiParToParConverter.cs" />
-    <Compile Include="Converters\BooleanInvertConverter.cs" />
     <Compile Include="Enums\DiffViewModeEnum.cs" />
     <Compile Include="Interfaces\IAppViewModel.cs" />
     <Compile Include="Interfaces\IDiffFileModeItemViewModel.cs" />

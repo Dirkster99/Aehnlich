@@ -388,9 +388,10 @@
 
                 case RangeAlignment.End:
                     return size;
-            }
 
-            return 0;
+                default:
+                    return 0;
+            }
         }
 
         protected override Geometry GetLayoutClip(Size layoutSlotSize)

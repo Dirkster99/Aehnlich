@@ -1,6 +1,6 @@
 ﻿namespace AehnlichDirViewModelLib.Interfaces
 {
-    using AehnlichLib.Progress;
+    using AehnlichLib.Interfaces;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows.Input;

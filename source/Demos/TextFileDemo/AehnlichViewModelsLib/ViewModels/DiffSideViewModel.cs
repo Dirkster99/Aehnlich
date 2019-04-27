@@ -14,6 +14,8 @@
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Windows.Data;
+    using System.Windows;
 
     /// <summary>
     /// Implements the viewmodel that controls one side of a text diff view with two sides
@@ -38,6 +40,7 @@
         private OneTaskLimitedScheduler _oneTaskScheduler;
 
         #region DiffLines
+        private readonly object _DocLineDiffsLock;
         private readonly ObservableRangeCollection<IDiffLineViewModel> _DocLineDiffs;
 
         private int[] _diffEndLines = null;
@@ -60,7 +63,11 @@
         public DiffSideViewModel()
         {
             _position = new DiffViewPosition(0, 0);
+
+            _DocLineDiffsLock = new object();
             _DocLineDiffs = new ObservableRangeCollection<IDiffLineViewModel>();
+            BindingOperations.EnableCollectionSynchronization(_DocLineDiffs, _DocLineDiffsLock);
+
             _Line = 0;
             _Column = 0;
 
@@ -516,17 +523,28 @@
                 _diffStartLines = lines.DiffStartLines;
                 _maxImaginaryLineNumber = lines.MaxImaginaryLineNumber;
 
-                _DocLineDiffs.ReplaceRange(lines.DocLineDiffs);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _DocLineDiffs.ReplaceRange(lines.DocLineDiffs);
+                });
             }
             else
             {
                 _diffEndLines = null;
                 _diffStartLines = null;
                 _maxImaginaryLineNumber = 1;
-                _DocLineDiffs.Clear();
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _DocLineDiffs.Clear();
+                });
             }
 
-            Document = new TextDocument(text);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Document = new TextDocument(text);
+            });
+
             NotifyPropertyChanged(() => Document);
         }
 
@@ -564,13 +582,17 @@
 
             text = text.Replace("\t", "    ");
 
-            // Update LineInfo viewmodels
-            _DocLineDiffs.Clear();
-            _DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
-            NotifyPropertyChanged(() => DocLineDiffs);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                // Update LineInfo viewmodels
+                _DocLineDiffs.Clear();
+                _DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
 
-            // Update text document
-            Document = new TextDocument(text);
+                // Update text document
+                Document = new TextDocument(text);
+            });
+
+            NotifyPropertyChanged(() => DocLineDiffs);
             NotifyPropertyChanged(() => Document);
         }
 

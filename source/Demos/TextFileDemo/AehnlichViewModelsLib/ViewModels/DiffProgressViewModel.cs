@@ -1,4 +1,4 @@
-﻿namespace AehnlichDirViewModelLib.ViewModels
+﻿namespace AehnlichViewModelsLib.ViewModels
 {
     using AehnlichLib.Interfaces;
     using System;
@@ -247,12 +247,6 @@
             IsProgressbarVisible = false;
         }
 
-        /// <summary>
-        /// Resets all progress values to their defaults and assigns a new
-        /// <see cref="CancellationToken"/> to signal backend task if cancellation
-        /// was requested.
-        /// </summary>
-        /// <param name="token"></param>
         internal void ResetProgressValues(CancellationToken token)
         {
             _Token = token;

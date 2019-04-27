@@ -1,9 +1,8 @@
-﻿namespace AehnlichViewModelsLib.Models
+﻿namespace AehnlichLib.Models
 {
     using AehnlichLib.Enums;
-    using AehnlichViewModelsLib.Enums;
 
-    internal class ShowDiffArgs
+    public class ShowDiffArgs
     {
         #region Constructors
         /// <summary>

@@ -6,10 +6,8 @@
     using AehnlichLib.Dir;
     using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
-    using AehnlichLib.Progress;
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Input;
@@ -43,10 +41,10 @@
         public AppViewModel()
         {
             _cancelTokenSource = new CancellationTokenSource();
+            _DiffProgress = new DiffProgressViewModel();
 
             _DirDiffDoc = new DirDiffDocViewModel();
             _DiffViewModes = ResetViewModeDefaults();
-            _DiffProgress = new DiffProgressViewModel(CancellationToken.None);
 
             _DiffFileModes = new List<IDiffFileModeItemViewModel>();
             _DiffFileModeSelected = CreateCompareFileModes(_DiffFileModes);
@@ -356,12 +354,11 @@
 
             try
             {
-                var token = _cancelTokenSource.Token;
-                _DiffProgress.ResetProgressValues(token);
+                _DiffProgress.ResetProgressValues(_cancelTokenSource.Token);
 
                 Task.Factory.StartNew<IDiffProgress>(
                         (p) => diff.Execute(args.LeftDir, args.RightDir, _DiffProgress)
-                      , TaskCreationOptions.LongRunning, token)
+                      , TaskCreationOptions.LongRunning, _cancelTokenSource.Token)
                 .ContinueWith((r) =>
                 {
                     bool onError = false;
