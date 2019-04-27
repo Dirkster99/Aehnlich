@@ -1,4 +1,4 @@
-﻿namespace AehnlichLib.Progress
+﻿namespace AehnlichLib.Interfaces
 {
     using System;
     using System.Threading;

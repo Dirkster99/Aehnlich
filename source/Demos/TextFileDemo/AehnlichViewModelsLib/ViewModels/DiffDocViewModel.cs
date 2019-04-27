@@ -9,11 +9,12 @@
     using System.Xml;
     using AehnlichLib.Binaries;
     using AehnlichLib.Dir;
+    using AehnlichLib.Enums;
+    using AehnlichLib.Models;
     using AehnlichLib.Text;
     using AehnlichViewModelsLib.Enums;
     using AehnlichViewModelsLib.Events;
     using AehnlichViewModelsLib.Interfaces;
-    using AehnlichViewModelsLib.Models;
     using AehnlichViewModelsLib.ViewModels.Base;
     using AehnlichViewModelsLib.ViewModels.LineInfo;
     using ICSharpCode.AvalonEdit;
@@ -62,7 +63,13 @@
         /// </summary>
         public DiffDocViewModel()
         {
-            _DiffViewOptions = new TextEditorOptions() { ShowTabs = false, ConvertTabsToSpaces = true, IndentationSize = 4 };
+            _DiffViewOptions = new TextEditorOptions()
+            {
+                ShowTabs = false,
+                ConvertTabsToSpaces = true,
+                IndentationSize = 4
+            };
+
             _ViewA = new DiffSideViewModel();
             _ViewB = new DiffSideViewModel();
             _ViewLineDiff = new DiffSideViewModel();
@@ -583,29 +590,12 @@
         /// Updates the diff view with the supplied information.
         /// </summary>
         /// <param name="args"></param>
-        public void ShowDifferences(ShowDiffArgs args)
+        /// <param name="r"></param>
+        public void ShowDifferences(ShowDiffArgs args, ProcessTextDiff r)
         {
-            IList<string> a, b;
-            int leadingCharactersToIgnore = 0;
-            bool fileNames = (args.DiffType == DiffType.File);
-            if (fileNames)
-            {
-                GetFileLines(args.A, args.B, out a, out b, out leadingCharactersToIgnore, args);
-            }
-            else
-            {
-                GetTextLines(args.A, args.B, args, out a, out b);
-            }
-
-            bool isBinaryCompare = leadingCharactersToIgnore > 0;
-            bool ignoreCase = isBinaryCompare ? false : args.IgnoreCase;
-            bool ignoreTextWhitespace = isBinaryCompare ? false : args.IgnoreTextWhitespace;
-            TextDiff diff = new TextDiff(args.HashType, ignoreCase, ignoreTextWhitespace, leadingCharactersToIgnore, !args.ShowChangeAsDeleteInsert);
-            EditScript script = diff.Execute(a, b);
-
             string captionA = string.Empty;
             string captionB = string.Empty;
-            if (fileNames)
+            if (args.DiffType == DiffType.File)
             {
                 try
                 {
@@ -621,14 +611,15 @@
                 this.StatusText = "Text Comparison";
             }
 
-            SetData(a, b, script, args, ignoreCase, ignoreTextWhitespace, isBinaryCompare);
+            SetData(r.ListA, r.ListB, r.Script, args,
+                    r.IgnoreCase, r.IgnoreTextWhitespace, r.IsBinaryCompare);
 
             // Update the stats
-            this.NumberOfLines = (uint)a.Count;
+            this.NumberOfLines = (uint)r.ListA.Count;
             this.MaxNumberOfLines = (uint)_ViewA.LineCount;
             int iDeletes = 0, iChanges = 0, iInserts = 0;
 
-            foreach (var item in script)
+            foreach (var item in r.Script)
             {
                 switch (item.EditType)
                 {
@@ -911,120 +902,6 @@
                 }
             }
         }
-
-        #region TextLineConverter
-        private static void GetFileLines(string fileNameA, string fileNameB,
-                                         out IList<string> a, out IList<string> b,
-                                         out int leadingCharactersToIgnore, ShowDiffArgs args)
-        {
-            a = null;
-            b = null;
-            leadingCharactersToIgnore = 0;
-            CompareType compareType = args.CompareType;
-            bool isAuto = compareType == CompareType.Auto;
-
-            if (compareType == CompareType.Binary ||
-                (isAuto && (DiffUtility.IsBinaryFile(fileNameA) || DiffUtility.IsBinaryFile(fileNameB))))
-            {
-                using (FileStream fileA = File.OpenRead(fileNameA))
-                using (FileStream fileB = File.OpenRead(fileNameB))
-                {
-                    BinaryDiff diff = new BinaryDiff
-                    {
-                        FootprintLength = args.BinaryFootprintLength
-                    };
-
-                    AddCopyCollection addCopy = diff.Execute(fileA, fileB);
-
-                    BinaryDiffLines lines = new BinaryDiffLines(fileA, addCopy, args.BinaryFootprintLength);
-                    a = lines.BaseLines;
-                    b = lines.VersionLines;
-                    leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
-                }
-            }
-
-            if (compareType == CompareType.Xml || (isAuto && (a == null || b == null)))
-            {
-                a = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameA, fileNameA, !isAuto, args);
-
-                // If A failed to parse with Auto, then there's no reason to try B.
-                if (a != null)
-                {
-                    b = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameB, fileNameB, !isAuto, args);
-                }
-
-                // If we get here and the compare type was XML, then both
-                // inputs parsed correctly, and both lists should be non-null.
-                // If we get here and the compare type was Auto, then one
-                // or both lists may be null, so we'll fallthrough to the text
-                // handling logic.
-            }
-
-            if (a == null || b == null)
-            {
-                a = DiffUtility.GetFileTextLines(fileNameA);
-                b = DiffUtility.GetFileTextLines(fileNameB);
-            }
-        }
-
-        private static void GetTextLines(string textA, string textB, ShowDiffArgs args
-                                       , out IList<string> a, out IList<string> b)
-        {
-            a = null;
-            b = null;
-            CompareType compareType = args.CompareType;
-            bool isAuto = compareType == CompareType.Auto;
-
-            if (compareType == CompareType.Xml || isAuto)
-            {
-                a = TryGetXmlLines(DiffUtility.GetXmlTextLinesFromXml, "the left side text", textA, !isAuto, args);
-
-                // If A failed to parse with Auto, then there's no reason to try B.
-                if (a != null)
-                {
-                    b = TryGetXmlLines(DiffUtility.GetXmlTextLinesFromXml, "the right side text", textB, !isAuto, args);
-                }
-
-                // If we get here and the compare type was XML, then both
-                // inputs parsed correctly, and both lists should be non-null.
-                // If we get here and the compare type was Auto, then one
-                // or both lists may be null, so we'll fallthrough to the text
-                // handling logic.
-            }
-
-            if (a == null || b == null)
-            {
-                a = DiffUtility.GetStringTextLines(textA);
-                b = DiffUtility.GetStringTextLines(textB);
-            }
-        }
-
-        private static IList<string> TryGetXmlLines(
-            Func<string, bool, IList<string>> converter,
-            string name,
-            string input,
-            bool throwOnError,
-            ShowDiffArgs args)
-        {
-            IList<string> result = null;
-            try
-            {
-                result = converter(input, args.IgnoreXmlWhitespace);
-            }
-            catch (XmlException ex)
-            {
-                if (throwOnError)
-                {
-                    StringBuilder sb = new StringBuilder("An XML comparison was attempted, but an XML exception occurred while parsing ");
-                    sb.Append(name).AppendLine(".").AppendLine();
-                    sb.AppendLine("Exception Message:").Append(ex.Message);
-                    throw new XmlException(sb.ToString(), ex);
-                }
-            }
-
-            return result;
-        }
-        #endregion TextLineConverter
 
         #region IDisposable
         /// <summary>

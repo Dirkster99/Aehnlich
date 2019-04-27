@@ -39,7 +39,7 @@
         private ICommand _OpenFileFromActiveViewCommand;
 
         private readonly ObservableRangeCollection<IDirEntryViewModel> _DirEntries;
-        private object _itemsLock;
+        private object _DirEntriesLock;
 
         private int _CountFilesDeleted;
         private int _CountFilesAdded;
@@ -53,9 +53,9 @@
         /// </summary>
         public DirDiffDocViewModel()
         {
-            _itemsLock = new object();
+            _DirEntriesLock = new object();
             _DirEntries = new ObservableRangeCollection<IDirEntryViewModel>();
-            BindingOperations.EnableCollectionSynchronization(_DirEntries, _itemsLock);
+            BindingOperations.EnableCollectionSynchronization(_DirEntries, _DirEntriesLock);
 
             _DirPathStack = new Stack<IDirEntryViewModel>();
 

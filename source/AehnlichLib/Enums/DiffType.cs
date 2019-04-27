@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewModelsLib.Enums
+﻿namespace AehnlichLib.Enums
 {
     /// <summary>
     /// Describes the types of target object use case for the comparison

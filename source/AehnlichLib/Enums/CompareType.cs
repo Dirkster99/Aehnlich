@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewModelsLib.Enums
+﻿namespace AehnlichLib.Enums
 {
     /// <summary>
     /// Controls the way of how the diff engine should diff the given information.

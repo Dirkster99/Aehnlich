@@ -3,7 +3,6 @@ namespace AehnlichLib.Dir
     using AehnlichLib.Dir.Merge;
     using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
-    using AehnlichLib.Progress;
     using System;
     using System.Collections.Generic;
     using System.IO;
