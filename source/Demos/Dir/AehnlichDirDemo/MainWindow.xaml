@@ -29,7 +29,7 @@
                                                     TrueValue="Visible"
                                                     />
             <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
-            <conv1:BooleanInvertConverter x:Key="BooleanInvertConverter"/>
+            <conv:BooleanInvertConverter x:Key="BooleanInvertConverter"/>
             <conv1:MultiBoolToVisibilityPropConverter x:Key="MultiBoolToVisibilityPropConverter"/>
         </Grid.Resources>
         <Grid.RowDefinitions>

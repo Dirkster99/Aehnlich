@@ -4,11 +4,8 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using System.Text;
+    using System.Windows;
     using System.Windows.Input;
-    using System.Xml;
-    using AehnlichLib.Binaries;
-    using AehnlichLib.Dir;
     using AehnlichLib.Enums;
     using AehnlichLib.Models;
     using AehnlichLib.Text;
@@ -611,12 +608,16 @@
                 this.StatusText = "Text Comparison";
             }
 
-            SetData(r.ListA, r.ListB, r.Script, args,
-                    r.IgnoreCase, r.IgnoreTextWhitespace, r.IsBinaryCompare);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SetData(r.ListA, r.ListB, r.Script, args,
+                        r.IgnoreCase, r.IgnoreTextWhitespace, r.IsBinaryCompare);
 
-            // Update the stats
-            this.NumberOfLines = (uint)r.ListA.Count;
-            this.MaxNumberOfLines = (uint)_ViewA.LineCount;
+                // Update the stats
+                this.NumberOfLines = (uint)r.ListA.Count;
+                this.MaxNumberOfLines = (uint)_ViewA.LineCount;
+            });
+
             int iDeletes = 0, iChanges = 0, iInserts = 0;
 
             foreach (var item in r.Script)
@@ -738,7 +739,8 @@
         /// <param name="changeDiffIgnoreCase"></param>
         /// <param name="changeDiffIgnoreWhiteSpace"></param>
         /// <param name="changeDiffTreatAsBinaryLines"></param>
-        private void SetData(IList<string> listA, IList<string> listB, EditScript script,
+        private void SetData(IList<string> listA, IList<string> listB,
+                             EditScript script,
                              ShowDiffArgs args,
                              bool changeDiffIgnoreCase,
                              bool changeDiffIgnoreWhiteSpace,

@@ -1,5 +1,6 @@
 namespace AehnlichLib.Dir
 {
+    using AehnlichLib.Interfaces;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -59,28 +60,32 @@ namespace AehnlichLib.Dir
 			}
 		}
 
-		public static IList<string> GetFileTextLines(string fileName)
+		public static IList<string> GetFileTextLines(string fileName, IDiffProgress progress)
 		{
 			using (StreamReader reader = new StreamReader(fileName, Encoding.Default, true))
 			{
-				return GetTextLines(reader);
+				return GetTextLines(reader, progress);
 			}
 		}
 
-		public static IList<string> GetStringTextLines(string text)
+		public static IList<string> GetStringTextLines(string text,
+                                                       IDiffProgress progress)
 		{
 			using (StringReader reader = new StringReader(text))
 			{
-				return GetTextLines(reader);
+				return GetTextLines(reader, progress);
 			}
 		}
 
-		public static IList<string> GetTextLines(TextReader reader)
+		public static IList<string> GetTextLines(TextReader reader,
+                                                 IDiffProgress progress)
 		{
 			IList<string> result = new List<string>();
 
 			while (reader.Peek() > -1)
 			{
+                progress.Token.ThrowIfCancellationRequested();
+
 				string line = reader.ReadLine();
 				result.Add(line);
 			}
@@ -88,15 +93,17 @@ namespace AehnlichLib.Dir
 			return result;
 		}
 
-		public static IList<string> GetXmlTextLines(string fileName, bool ignoreInsignificantWhiteSpace)
+		public static IList<string> GetXmlTextLines(string fileName,
+                                                    bool ignoreInsignificantWhiteSpace,
+                                                    IDiffProgress progress)
 		{
 			using (StreamReader reader = new StreamReader(fileName, Encoding.Default, true))
 			{
-				return GetXmlTextLines(reader, ignoreInsignificantWhiteSpace);
+				return GetXmlTextLines(reader, ignoreInsignificantWhiteSpace, progress);
 			}
 		}
 
-		public static IList<string> GetXmlTextLines(XmlReader reader)
+		public static IList<string> GetXmlTextLines(XmlReader reader, IDiffProgress progress)
 		{
             XmlWriterSettings settings = new XmlWriterSettings
             {
@@ -113,15 +120,17 @@ namespace AehnlichLib.Dir
 				writer.WriteNode(reader, false);
 			}
 
-			IList<string> result = GetStringTextLines(sb.ToString());
+			IList<string> result = GetStringTextLines(sb.ToString(), progress);
 			return result;
 		}
 
-		public static IList<string> GetXmlTextLinesFromXml(string xml, bool ignoreInsignificantWhiteSpace)
+		public static IList<string> GetXmlTextLinesFromXml(string xml,
+                                                           bool ignoreInsignificantWhiteSpace,
+                                                           IDiffProgress progress)
 		{
 			using (StringReader reader = new StringReader(xml))
 			{
-				return GetXmlTextLines(reader, ignoreInsignificantWhiteSpace);
+				return GetXmlTextLines(reader, ignoreInsignificantWhiteSpace, progress);
 			}
 		}
 
@@ -174,7 +183,9 @@ namespace AehnlichLib.Dir
 
 		#region Private Methods
 
-		private static IList<string> GetXmlTextLines(TextReader textReader, bool ignoreInsignificantWhitespace)
+		private static IList<string> GetXmlTextLines(TextReader textReader,
+                                                     bool ignoreInsignificantWhitespace,
+                                                     IDiffProgress progress)
 		{
             XmlReaderSettings settings = new XmlReaderSettings
             {
@@ -189,7 +200,7 @@ namespace AehnlichLib.Dir
 
             using (XmlReader xmlReader = XmlReader.Create(textReader, settings))
 			{
-				IList<string> result = GetXmlTextLines(xmlReader);
+				IList<string> result = GetXmlTextLines(xmlReader, progress);
 				return result;
 			}
 		}

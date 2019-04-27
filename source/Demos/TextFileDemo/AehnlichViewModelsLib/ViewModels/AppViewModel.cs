@@ -20,6 +20,7 @@
     {
         #region fields
         private ICommand _CompareFilesCommand;
+        private ICommand _CancelCompareCommand;
         private ICommand _ViewPortChangedCommand;
         private ICommand _OpenFileFromActiveViewCommand;
         private ICommand _CopyTextSelectionFromActiveViewCommand;
@@ -52,9 +53,6 @@
         public AppViewModel(string fileA, string fileB)
             : this()
         {
-            _cancelTokenSource = new CancellationTokenSource();
-            _DiffProgress = new DiffProgressViewModel();
-
             _FilePathA.FilePath = fileA;
             _FilePathB.FilePath = fileB;
         }
@@ -64,6 +62,9 @@
         /// </summary>
         public AppViewModel()
         {
+            _cancelTokenSource = new CancellationTokenSource();
+            _DiffProgress = new DiffProgressViewModel();
+
             _FilePathA = new SuggestSourceViewModel();
             _FilePathB = new SuggestSourceViewModel();
 
@@ -75,6 +76,7 @@
         #endregion ctors
 
         #region properties
+        #region Compare Command
         /// <summary>
         /// Gets a command that refreshs (reloads) the comparison of 2 textfiles.
         /// </summary>
@@ -160,6 +162,7 @@
                                 if (onError == false && taskCancelled == false)
                                 {
                                     var diffResults = r.Result.ResultData as ProcessTextDiff;
+
                                     _DiffCtrl.ShowDifferences(args, diffResults);
 
                                     FocusControl = Focus.None;
@@ -187,6 +190,44 @@
                 return _CompareFilesCommand;
             }
         }
+
+        /// <summary>
+        /// Gets a command that can be used to cancel the directory comparison
+        /// currently being processed (if any).
+        /// </summary>
+        public ICommand CancelTextCompareCommand
+        {
+            get
+            {
+                if (_CancelCompareCommand == null)
+                {
+                    _CancelCompareCommand = new RelayCommand<object>((p) =>
+                    {
+                        if (_cancelTokenSource != null)
+                        {
+                            if (_cancelTokenSource.IsCancellationRequested == false)
+                                _cancelTokenSource.Cancel();
+                        }
+                    },
+                    (p) =>
+                    {
+                        if (DiffProgress.IsProgressbarVisible == true)
+                        {
+                            if (_cancelTokenSource != null)
+                            {
+                                if (_cancelTokenSource.IsCancellationRequested == false)
+                                    return true;
+                            }
+                        }
+
+                        return false;
+                    });
+                }
+
+                return _CancelCompareCommand;
+            }
+        }
+        #endregion Compare Command
 
         /// <summary>
         /// Gets a focus element indicator to indicate a ui element to focus
@@ -486,6 +527,18 @@
             get
             {
                 return _GotoLineController;
+            }
+        }
+
+        /// <summary>
+        /// Gets a viewmodel that manages progress display in terms of min, value, max or
+        /// indeterminate progress display.
+        /// </summary>
+        public IDiffProgress DiffProgress
+        {
+            get
+            {
+                return _DiffProgress;
             }
         }
         #endregion properties
