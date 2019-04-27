@@ -1,6 +1,7 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
     using AehnlichDirViewModelLib.Enums;
+    using AehnlichDirViewModelLib.Interfaces;
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
     using AehnlichLib.Enums;
@@ -13,7 +14,7 @@
     using System.Threading.Tasks;
     using System.Windows.Input;
 
-    public class AppViewModel : Base.ViewModelBase, System.IDisposable
+    internal class AppViewModel : Base.ViewModelBase, IAppViewModel
     {
         #region fields
         private string _RightDirPath;
@@ -23,14 +24,16 @@
         private ICommand _CancelCompareCommand;
         private ICommand _DiffViewModeSelectCommand;
 
-        private ListItemViewModel _DiffViewModeSelected;
-        private DiffFileModeItemViewModel _DiffFileModeSelected;
+        private readonly List<IListItemViewModel> _DiffViewModes;
+        private IListItemViewModel _DiffViewModeSelected;
+
+        private readonly List<IDiffFileModeItemViewModel> _DiffFileModes;
+        private IDiffFileModeItemViewModel _DiffFileModeSelected;
+
         private bool _Disposed;
         private CancellationTokenSource _cancelTokenSource;
         private readonly DiffProgressViewModel _DiffProgress;
-        private readonly List<ListItemViewModel> _DiffViewModes;
         private readonly DirDiffDocViewModel _DirDiffDoc;
-        private readonly List<DiffFileModeItemViewModel> _DiffFileModes;
         #endregion fields
 
         #region ctors
@@ -45,7 +48,7 @@
             _DiffViewModes = ResetViewModeDefaults();
             _DiffProgress = new DiffProgressViewModel();
 
-            _DiffFileModes = new List<DiffFileModeItemViewModel>();
+            _DiffFileModes = new List<IDiffFileModeItemViewModel>();
             _DiffFileModeSelected = CreateCompateFileModes(_DiffFileModes);
         }
         #endregion ctors
@@ -55,7 +58,7 @@
         /// Gets the viewmodel for the document that contains the diff information
         /// on a left directory (A) and a right directory (B) and its contents.
         /// </summary>
-        public DirDiffDocViewModel DirDiffDoc
+        public IDirDiffDocViewModel DirDiffDoc
         {
             get
             {
@@ -68,7 +71,7 @@
         /// Gets a list of modies that can be used to compare one directory
         /// and its contents, to the other directory.
         /// </summary>
-        public List<DiffFileModeItemViewModel> DiffFileModes
+        public List<IDiffFileModeItemViewModel> DiffFileModes
         {
             get
             {
@@ -80,7 +83,7 @@
         /// Gets/sets the mode that is currently used to compare one directory
         /// and its contents with the other directory.
         /// </summary>
-        public DiffFileModeItemViewModel DiffFileModeSelected
+        public IDiffFileModeItemViewModel DiffFileModeSelected
         {
             get
             {
@@ -251,7 +254,7 @@
         /// directory and file comparison can be viewed
         /// (eg.: directories and files or files only).
         /// </summary>
-        public IReadOnlyList<ListItemViewModel> DiffViewModes
+        public IReadOnlyList<IListItemViewModel> DiffViewModes
         {
             get { return _DiffViewModes; }
         }
@@ -259,7 +262,7 @@
         /// <summary>
         /// Gets the currently selected view mode for the display of diff results.
         /// </summary>
-        public ListItemViewModel DiffViewModeSelected
+        public IListItemViewModel DiffViewModeSelected
         {
             get { return _DiffViewModeSelected; }
 
@@ -292,13 +295,13 @@
 
                         if (param.Key == (int)DiffViewModeEnum.DirectoriesAndFiles)
                         {
-                            DirDiffDoc.SetViewMode(DiffViewModeEnum.DirectoriesAndFiles);
+                            _DirDiffDoc.SetViewMode(DiffViewModeEnum.DirectoriesAndFiles);
                         }
                         else
                         {
                             if (param.Key == (int)DiffViewModeEnum.FilesOnly)
                             {
-                                DirDiffDoc.SetViewMode(DiffViewModeEnum.FilesOnly);
+                                _DirDiffDoc.SetViewMode(DiffViewModeEnum.FilesOnly);
                             }
                         }
                     }, ((p) => { return DirDiffDoc.IsDiffDataAvailable; }));
@@ -460,9 +463,9 @@
         }
         #endregion IDisposeable
 
-        private List<ListItemViewModel> ResetViewModeDefaults()
+        private List<IListItemViewModel> ResetViewModeDefaults()
         {
-            var lst = new List<ListItemViewModel>();
+            var lst = new List<IListItemViewModel>();
 
             lst.Add(new ListItemViewModel("Directories and Files", (int)DiffViewModeEnum.DirectoriesAndFiles));
             lst.Add(new ListItemViewModel("Files only", (int)DiffViewModeEnum.FilesOnly));
@@ -472,8 +475,8 @@
             return lst;
         }
 
-        private DiffFileModeItemViewModel CreateCompateFileModes(
-            IList<DiffFileModeItemViewModel> diffFileModes)
+        private IDiffFileModeItemViewModel CreateCompateFileModes(
+            IList<IDiffFileModeItemViewModel> diffFileModes)
         {
             DiffFileModeItemViewModel defaultItem = null;
 

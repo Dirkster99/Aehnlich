@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\AehnlichDirViewModelLib.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\AehnlichDirViewModelLib.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -50,6 +52,11 @@
     <Compile Include="Converters\MultiParToParConverter.cs" />
     <Compile Include="Converters\BooleanInvertConverter.cs" />
     <Compile Include="Enums\DiffViewModeEnum.cs" />
+    <Compile Include="Interfaces\IAppViewModel.cs" />
+    <Compile Include="Interfaces\IDiffFileModeItemViewModel.cs" />
+    <Compile Include="Interfaces\IDirDiffDocViewModel.cs" />
+    <Compile Include="Interfaces\IDirEntryViewModel.cs" />
+    <Compile Include="Interfaces\IListItemViewModel.cs" />
     <Compile Include="Models\FileSystemCommands.cs" />
     <Compile Include="Models\ShowDirDiffArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -58,6 +65,7 @@
     <Compile Include="ViewModels\Base\ViewModelBase.cs" />
     <Compile Include="ViewModels\DiffFileModeItemViewModel.cs" />
     <Compile Include="ViewModels\DiffProgressViewModel.cs" />
+    <Compile Include="ViewModels\Factory.cs" />
     <Compile Include="ViewModels\ListItemViewModel.cs" />
     <Compile Include="ViewModels\DirDiffDocViewModel.cs" />
     <Compile Include="ViewModels\DirEntryViewModel.cs" />

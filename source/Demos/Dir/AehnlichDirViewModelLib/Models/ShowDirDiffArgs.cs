@@ -2,7 +2,7 @@
 {
     using AehnlichLib.Dir;
 
-    public class ShowDirDiffArgs
+    internal class ShowDirDiffArgs
     {
         #region ctors
         /// <summary>

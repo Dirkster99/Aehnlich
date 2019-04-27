@@ -1,6 +1,7 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
     using AehnlichDirViewModelLib.Enums;
+    using AehnlichDirViewModelLib.Interfaces;
     using AehnlichDirViewModelLib.Models;
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
@@ -10,11 +11,13 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Text;
-    using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
 
-    public class DirDiffDocViewModel : Base.ViewModelBase
+    /// <summary>
+    /// Implements the viewmodel for a side-by-side view of left and right directory content lists.
+    /// </summary>
+    internal class DirDiffDocViewModel : Base.ViewModelBase, IDirDiffDocViewModel
     {
         #region fields
         private ShowDirDiffArgs _CompareOptions;
@@ -35,13 +38,13 @@
         private ICommand _OpenInWindowsCommand;
         private ICommand _OpenFileFromActiveViewCommand;
 
-        private readonly ObservableRangeCollection<DirEntryViewModel> _DirEntries;
+        private readonly ObservableRangeCollection<IDirEntryViewModel> _DirEntries;
         private object _itemsLock;
 
         private int _CountFilesDeleted;
         private int _CountFilesAdded;
         private int _CountFilesChanged;
-        private readonly Stack<DirEntryViewModel> _DirPathStack;
+        private readonly Stack<IDirEntryViewModel> _DirPathStack;
         #endregion fields
 
         #region ctors
@@ -51,16 +54,16 @@
         public DirDiffDocViewModel()
         {
             _itemsLock = new object();
-            _DirEntries = new ObservableRangeCollection<DirEntryViewModel>();
+            _DirEntries = new ObservableRangeCollection<IDirEntryViewModel>();
             BindingOperations.EnableCollectionSynchronization(_DirEntries, _itemsLock);
 
-            _DirPathStack = new Stack<DirEntryViewModel>();
+            _DirPathStack = new Stack<IDirEntryViewModel>();
 
             _ViewActivation_A = DateTime.MinValue;
             _ViewActivation_B = DateTime.MinValue;
 
-            SelectedItemsA = new ObservableCollection<DirEntryViewModel>();
-            SelectedItemsB = new ObservableCollection<DirEntryViewModel>();
+            SelectedItemsA = new ObservableCollection<IDirEntryViewModel>();
+            SelectedItemsB = new ObservableCollection<IDirEntryViewModel>();
         }
         #endregion ctors
 
@@ -83,7 +86,11 @@
             }
         }
 
-        public IReadOnlyList<DirEntryViewModel> DirEntries
+        /// <summary>
+        /// Gets a list of viewmodel entries that lists the contents of the left ViewA
+        /// in a synchronized way (with imaginary lines) to the right ViewB.
+        /// </summary>
+        public IReadOnlyList<IDirEntryViewModel> DirEntries
         {
             get
             {
@@ -91,6 +98,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets the file system path for the contents displayed in left ViewA.
+        /// </summary>
         public string PathA
         {
             get { return _PathA; }
@@ -104,6 +114,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets the file system path for the contents displayed in right ViewA.
+        /// </summary>
         public string PathB
         {
             get { return _PathB; }
@@ -159,6 +172,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets/sets the single selected item in the left ViewA.
+        /// </summary>
         public object SelectedItem_A
         {
             get { return _SelectedItem_A; }
@@ -172,6 +188,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets/sets the single selected item in the right ViewB.
+        /// </summary>
         public object SelectedItem_B
         {
             get { return _SelectedItem_B; }
@@ -202,6 +221,68 @@
         }
 
         /// <summary>
+        /// Get set of currently selected items (when multiple items are selected).
+        /// </summary>
+        public ObservableCollection<IDirEntryViewModel> SelectedItemsA { get; }
+
+        /// <summary>
+        /// Get set of currently selected items (when multiple items are selected).
+        /// </summary>
+        public ObservableCollection<IDirEntryViewModel> SelectedItemsB { get; }
+
+        /// <summary>
+        /// Gets the number of files that have been deleted in B
+        /// when comparing a set of files between A and B.
+        /// </summary>
+        public int CountFilesDeleted
+        {
+            get { return _CountFilesDeleted; }
+            private set
+            {
+                if (_CountFilesDeleted != value)
+                {
+                    _CountFilesDeleted = value;
+                    NotifyPropertyChanged(() => CountFilesDeleted);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of files that have been added in B
+        /// when comparing a set of files between A and B.
+        /// </summary>
+        public int CountFilesAdded
+        {
+            get { return _CountFilesAdded; }
+            private set
+            {
+                if (_CountFilesAdded != value)
+                {
+                    _CountFilesAdded = value;
+                    NotifyPropertyChanged(() => CountFilesAdded);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of files that have been changed in B or A
+        /// when comparing a set of files between A and B.
+        /// </summary>
+        public int CountFilesChanged
+        {
+            get { return _CountFilesChanged; }
+            private set
+            {
+                if (_CountFilesChanged != value)
+                {
+                    _CountFilesChanged = value;
+                    NotifyPropertyChanged(() => CountFilesChanged);
+                }
+            }
+        }
+
+        #region Commands
+        /// <summary>
         /// Gets a command to browse the current directory diff view by one level down
         /// (if there is a current view and a remaining level down is available).
         /// </summary>
@@ -213,7 +294,7 @@
                 {
                     _BrowseItemCommand = new RelayCommand<object>((p) =>
                     {
-                        var param = p as DirEntryViewModel;
+                        var param = p as IDirEntryViewModel;
                         if (param == null)
                         {
                             bool? fromA;
@@ -237,7 +318,7 @@
                         PathB = GetSubPath(_CompareOptions.RightDir, _DirPathStack, false);
                     }, ((p) =>
                     {
-                        var param = p as DirEntryViewModel;
+                        var param = p as IDirEntryViewModel;
                         if (param == null)
                         {
                             bool? fromA;
@@ -314,6 +395,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets a command that copies the path from all selected item(s)
+        /// into the Windows clipboard.
+        /// </summary>
         public ICommand CopyPathToClipboardCommand
         {
             get
@@ -328,10 +413,10 @@
                             FileSystemCommands.CopyString(param);
                         else
                         {
-                            var list = p as IEnumerable<DirEntryViewModel>;
+                            var list = p as IEnumerable<IDirEntryViewModel>;
                             if (list != null)
                             {
-                                var scopy = new StringBuilder(); ;
+                                var scopy = new StringBuilder();
                                 foreach (var item in list)
                                 {
                                     if (item.ItemPathA != null)
@@ -346,7 +431,7 @@
 
                     }, (p) =>
                     {
-                        return ((p is string) || (p is IEnumerable<DirEntryViewModel>));
+                        return ((p is string) || (p is IEnumerable<IDirEntryViewModel>));
                     });
                 }
 
@@ -355,15 +440,9 @@
         }
 
         /// <summary>
-        /// Get set of currently selected items (when multiple items are selected).
+        /// Gets a command to open the folder in which the
+        /// currently (single) selected item (if any) is stored.
         /// </summary>
-        public ObservableCollection<DirEntryViewModel> SelectedItemsA { get; }
-
-        /// <summary>
-        /// Get set of currently selected items (when multiple items are selected).
-        /// </summary>
-        public ObservableCollection<DirEntryViewModel> SelectedItemsB { get; }
-
         public ICommand OpenContainingFolderCommand
         {
             get
@@ -386,6 +465,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets a command to execute the associate Windows program for the
+        /// currently (single) selected item (if any).
+        /// </summary>
         public ICommand OpenInWindowsCommand
         {
             get
@@ -408,6 +491,13 @@
             }
         }
 
+        /// <summary>
+        /// Gets a command to execute the associate Windows program for the
+        /// currently (single) selected item (if any) from the last avtive view.
+        /// 
+        /// This command is intended for binding via UI elements such as Menu, Toolbar
+        /// etc. which are not directly part of the DiffDir control/viewmodel structure.
+        /// </summary>
         public ICommand OpenFileFromActiveViewCommand
         {
             get
@@ -443,57 +533,7 @@
                 return _OpenFileFromActiveViewCommand;
             }
         }
-
-        /// <summary>
-        /// Gets the number of files that have been deleted in B
-        /// when comparing a set of files between A and B.
-        /// </summary>
-        public int CountFilesDeleted
-        {
-            get { return _CountFilesDeleted; }
-            private set
-            {
-                if (_CountFilesDeleted != value)
-                {
-                    _CountFilesDeleted = value;
-                    NotifyPropertyChanged(() => CountFilesDeleted);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the number of files that have been added in B
-        /// when comparing a set of files between A and B.
-        /// </summary>
-        public int CountFilesAdded
-        {
-            get { return _CountFilesAdded; }
-            private set
-            {
-                if (_CountFilesAdded != value)
-                {
-                    _CountFilesAdded = value;
-                    NotifyPropertyChanged(() => CountFilesAdded);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the number of files that have been changed in B or A
-        /// when comparing a set of files between A and B.
-        /// </summary>
-        public int CountFilesChanged
-        {
-            get { return _CountFilesChanged; }
-            private set
-            {
-                if (_CountFilesChanged != value)
-                {
-                    _CountFilesChanged = value;
-                    NotifyPropertyChanged(() => CountFilesChanged);
-                }
-            }
-        }
+        #endregion Commands
         #endregion properties
 
         #region methods
@@ -531,7 +571,7 @@
             string currentPathA = results.RootPathA;
             string currentPathB = results.RootPathB;
 
-            List<DirEntryViewModel> dirs = null;
+            List<IDirEntryViewModel> dirs = null;
             switch (requestedViewMode)
             {
                 case DiffViewModeEnum.DirectoriesAndFiles:
@@ -581,23 +621,23 @@
         /// https://stackoverflow.com/questions/55226831/resize-datagrid-column-onloaded-programatically/55299954#55299954
         /// </summary>
         /// <param name="dirs"></param>
-        private void SetDirDiffCollectionData(List<DirEntryViewModel> dirs)
+        private void SetDirDiffCollectionData(List<IDirEntryViewModel> dirs)
         {
             _DirEntries.ReplaceRange(dirs);
         }
 
-        private List<DirEntryViewModel> CreateViewModelEntries(IReadOnlyCollection<IDirectoryDiffEntry> entries,
+        private List<IDirEntryViewModel> CreateViewModelEntries(IReadOnlyCollection<IDirectoryDiffEntry> entries,
                                                                string currentPathA,
                                                                string currentPathB)
         {
-            List<DirEntryViewModel> dirs = new List<DirEntryViewModel>();
+            var dirs = new List<IDirEntryViewModel>();
 
             if (entries == null)
                 return dirs;
 
             foreach (var item in entries)
             {
-                dirs.Add(new DirEntryViewModel(item, currentPathA, currentPathB));
+                dirs.Add(new DirEntryViewModel(item, currentPathA, currentPathB) as IDirEntryViewModel);
             }
 
             return dirs;
@@ -607,11 +647,10 @@
         /// Gets the relative sub-path portion of the current <see cref="_DirPathStack"/> against
         /// the given <param name="basePath"/>.
         /// </summary>
-        /// <param name="basePath"></param>
         /// <param name="dirPathStack"></param>
         /// <param name="forA"></param>
         /// <returns></returns>
-        private string GetSubPath(string basePath, Stack<DirEntryViewModel> dirPathStack, bool forA)
+        private string GetSubPath(string basePath, Stack<IDirEntryViewModel> dirPathStack, bool forA)
         {
             string subPath = string.Empty;
             if (dirPathStack.Count == 0)
@@ -632,18 +671,18 @@
         /// (had the focus the last time).
         /// </summary>
         /// <returns></returns>
-        internal DirEntryViewModel GetSelectedItem(out bool? fromA)
+        internal IDirEntryViewModel GetSelectedItem(out bool? fromA)
         {
             fromA = null;
 
             if (ViewActivation_A < ViewActivation_B)
             {
                 fromA = false;
-                return SelectedItem_B as DirEntryViewModel;
+                return SelectedItem_B as IDirEntryViewModel;
             }
 
             fromA = true;
-            return SelectedItem_A as DirEntryViewModel;
+            return SelectedItem_A as IDirEntryViewModel;
         }
 
         #endregion methods

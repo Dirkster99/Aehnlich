@@ -12,14 +12,18 @@
     /// </summary>
     public static class SelectionChangedCommand
     {
-        // Field of attached ICommand property
+        /// <summary>
+        /// Backing store of attached Command property
+        /// </summary>
         private static readonly DependencyProperty ChangedCommandProperty = DependencyProperty.RegisterAttached(
             "ChangedCommand",
             typeof(ICommand),
             typeof(SelectionChangedCommand),
             new PropertyMetadata(null, OnSelectionChangedCommandChange));
 
-        // Field of attached CommandParameter property
+        /// <summary>
+        /// Backing store of attached CommandParameter property
+        /// </summary>
         public static readonly DependencyProperty CommandParameterProperty =
             DependencyProperty.RegisterAttached("CommandParameter", typeof(object),
                 typeof(SelectionChangedCommand), new PropertyMetadata(null));

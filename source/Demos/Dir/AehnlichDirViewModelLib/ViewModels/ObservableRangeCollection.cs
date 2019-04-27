@@ -12,7 +12,7 @@
     /// source: https://github.com/jamesmontemagno/mvvm-helpers
     /// </summary> 
     /// <typeparam name="T"></typeparam> 
-    public class ObservableRangeCollection<T> : ObservableCollection<T>
+    internal class ObservableRangeCollection<T> : ObservableCollection<T>
     {
         /// <summary> 
         /// Initializes a new instance of the System.Collections.ObjectModel.ObservableCollection(Of T) class. 

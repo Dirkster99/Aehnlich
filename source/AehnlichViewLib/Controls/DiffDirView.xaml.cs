@@ -418,7 +418,8 @@
 
                 foreach (object addedItem in selectionChangedArgs.AddedItems)
                 {
-                    if (IsGenericList(selectedItemsSource.GetType(), addedItem.GetType()))
+                    ////Not sure why this is necessary?
+                    ////if (IsGenericList(selectedItemsSource.GetType(), addedItem.GetType()))
                         selectedItemsSource.Add(addedItem);
                 }
 

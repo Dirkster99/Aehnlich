@@ -1,10 +1,14 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
+    using AehnlichDirViewModelLib.Interfaces;
     using AehnlichLib.Dir;
     using AehnlichLib.Interfaces;
     using System;
 
-    public class DirEntryViewModel : Base.ViewModelBase
+    /// <summary>
+    /// Models an item in a list of items (directories or files) contained in a directory.
+    /// </summary>
+    internal class DirEntryViewModel : Base.ViewModelBase, IDirEntryViewModel
     {
         #region fields
         private readonly IDirectoryDiffEntry _Model;

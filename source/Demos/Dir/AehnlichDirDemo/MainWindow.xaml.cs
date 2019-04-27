@@ -1,5 +1,6 @@
 ﻿namespace AehnlichDirDemo
 {
+    using AehnlichDirViewModelLib.Interfaces;
     using AehnlichDirViewModelLib.ViewModels;
     using System.Windows;
 
@@ -25,7 +26,7 @@
             string rightDirPath = Properties.Settings.Default.RightDirPath;
 
             // Construct AppViewModel and attach to datacontext
-            var appVM = new AppViewModel();
+            var appVM = Factory.ConstructAppViewModel();
 
             this.DataContext = appVM;
 
@@ -36,7 +37,7 @@
         {
             try
             {
-                var appVM = DataContext as AppViewModel;
+                var appVM = DataContext as IAppViewModel;
                 if (appVM == null)
                     return;
 

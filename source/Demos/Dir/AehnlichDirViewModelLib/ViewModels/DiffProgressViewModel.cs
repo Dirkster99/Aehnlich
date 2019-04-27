@@ -9,7 +9,7 @@
     /// Exposes the properties of a Progress Display (ProgressBar) to enable
     /// UI feedback on long running processings.
     /// </summary>
-    public class DiffProgressViewModel : Base.ViewModelBase, INotifyPropertyChanged, IDiffProgress
+    internal class DiffProgressViewModel : Base.ViewModelBase, INotifyPropertyChanged, IDiffProgress
     {
         #region fields
         private bool _IsIndeterminate = true;
@@ -144,6 +144,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets an <see cref="Exception"/> object if it was set by the processing thread
+        /// during the processing of the last request.
+        /// </summary>
         public Exception ErrorException
         {
             get { return _ErrorException; }
@@ -159,6 +163,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets an error message string if it was set by the processing thread
+        /// during the processing of the last request.
+        /// </summary>
         public string ErrorMessage
         {
             get { return _ErrorMessage; }
@@ -173,7 +181,11 @@
             }
         }
 
-        public CancellationToken Token
+        /// <summary>
+        /// Gets a cancellation token (if any is set by the caller) that can be used
+        /// to cancel the current processing (if it was setup a background task).
+        /// </summary>
+        CancellationToken IDiffProgress.Token
         {
             get
             {
