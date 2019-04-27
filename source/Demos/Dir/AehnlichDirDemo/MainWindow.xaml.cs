@@ -14,7 +14,19 @@
             InitializeComponent();
 
             Loaded += MainWindow_Loaded;
+            Unloaded += MainWindow_Unloaded;
             Closed += MainWindow_Closed;
+        }
+
+        private void MainWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var appVM = this.DataContext as System.IDisposable;
+            if (appVM != null)
+            {
+                appVM.Dispose();
+            }
+
+            this.DataContext = null;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)

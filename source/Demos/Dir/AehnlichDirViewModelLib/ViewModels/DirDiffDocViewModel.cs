@@ -556,6 +556,25 @@
             }
         }
 
+        /// <summary>
+        /// Gets the selected item (of the 2 side by side views) that was activated last
+        /// (had the focus the last time).
+        /// </summary>
+        /// <returns></returns>
+        internal IDirEntryViewModel GetSelectedItem(out bool? fromA)
+        {
+            fromA = null;
+
+            if (ViewActivation_A < ViewActivation_B)
+            {
+                fromA = false;
+                return SelectedItem_B as IDirEntryViewModel;
+            }
+
+            fromA = true;
+            return SelectedItem_A as IDirEntryViewModel;
+        }
+
         internal void SetViewMode(DiffViewModeEnum requestedViewMode)
         {
             if (_Results == null)
@@ -563,6 +582,47 @@
 
             SetData(_Results, requestedViewMode);
             _CurrentViewMode = requestedViewMode;
+        }
+
+        private static List<IDirEntryViewModel>
+            CreateViewModelEntries(IReadOnlyCollection<IDirectoryDiffEntry> entries,
+                                   string currentPathA,
+                                   string currentPathB)
+        {
+            var dirs = new List<IDirEntryViewModel>();
+
+            if (entries == null)
+                return dirs;
+
+            foreach (var item in entries)
+            {
+                dirs.Add(new DirEntryViewModel(item, currentPathA, currentPathB) as IDirEntryViewModel);
+            }
+
+            return dirs;
+        }
+
+        /// <summary>
+        /// Gets the relative sub-path portion of the current <see cref="_DirPathStack"/> against
+        /// the given <param name="basePath"/>.
+        /// </summary>
+        /// <param name="dirPathStack"></param>
+        /// <param name="forA"></param>
+        /// <returns></returns>
+        private static string GetSubPath(string basePath, Stack<IDirEntryViewModel> dirPathStack, bool forA)
+        {
+            string subPath = string.Empty;
+            if (dirPathStack.Count == 0)
+                return subPath;
+
+            if (forA)
+                subPath = dirPathStack.Peek().ItemPathA;
+            else
+                subPath = dirPathStack.Peek().ItemPathB;
+
+            subPath = subPath.Substring(basePath.Length);
+
+            return subPath;
         }
 
         private void SetData(IDirectoryDiffRoot results,
@@ -625,66 +685,6 @@
         {
             _DirEntries.ReplaceRange(dirs);
         }
-
-        private List<IDirEntryViewModel> CreateViewModelEntries(IReadOnlyCollection<IDirectoryDiffEntry> entries,
-                                                               string currentPathA,
-                                                               string currentPathB)
-        {
-            var dirs = new List<IDirEntryViewModel>();
-
-            if (entries == null)
-                return dirs;
-
-            foreach (var item in entries)
-            {
-                dirs.Add(new DirEntryViewModel(item, currentPathA, currentPathB) as IDirEntryViewModel);
-            }
-
-            return dirs;
-        }
-
-        /// <summary>
-        /// Gets the relative sub-path portion of the current <see cref="_DirPathStack"/> against
-        /// the given <param name="basePath"/>.
-        /// </summary>
-        /// <param name="dirPathStack"></param>
-        /// <param name="forA"></param>
-        /// <returns></returns>
-        private string GetSubPath(string basePath, Stack<IDirEntryViewModel> dirPathStack, bool forA)
-        {
-            string subPath = string.Empty;
-            if (dirPathStack.Count == 0)
-                return subPath;
-
-            if (forA)
-                subPath = dirPathStack.Peek().ItemPathA;
-            else
-                subPath = dirPathStack.Peek().ItemPathB;
-
-            subPath = subPath.Substring(basePath.Length);
-
-            return subPath;
-        }
-
-        /// <summary>
-        /// Gets the selected item (of the 2 side by side views) that was activated last
-        /// (had the focus the last time).
-        /// </summary>
-        /// <returns></returns>
-        internal IDirEntryViewModel GetSelectedItem(out bool? fromA)
-        {
-            fromA = null;
-
-            if (ViewActivation_A < ViewActivation_B)
-            {
-                fromA = false;
-                return SelectedItem_B as IDirEntryViewModel;
-            }
-
-            fromA = true;
-            return SelectedItem_A as IDirEntryViewModel;
-        }
-
         #endregion methods
     }
 }

@@ -46,10 +46,10 @@
 
             _DirDiffDoc = new DirDiffDocViewModel();
             _DiffViewModes = ResetViewModeDefaults();
-            _DiffProgress = new DiffProgressViewModel();
+            _DiffProgress = new DiffProgressViewModel(CancellationToken.None);
 
             _DiffFileModes = new List<IDiffFileModeItemViewModel>();
-            _DiffFileModeSelected = CreateCompateFileModes(_DiffFileModes);
+            _DiffFileModeSelected = CreateCompareFileModes(_DiffFileModes);
         }
         #endregion ctors
 
@@ -475,7 +475,7 @@
             return lst;
         }
 
-        private IDiffFileModeItemViewModel CreateCompateFileModes(
+        private static IDiffFileModeItemViewModel CreateCompareFileModes(
             IList<IDiffFileModeItemViewModel> diffFileModes)
         {
             DiffFileModeItemViewModel defaultItem = null;

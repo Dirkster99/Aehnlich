@@ -26,10 +26,11 @@
 
         #region ctors
         /// <summary>
-        /// Hidden standard class constructor.
+        /// Standard class constructor.
         /// </summary>
-        public DiffProgressViewModel()
+        public DiffProgressViewModel(CancellationToken token)
         {
+            _Token = token;
         }
         #endregion ctors
 

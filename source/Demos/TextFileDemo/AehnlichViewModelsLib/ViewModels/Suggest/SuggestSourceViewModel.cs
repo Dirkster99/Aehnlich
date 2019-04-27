@@ -56,7 +56,7 @@
                         if (newText == null)
                             return;
 
-                        var suggestions = await SuggestTextChangedCommand_Executed(newText);
+                        var suggestions = await SuggestTextChangedCommand_Executed(newText).ConfigureAwait(false);
 
                         _ListQueryResult.Clear();
                         if (suggestions != null)
@@ -139,7 +139,7 @@
             _Queue.Add(queryThis, tokenSource);
 
             // Make sure the task always processes the last input but is not started twice
-            await _SlowStuffSemaphore.WaitAsync();
+            await _SlowStuffSemaphore.WaitAsync().ConfigureAwait(false);
             try
             {
                 // There is more recent input to process so we ignore this one
@@ -150,7 +150,7 @@
                 }
 
                 // Do the search and return results
-                var result = await SuggestAsync(queryThis);
+                var result = await SuggestAsync(queryThis).ConfigureAwait(false);
 
                 return result;
             }
