@@ -523,10 +523,7 @@
                 _diffStartLines = lines.DiffStartLines;
                 _maxImaginaryLineNumber = lines.MaxImaginaryLineNumber;
 
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    _DocLineDiffs.ReplaceRange(lines.DocLineDiffs);
-                });
+                _DocLineDiffs.ReplaceRange(lines.DocLineDiffs);
             }
             else
             {
@@ -534,16 +531,10 @@
                 _diffStartLines = null;
                 _maxImaginaryLineNumber = 1;
 
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    _DocLineDiffs.Clear();
-                });
+                _DocLineDiffs.Clear();
             }
 
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                Document = new TextDocument(text);
-            });
+            Document = new TextDocument(text);
 
             NotifyPropertyChanged(() => Document);
         }
@@ -582,15 +573,12 @@
 
             text = text.Replace("\t", "    ");
 
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                // Update LineInfo viewmodels
-                _DocLineDiffs.Clear();
-                _DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
+            // Update LineInfo viewmodels
+            _DocLineDiffs.Clear();
+            _DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
 
-                // Update text document
-                Document = new TextDocument(text);
-            });
+            // Update text document
+            Document = new TextDocument(text);
 
             NotifyPropertyChanged(() => DocLineDiffs);
             NotifyPropertyChanged(() => Document);

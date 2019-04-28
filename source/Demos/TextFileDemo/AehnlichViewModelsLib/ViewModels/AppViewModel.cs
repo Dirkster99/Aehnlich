@@ -15,6 +15,7 @@
     using AehnlichLib.Text;
     using System.Threading.Tasks;
     using AehnlichLib.Interfaces;
+    using System.Windows;
 
     internal class AppViewModel : Base.ViewModelBase, IAppViewModel
     {
@@ -88,102 +89,20 @@
                 {
                     _CompareFilesCommand = new RelayCommand<object>((p) =>
                     {
-                        ISuggestSourceViewModel fileA;
-                        ISuggestSourceViewModel fileB;
 
-                        if ((p is object[]) == false)
-                        {
-                            fileA = this.FilePathA;
-                            fileB = this.FilePathB;
-                        }
-                        else
-                        {
-                            var param = p as object[];
-
-                            if (param == null)
-                                return;
-
-                            if (param.Length != 2)
-                                return;
-
-                            fileA = param[0] as SuggestSourceViewModel;
-                            fileB = param[1] as SuggestSourceViewModel;
-                        }
-
-                        if (fileA == null || fileB == null)
-                            return;
-
-                        if (fileA.IsTextValid == false || fileB.IsTextValid == false)
-                            return;
-
-                        if (string.IsNullOrEmpty(fileA.FilePath) || string.IsNullOrEmpty(fileB.FilePath))
+                        string filePathA, filePathB;
+                        if (CompareTextFilesCommand_CanExecute(p, out filePathA, out filePathB) == false)
                             return;
 
                         if (_cancelTokenSource.IsCancellationRequested == true)
                             return;
 
-                        try
-                        {
-                            var args = new ShowDiffArgs(fileA.FilePath, fileB.FilePath, DiffType.File);
-                            var processDiff = new ProcessTextDiff(args);
-
-                            _DiffProgress.ResetProgressValues(_cancelTokenSource.Token);
-                            Task.Factory.StartNew<IDiffProgress>(
-                                (pr) => processDiff.ProcessDiff(_DiffProgress)
-                              , TaskCreationOptions.LongRunning, _cancelTokenSource.Token)
-                            .ContinueWith((r) =>
-                            {
-                                bool onError = false;
-                                bool taskCancelled = false;
-
-                                if (_cancelTokenSource != null)
-                                {
-                                    // Re-create cancellation token if this task was cancelled
-                                    // to support cancelable tasks in the future
-                                    if (_cancelTokenSource.IsCancellationRequested)
-                                    {
-                                        taskCancelled = true;
-                                        _cancelTokenSource.Dispose();
-                                        _cancelTokenSource = new CancellationTokenSource();
-                                    }
-                                }
-
-                                if (taskCancelled == false)
-                                {
-                                    if (r.Result == null)
-                                        onError = true;
-                                    else
-                                    {
-                                        if (r.Result.ResultData == null)
-                                            onError = true;
-                                    }
-                                }
-
-                                if (onError == false && taskCancelled == false)
-                                {
-                                    var diffResults = r.Result.ResultData as ProcessTextDiff;
-
-                                    _DiffCtrl.ShowDifferences(args, diffResults);
-
-                                    FocusControl = Focus.None;
-                                    FocusControl = Focus.LeftView;
-                                    GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
-
-                                    // Position view on first difference if thats available
-                                    if (_DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
-                                        _DiffCtrl.GoToFirstDifferenceCommand.Execute(null);
-
-                                    NotifyPropertyChanged(() => DiffCtrl);
-                                }
-                                else
-                                {
-                                    // Display Error
-                                }
-                            });
-                        }
-                        catch
-                        {
-                        }
+                        CompareTextFilesCommand_Executed(filePathA, filePathB);
+                    },
+                    (p) =>
+                    {
+                        string filePathA, filePathB;
+                        return CompareTextFilesCommand_CanExecute(p, out filePathA, out filePathB);
                     });
                 }
 
@@ -544,6 +463,124 @@
         #endregion properties
 
         #region methods
+        #region Compare Command
+        private void CompareTextFilesCommand_Executed(string filePathA, string filePathB)
+        {
+            try
+            {
+                var args = new ShowDiffArgs(filePathA, filePathB, DiffType.File);
+                var processDiff = new ProcessTextDiff(args);
+
+                _DiffProgress.ResetProgressValues(_cancelTokenSource.Token);
+                Task.Factory.StartNew<IDiffProgress>(
+                    (pr) => processDiff.ProcessDiff(_DiffProgress),
+                    TaskCreationOptions.LongRunning,
+                    _cancelTokenSource.Token)
+                .ContinueWith((r) =>
+                {
+                    bool onError = false;
+                    bool taskCancelled = false;
+
+                    if (_cancelTokenSource != null)
+                    {
+                        // Re-create cancellation token if this task was cancelled
+                        // to support cancelable tasks in the future
+                        if (_cancelTokenSource.IsCancellationRequested)
+                        {
+                            taskCancelled = true;
+                            _cancelTokenSource.Dispose();
+                            _cancelTokenSource = new CancellationTokenSource();
+                        }
+                    }
+
+                    if (taskCancelled == false)
+                    {
+                        if (r.Result == null)
+                            onError = true;
+                        else
+                        {
+                            if (r.Result.ResultData == null)
+                                onError = true;
+                        }
+                    }
+
+                    if (onError == false && taskCancelled == false)
+                    {
+                        var diffResults = r.Result.ResultData as ProcessTextDiff;
+
+                        _DiffCtrl.ShowDifferences(args, diffResults);
+
+                        FocusControl = Focus.None;
+                        FocusControl = Focus.LeftView;
+                        GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
+
+                        // Position view on first difference if thats available
+                        if (_DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
+                        {
+                            _DiffCtrl.GoToFirstDifferenceCommand.Execute(null);
+                        }
+
+                        NotifyPropertyChanged(() => DiffCtrl);
+                    }
+                    else
+                    {
+                        // Display Error
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+            }
+            catch
+            {
+                // Extend me with erro displays
+            }
+        }
+
+        private bool CompareTextFilesCommand_CanExecute(object p, out string a, out string b)
+        {
+            a = null;
+            b = null;
+
+            if (DiffProgress.IsProgressbarVisible == true)
+                return false;
+
+            ISuggestSourceViewModel fileA;
+            ISuggestSourceViewModel fileB;
+
+            if ((p is object[]) == false)
+            {
+                // Use internal bindings if parameter appears to be incompatible
+                fileA = this.FilePathA;
+                fileB = this.FilePathB;
+            }
+            else
+            {
+                var param = p as object[];
+
+                if (param == null)
+                    return false;
+
+                if (param.Length != 2)
+                    return false;
+
+                fileA = param[0] as SuggestSourceViewModel;
+                fileB = param[1] as SuggestSourceViewModel;
+            }
+
+            if (fileA == null || fileB == null)
+                return false;
+
+            if (fileA.IsTextValid == false || fileB.IsTextValid == false)
+                return false;
+
+            if (string.IsNullOrEmpty(fileA.FilePath) || string.IsNullOrEmpty(fileB.FilePath))
+                return false;
+
+            a = fileA.FilePath;
+            b = fileB.FilePath;
+
+            return true;
+        }
+        #endregion Compare Command
+
         private InlineDialogMode ToogleInlineDialog(InlineDialogMode forThisDialog)
         {
             if (InlineDialog != forThisDialog)
