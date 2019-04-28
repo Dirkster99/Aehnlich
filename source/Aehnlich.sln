@@ -2,9 +2,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{40F32E20-3517-4025-9EF2-10FB0FE863B1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AehnlichFileDemo", "Demos\TextFileDemo\AehnlichFileDemo\AehnlichFileDemo.csproj", "{1AA9B198-CC6C-4533-A369-DB6FDA649104}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AehnlichDirDemo", "Demos\Dir\AehnlichDirDemo\AehnlichDirDemo.csproj", "{BFAD6A61-B355-4D3B-B638-86501C5FC6E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{40F32E20-3517-4025-9EF2-10FB0FE863B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AehnlichLib", "AehnlichLib\AehnlichLib.csproj", "{C0D1E820-EB48-4B79-BCD6-C2DE7CC367F2}"
 EndProject
@@ -13,8 +15,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AehnlichViewLib", "AehnlichViewLib\AehnlichViewLib.csproj", "{342915EC-E1CA-4AAD-BDDB-810EE65E4233}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dir", "Dir", "{2905550E-703E-4ADB-BC77-573CE3FB852B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AehnlichDirDemo", "Demos\Dir\AehnlichDirDemo\AehnlichDirDemo.csproj", "{BFAD6A61-B355-4D3B-B638-86501C5FC6E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AehnlichDirViewModelLib", "Demos\Dir\AehnlichDirViewModelLib\AehnlichDirViewModelLib.csproj", "{920650A5-C019-4E33-AD92-04BC77BD59B0}"
 EndProject
