@@ -608,15 +608,12 @@
                 this.StatusText = "Text Comparison";
             }
 
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                SetData(r.ListA, r.ListB, r.Script, args,
-                        r.IgnoreCase, r.IgnoreTextWhitespace, r.IsBinaryCompare);
+            SetData(r.ListA, r.ListB, r.Script, args,
+                    r.IgnoreCase, r.IgnoreTextWhitespace, r.IsBinaryCompare);
 
-                // Update the stats
-                this.NumberOfLines = (uint)r.ListA.Count;
-                this.MaxNumberOfLines = (uint)_ViewA.LineCount;
-            });
+            // Update the stats
+            this.NumberOfLines = (uint)r.ListA.Count;
+            this.MaxNumberOfLines = (uint)_ViewA.LineCount;
 
             int iDeletes = 0, iChanges = 0, iInserts = 0;
 
