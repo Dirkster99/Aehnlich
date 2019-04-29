@@ -197,7 +197,7 @@
                 {
                     var file = new FileInfo(input);
                     var folder = file.Directory.FullName;
-                    string searchPattern = folder + "*";
+                    string searchPattern = "*";
 
                     List<object> dirs = new List<object>();
                     string[] items = null;

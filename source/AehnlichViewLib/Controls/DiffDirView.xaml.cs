@@ -22,7 +22,16 @@
     public partial class DiffDirView : Control
     {
         #region fields
+        /// <summary>
+        /// Defines the name of the left required grid. This Grid is required to synchronize
+        /// the middle splitter object with the controles that are outside of this control.
+        /// </summary>
         public const string PART_GridA = "PART_GridA";
+
+        /// <summary>
+        /// Defines the name of the right required grid. This Grid is required to synchronize
+        /// the middle splitter object with the controles that are outside of this control.
+        /// </summary>
         public const string PART_GridB = "PART_GridB";
 
         /// <summary>
@@ -172,6 +181,44 @@
                 typeof(DiffDirView), new PropertyMetadata(null));
         #endregion SelectedItem
 
+        #region SelectedItems
+        // Use each source list's hashcode as the key so that we don't hold on
+        // to any references in case the DataGrid gets disposed without telling
+        // to remove the source list from our registry.
+        private readonly Dictionary<int, DataGridsAndInitiatedSelectionChange> selectedItemsSources;
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="SelectedItemsSourceA"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedItemsSourceAProperty =
+            DependencyProperty.Register("SelectedItemsSourceA",
+                typeof(INotifyCollectionChanged),
+                typeof(DiffDirView), new PropertyMetadata(null, SelectedItemsSourceAChanged));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="SelectedItemsSourceB"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedItemsSourceBProperty =
+            DependencyProperty.Register("SelectedItemsSourceB", typeof(INotifyCollectionChanged),
+                typeof(DiffDirView), new PropertyMetadata(null, SelectedItemsSourceBChanged));
+        #endregion SelectedItems
+
+        #region ContextMenu
+        /// <summary>
+        /// Implements the backing store of the <see cref="ContextMenuA"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ContextMenuAProperty =
+            DependencyProperty.Register("ContextMenuA", typeof(ContextMenu),
+                typeof(DiffDirView), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="ContextMenuB"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ContextMenuBProperty =
+            DependencyProperty.Register("ContextMenuB", typeof(ContextMenu),
+                typeof(DiffDirView), new PropertyMetadata(null));
+        #endregion ContextMenu
+
         #region Column A B GridSplitter Synchronization
         /// <summary>
         /// Implements the backing store of the <see cref="ColumnWidthA"/> dependency property.
@@ -187,274 +234,6 @@
             DependencyProperty.Register("ColumnWidthB", typeof(GridLength),
                 typeof(DiffDirView), new PropertyMetadata(default(GridLength), OnColumnWidthBChanged));
         #endregion Column A B GridSplitter Synchronization
-
-        #region SelectedItems
-        // Use each source list's hashcode as the key so that we don't hold on
-        // to any references in case the DataGrid gets disposed without telling
-        // to remove the source list from our registry.
-        private readonly Dictionary<int, DataGridsAndInitiatedSelectionChange> selectedItemsSources;
-
-        public static readonly DependencyProperty SelectedItemsSourceAProperty =
-            DependencyProperty.Register("SelectedItemsSourceA",
-                typeof(INotifyCollectionChanged),
-                typeof(DiffDirView), new PropertyMetadata(null, SelectedItemsSourceAChanged));
-
-        public static readonly DependencyProperty SelectedItemsSourceBProperty =
-            DependencyProperty.Register("SelectedItemsSourceB", typeof(INotifyCollectionChanged),
-                typeof(DiffDirView), new PropertyMetadata(null, SelectedItemsSourceBChanged));
-
-        public INotifyCollectionChanged SelectedItemsSourceA
-        {
-            get { return (INotifyCollectionChanged)GetValue(SelectedItemsSourceAProperty); }
-            set { SetValue(SelectedItemsSourceAProperty, value); }
-        }
-
-        public INotifyCollectionChanged SelectedItemsSourceB
-        {
-            get { return (INotifyCollectionChanged)GetValue(SelectedItemsSourceBProperty); }
-            set { SetValue(SelectedItemsSourceBProperty, value); }
-        }
-
-        private static void SelectedItemsSourceAChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var diffView = d as DiffDirView;
-            diffView.SelectedItemsSourceAChanged(e, diffView._PART_GridA);
-        }
-
-        private static void SelectedItemsSourceBChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var diffView = d as DiffDirView;
-            diffView.SelectedItemsSourceAChanged(e, diffView._PART_GridB);
-        }
-
-        private void SelectedItemsSourceAChanged(DependencyPropertyChangedEventArgs args, DataGrid dataGrid)
-        {
-            IList selectedItemsSource = null;
-
-            // Check if the app is setting the source to a new or different list, or if it is removing the binding
-            if (args.NewValue != null)
-            {
-                selectedItemsSource = args.NewValue as IList;
-                if (selectedItemsSource == null)
-                {
-                    throw new ArgumentException("The value for SelectedItemsSource must implement IList.");
-                }
-
-                INotifyCollectionChanged collection = args.NewValue as INotifyCollectionChanged;
-                if (collection == null)
-                {
-                    throw new ArgumentException("The value for SelectedItemsSource must implement INotifyCollectionChanged.");
-                }
-
-                // Don't add the event handler if the DataGrid is not setting its SelectedItemsSource for the first time
-                if (args.OldValue == null)
-                {
-                    // Sign up for changes to the DataGrid's selected items to enable a two-way binding effect
-                    dataGrid.SelectionChanged += UpdateSourceListOnDataGridSelectionChanged;
-                }
-
-                // Track this DataGrid instance for the specified source list
-                DataGridsAndInitiatedSelectionChange sourceListInfo = null;
-                if (this.selectedItemsSources.TryGetValue(selectedItemsSource.GetHashCode(), out sourceListInfo))
-                {
-                    sourceListInfo.BoundDataGridReferences.Add(new WeakReference(dataGrid));
-                }
-                else
-                {
-                    // This is a new source collection
-                    sourceListInfo = new DataGridsAndInitiatedSelectionChange() { InitiatedSelectionChange = false };
-                    sourceListInfo.BoundDataGridReferences.Add(new WeakReference(dataGrid));
-                    this.selectedItemsSources.Add(selectedItemsSource.GetHashCode(), sourceListInfo);
-
-                    // Sign up for changes to the source only on the first time the source is added
-                    collection.CollectionChanged += UpdateDataGridsOnSourceCollectionChanged;
-                }
-
-                // Now force the DataGrid to update its SelectedItems to match the current
-                // contents of the source list
-                sourceListInfo.InitiatedSelectionChange = true;
-                UpdateDataGrid(dataGrid, selectedItemsSource, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                sourceListInfo.InitiatedSelectionChange = false;
-            }
-            else
-            {
-                // This DataGrid is removing its SelectedItems binding to any list
-                dataGrid.SelectionChanged -= UpdateSourceListOnDataGridSelectionChanged;
-                dataGrid.SelectedItems.Clear();
-            }
-
-            if (args.OldValue != null)
-            {
-                // Clean up the items source that was the old value
-
-                // Remove the DataGrid from the source list's registry and remove the source list
-                // if there are no more DataGrids bound to it.
-                DataGridsAndInitiatedSelectionChange sourceListInfo = this.selectedItemsSources[args.OldValue.GetHashCode()];
-                WeakReference dataGridReferenceNeedingRemoval = null;
-                foreach (WeakReference dataGridReference in sourceListInfo.BoundDataGridReferences)
-                {
-                    if (dataGridReference.IsAlive && (dataGridReference.Target == dataGrid))
-                    {
-                        dataGridReferenceNeedingRemoval = dataGridReference;
-                        break;
-                    }
-                }
-                sourceListInfo.BoundDataGridReferences.Remove(dataGridReferenceNeedingRemoval);
-                if (sourceListInfo.BoundDataGridReferences.Count == 0)
-                {
-                    this.selectedItemsSources.Remove(args.OldValue.GetHashCode());
-
-                    // Detach the event handlers and clear DataGrid.SelectedItems since the source is now null
-                    INotifyCollectionChanged collection = args.OldValue as INotifyCollectionChanged;
-                    if (collection != null)
-                    {
-                        collection.CollectionChanged -= UpdateDataGridsOnSourceCollectionChanged;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Helper method to update the items in DataGrid.SelectedItems based on the changes defined in the given NotifyCollectionChangedEventArgs
-        /// </summary>
-        /// <param name="dataGrid">DataGrid which owns the SelectedItems collection to update</param>
-        /// <param name="sourceList">IList which is the SelectedItemsSource</param>
-        /// <param name="collectionChangedArgs">The NotifyCollectionChangedEventArgs that was passed into the CollectionChanged event handler</param>
-        private void UpdateDataGrid(DataGrid dataGrid, IList sourceList, NotifyCollectionChangedEventArgs collectionChangedArgs)
-        {
-            switch (collectionChangedArgs.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    foreach (object newItem in collectionChangedArgs.NewItems)
-                    {
-                        dataGrid.SelectedItems.Add(newItem);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (object oldItem in collectionChangedArgs.OldItems)
-                    {
-                        dataGrid.SelectedItems.Remove(oldItem);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    // Unfortunately can not do the following two steps as an atomic change
-                    // so the target list could raise multiple notifications as it gets updated
-                    dataGrid.SelectedItems.Clear();
-                    foreach (object item in sourceList)
-                    {
-                        dataGrid.SelectedItems.Add(item);
-                    }
-                    break;
-                default:
-                    throw new NotImplementedException("Only Add, Remove, and Reset actions are implemented.");
-            }
-        }
-
-        /// <summary>
-        /// INotifyCollectionChanged.CollectionChanged handler for updating DataGrid.SelectedItems when the source list changes
-        /// </summary>
-        private void UpdateDataGridsOnSourceCollectionChanged(object source, NotifyCollectionChangedEventArgs collectionChangedArgs)
-        {
-            DataGridsAndInitiatedSelectionChange sourceListInfo = this.selectedItemsSources[source.GetHashCode()];
-
-            // For each DataGrid that is bound to this list, is alive, and did not initate selection changes, update its selection
-            sourceListInfo.InitiatedSelectionChange = true;
-            IList sourceList = source as IList;
-            Debug.Assert(sourceList != null, "SelectedItemsSource must be of type IList");
-            DataGrid dataGrid = null;
-            foreach (WeakReference dataGridReference in sourceListInfo.BoundDataGridReferences)
-            {
-                if (dataGridReference.IsAlive && !this.GetInitiatedSelectionChange(dataGridReference.Target as DataGrid))
-                {
-                    dataGrid = dataGridReference.Target as DataGrid;
-                    UpdateDataGrid(dataGrid, sourceList, collectionChangedArgs);
-                }
-            }
-            sourceListInfo.InitiatedSelectionChange = false;
-        }
-
-        private bool GetInitiatedSelectionChange(DataGrid dataGrid)
-        {
-            if (dataGrid == null)
-                return false;
-
-            if (dataGrid == _PART_GridA || dataGrid == _PART_GridB)
-                return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// DataGrid.SelectionChanged handler to update the source list given the SelectionChangedEventArgs
-        /// </summary>
-        private void UpdateSourceListOnDataGridSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedArgs)
-        {
-            DataGrid dataGrid = sender as DataGrid;
-            IList selectedItemsSource = null;
-
-            if (dataGrid == _PART_GridA)
-                selectedItemsSource = this.SelectedItemsSourceA as IList;
-            else
-            {
-                if (dataGrid == _PART_GridB)
-                    selectedItemsSource = this.SelectedItemsSourceB as IList;
-                else
-                {
-                    Debug.Fail("Failed to assign sender to a known Grid");
-                }
-            }
-
-            Debug.Assert(selectedItemsSource != null, "SelectedItemsSource must be of type IList");
-
-            // If the source list initiated the changes then don't pass the DataGrid's changes back down to the source list
-            if (!this.selectedItemsSources[selectedItemsSource.GetHashCode()].InitiatedSelectionChange)
-            {
-                ////DataGridMultipleSelection.SetInitiatedSelectionChange(dataGrid, true);
-
-                foreach (object removedItem in selectionChangedArgs.RemovedItems)
-                {
-                    selectedItemsSource.Remove(removedItem);
-                }
-
-                foreach (object addedItem in selectionChangedArgs.AddedItems)
-                {
-                    ////Not sure why this is necessary?
-                    ////if (IsGenericList(selectedItemsSource.GetType(), addedItem.GetType()))
-                        selectedItemsSource.Add(addedItem);
-                }
-
-                ////DataGridMultipleSelection.SetInitiatedSelectionChange(dataGrid, false);
-            }
-        }
-
-        /// <summary>
-        /// Compare a generic collection and determine whether its item-type matches
-        /// the type of a given item.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="itemType"></param>
-        /// <returns></returns>
-        private bool IsGenericList(Type type, Type itemType)
-        {
-            if (type == null)
-            {
-                throw new ArgumentNullException("type");
-            }
-
-            foreach (Type @interface in type.GetInterfaces())
-            {
-                if (@interface.IsGenericType)
-                {
-                    // Match type used as generic argument with type of item
-                    if (@interface.GenericTypeArguments[0] == itemType)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        #endregion SelectedItems
 
         private ColumnDefinition _PART_ColumnA, _PART_ColumnB;
         private GridSplitter _PART_GridSplitter;
@@ -674,26 +453,6 @@
         }
         #endregion ViewActivation
 
-        #region Column A B Synchronization
-        /// <summary>
-        /// Gets the width of column A in a view with columns A and B being separated by a GridSplitter.
-        /// </summary>
-        public GridLength ColumnWidthA
-        {
-            get { return (GridLength)GetValue(ColumnWidthAProperty); }
-            set { SetValue(ColumnWidthAProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets the width of column B in a view with columns A and B being separated by a GridSplitter.
-        /// </summary>
-        public GridLength ColumnWidthB
-        {
-            get { return (GridLength)GetValue(ColumnWidthBProperty); }
-            set { SetValue(ColumnWidthBProperty, value); }
-        }
-        #endregion Column A B Synchronization
-
         #region SelectedItem
         /// <summary>
         /// Gets the selecteditem (if any) from the left PART_GridA.
@@ -713,6 +472,66 @@
             set { SetValue(SelectedItem_BProperty, value); }
         }
         #endregion SelectedItem
+
+        #region SelectedItems
+        /// <summary>
+        /// Gets/sets multiple (if any) selected items for the left View A.
+        /// </summary>
+        public INotifyCollectionChanged SelectedItemsSourceA
+        {
+            get { return (INotifyCollectionChanged)GetValue(SelectedItemsSourceAProperty); }
+            set { SetValue(SelectedItemsSourceAProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets multiple (if any) selected items for the right View B.
+        /// </summary>
+        public INotifyCollectionChanged SelectedItemsSourceB
+        {
+            get { return (INotifyCollectionChanged)GetValue(SelectedItemsSourceBProperty); }
+            set { SetValue(SelectedItemsSourceBProperty, value); }
+        }
+        #endregion SelectedItems
+
+        #region ContextMenu
+        /// <summary>
+        /// Gets/sets the context menu for the left view A.
+        /// </summary>
+        public ContextMenu ContextMenuA
+        {
+            get { return (ContextMenu)GetValue(ContextMenuAProperty); }
+            set { SetValue(ContextMenuAProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets the context menu for the left view B.
+        /// </summary>
+        public ContextMenu ContextMenuB
+        {
+            get { return (ContextMenu)GetValue(ContextMenuBProperty); }
+            set { SetValue(ContextMenuBProperty, value); }
+        }
+        #endregion ContextMenu
+
+        #region Column A B GridSplitter Synchronization
+        /// <summary>
+        /// Gets the width of column A in a view with columns A and B being separated by a GridSplitter.
+        /// </summary>
+        public GridLength ColumnWidthA
+        {
+            get { return (GridLength)GetValue(ColumnWidthAProperty); }
+            set { SetValue(ColumnWidthAProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets the width of column B in a view with columns A and B being separated by a GridSplitter.
+        /// </summary>
+        public GridLength ColumnWidthB
+        {
+            get { return (GridLength)GetValue(ColumnWidthBProperty); }
+            set { SetValue(ColumnWidthBProperty, value); }
+        }
+        #endregion Column A B GridSplitter Synchronization
         #endregion properties
 
         #region methods
@@ -917,6 +736,248 @@
                     ActivationTimeStamp_B = DateTime.Now;
             }
         }
+
+        #region SelectedItems
+        private static void SelectedItemsSourceAChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var diffView = d as DiffDirView;
+            diffView.SelectedItemsSourceAChanged(e, diffView._PART_GridA);
+        }
+
+        private static void SelectedItemsSourceBChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var diffView = d as DiffDirView;
+            diffView.SelectedItemsSourceAChanged(e, diffView._PART_GridB);
+        }
+
+        private void SelectedItemsSourceAChanged(DependencyPropertyChangedEventArgs args, DataGrid dataGrid)
+        {
+            IList selectedItemsSource = null;
+
+            // Check if the app is setting the source to a new or different list, or if it is removing the binding
+            if (args.NewValue != null)
+            {
+                selectedItemsSource = args.NewValue as IList;
+                if (selectedItemsSource == null)
+                {
+                    throw new ArgumentException("The value for SelectedItemsSource must implement IList.");
+                }
+
+                INotifyCollectionChanged collection = args.NewValue as INotifyCollectionChanged;
+                if (collection == null)
+                {
+                    throw new ArgumentException("The value for SelectedItemsSource must implement INotifyCollectionChanged.");
+                }
+
+                // Don't add the event handler if the DataGrid is not setting its SelectedItemsSource for the first time
+                if (args.OldValue == null)
+                {
+                    // Sign up for changes to the DataGrid's selected items to enable a two-way binding effect
+                    dataGrid.SelectionChanged += UpdateSourceListOnDataGridSelectionChanged;
+                }
+
+                // Track this DataGrid instance for the specified source list
+                DataGridsAndInitiatedSelectionChange sourceListInfo = null;
+                if (this.selectedItemsSources.TryGetValue(selectedItemsSource.GetHashCode(), out sourceListInfo))
+                {
+                    sourceListInfo.BoundDataGridReferences.Add(new WeakReference(dataGrid));
+                }
+                else
+                {
+                    // This is a new source collection
+                    sourceListInfo = new DataGridsAndInitiatedSelectionChange() { InitiatedSelectionChange = false };
+                    sourceListInfo.BoundDataGridReferences.Add(new WeakReference(dataGrid));
+                    this.selectedItemsSources.Add(selectedItemsSource.GetHashCode(), sourceListInfo);
+
+                    // Sign up for changes to the source only on the first time the source is added
+                    collection.CollectionChanged += UpdateDataGridsOnSourceCollectionChanged;
+                }
+
+                // Now force the DataGrid to update its SelectedItems to match the current
+                // contents of the source list
+                sourceListInfo.InitiatedSelectionChange = true;
+                UpdateDataGrid(dataGrid, selectedItemsSource, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                sourceListInfo.InitiatedSelectionChange = false;
+            }
+            else
+            {
+                // This DataGrid is removing its SelectedItems binding to any list
+                dataGrid.SelectionChanged -= UpdateSourceListOnDataGridSelectionChanged;
+                dataGrid.SelectedItems.Clear();
+            }
+
+            if (args.OldValue != null)
+            {
+                // Clean up the items source that was the old value
+
+                // Remove the DataGrid from the source list's registry and remove the source list
+                // if there are no more DataGrids bound to it.
+                DataGridsAndInitiatedSelectionChange sourceListInfo = this.selectedItemsSources[args.OldValue.GetHashCode()];
+                WeakReference dataGridReferenceNeedingRemoval = null;
+                foreach (WeakReference dataGridReference in sourceListInfo.BoundDataGridReferences)
+                {
+                    if (dataGridReference.IsAlive && (dataGridReference.Target == dataGrid))
+                    {
+                        dataGridReferenceNeedingRemoval = dataGridReference;
+                        break;
+                    }
+                }
+                sourceListInfo.BoundDataGridReferences.Remove(dataGridReferenceNeedingRemoval);
+                if (sourceListInfo.BoundDataGridReferences.Count == 0)
+                {
+                    this.selectedItemsSources.Remove(args.OldValue.GetHashCode());
+
+                    // Detach the event handlers and clear DataGrid.SelectedItems since the source is now null
+                    INotifyCollectionChanged collection = args.OldValue as INotifyCollectionChanged;
+                    if (collection != null)
+                    {
+                        collection.CollectionChanged -= UpdateDataGridsOnSourceCollectionChanged;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Helper method to update the items in DataGrid.SelectedItems based on the changes defined in the given NotifyCollectionChangedEventArgs
+        /// </summary>
+        /// <param name="dataGrid">DataGrid which owns the SelectedItems collection to update</param>
+        /// <param name="sourceList">IList which is the SelectedItemsSource</param>
+        /// <param name="collectionChangedArgs">The NotifyCollectionChangedEventArgs that was passed into the CollectionChanged event handler</param>
+        private void UpdateDataGrid(DataGrid dataGrid, IList sourceList, NotifyCollectionChangedEventArgs collectionChangedArgs)
+        {
+            switch (collectionChangedArgs.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (object newItem in collectionChangedArgs.NewItems)
+                    {
+                        dataGrid.SelectedItems.Add(newItem);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (object oldItem in collectionChangedArgs.OldItems)
+                    {
+                        dataGrid.SelectedItems.Remove(oldItem);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    // Unfortunately can not do the following two steps as an atomic change
+                    // so the target list could raise multiple notifications as it gets updated
+                    dataGrid.SelectedItems.Clear();
+                    foreach (object item in sourceList)
+                    {
+                        dataGrid.SelectedItems.Add(item);
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException("Only Add, Remove, and Reset actions are implemented.");
+            }
+        }
+
+        /// <summary>
+        /// INotifyCollectionChanged.CollectionChanged handler for updating DataGrid.SelectedItems when the source list changes
+        /// </summary>
+        private void UpdateDataGridsOnSourceCollectionChanged(object source, NotifyCollectionChangedEventArgs collectionChangedArgs)
+        {
+            DataGridsAndInitiatedSelectionChange sourceListInfo = this.selectedItemsSources[source.GetHashCode()];
+
+            // For each DataGrid that is bound to this list, is alive, and did not initate selection changes, update its selection
+            sourceListInfo.InitiatedSelectionChange = true;
+            IList sourceList = source as IList;
+            Debug.Assert(sourceList != null, "SelectedItemsSource must be of type IList");
+            DataGrid dataGrid = null;
+            foreach (WeakReference dataGridReference in sourceListInfo.BoundDataGridReferences)
+            {
+                if (dataGridReference.IsAlive && !this.GetInitiatedSelectionChange(dataGridReference.Target as DataGrid))
+                {
+                    dataGrid = dataGridReference.Target as DataGrid;
+                    UpdateDataGrid(dataGrid, sourceList, collectionChangedArgs);
+                }
+            }
+            sourceListInfo.InitiatedSelectionChange = false;
+        }
+
+        private bool GetInitiatedSelectionChange(DataGrid dataGrid)
+        {
+            if (dataGrid == null)
+                return false;
+
+            if (dataGrid == _PART_GridA || dataGrid == _PART_GridB)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// DataGrid.SelectionChanged handler to update the source list given the SelectionChangedEventArgs
+        /// </summary>
+        private void UpdateSourceListOnDataGridSelectionChanged(object sender, SelectionChangedEventArgs selectionChangedArgs)
+        {
+            DataGrid dataGrid = sender as DataGrid;
+            IList selectedItemsSource = null;
+
+            if (dataGrid == _PART_GridA)
+                selectedItemsSource = this.SelectedItemsSourceA as IList;
+            else
+            {
+                if (dataGrid == _PART_GridB)
+                    selectedItemsSource = this.SelectedItemsSourceB as IList;
+                else
+                {
+                    Debug.Fail("Failed to assign sender to a known Grid");
+                }
+            }
+
+            Debug.Assert(selectedItemsSource != null, "SelectedItemsSource must be of type IList");
+
+            // If the source list initiated the changes then don't pass the DataGrid's changes back down to the source list
+            if (!this.selectedItemsSources[selectedItemsSource.GetHashCode()].InitiatedSelectionChange)
+            {
+                ////DataGridMultipleSelection.SetInitiatedSelectionChange(dataGrid, true);
+
+                foreach (object removedItem in selectionChangedArgs.RemovedItems)
+                {
+                    selectedItemsSource.Remove(removedItem);
+                }
+
+                foreach (object addedItem in selectionChangedArgs.AddedItems)
+                {
+                    ////Not sure why this is necessary?
+                    ////if (IsGenericList(selectedItemsSource.GetType(), addedItem.GetType()))
+                    selectedItemsSource.Add(addedItem);
+                }
+
+                ////DataGridMultipleSelection.SetInitiatedSelectionChange(dataGrid, false);
+            }
+        }
+
+        /// <summary>
+        /// Compare a generic collection and determine whether its item-type matches
+        /// the type of a given item.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="itemType"></param>
+        /// <returns></returns>
+        private bool IsGenericList(Type type, Type itemType)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException("type");
+            }
+
+            foreach (Type @interface in type.GetInterfaces())
+            {
+                if (@interface.IsGenericType)
+                {
+                    // Match type used as generic argument with type of item
+                    if (@interface.GenericTypeArguments[0] == itemType)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        #endregion SelectedItems
         #endregion methods
 
         #region private classes

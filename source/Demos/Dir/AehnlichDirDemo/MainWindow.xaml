@@ -123,7 +123,7 @@
                         ToolTipService.ShowOnDisabled="true"
                     >
                         <Button.Background>
-                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ArrowUpKey}}"/>
+                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_FolderUpKey}}"/>
                         </Button.Background>
                     </Button>
 
@@ -139,7 +139,7 @@
                         ToolTipService.ShowOnDisabled="true"
                     >
                         <Button.Background>
-                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ArrowDownKey}}"/>
+                            <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_FolderDownKey}}"/>
                         </Button.Background>
                     </Button>
 
@@ -162,7 +162,7 @@
                         BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
 						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
 					>
-                    <Grid 
+                        <Grid 
                         HorizontalAlignment="Stretch"
 						MinHeight="16" MinWidth="16"
 						Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
@@ -179,7 +179,7 @@
                         BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
 						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
 					>
-                    <Grid 
+                        <Grid 
                         HorizontalAlignment="Stretch"
 						MinHeight="16" MinWidth="16"
 						Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
@@ -199,7 +199,7 @@
                     <Border
                         BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
 						Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}">
-                    <Grid 
+                        <Grid 
                         HorizontalAlignment="Stretch"
 						MinHeight="16" MinWidth="16"
 						Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
@@ -349,12 +349,63 @@
                               SelectedItemsSourceA="{Binding DirDiffDoc.SelectedItemsA,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                               SelectedItemsSourceB="{Binding DirDiffDoc.SelectedItemsB,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                               >
+                <ctrl:DiffDirView.Resources>
+                    <behav:BindingProxy x:Key="ControlContextProxy" Data="{Binding DirDiffDoc}" />
+                </ctrl:DiffDirView.Resources>
                 <ctrl:DiffDirView.Visibility>
                     <MultiBinding Converter="{StaticResource MultiBoolToVisibilityPropConverter}">
                         <Binding Path="DirDiffDoc.IsDiffDataAvailable" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                         <Binding Path="DiffProgress.IsProgressbarVisible" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                     </MultiBinding>
                 </ctrl:DiffDirView.Visibility>
+                <ctrl:DiffDirView.ContextMenuA>
+                    <ContextMenu>
+                        <MenuItem
+                            Header="Open Containing Folder"
+                            IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                            Command="{Binding Data.OpenContainingFolderCommand, Source={StaticResource ControlContextProxy}}"
+                            CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                        />
+
+                        <MenuItem
+                            Header="Copy Path to Clipboard"
+                            IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                            Command="{Binding Data.CopyPathAToClipboardCommand, Source={StaticResource ControlContextProxy}}"
+                            CommandParameter="{Binding Data.SelectedItemsA, Source={StaticResource ControlContextProxy}}"
+                        />
+
+                        <MenuItem
+                            Header="Open in Windows"
+                            IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                            Command="{Binding Data.OpenInWindowsCommand, Source={StaticResource ControlContextProxy}}"
+                            CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                        />
+                    </ContextMenu>
+                </ctrl:DiffDirView.ContextMenuA>
+                <ctrl:DiffDirView.ContextMenuB>
+                    <ContextMenu>
+                        <MenuItem
+                            Header="Open Containing Folder"
+                            IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                            Command="{Binding Data.OpenContainingFolderCommand, Source={StaticResource ControlContextProxy}}"
+                            CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                        />
+
+                        <MenuItem
+                            Header="Copy Path to Clipboard"
+                            IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                            Command="{Binding Data.CopyPathBToClipboardCommand, Source={StaticResource ControlContextProxy}}"
+                            CommandParameter="{Binding Data.SelectedItemsB, Source={StaticResource ControlContextProxy}}"
+                        />
+
+                        <MenuItem
+                            Header="Open in Windows"
+                            IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                            Command="{Binding Data.OpenInWindowsCommand, Source={StaticResource ControlContextProxy}}"
+                            CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                        />
+                    </ContextMenu>
+                </ctrl:DiffDirView.ContextMenuB>
             </ctrl:DiffDirView>
         </Grid>
     </Grid>

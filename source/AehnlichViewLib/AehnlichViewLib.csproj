@@ -192,6 +192,14 @@
     <Content Include="Icons\Light\Close_16x.svg" />
     <Resource Include="Icons\Dark\Close_White_16x.ico" />
     <Content Include="Icons\Dark\Close_White_16x.svg" />
+    <Resource Include="Icons\Light\FolderOpen_Down.ico" />
+    <Resource Include="Icons\Light\FolderOpen_Down1_16x.ico" />
+    <Content Include="Icons\Light\FolderOpen_Down1_16x.svg" />
+    <Content Include="Icons\Light\FolderOpen_Down_16x.svg" />
+    <Resource Include="Icons\Light\FolderOpen_Up.ico" />
+    <Resource Include="Icons\Light\FolderOpen_Up1_16x.ico" />
+    <Content Include="Icons\Light\FolderOpen_Up1_16x.svg" />
+    <Content Include="Icons\Light\FolderOpen_Up_16x.svg" />
     <Content Include="Icons\Light\minus.svg" />
     <Resource Include="Icons\Light\plus.ico" />
     <Content Include="Icons\Light\Next_16x.svg" />

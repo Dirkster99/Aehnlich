@@ -106,9 +106,15 @@
 
         /// <summary>
         /// Gets a command that copies the path from all selected item(s)
-        /// into the Windows clipboard.
+        /// in the left view A into the Windows clipboard.
         /// </summary>
-        ICommand CopyPathToClipboardCommand { get; }
+        ICommand CopyPathAToClipboardCommand { get; }
+
+        /// <summary>
+        /// Gets a command that copies the path from all selected item(s)
+        /// in the right view B into the Windows clipboard.
+        /// </summary>
+        ICommand CopyPathBToClipboardCommand { get; }
 
         /// <summary>
         /// Gets a command to open the folder in which the

@@ -87,6 +87,12 @@
         public static readonly ComponentResourceKey ICON_ArrowLeftKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_ArrowLeftKey");
         public static readonly ComponentResourceKey ICON_ArrowRightKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_ArrowRightKey");
         #endregion Arrow Icons
+
+        #region Browse Folder Icons
+        public static readonly ComponentResourceKey ICON_FolderUpKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_FolderUpKey");
+        public static readonly ComponentResourceKey ICON_FolderDownKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_FolderDownKey");
+        #endregion Browse Folder Icons
+
         #endregion ICONs
 
         #region Diff Colors

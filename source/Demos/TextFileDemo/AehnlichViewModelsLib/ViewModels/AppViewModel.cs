@@ -510,8 +510,8 @@
 
                         _DiffCtrl.ShowDifferences(args, diffResults);
 
-                        FocusControl = Focus.None;
-                        FocusControl = Focus.LeftView;
+                        //FocusControl = Focus.None;
+                        //FocusControl = Focus.LeftView;
                         GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
 
                         // Position view on first difference if thats available

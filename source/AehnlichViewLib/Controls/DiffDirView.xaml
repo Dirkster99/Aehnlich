@@ -78,29 +78,7 @@
                                             </MultiBinding>
                                         </Setter.Value>
                                     </Setter>
-                                    <Setter Property="ContextMenu">
-                                        <Setter.Value>
-                                            <ContextMenu>
-                                                <MenuItem Header="Open Containing Folder"
-                                                          IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                          Command="{Binding Data.OpenContainingFolderCommand, Source={StaticResource DocumentContextProxy}}"
-                                                          CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                />
-
-                                                <MenuItem Header="Copy Path to Clipboard"
-                                                          IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                          Command="{Binding Data.CopyPathToClipboardCommand, Source={StaticResource DocumentContextProxy}}"
-                                                          CommandParameter="{Binding Data.SelectedItemsA, Source={StaticResource DocumentContextProxy}}"
-                                                />
-
-                                                <MenuItem Header="Open in Windows"
-                                                          IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                          Command="{Binding Data.OpenInWindowsCommand, Source={StaticResource DocumentContextProxy}}"
-                                                          CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                />
-                                            </ContextMenu>
-                                        </Setter.Value>
-                                    </Setter>
+                                    <Setter Property="ContextMenu" Value="{Binding ContextMenuA, RelativeSource={RelativeSource AncestorType={x:Type local:DiffDirView}},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
                                 </Style>
                             </DataGrid.RowStyle>
 
@@ -261,29 +239,7 @@
                                             </MultiBinding>
                                         </Setter.Value>
                                     </Setter>
-                                    <Setter Property="ContextMenu">
-                                        <Setter.Value>
-                                            <ContextMenu>
-                                                <MenuItem Header="Open Containing Folder"
-                                                          IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                          Command="{Binding Data.OpenContainingFolderCommand, Source={StaticResource DocumentContextProxy}}"
-                                                          CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                />
-
-                                                <MenuItem Header="Copy Path to Clipboard"
-                                                          IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                          Command="{Binding Data.CopyPathToClipboardCommand, Source={StaticResource DocumentContextProxy}}"
-                                                          CommandParameter="{Binding Data.SelectedItemsB, Source={StaticResource DocumentContextProxy}}"
-                                                />
-
-                                                <MenuItem Header="Open in Windows"
-                                                          IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                          Command="{Binding Data.OpenInWindowsCommand, Source={StaticResource DocumentContextProxy}}"
-                                                          CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                />
-                                            </ContextMenu>
-                                        </Setter.Value>
-                                    </Setter>
+                                    <Setter Property="ContextMenu" Value="{Binding ContextMenuB, RelativeSource={RelativeSource AncestorType={x:Type local:DiffDirView}},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
                                 </Style>
                             </DataGrid.RowStyle>
 

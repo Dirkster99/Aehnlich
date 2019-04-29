@@ -340,8 +340,10 @@
                                   SmallChange="1.00"
                                   LargeChange="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                   IsRepeatButtonVisible="False"
-                                  Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
                                 >
+                <!--
+                                  Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
+                -->
                 <range:RangeScrollbar.ItemTemplate>
                     <DataTemplate DataType="{x:Type vms:IDiffLineViewModel}">
                         <Rectangle Name="elp"

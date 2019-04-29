@@ -82,4 +82,13 @@
                   UriSource="/AehnlichViewLib;component/Icons/Light/arrow_right.ico" />
     <!-- Arrow Icons -->
 
+    <!-- Browse Folder Icons -->
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_FolderUpKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/FolderOpen_Up1_16x.ico" />
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_FolderDownKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/FolderOpen_Down1_16x.ico" />
+    <!-- Browse Folder Icons -->
+
 </ResourceDictionary>

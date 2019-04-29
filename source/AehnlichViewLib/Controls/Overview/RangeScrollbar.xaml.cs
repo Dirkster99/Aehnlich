@@ -8,7 +8,6 @@
     using System.ComponentModel;
     using System.Collections;
     using System.Windows.Input;
-    using System.Windows.Shapes;
     using System;
 
     /// <summary>
@@ -169,7 +168,11 @@
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            this.Loaded += RangeScrollbar_Loaded;
+        }
 
+        private void RangeScrollbar_Loaded(object sender, RoutedEventArgs e)
+        {
             _PART_RangeOverlay = base.GetTemplateChild("PART_RangeOverlay") as RangeItemsControl;
             _PART_Track = base.GetTemplateChild("PART_Track") as Track;
 

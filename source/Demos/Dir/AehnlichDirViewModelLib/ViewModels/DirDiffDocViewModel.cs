@@ -33,10 +33,12 @@
 
         private ICommand _BrowseItemCommand;
         private ICommand _BrowseUpCommand;
-        private ICommand _CopyPathToClipboardCommand;
         private ICommand _OpenContainingFolderCommand;
         private ICommand _OpenInWindowsCommand;
         private ICommand _OpenFileFromActiveViewCommand;
+
+        private ICommand _CopyPathAToClipboardCommand;
+        private ICommand _CopyPathBToClipboardCommand;
 
         private readonly ObservableRangeCollection<IDirEntryViewModel> _DirEntries;
         private object _DirEntriesLock;
@@ -395,49 +397,49 @@
             }
         }
 
+        #region ClipboardCommands
         /// <summary>
         /// Gets a command that copies the path from all selected item(s)
         /// into the Windows clipboard.
         /// </summary>
-        public ICommand CopyPathToClipboardCommand
+        public ICommand CopyPathAToClipboardCommand
         {
             get
             {
-                if (_CopyPathToClipboardCommand == null)
+                if (_CopyPathAToClipboardCommand == null)
                 {
-                    _CopyPathToClipboardCommand = new RelayCommand<object>((p) =>
-                    {
-                        var param = (p as string);
-
-                        if (param != null)
-                            FileSystemCommands.CopyString(param);
-                        else
-                        {
-                            var list = p as IEnumerable<IDirEntryViewModel>;
-                            if (list != null)
-                            {
-                                var scopy = new StringBuilder();
-                                foreach (var item in list)
-                                {
-                                    if (item.ItemPathA != null)
-                                    {
-                                        scopy.Append(item.ItemPathA + '\n');
-                                    }
-                                }
-
-                                FileSystemCommands.CopyString(scopy.ToString());
-                            }
-                        }
-
-                    }, (p) =>
-                    {
-                        return ((p is string) || (p is IEnumerable<IDirEntryViewModel>));
-                    });
+                    _CopyPathAToClipboardCommand = new RelayCommand<object>
+                    (
+                        (p) => { CopySelectedItemsPathIntoClipboard(p, true); },
+                        (p) => { return ((p is string) || (p is IEnumerable<IDirEntryViewModel>)); }
+                    );
                 }
 
-                return _CopyPathToClipboardCommand;
+                return _CopyPathAToClipboardCommand;
             }
         }
+
+        /// <summary>
+        /// Gets a command that copies the path from all selected item(s)
+        /// into the Windows clipboard.
+        /// </summary>
+        public ICommand CopyPathBToClipboardCommand
+        {
+            get
+            {
+                if (_CopyPathBToClipboardCommand == null)
+                {
+                    _CopyPathBToClipboardCommand = new RelayCommand<object>
+                    (
+                        (p) => { CopySelectedItemsPathIntoClipboard(p, false); },
+                        (p) => { return ((p is string) || (p is IEnumerable<IDirEntryViewModel>)); }
+                    );
+                }
+
+                return _CopyPathBToClipboardCommand;
+            }
+        }
+        #endregion ClipboardCommands
 
         /// <summary>
         /// Gets a command to open the folder in which the
@@ -684,6 +686,48 @@
         private void SetDirDiffCollectionData(List<IDirEntryViewModel> dirs)
         {
             _DirEntries.ReplaceRange(dirs);
+        }
+
+        /// <summary>
+        /// Implements the copy path for selecteditems command(s) for
+        /// left view A and right view B.
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="isFromA">Whether the selection parameter should be interpreted
+        /// for left view A or right view B.</param>
+        private static void CopySelectedItemsPathIntoClipboard(object p, bool isFromA)
+        {
+            var param = (p as string);
+
+            if (param != null)
+                FileSystemCommands.CopyString(param);
+            else
+            {
+                var list = p as IEnumerable<IDirEntryViewModel>;
+                if (list != null)
+                {
+                    var scopy = new StringBuilder();
+                    foreach (var item in list)
+                    {
+                        if (isFromA)
+                        {
+                            if (item.IsItemInA)
+                                scopy.Append(item.ItemPathA + '\n');
+                            else
+                                scopy.Append('\n');
+                        }
+                        else
+                        {
+                            if (item.IsItemInB)
+                                scopy.Append(item.ItemPathB + '\n');
+                            else
+                                scopy.Append('\n');
+                        }
+                    }
+
+                    FileSystemCommands.CopyString(scopy.ToString());
+                }
+            }
         }
         #endregion methods
     }
