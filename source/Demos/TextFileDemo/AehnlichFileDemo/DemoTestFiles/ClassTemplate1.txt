@@ -1,21 +1,24 @@
 
 public class
 {
-        #region fields
-
-
-
-        #endregion fields
-
-        #region ctors
-
-        #endregion ctors
-
-        #region properties
-
-        #endregion properties
-
-        #region methods
-
-        #endregion methods
+    #region fields
+    
+    
+    
+    #endregion fields
+    
+    #region ctors
+    /// <summary>
+    /// Class constructor
+    /// </summary>
+    
+    #endregion ctors
+    
+    #region properties
+    
+    #endregion properties
+    
+    #region methods
+    
+    #endregion methods
 }

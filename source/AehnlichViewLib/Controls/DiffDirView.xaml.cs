@@ -754,6 +754,9 @@
         {
             IList selectedItemsSource = null;
 
+            if (dataGrid == null)
+                return;
+
             // Check if the app is setting the source to a new or different list, or if it is removing the binding
             if (args.NewValue != null)
             {

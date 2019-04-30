@@ -6,6 +6,11 @@ ECHO.
 ECHO This script deletes all temporary build files in the .vs folder and the
 ECHO BIN and OBJ folders contained in the following projects
 ECHO.
+ECHO Aehnlich
+ECHO Aehnlich\Components\ServiceLocator
+ECHO Aehnlich\Components\Settings\Settings
+ECHO Aehnlich\Components\Settings\SettingsModel
+ECHO.
 ECHO AehnlichLib
 ECHO AehnlichLib_UnitTests
 ECHO AehnlichViewLib
@@ -26,6 +31,36 @@ ECHO.
 ECHO Removing vs settings folder with *.sou file
 ECHO.
 RMDIR /S /Q .vs
+
+ECHO.
+ECHO Deleting BIN and OBJ Folders in Aehnlich
+ECHO.
+RMDIR /S /Q "Aehnlich\Aehnlich\bin"
+RMDIR /S /Q "Aehnlich\Aehnlich\obj"
+
+ECHO.
+ECHO Deleting BIN and OBJ Folders in ServiceLocator
+ECHO.
+RMDIR /S /Q "Aehnlich\Components\ServiceLocator\bin"
+RMDIR /S /Q "Aehnlich\Components\ServiceLocator\obj"
+
+ECHO.
+ECHO Deleting BIN and OBJ Folders in Aehnlich
+ECHO.
+RMDIR /S /Q "Aehnlich\Aehnlich\bin"
+RMDIR /S /Q "Aehnlich\Aehnlich\obj"
+
+ECHO.
+ECHO Deleting BIN and OBJ Folders in Settings
+ECHO.
+RMDIR /S /Q "Aehnlich\Components\Settings\Settings\bin"
+RMDIR /S /Q "Aehnlich\Components\Settings\Settings\obj"
+
+ECHO.
+ECHO Deleting BIN and OBJ Folders in SettingsModel
+ECHO.
+RMDIR /S /Q "Aehnlich\Components\Settings\SettingsModel\bin"
+RMDIR /S /Q "Aehnlich\Components\Settings\SettingsModel\obj"
 
 ECHO.
 ECHO Deleting BIN and OBJ Folders in AehnlichLib
