@@ -20,7 +20,7 @@
     public partial class App : Application
     {
         #region fields
-        protected static log4net.ILog Logger;
+        protected static readonly log4net.ILog Logger;
 
         private ViewModels.AppViewModel _appVM = null;
         private MainWindow _mainWindow = null;
@@ -67,10 +67,10 @@
                 _appVM = new ViewModels.AppViewModel(lifeCycle);
                 _appVM.SetSessionData(settings.SessionData);
 
-                // Customize services specific items for this application
-                // Program message box service for Modern UI (Metro Light and Dark)
-                //                var msgBox = GetService<IMessageBoxService>();
-                //                msgBox.Style = MsgBoxStyle.WPFThemed;
+                ////Customize services specific items for this application
+                ////Program message box service for Modern UI (Metro Light and Dark)
+                ////               var msgBox = GetService<IMessageBoxService>();
+                ////               msgBox.Style = MsgBoxStyle.WPFThemed;
 
             }
             catch (Exception exp)
@@ -85,8 +85,9 @@
                 Thread.CurrentThread.CurrentCulture = new CultureInfo(selectedLanguage);
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(selectedLanguage);
             }
-            catch
+            catch (Exception exp)
             {
+                Debug.WriteLine(exp.Message);
             }
 
             // Create the optional appearance viewmodel and apply
@@ -100,7 +101,8 @@
 
             Aehnlich.Properties.Settings.Default.Reload();
 
-            Application.Current.MainWindow = _mainWindow = new MainWindow();
+            _mainWindow = new MainWindow();
+            Application.Current.MainWindow = _mainWindow;
             MainWindow.DataContext = _appVM;
 
             AppCore.CreateAppDataFolder();
@@ -183,8 +185,8 @@
             {
                 var settings = GetService<ISettingsManager>();
 
-                // Establish command binding to accept user input via commanding framework
-                // workSpace.InitCommandBinding(win);
+                ////Establish command binding to accept user input via commanding framework
+                ////workSpace.InitCommandBinding(win);
 
                 ViewPosSizeModel viewSz;
                 settings.SessionData.WindowPosSz.TryGetValue(settings.SessionData.MainWindowName

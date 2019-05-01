@@ -16,8 +16,9 @@
     public class ViewPosSizeModel : Settings.Interfaces.IViewPosSizeModel
     {
         #region fields
-        private double mX, mY, mWidth, mHeight;
-        private bool mIsMaximized;
+        private const double _epsilon = 0.0000001;
+        private double _X, _Y, _Width, _Height;
+        private bool _IsMaximized;
         #endregion fields
 
         #region constructors
@@ -26,11 +27,11 @@
         /// </summary>
         public ViewPosSizeModel()
         {
-            mX = 0;
-            mY = 0;
-            mWidth = 0;
-            mHeight = 0;
-            mIsMaximized = false;
+            _X = 0;
+            _Y = 0;
+            _Width = 0;
+            _Height = 0;
+            _IsMaximized = false;
             DefaultConstruct = true;
         }
 
@@ -44,14 +45,29 @@
         public ViewPosSizeModel(double x,
                                 double y,
                                 double width,
-                                double height,
-                                bool isMaximized = false)
+                                double height)
+            : this(x, y, width, height, false)
         {
-            mX = x;
-            mY = y;
-            mWidth = width;
-            mHeight = height;
-            mIsMaximized = isMaximized;
+        }
+
+        /// <summary>
+        /// Class cosntructor from coordinates of control
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        public ViewPosSizeModel(double x,
+                                double y,
+                                double width,
+                                double height,
+                                bool isMaximized)
+        {
+            _X = x;
+            _Y = y;
+            _Width = width;
+            _Height = height;
+            _IsMaximized = isMaximized;
             DefaultConstruct = false;
         }
 
@@ -92,14 +108,14 @@
         {
             get
             {
-                return mX;
+                return _X;
             }
 
             set
             {
-                if (mX != value)
+                if (Math.Abs(_X - value) > _epsilon)
                 {
-                    mX = value;
+                    _X = value;
                 }
             }
         }
@@ -112,14 +128,14 @@
         {
             get
             {
-                return mY;
+                return _Y;
             }
 
             set
             {
-                if (mY != value)
+                if (Math.Abs(_Y - value) > _epsilon)
                 {
-                    mY = value;
+                    _Y = value;
                 }
             }
         }
@@ -132,14 +148,14 @@
         {
             get
             {
-                return mWidth;
+                return _Width;
             }
 
             set
             {
-                if (mWidth != value)
+                if (Math.Abs(_Width - value) > _epsilon)
                 {
-                    mWidth = value;
+                    _Width = value;
                 }
             }
         }
@@ -152,14 +168,14 @@
         {
             get
             {
-                return mHeight;
+                return _Height;
             }
 
             set
             {
-                if (mHeight != value)
+                if (Math.Abs(_Height - value) > _epsilon)
                 {
-                    mHeight = value;
+                    _Height = value;
                 }
             }
         }
@@ -172,14 +188,14 @@
         {
             get
             {
-                return mIsMaximized;
+                return _IsMaximized;
             }
 
             set
             {
-                if (mIsMaximized != value)
+                if (_IsMaximized != value)
                 {
-                    mIsMaximized = value;
+                    _IsMaximized = value;
                 }
             }
         }

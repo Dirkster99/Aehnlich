@@ -110,7 +110,8 @@
             {
                 if (!Items.Remove(changedItems[i]))
                 {
-                    changedItems.RemoveAt(i); //Can't use a foreach because changedItems is intended to be (carefully) modified
+                    // Can't use a foreach because changedItems is intended to be (carefully) modified
+                    changedItems.RemoveAt(i);
                     i--;
                 }
             }

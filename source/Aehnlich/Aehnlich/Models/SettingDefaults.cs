@@ -22,9 +22,9 @@
             options.AddOption(groupName, "SourceFilePath", typeof(string), false, @"C:\temp\source\");
             options.AddOption(groupName, "LanguageSelected", typeof(string), false, "en-US");
 
-            // var schema = optsEngine.AddListOption<string>(groupName, "BookmarkedFolders", typeof(string), false, new List<string>());
-            // schema.List_AddValue(@"C:\TEMP", @"C:\TEMP");
-            // schema.List_AddValue(@"C:\Windows", @"C:\Windows");
+            ////var schema = optsEngine.AddListOption<string>(groupName, "BookmarkedFolders", typeof(string), false, new List<string>());
+            ////schema.List_AddValue(@"C:\TEMP", @"C:\TEMP");
+            ////schema.List_AddValue(@"C:\Windows", @"C:\Windows");
         }
 
         /// <summary>
@@ -39,9 +39,9 @@
             options.AddOption(groupName, "ApplyWindowsDefaultAccent", typeof(bool), false, true);
             options.AddOption(groupName, "AccentColor", typeof(Color), false, Color.FromRgb(0x33, 0x99, 0xff));
 
-            // options.AddOption(groupName, "DefaultIconSize", typeof(int), false, settings.DefaultIconSize);
-            // options.AddOption(groupName, "DefaultFontSize", typeof(int), false, settings.DefaultFontSize);
-            // options.AddOption(groupName, "FixedFontSize", typeof(int), false, settings.DefaultFixedFontSize);
+            ////options.AddOption(groupName, "DefaultIconSize", typeof(int), false, settings.DefaultIconSize);
+            ////options.AddOption(groupName, "DefaultFontSize", typeof(int), false, settings.DefaultFontSize);
+            ////options.AddOption(groupName, "FixedFontSize", typeof(int), false, settings.DefaultFixedFontSize);
         }
     }
 }

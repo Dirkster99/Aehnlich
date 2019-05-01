@@ -35,21 +35,21 @@
                 return Binding.DoNothing;
 
             if (IsItemDifferent && IsItemInA == true && IsItemInB == true)
-                return colorDefs.ColorBackgroundContext; // new SolidColorBrush(Colors.Green);
+                return colorDefs.ColorBackgroundContext;
 
             if (IsItemInA == false && IsItemInB == true)
             {
                 if (IsFromA)
                     return colorDefs.ColorBackgroundImaginaryLineAdded;
                 else
-                    return colorDefs.ColorBackgroundAdded; // new SolidColorBrush(Colors.Blue);
+                    return colorDefs.ColorBackgroundAdded;
             }
             else
             {
                 if (IsItemInA == true && IsItemInB == false)
                 {
                     if (IsFromA)
-                        return colorDefs.ColorBackgroundDeleted; // new SolidColorBrush(Colors.Red);
+                        return colorDefs.ColorBackgroundDeleted;
                     else
                         return colorDefs.ColorBackgroundImaginaryLineDeleted;
                 }

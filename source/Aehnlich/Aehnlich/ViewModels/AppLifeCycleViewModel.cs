@@ -139,6 +139,7 @@
             }
             catch
             {
+                // Ignore issues in theme definition stage to ensure app starts up
             }
 
             try
@@ -157,6 +158,7 @@
             }
             catch
             {
+                // Ignore issues in theme definition stage to ensure app starts up
             }
 
             try
@@ -172,6 +174,7 @@
             }
             catch
             {
+                // Ignore issues in theme definition stage to ensure app starts up
             }
         }
 
@@ -234,6 +237,7 @@
             }
             catch
             {
+                // Ignore issues in load settings to ensure app starts up
             }
         }
         #endregion Save Load Application configuration
@@ -314,7 +318,15 @@
         /// <summary>
         /// Method to be executed when user (or program) tries to close the application
         /// </summary>
-        public void OnRequestClose(bool ShutDownAfterClosing = true)
+        public void OnRequestClose()
+        {
+            OnRequestClose(true);
+        }
+
+        /// <summary>
+        /// Method to be executed when user (or program) tries to close the application
+        /// </summary>
+        public void OnRequestClose(bool ShutDownAfterClosing)
         {
             try
             {

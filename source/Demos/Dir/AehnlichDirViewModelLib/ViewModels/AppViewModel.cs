@@ -400,6 +400,7 @@
             }
             catch
             {
+                // Handle task based error and display error
             }
         }
 

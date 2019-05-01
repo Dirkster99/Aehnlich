@@ -12,6 +12,7 @@
     internal class DiffProgressViewModel : Base.ViewModelBase, INotifyPropertyChanged, IDiffProgress
     {
         #region fields
+        private const double _epsilon = 0.000001;
         private bool _IsIndeterminate = true;
         private bool _IsProgressbarVisible = false;
         private double _Progress;
@@ -80,7 +81,7 @@
 
             protected set
             {
-                if (_Progress != value)
+                if (Math.Abs(_Progress - value) > _epsilon)
                 {
                     _Progress = value;
                     NotifyPropertyChanged(() => ProgressValue);
@@ -99,7 +100,7 @@
 
             protected set
             {
-                if (_MinimumValue != value)
+                if (Math.Abs(_MinimumValue - value) > _epsilon)
                 {
                     _MinimumValue = value;
                     NotifyPropertyChanged(() => MinimumProgressValue);
@@ -118,7 +119,7 @@
 
             protected set
             {
-                if (_MaximumValue != value)
+                if (Math.Abs(_MaximumValue - value) > _epsilon)
                 {
                     _MaximumValue = value;
                     NotifyPropertyChanged(() => MaximumProgressValue);
@@ -206,19 +207,37 @@
         }
 
         /// <summary>
-        /// Method enables properties such that display of
-        /// determinate progress is turned on.
+        /// Method turnes on determinate progress display and sets the
+        /// actual <paramref name="value"/>, <see cref="MinimumProgressValue"/>
+        /// and <see cref="MaximumProgressValue"/>.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="minimum"></param>
         /// <param name="maximum"></param>
         public void ShowDeterminatedProgress(double value,
-                                             double minimum = 0,
-                                             double maximum = 100)
+                                             double minimum,
+                                             double maximum)
         {
             ProgressValue = value;
             MinimumProgressValue = minimum;
             MaximumProgressValue = maximum;
+
+            IsIndeterminate = false;
+            IsProgressbarVisible = true;
+        }
+
+        /// <summary>
+        /// Method turnes on determinate progress display and sets the
+        /// actual <paramref name="value"/>. The maximum and minimum in
+        /// <see cref="MinimumProgressValue"/> = 0 and
+        /// <see cref="MaximumProgressValue"/> = 100.
+        /// </summary>
+        /// <param name="value"></param>
+        public void ShowDeterminatedProgress(double value)
+        {
+            ProgressValue = value;
+            MinimumProgressValue = 0;
+            MaximumProgressValue = 100;
 
             IsIndeterminate = false;
             IsProgressbarVisible = true;

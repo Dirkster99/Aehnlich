@@ -10,6 +10,15 @@
     /// </summary>
     public class AppCore
     {
+        #region ctors
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        protected AppCore()
+        {
+        }
+        #endregion ctors
+
         #region properties
         /// <summary>
         /// Get the name of the executing assembly (usually name of *.exe file)

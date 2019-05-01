@@ -362,13 +362,13 @@
             if (optionsGroup == null)
             {
                 if (TryResolveOptionsGroupAndOptionName(tableName, out groupName, out optionName) == true)
-                    throw new Exception(string.Format("Unknown item detected. Cannot resolve {0}.", tableName));
+                    throw new ArgumentException(string.Format("Unknown item detected. Cannot resolve {0}.", tableName));
 
                 optionsGroup = engine.GetOptionGroup(groupName);
             }
 
             if (optionsGroup == null)
-                throw new Exception(string.Format("Cannot resolve table name: {0}", tableName));
+                throw new ArgumentException(string.Format("Cannot resolve table name: {0}", tableName));
 
             return optionsGroup;
         }

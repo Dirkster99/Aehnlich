@@ -32,7 +32,8 @@
             WindowPosSz = new SerializableDictionary<string, ViewPosSizeModel>();
             WindowPosSz.Add(MainWindowName, new ViewPosSizeModel(ViewPosSizeModel.DefaultSize));
 
-            LastActiveSolution = LastActiveTargetFile = string.Empty;
+            LastActiveSolution = string.Empty;
+            LastActiveTargetFile = string.Empty;
 
             LastActiveSourceFiles = new List<FileReference>();
         }
@@ -147,6 +148,7 @@
             }
             catch
             {
+                // Make sure System.IO's exceptions (if any) do not crash the app
             }
 
             return string.Empty;

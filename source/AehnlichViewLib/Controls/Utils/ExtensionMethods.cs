@@ -44,8 +44,9 @@
         /// </summary>
         public static bool IsClose(this double d1, double d2)
         {
-            if (d1 == d2) // required for infinities
+            if (double.IsInfinity(d1) && double.IsInfinity(d2)) // required for infinities
                 return true;
+
             return Math.Abs(d1 - d2) < Epsilon;
         }
 

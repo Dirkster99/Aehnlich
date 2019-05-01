@@ -60,6 +60,7 @@
             }
             catch
             {
+                // Make sure saving values does not crash the app shut down process
             }
 
             try
@@ -72,6 +73,7 @@
             }
             catch
             {
+                // Make sure disposing objects does not crash the app shut down process
             }
         }
 

@@ -113,7 +113,9 @@
             if (string.IsNullOrEmpty(message = CheckForValidName(nameOfOptionGroup)) == false)
                 throw new Exception(message);
 
-            if (string.IsNullOrEmpty(message = CheckForValidName(optionName)) == false)
+            message = CheckForValidName(optionName);
+
+            if (string.IsNullOrEmpty(message) == false)
                 throw new Exception(message);
 
             OptionGroup opgroup;
@@ -218,8 +220,8 @@
             object optValue = GetOptionValue(nameOfOptionGroup, optionName);
 
             if ((optValue is T) == false)
-                throw new Exception(string.Format("The requested option {0}-{1} is not of requested type <T>.",
-                                                  nameOfOptionGroup, optionName));
+                throw new ArgumentException(string.Format("The requested option {0}-{1} is not of requested type <T>.",
+                                            nameOfOptionGroup, optionName));
 
             return (T)optValue;
         }

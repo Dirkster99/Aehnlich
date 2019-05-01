@@ -254,7 +254,7 @@
         private static void OnMaximumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             RangePanel pan = (RangePanel)d;
-            //  pan.CoerceValue(MinimumProperty);
+            ////pan.CoerceValue(MinimumProperty);
             pan.OnMaximumChanged((double)e.OldValue, (double)e.NewValue);
         }
 

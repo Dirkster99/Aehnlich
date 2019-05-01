@@ -35,21 +35,21 @@
                 return Binding.DoNothing;
 
             if (IsItemDifferent && IsItemInA == true && IsItemInB == true)
-                return colorDefs.ColorForegroundContext; // new SolidColorBrush(Colors.Green);
+                return colorDefs.ColorForegroundContext;
 
             if (IsItemInA == false && IsItemInB == true)
             {
                 if (IsFromA)
                     return Binding.DoNothing;        // Imaginary Lines do not have a foreground item
                 else
-                    return colorDefs.ColorForegroundAdded; // new SolidColorBrush(Colors.Blue);
+                    return colorDefs.ColorForegroundAdded;
             }
             else
             {
                 if (IsItemInA == true && IsItemInB == false)
                 {
                     if (IsFromA)
-                        return colorDefs.ColorForegroundDeleted; // new SolidColorBrush(Colors.Red);
+                        return colorDefs.ColorForegroundDeleted;
                     else
                         return Binding.DoNothing;   // Imaginary Lines do not have a foreground item
                 }

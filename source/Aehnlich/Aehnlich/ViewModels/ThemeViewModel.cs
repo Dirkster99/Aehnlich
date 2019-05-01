@@ -15,10 +15,10 @@
     public class ThemeViewModel : Base.ViewModelBase
     {
         #region private fields
-        private readonly ThemeDefinitionViewModel _DefaultTheme = null;
-        private Dictionary<string, ThemeDefinitionViewModel> _ListOfThemes = null;
         private ThemeDefinitionViewModel _SelectedTheme = null;
         private bool _IsEnabled = true;
+        private readonly ThemeDefinitionViewModel _DefaultTheme = null;
+        private readonly Dictionary<string, ThemeDefinitionViewModel> _ListOfThemes = null;
         #endregion private fields
 
         #region constructors
@@ -164,6 +164,7 @@
                 }
                 catch
                 {
+                    // Systems earlier than Windows 10 may not have this peroperty and will throw instead(?)
                 }
 
                 // This may be black on Windows 7 and the experience is black & white then :-(

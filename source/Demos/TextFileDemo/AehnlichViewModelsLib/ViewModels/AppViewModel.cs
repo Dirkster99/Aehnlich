@@ -15,7 +15,6 @@
     using AehnlichLib.Text;
     using System.Threading.Tasks;
     using AehnlichLib.Interfaces;
-    using System.Windows;
 
     internal class AppViewModel : Base.ViewModelBase, IAppViewModel
     {
@@ -510,8 +509,8 @@
 
                         _DiffCtrl.ShowDifferences(args, diffResults);
 
-                        //FocusControl = Focus.None;
-                        //FocusControl = Focus.LeftView;
+                        ////FocusControl = Focus.None;
+                        ////FocusControl = Focus.LeftView;
                         GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
 
                         // Position view on first difference if thats available
@@ -614,6 +613,9 @@
                     _DiffCtrl.Dispose();
                     _FilePathA.Dispose();
                     _FilePathB.Dispose();
+
+                    if (_cancelTokenSource != null)
+                        _cancelTokenSource.Dispose();
                 }
 
                 // There are no unmanaged resources to release, but

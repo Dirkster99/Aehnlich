@@ -15,9 +15,8 @@
         /// <summary>
         /// Class constructor
         /// </summary>
-        public DocumentBaseViewModel()
+        protected DocumentBaseViewModel()
         {
-
         }
         #endregion ctors
 

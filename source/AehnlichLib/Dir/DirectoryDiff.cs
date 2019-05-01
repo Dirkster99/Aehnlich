@@ -24,6 +24,7 @@ namespace AehnlichLib.Dir
         private readonly DirectoryDiffFileFilter _Filter;
         private readonly DiffDirFileMode _DiffMode;
         private readonly double _LastUpDatePrecision;
+        private const double _epsilon = 0.00001;
         #endregion
 
         #region Constructors
@@ -687,7 +688,7 @@ namespace AehnlichLib.Dir
                         // Are these different by byte length and/or time stamp already?
                         if ((root.DiffMode & DiffDirFileMode.ByteLength) != 0)
                         {
-                            if (lengthA != lengthB)
+                            if (Math.Abs(lengthA - lengthB) > _epsilon)
                                 different = true;
                         }
 

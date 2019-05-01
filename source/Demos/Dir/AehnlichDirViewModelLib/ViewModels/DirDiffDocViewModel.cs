@@ -41,7 +41,7 @@
         private ICommand _CopyPathBToClipboardCommand;
 
         private readonly ObservableRangeCollection<IDirEntryViewModel> _DirEntries;
-        private object _DirEntriesLock;
+        private readonly object _DirEntriesLock;
 
         private int _CountFilesDeleted;
         private int _CountFilesAdded;

@@ -953,33 +953,33 @@
             }
         }
 
-        /// <summary>
-        /// Compare a generic collection and determine whether its item-type matches
-        /// the type of a given item.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="itemType"></param>
-        /// <returns></returns>
-        private bool IsGenericList(Type type, Type itemType)
-        {
-            if (type == null)
-            {
-                throw new ArgumentNullException("type");
-            }
-
-            foreach (Type @interface in type.GetInterfaces())
-            {
-                if (@interface.IsGenericType)
-                {
-                    // Match type used as generic argument with type of item
-                    if (@interface.GenericTypeArguments[0] == itemType)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+////        /// <summary>
+////        /// Compare a generic collection and determine whether its item-type matches
+////        /// the type of a given item.
+////        /// </summary>
+////        /// <param name="type"></param>
+////        /// <param name="itemType"></param>
+////        /// <returns></returns>
+////        private bool IsGenericList(Type type, Type itemType)
+////        {
+////            if (type == null)
+////            {
+////                throw new ArgumentNullException("type");
+////            }
+////
+////            foreach (Type @interface in type.GetInterfaces())
+////            {
+////                if (@interface.IsGenericType)
+////                {
+////                    // Match type used as generic argument with type of item
+////                    if (@interface.GenericTypeArguments[0] == itemType)
+////                    {
+////                        return true;
+////                    }
+////                }
+////            }
+////            return false;
+////        }
         #endregion SelectedItems
         #endregion methods
 

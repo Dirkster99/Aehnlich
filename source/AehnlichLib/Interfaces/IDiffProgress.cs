@@ -75,15 +75,25 @@
         void ShowIndeterminatedProgress();
 
         /// <summary>
-        /// Method enables properties such that display of
-        /// determinate progress is turned on.
+        /// Method turnes on determinate progress display and sets the
+        /// actual <paramref name="value"/>, <see cref="MinimumProgressValue"/>
+        /// and <see cref="MaximumProgressValue"/>.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="minimum"></param>
         /// <param name="maximum"></param>
         void ShowDeterminatedProgress(double value,
-                                      double minimum = 0,
-                                      double maximum = 100);
+                                      double minimum,
+                                      double maximum);
+
+        /// <summary>
+        /// Method turnes on determinate progress display and sets the
+        /// actual <paramref name="value"/>. The maximum and minimum in
+        /// <see cref="MinimumProgressValue"/> = 0 and
+        /// <see cref="MaximumProgressValue"/> = 100.
+        /// </summary>
+        /// <param name="value"></param>
+        void ShowDeterminatedProgress(double value);
 
         /// <summary>
         /// Method updates a display of determinate progress

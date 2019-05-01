@@ -54,7 +54,8 @@
                 case OptionSchemaType.SingleValue:
                 case OptionSchemaType.List:
                     // Value and default value is same at construction time
-                    Value = DefaultValue = defaultValue;
+                    DefaultValue = defaultValue;
+                    Value = defaultValue;
                     break;
 
                 default:

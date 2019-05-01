@@ -15,9 +15,8 @@
         /// <summary>
         /// Class constructor
         /// </summary>
-        public PaneViewModel()
+        protected PaneViewModel()
         {
-
         }
         #endregion ctors
 

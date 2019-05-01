@@ -14,9 +14,6 @@
     public class AppViewModel : Base.ViewModelBase, IAehnlichAppViewModel, IDisposable
     {
         #region private fields
-        private bool _Disposed = false;
-        private AppLifeCycleViewModel _AppLifeCycle = null;
-
         private bool _isInitialized = false;       // application should be initialized through one method ONLY!
         private object _lockObject = new object(); // thread lock semaphore
 
@@ -24,7 +21,9 @@
         private ICommand _NewDirectoryCompareCommand;
 
         private ThemeViewModel _AppTheme = null;
+        private readonly AppLifeCycleViewModel _AppLifeCycle = null;
         private readonly DocumentManagerViewModel _DocumentManager;
+        private bool _Disposed = false;
         #endregion private fields
 
         #region constructors
@@ -231,6 +230,18 @@
             _DocumentManager.SaveSettings();
         }
 
+        /// <summary>
+        /// Method is invoked when theme manager is asked
+        /// to change the accent color and has actually changed it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected virtual void Appearance_AccentColorChanged(object sender, MLib.Events.ColorChangedEventArgs e)
+        {
+            // Extend or overwrite this with custom code if you need to react directly on a change
+            // of accent color definition
+        }
+
         #region IDisposable
         /// <summary>
         /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
@@ -264,17 +275,6 @@
             ////base.Dispose(disposing);
         }
         #endregion IDisposable
-
-        /// <summary>
-        /// Method is invoked when theme manager is asked
-        /// to change the accent color and has actually changed it.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Appearance_AccentColorChanged(object sender, MLib.Events.ColorChangedEventArgs e)
-        {
-
-        }
         #endregion methods
     }
 }

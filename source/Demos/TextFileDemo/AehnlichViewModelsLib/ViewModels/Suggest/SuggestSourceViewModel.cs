@@ -217,6 +217,7 @@
             }
             catch
             {
+                // Don't let System.IO exceptions crash this
             }
 
             var subDirs = GetLogicalDriveOrSubDirs(input, input);

@@ -106,8 +106,8 @@
             object optValue;
 
             if (GetValue(optionName, out optValue) == false)
-                throw new Exception(string.Format("The application option {0}-{1} cannot be located.",
-                    this.Name, optionName));
+                throw new ArgumentException(string.Format("The application option {0}-{1} cannot be located.",
+                                            this.Name, optionName));
 
             return optValue;
         }
@@ -125,8 +125,8 @@
             object optValue = GetValue(optionName);
 
             if ((optValue is T) == false)
-                throw new Exception(string.Format("The requested option {0}-{1} is not of requested type <T>.",
-                this.Name, optionName));
+                throw new ArgumentException(string.Format("The requested option {0}-{1} is not of requested type <T>.",
+                                            this.Name, optionName));
 
             return (T)optValue;
         }
@@ -145,13 +145,13 @@
                 return false;
 
             if (result.TypeOfValue != newValue.GetType())
-                throw new Exception(string.Format("Expected Type:'{0}' of '{1}-{2}' was not supplied '{3}'",
-                                    result.TypeOfValue, this.Name, result.OptionName,
-                                    newValue.GetType()));
+                throw new ArgumentException(string.Format("Expected Type:'{0}' of '{1}-{2}' was not supplied '{3}'",
+                                            result.TypeOfValue, this.Name, result.OptionName,
+                                            newValue.GetType()));
 
             bool bdirty = result.SetValue(newValue);
 
-            IsDirty = (IsDirty | bdirty);
+            IsDirty = (IsDirty || bdirty);
 
             return bdirty;
         }
