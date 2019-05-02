@@ -14,14 +14,14 @@
     public class AppViewModel : Base.ViewModelBase, IAehnlichAppViewModel, IDisposable
     {
         #region private fields
-        private bool _isInitialized = false;       // application should be initialized through one method ONLY!
-        private object _lockObject = new object(); // thread lock semaphore
+        private bool _isInitialized = false;                 // application should be initialized through one method ONLY!
+        private readonly object _lockObject = new object(); // thread lock semaphore
 
         private ICommand _ThemeSelectionChangedCommand = null;
         private ICommand _NewDirectoryCompareCommand;
 
         private ThemeViewModel _AppTheme = null;
-        private readonly AppLifeCycleViewModel _AppLifeCycle = null;
+        private readonly AppLifeCycleViewModel _AppLifeCycle;
         private readonly DocumentManagerViewModel _DocumentManager;
         private bool _Disposed = false;
         #endregion private fields
@@ -83,7 +83,7 @@
                         ThemeDefinitionViewModel theme = null;
 
                         // Try to convert object[0] command parameter
-                        if(paramets != null)
+                        if (paramets != null)
                         {
                             if (paramets.Length == 1)
                             {
@@ -153,33 +153,33 @@
         #region Get/set Session Application Data
         internal void GetSessionData(IProfile sessionData)
         {
-/***
-            if (sessionData.LastActiveTargetFile != TargetFile.FileName)
-                sessionData.LastActiveTargetFile = TargetFile.FileName;
+            /***
+                        if (sessionData.LastActiveTargetFile != TargetFile.FileName)
+                            sessionData.LastActiveTargetFile = TargetFile.FileName;
 
-            sessionData.LastActiveSourceFiles = new List<SettingsModel.Models.FileReference>();
-            if (SourceFiles != null)
-            {
-                foreach (var item in SourceFiles)
-                    sessionData.LastActiveSourceFiles.Add(new SettingsModel.Models.FileReference()
-                    { path = item.FileName }
-                                                         );
-            }
-***/
+                        sessionData.LastActiveSourceFiles = new List<SettingsModel.Models.FileReference>();
+                        if (SourceFiles != null)
+                        {
+                            foreach (var item in SourceFiles)
+                                sessionData.LastActiveSourceFiles.Add(new SettingsModel.Models.FileReference()
+                                { path = item.FileName }
+                                                                     );
+                        }
+            ***/
         }
 
         internal void SetSessionData(IProfile sessionData)
         {
-/***
-            TargetFile.FileName = sessionData.LastActiveTargetFile;
+            /***
+                        TargetFile.FileName = sessionData.LastActiveTargetFile;
 
-            _SourceFiles = new ObservableCollection<FileInfoViewModel>();
-            if (sessionData.LastActiveSourceFiles != null)
-            {
-                foreach (var item in sessionData.LastActiveSourceFiles)
-                    _SourceFiles.Add(new FileInfoViewModel(item.path));
-            }
-***/
+                        _SourceFiles = new ObservableCollection<FileInfoViewModel>();
+                        if (sessionData.LastActiveSourceFiles != null)
+                        {
+                            foreach (var item in sessionData.LastActiveSourceFiles)
+                                _SourceFiles.Add(new FileInfoViewModel(item.path));
+                        }
+            ***/
         }
         #endregion Get/set Session Application Data
 
@@ -195,7 +195,7 @@
             lock (_lockObject)
             {
                 if (_isInitialized == true)
-                    throw new Exception("AppViewModel initizialized twice.");
+                    throw new NotImplementedException("AppViewModel initialized twice.");
 
                 _isInitialized = true;
             }

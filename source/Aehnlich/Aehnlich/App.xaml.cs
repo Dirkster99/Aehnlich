@@ -43,7 +43,7 @@
             try
             {
                 // Set shutdown mode here (and reset further below) to enable showing custom dialogs (messageboxes)
-                // durring start-up without shutting down application when the custom dialogs (messagebox) closes
+                // during start-up without shutting down application when the custom dialogs (messagebox) closes
                 ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown;
             }
             catch
@@ -194,9 +194,9 @@
 
                 viewSz.SetWindowsState(win);
 
-                string lastActiveFile = settings.SessionData.LastActiveSolution;
+                ////string lastActiveFile = settings.SessionData.LastActiveSolution;
 
-                MainWindow mainWin = win as MainWindow;
+                ////MainWindow mainWin = win as MainWindow;
             }
             catch (Exception exp)
             {

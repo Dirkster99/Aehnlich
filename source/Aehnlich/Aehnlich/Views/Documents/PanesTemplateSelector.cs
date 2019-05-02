@@ -25,7 +25,7 @@
         /// <returns>Returns a <see cref="DataTemplate"/> or null. The default value is null.</returns>
         public override DataTemplate SelectTemplate(object item, System.Windows.DependencyObject container)
         {
-            var itemAsLayoutContent = item as LayoutContent;
+            ////var itemAsLayoutContent = item as LayoutContent;
 
             if (item is DirDiffDocViewModel)
                 return DirDiffDocumentViewTemplate;

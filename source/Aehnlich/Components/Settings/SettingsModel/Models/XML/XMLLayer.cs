@@ -227,7 +227,7 @@
                             // assumption: Address first column in each row since list
                             // table contains only 1 data column
                             optionsGroup.SetValue(optionName, table.Rows[i].ItemArray[0]);
-                        }                       
+                        }
                     }
                 }
                 else
@@ -310,7 +310,7 @@
             bool IsFirstRow = true;
 
             foreach (var item in columnSchema.List_GetListOfValues())
-	        {
+            {
                 if (IsFirstRow == true)
                 {
                     IsFirstRow = false;
@@ -321,17 +321,17 @@
                     else
                         masterRow[columnSchema.OptionName] = item;
                 }
-                
-                
+
+
                 var row = dataTable.NewRow();
 
-                    if (handler != null)
-                        row[columnSchema.OptionName] = handler.Convert(item as SecureString);
-                    else
-                        row[columnSchema.OptionName] = item;
+                if (handler != null)
+                    row[columnSchema.OptionName] = handler.Convert(item as SecureString);
+                else
+                    row[columnSchema.OptionName] = item;
 
-                    dataTable.Rows.Add(row);
-	        }
+                dataTable.Rows.Add(row);
+            }
 
             return dataTable;
         }
@@ -393,7 +393,7 @@
         /// <param name="groupName"></param>
         /// <param name="optionName"></param>
         /// <returns></returns>
-        private bool TryResolveOptionsGroupAndOptionName(string name, out string groupName, out string optionName)
+        private static bool TryResolveOptionsGroupAndOptionName(string name, out string groupName, out string optionName)
         {
             groupName = string.Empty;
             optionName = string.Empty;

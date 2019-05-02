@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Security;
     using System.Text;
@@ -75,8 +76,9 @@
                 string result = System.Convert.ToBase64String(encryptedData);
                 return result;
             }
-            catch (Exception)
+            catch (Exception exp)
             {
+                Debug.WriteLine(exp);
                 throw;
             }
             finally
@@ -134,7 +136,7 @@
         }
 
         #region private methods
-        private SecureString ToSecureString(string input)
+        private static SecureString ToSecureString(string input)
         {
             SecureString secure = new SecureString();
             foreach (char c in input)
@@ -145,7 +147,7 @@
             return secure;
         }
 
-        private string ToInsecureString(SecureString input)
+        private static string ToInsecureString(SecureString input)
         {
             string returnValue = string.Empty;
             IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(input);

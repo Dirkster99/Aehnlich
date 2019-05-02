@@ -18,7 +18,7 @@
         private ThemeDefinitionViewModel _SelectedTheme = null;
         private bool _IsEnabled = true;
         private readonly ThemeDefinitionViewModel _DefaultTheme = null;
-        private readonly Dictionary<string, ThemeDefinitionViewModel> _ListOfThemes = null;
+        private readonly Dictionary<string, ThemeDefinitionViewModel> _ListOfThemes;
         #endregion private fields
 
         #region constructors

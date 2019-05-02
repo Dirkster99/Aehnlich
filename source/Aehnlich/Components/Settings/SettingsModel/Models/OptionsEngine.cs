@@ -17,17 +17,8 @@
 
         private readonly Dictionary<string, OptionGroup> mOptionGroups = new Dictionary<string, OptionGroup>();
 
-        private bool mIsDirty = false;
+        private bool mIsDirty;
         #endregion fields
-
-        #region constructor
-        /// <summary>
-        /// Class constructor
-        /// </summary>
-        public OptionsEngine()
-        {
-        }
-        #endregion constructor
 
         #region properties
         /// <summary>
@@ -110,16 +101,17 @@
         {
             string message;
 
-            if (string.IsNullOrEmpty(message = CheckForValidName(nameOfOptionGroup)) == false)
-                throw new Exception(message);
+            message = CheckForValidName(nameOfOptionGroup);
+            if (string.IsNullOrEmpty(message) == false)
+                throw new ArgumentException(message);
 
             message = CheckForValidName(optionName);
 
             if (string.IsNullOrEmpty(message) == false)
-                throw new Exception(message);
+                throw new ArgumentException(message);
 
             OptionGroup opgroup;
-            var option = mOptionGroups.TryGetValue(nameOfOptionGroup, out opgroup);
+            mOptionGroups.TryGetValue(nameOfOptionGroup, out opgroup);
 
             // Create a new option group if this one is not present, yet
             if (opgroup == null)
@@ -380,6 +372,7 @@
             }
             catch
             {
+                // XML error should not crash reading XML
             }
         }
 
@@ -401,7 +394,7 @@
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private string CheckForValidName(string name)
+        private static string CheckForValidName(string name)
         {
             if (string.IsNullOrEmpty(name) == true)
                 return string.Format("The '{0}' name cannot be empty or null", name);
