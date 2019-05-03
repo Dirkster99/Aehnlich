@@ -54,6 +54,7 @@
     <Compile Include="Converters\MultiBoolToVisibilityPropConverter.cs" />
     <Compile Include="Converters\MultiParToParConverter.cs" />
     <Compile Include="Enums\DiffViewModeEnum.cs" />
+    <Compile Include="Events\OpenFileDiffEvent.cs" />
     <Compile Include="Interfaces\IAppViewModel.cs" />
     <Compile Include="Interfaces\IDiffFileModeItemViewModel.cs" />
     <Compile Include="Interfaces\IDirDiffDocViewModel.cs" />

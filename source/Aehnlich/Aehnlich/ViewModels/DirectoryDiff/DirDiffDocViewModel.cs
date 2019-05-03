@@ -1,7 +1,9 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
     using Aehnlich.Interfaces;
+    using AehnlichDirViewModelLib.Events;
     using System;
+    using System.Windows;
     using System.Windows.Input;
 
     internal enum DirDiffDocStages
@@ -39,6 +41,7 @@
         public DirDiffDocViewModel(IDocumentManagerViewModel docManager,
                                    string leftDirPath,
                                    string rightDirPath)
+            : this()
         {
             _DocumentManager = docManager;
 
@@ -52,6 +55,14 @@
                 (p) => CreatePageViewCommand_CanExecute(p));
 
             _SelectedDirDiffItem = new DirDiffDocSetupViewModel(createViewPageCommand, leftDirPath, rightDirPath);
+        }
+
+        /// <summary>
+        /// Hidden standard clas constructor
+        /// </summary>
+        protected DirDiffDocViewModel()
+            : base()
+        {
         }
         #endregion ctors
 
@@ -170,7 +181,11 @@
                     if (setupPage != null)
                     {
                         ContentId = SetupContentID + Guid.NewGuid().ToString();
-                        var newPage = new DirDiffDocViewViewModel();
+
+                        // Subscripe document manager to diff file open event
+                        var newPage = new DirDiffDocViewViewModel(_DocumentManager.DirDiffDoc_CompareFilesrequest);
+
+                        // Initialize directory diff and execute async task based comparison
                         newPage.Initilize(setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath);
 
                         newPage.DirDiffDoc.CompareDirectoriesCommand.Execute(

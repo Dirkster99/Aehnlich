@@ -1,6 +1,7 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
     using AehnlichDirViewModelLib.Enums;
+    using AehnlichDirViewModelLib.Events;
     using AehnlichDirViewModelLib.Interfaces;
     using AehnlichDirViewModelLib.Models;
     using AehnlichDirViewModelLib.ViewModels.Base;
@@ -68,6 +69,12 @@
             SelectedItemsB = new ObservableCollection<IDirEntryViewModel>();
         }
         #endregion ctors
+
+        /// <summary>
+        /// Requests a listner to handle the event when the user wants to open a detailed
+        /// file diff view to compare the contents of 2 (text or binary) files.
+        /// </summary>
+        public event EventHandler<OpenFileDiffEventArgs> CompareFilesRequest;
 
         #region properties
         /// <summary>
@@ -306,8 +313,13 @@
                                 return;
                         }
 
-                        if (param.IsFile == true)  // Todo Open a text file diff view for this
+                        // Send an event to Open a (text) file diff view for this
+                        // If there is a listner doing the open part and view ...
+                        if (param.IsFile == true)
+                        {
+                            this.CompareFilesRequest?.Invoke(this, new OpenFileDiffEventArgs(param));
                             return;
+                        }
 
                         if (param.Subentries.Count == 0) // No more subentries to browse to
                             return;

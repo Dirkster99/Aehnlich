@@ -1,5 +1,6 @@
 ﻿namespace Aehnlich.Interfaces
 {
+    using AehnlichDirViewModelLib.Events;
     using System.Collections.Generic;
 
     internal interface IDocumentManagerViewModel : System.IDisposable
@@ -9,5 +10,12 @@
         bool CloseDocument(IDocumentBaseViewModel closeMe);
 
         void SaveSettings();
+
+        /// <summary>
+        /// Is raised when the user requests to view a file content diff (binary or text).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void DirDiffDoc_CompareFilesrequest(object sender, OpenFileDiffEventArgs e);
     }
 }

@@ -3,9 +3,11 @@
     using Aehnlich.Events;
     using Aehnlich.Interfaces;
     using Aehnlich.ViewModels.Documents;
+    using AehnlichDirViewModelLib.Events;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Windows;
     using System.Windows.Threading;
 
     public class DocumentManagerViewModel : Base.ViewModelBase, IDocumentManagerViewModel
@@ -70,26 +72,6 @@
                 }
             }
         }
-
-        internal void DirectoryCompareShow()
-        {
-            IDocumentBaseViewModel newDoc;
-
-            // Allow only one directory comparer page in setup mode
-            // and activate it for the user to bring this to his attention
-            newDoc = _Documents.FirstOrDefault(i => i.ContentId == DirDiffDocViewModel.SetupContentID);
-            if (newDoc == null)
-            {
-                string leftDir = Properties.Settings.Default.LeftDirPath;
-                string rightDir = Properties.Settings.Default.RightDirPath;
-
-                // Or create a new directory setup page if their is currently none to use
-                newDoc = new DirDiffDocViewModel(this, leftDir, rightDir);
-                _Documents.Add(newDoc);
-            }
-
-            ActiveDocument = newDoc;
-        }
         #endregion properties
 
         #region methods
@@ -102,6 +84,10 @@
                 ActiveDocument = null;
 
             _Documents.Remove(closeMe);
+
+            var disposMe = closeMe as IDisposable;
+            if (disposMe != null)
+                disposMe.Dispose();
 
             return true;
         }
@@ -116,6 +102,63 @@
             {
                 doc.SaveSettings();
             }
+        }
+
+        /// <summary>
+        /// Is raised when the user requests to view a file content diff (binary or text).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void DirDiffDoc_CompareFilesrequest(object sender, OpenFileDiffEventArgs e)
+        {
+            var newDoc = new DocDiffDocViewViewModel(this, e.ItemPathA, e.ItemPathB);
+
+            var oldDoc = FindDocument(newDoc.ContentId);
+
+            if (oldDoc == null)
+            {
+                AddDocument(newDoc, true);
+                newDoc.ExecuteCompare();
+            }
+            else
+                AcitvateDocument(oldDoc);
+        }
+
+        internal void DirectoryCompareShow()
+        {
+            var newDoc = FindDocument(DirDiffDocViewModel.SetupContentID);
+
+            // Allow only one directory comparer page in setup mode
+            // and activate it for the user to bring this to his attention
+            if (newDoc == null)
+            {
+                string leftDir = Properties.Settings.Default.LeftDirPath;
+                string rightDir = Properties.Settings.Default.RightDirPath;
+
+                // Or create a new directory setup page if their is currently none to use
+                newDoc = new DirDiffDocViewModel(this, leftDir, rightDir);
+                AddDocument(newDoc, true);
+            }
+            else
+                AcitvateDocument(newDoc);
+        }
+
+        internal IDocumentBaseViewModel FindDocument(string contentId)
+        {
+            return _Documents.FirstOrDefault(i => i.ContentId == contentId);
+        }
+
+        internal void AddDocument(IDocumentBaseViewModel newDoc, bool activateDocument)
+        {
+            _Documents.Add(newDoc);
+
+            if(activateDocument == true)
+                AcitvateDocument(newDoc);
+        }
+
+        internal void AcitvateDocument(IDocumentBaseViewModel newDoc)
+        {
+            ActiveDocument = newDoc;
         }
 
         #region IDisposable

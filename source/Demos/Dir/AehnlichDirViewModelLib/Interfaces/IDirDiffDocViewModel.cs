@@ -1,5 +1,6 @@
 ﻿namespace AehnlichDirViewModelLib.Interfaces
 {
+    using AehnlichDirViewModelLib.Events;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -12,6 +13,14 @@
     /// </summary>
     public interface IDirDiffDocViewModel : INotifyPropertyChanged
     {
+
+        /// <summary>
+        /// Requests a listner to handle the event when the user wants to open a detailed
+        /// file diff view to compare the contents of 2 (text or binary) files.
+        /// </summary>
+        event EventHandler<OpenFileDiffEventArgs> CompareFilesRequest;
+
+        #region properties
         /// <summary>
         /// Gets whether data binding should currently result in Diff data being available or not.
         /// This can be a good indicator for command enable/disablement when these make sense
@@ -137,5 +146,6 @@
         /// </summary>
         ICommand OpenFileFromActiveViewCommand { get; }
         #endregion Commands
+        #endregion properties
     }
 }

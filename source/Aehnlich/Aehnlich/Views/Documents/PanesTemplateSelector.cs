@@ -17,6 +17,12 @@
             set;
         }
 
+        public DataTemplate DocDiffDocumentViewTemplate
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Returns a System.Windows.DataTemplate based on custom logic.
         /// </summary>
@@ -29,6 +35,9 @@
 
             if (item is DirDiffDocViewModel)
                 return DirDiffDocumentViewTemplate;
+
+            if (item is DocDiffDocViewViewModel)
+                return DocDiffDocumentViewTemplate;
 
             return base.SelectTemplate(item, container);
         }

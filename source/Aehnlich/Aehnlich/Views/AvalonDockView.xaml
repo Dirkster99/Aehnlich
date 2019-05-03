@@ -35,6 +35,11 @@
                                             <views:DirDiffDocControl />
                                         </DataTemplate>
                                     </docs:PanesTemplateSelector.DirDiffDocumentViewTemplate>
+                                    <docs:PanesTemplateSelector.DocDiffDocumentViewTemplate>
+                                        <DataTemplate>
+                                            <views:DocDiffDocControl DataContext="{Binding DocDiffDoc}" />
+                                        </DataTemplate>
+                                    </docs:PanesTemplateSelector.DocDiffDocumentViewTemplate>
                                 </docs:PanesTemplateSelector>
                             </avalonDock:DockingManager.LayoutItemTemplateSelector>
                             <avalonDock:DockingManager.LayoutItemContainerStyleSelector>

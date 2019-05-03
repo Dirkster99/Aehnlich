@@ -1,5 +1,10 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
+    using AehnlichDirViewModelLib.Events;
+    using AehnlichDirViewModelLib.Interfaces;
+    using System;
+    using System.Windows;
+
     internal class DirDiffDocViewViewModel : Base.ViewModelBase
     {
         #region fields
@@ -9,9 +14,21 @@
         /// <summary>
         /// Class constructor
         /// </summary>
-        public DirDiffDocViewViewModel()
+        public DirDiffDocViewViewModel(EventHandler<OpenFileDiffEventArgs> openFileContentDiffRequestHandler)
+            : this()
         {
             DirDiffDoc = AehnlichDirViewModelLib.ViewModels.Factory.ConstructAppViewModel();
+
+            //DirDiffDoc.DirDiffDoc.CompareFilesRequest += openFileContentDiffRequestHandler;
+            WeakEventManager<IDirDiffDocViewModel, OpenFileDiffEventArgs>.AddHandler(
+                DirDiffDoc.DirDiffDoc, "CompareFilesRequest", openFileContentDiffRequestHandler);
+        }
+
+        /// <summary>
+        /// Hidden class constructor
+        /// </summary>
+        protected DirDiffDocViewViewModel()
+        {
         }
         #endregion ctors
 

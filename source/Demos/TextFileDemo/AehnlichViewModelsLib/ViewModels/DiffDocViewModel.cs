@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using System.Windows;
     using System.Windows.Input;
     using AehnlichLib.Enums;
     using AehnlichLib.Models;

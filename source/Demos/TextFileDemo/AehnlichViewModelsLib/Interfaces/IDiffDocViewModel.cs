@@ -1,6 +1,7 @@
 ﻿namespace AehnlichViewModelsLib.Interfaces
 {
     using AehnlichLib.Enums;
+    using AehnlichLib.Interfaces;
     using AehnlichViewModelsLib.ViewModels;
     using ICSharpCode.AvalonEdit;
     using System;

@@ -74,6 +74,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -88,6 +91,9 @@
     </Reference>
     <Reference Include="MWindowLib, Version=1.0.4.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dirkster.MWindowLib.1.0.4.2\lib\net452\MWindowLib.dll</HintPath>
+    </Reference>
+    <Reference Include="SuggestBoxLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.SuggestBoxLib.1.0.1\lib\net452\SuggestBoxLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -107,11 +113,11 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.3.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.AvalonDock.Themes.VS2013.3.5.3\lib\net4\Xceed.Wpf.AvalonDock.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.4.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.AvalonDock.Themes.VS2013.3.5.4.1\lib\net4\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2013, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.AvalonDock.Themes.VS2013.3.5.3\lib\net4\Xceed.Wpf.AvalonDock.Themes.VS2013.dll</HintPath>
+      <HintPath>..\..\packages\Dirkster.AvalonDock.Themes.VS2013.3.5.4.1\lib\net4\Xceed.Wpf.AvalonDock.Themes.VS2013.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +131,7 @@
     <Compile Include="ViewModels\DirectoryDiff\DirDiffDocViewViewModel.cs" />
     <Compile Include="ViewModels\DirectoryDiff\DirDiffDocSetupViewModel.cs" />
     <Compile Include="Interfaces\IDocumentManagerViewModel.cs" />
+    <Compile Include="ViewModels\DocDiff\DocDiffDocViewViewModel.cs" />
     <Compile Include="ViewModels\IAenlichAppViewModel.cs" />
     <Compile Include="Views\DirDiffSetupView.xaml.cs">
       <DependentUpon>DirDiffSetupView.xaml</DependentUpon>
@@ -151,6 +158,7 @@
     <Compile Include="ViewModels\ThemeViewModel.cs" />
     <Compile Include="Views\AvalonDockView.cs" />
     <Compile Include="Views\DirDiffDocControl.cs" />
+    <Compile Include="Views\DocDiffDocControl.cs" />
     <Compile Include="Views\Documents\PanesStyleSelector.cs" />
     <Compile Include="Views\Documents\PanesTemplateSelector.cs" />
     <Page Include="BindToMLib\AvalonDock_Dark_LightBrushs.xaml">
@@ -190,6 +198,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\AvalonDockView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocDiffDocControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -233,6 +245,10 @@
     <ProjectReference Include="..\..\Demos\Dir\AehnlichDirViewModelLib\AehnlichDirViewModelLib.csproj">
       <Project>{920650a5-c019-4e33-ad92-04bc77bd59b0}</Project>
       <Name>AehnlichDirViewModelLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Demos\TextFileDemo\AehnlichViewModelsLib\AehnlichViewModelsLib.csproj">
+      <Project>{4cdcebd2-5062-453e-b9af-f66811c3e31a}</Project>
+      <Name>AehnlichViewModelsLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Components\ServiceLocator\ServiceLocator.csproj">
       <Project>{252126d1-e1d9-49c3-910b-fcf2266265ef}</Project>

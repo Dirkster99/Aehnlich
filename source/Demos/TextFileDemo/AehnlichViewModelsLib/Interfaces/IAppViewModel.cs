@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel;
     using System.Windows.Input;
+    using AehnlichLib.Interfaces;
     using AehnlichViewLib.Enums;
     using AehnlichViewModelsLib.Enums;
     using AehnlichViewModelsLib.Interfaces;
@@ -94,6 +95,12 @@
         /// Gets a command that opens the currently active file in Windows.
         /// </summary>
         ICommand OpenFileFromActiveViewCommand { get; }
+
+        /// <summary>
+        /// Gets a viewmodel that manages progress display in terms of min, value, max or
+        /// indeterminate progress display.
+        /// </summary>
+        IDiffProgress DiffProgress { get; }
         #endregion Commands
     }
 }
