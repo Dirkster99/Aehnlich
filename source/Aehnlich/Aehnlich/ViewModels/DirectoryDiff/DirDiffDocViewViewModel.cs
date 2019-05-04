@@ -2,17 +2,17 @@
 {
     using AehnlichDirViewModelLib.Events;
     using AehnlichDirViewModelLib.Interfaces;
+    using AehnlichDirViewModelLib.Models;
+    using AehnlichLib.Models;
     using System;
     using System.Windows;
     using System.Windows.Input;
 
     internal class DirDiffDocViewViewModel : Base.ViewModelBase
     {
+        #region fields
         private ICommand _ViewLoadedCommand;
         private bool _ViewLoadedCommandCanExecute;
-
-        private readonly string _initLeftDirPath, _initRightDirPath;
-        #region fields
         #endregion fields
 
         #region ctors
@@ -20,14 +20,10 @@
         /// Class constructor
         /// </summary>
         public DirDiffDocViewViewModel(EventHandler<OpenFileDiffEventArgs> openFileContentDiffRequestHandler
-                                       , string initLeftDirPath
-                                        , string initRightDirPath)
+                                       , ShowDirDiffArgs args)
             : this()
         {
-            _initLeftDirPath = initLeftDirPath;
-            _initRightDirPath = initRightDirPath;
-
-            DirDiffDoc = AehnlichDirViewModelLib.ViewModels.Factory.ConstructAppViewModel();
+            DirDiffDoc = AehnlichDirViewModelLib.ViewModels.Factory.ConstructAppViewModel(args);
 
             //DirDiffDoc.DirDiffDoc.CompareFilesRequest += openFileContentDiffRequestHandler;
             WeakEventManager<IDirDiffDocViewModel, OpenFileDiffEventArgs>.AddHandler(
@@ -88,10 +84,10 @@
         private void ExecuteCompare()
         {
             // Initialize directory diff and execute async task based comparison
-            DirDiffDoc.Initialize(_initLeftDirPath, _initRightDirPath);
+            DirDiffDoc.Initialize(DirDiffDoc.LeftDirPath, DirDiffDoc.RightDirPath);
 
-            DirDiffDoc.CompareDirectoriesCommand.Execute(
-                new object[2] { _initLeftDirPath, _initRightDirPath });
+            DirDiffDoc.CompareDirectoriesCommand.Execute(new object[2]
+            { DirDiffDoc.LeftDirPath, DirDiffDoc.RightDirPath });
         }
         #endregion methods
     }

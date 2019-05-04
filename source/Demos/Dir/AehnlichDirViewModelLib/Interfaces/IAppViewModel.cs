@@ -1,6 +1,7 @@
 ﻿namespace AehnlichDirViewModelLib.Interfaces
 {
     using AehnlichLib.Interfaces;
+    using AehnlichLib.Models;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows.Input;

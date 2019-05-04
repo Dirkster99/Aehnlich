@@ -194,6 +194,11 @@
             return true;
         }
 
+        /// <summary>
+        /// Implements a command that closes the setup view(model) and creates the
+        /// view(model) that is actually processing the differences between the given directories.
+        /// </summary>
+        /// <param name="parameter"></param>
         private void CreatePageViewCommand_Executed(object parameter)
         {
             switch (this.CurrentStage)
@@ -209,10 +214,8 @@
                         ToolTip = GetTooltip(setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath); ;
 
                         // Subscripe document manager to diff file open event
-                        var newPage = new DirDiffDocViewViewModel(
-                                                        _DocumentManager.DocDiffDoc_CompareFilesRequest
-                                                        ,setupPage.LeftDirectoryPath
-                                                        , setupPage.RightDirectoryPath);
+                        var newPage = new DirDiffDocViewViewModel(_DocumentManager.DocDiffDoc_CompareFilesRequest
+                                                                 ,setupPage.GetDirDiffSetup());
 
                         SelectedDirDiffItem = newPage;
                         CurrentStage = DirDiffDocStages.DirDiffView;

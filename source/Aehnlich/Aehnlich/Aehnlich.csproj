@@ -157,9 +157,15 @@
     <Compile Include="ViewModels\ObservableRangeCollection.cs" />
     <Compile Include="ViewModels\ThemeDefinitionViewModel.cs" />
     <Compile Include="ViewModels\ThemeViewModel.cs" />
-    <Compile Include="Views\AvalonDockView.cs" />
-    <Compile Include="Views\DirDiffDocControl.cs" />
-    <Compile Include="Views\DocDiffDocControl.cs" />
+    <Compile Include="Views\AvalonDockView.xaml.cs">
+      <DependentUpon>AvalonDockView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DirDiffDocControl.xaml.cs">
+      <DependentUpon>DirDiffDocControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocDiffDocControl.xaml.cs">
+      <DependentUpon>DocDiffDocControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Documents\PanesStyleSelector.cs" />
     <Compile Include="Views\Documents\PanesTemplateSelector.cs" />
     <Page Include="BindToMLib\AvalonDock_Dark_LightBrushs.xaml">

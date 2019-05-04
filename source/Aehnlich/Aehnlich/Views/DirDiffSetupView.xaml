@@ -79,7 +79,6 @@
         <CheckBox
             Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7"
             Content="Recursive" IsChecked="{Binding IsRecursive}" 
-            IsEnabled="False"
             Margin="3,12"/>
 
         <Button

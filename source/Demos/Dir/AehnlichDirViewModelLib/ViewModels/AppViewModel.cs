@@ -2,10 +2,12 @@
 {
     using AehnlichDirViewModelLib.Enums;
     using AehnlichDirViewModelLib.Interfaces;
+    using AehnlichDirViewModelLib.Models;
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
     using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
+    using AehnlichLib.Models;
     using System;
     using System.Collections.Generic;
     using System.Threading;
@@ -17,6 +19,7 @@
         #region fields
         private string _RightDirPath;
         private string _LeftDirPath;
+        private readonly ShowDirDiffArgs _Args;
 
         private ICommand _CompareDirectoriesCommand;
         private ICommand _CancelCompareCommand;
@@ -35,6 +38,18 @@
         #endregion fields
 
         #region ctors
+        /// <summary>
+        /// Class constructor from specific diff options (rather than using defaults)
+        /// </summary>
+        /// <param name="args"></param>
+        public AppViewModel(ShowDirDiffArgs args)
+            : this()
+        {
+            _Args = args;
+            _LeftDirPath = args.LeftDir;
+            _RightDirPath = args.RightDir;
+        }
+
         /// <summary>
         /// Class constructor
         /// </summary>
@@ -343,7 +358,16 @@
             if (_cancelTokenSource.IsCancellationRequested == true)
                 return;
 
-            var args = new Models.ShowDirDiffArgs(leftDir, rightDir);
+            ShowDirDiffArgs args = _Args;
+
+            // Construct deffault options if there are no others
+            if (_Args == null)
+                args = new ShowDirDiffArgs(leftDir, rightDir);
+            else
+            {
+                _Args.LeftDir = leftDir;
+                _Args.RightDir = rightDir;
+            }
 
             var diff = new DirectoryDiff(args.ShowOnlyInA, args.ShowOnlyInB,
                                          args.ShowDifferent, args.ShowSame,

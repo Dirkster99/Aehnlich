@@ -1,5 +1,6 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
+    using AehnlichDirViewModelLib.Models;
     using System.Windows.Input;
 
     internal class DirDiffDocSetupViewModel : Base.ViewModelBase
@@ -84,7 +85,14 @@
         #endregion properties
 
         #region methods
+        internal ShowDirDiffArgs GetDirDiffSetup()
+        {
+            var setup = new ShowDirDiffArgs(LeftDirectoryPath, RightDirectoryPath);
 
+            setup.Recursive = this.IsRecursive;
+
+            return setup;
+        }
         #endregion methods
     }
 }

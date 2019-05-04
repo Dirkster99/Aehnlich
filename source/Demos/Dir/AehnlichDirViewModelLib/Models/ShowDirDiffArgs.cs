@@ -2,7 +2,11 @@
 {
     using AehnlichLib.Dir;
 
-    internal class ShowDirDiffArgs
+    /// <summary>
+    /// Defines the arguments (options) that are applicable for the directory diff
+    /// process and viewmodel.
+    /// </summary>
+    public class ShowDirDiffArgs
     {
         #region ctors
         /// <summary>
@@ -37,12 +41,12 @@
         /// <summary>
         /// Gets the path of the left directory A being compared to the right directory B.
         /// </summary>
-        public string LeftDir { get; }
+        public string LeftDir { get; set; }
 
         /// <summary>
         /// Gets the path of the right directory B being compared to the left directory A.
         /// </summary>
-        public string RightDir { get; }
+        public string RightDir { get; set; }
 
         /// <summary>
         /// Determines whether comparison results should only be relevant for the left view A.

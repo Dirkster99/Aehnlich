@@ -110,9 +110,5 @@
             }
         }
         #endregion properties
-
-        #region methods
-
-        #endregion methods
     }
 }

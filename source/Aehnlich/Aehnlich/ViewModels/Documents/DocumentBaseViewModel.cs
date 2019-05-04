@@ -3,6 +3,9 @@
     using Aehnlich.Interfaces;
     using System.Windows.Input;
 
+    /// <summary>
+    /// Defines common properties and methods for document viewmodels.
+    /// </summary>
     internal abstract class DocumentBaseViewModel : PaneViewModel, IDocumentBaseViewModel
     {
         #region fields
