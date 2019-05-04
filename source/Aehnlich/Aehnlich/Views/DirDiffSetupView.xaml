@@ -57,22 +57,46 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <CheckBox Content="Show if only on left" Grid.Row="0" />
-                <CheckBox Content="Show if only on right" Grid.Row="1" />
+                <CheckBox
+                    Grid.Row="0"
+                    Content="Show if only on left"
+                    IsChecked="{Binding ShowOnlyInA}" />
+
+                <CheckBox
+                    Grid.Row="1"
+                    Content="Show if only on right"
+                    IsChecked="{Binding ShowOnlyInB}" />
             </Grid>
         </GroupBox>
 
         <GroupBox Header="Matched Items" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Margin="3,12,3,3">
-            <Grid IsEnabled="False">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <CheckBox Content="Show if different" Grid.Row="0" />
-                <CheckBox Content="Show if same file" Grid.Row="1" />
-                <CheckBox Content="Show if same directory" Grid.Row="2" />
+                <CheckBox Grid.Row="0"
+                          Content="Show if different"
+                          IsChecked="{Binding ShowIfDifferent}"
+                          IsEnabled="False"
+                          >
+                    <CheckBox.ToolTip>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0">Check this to see items that appear similar but are different in some way.</TextBlock>
+                            <TextBlock Grid.Row="1">Uncheck this if you do not want to see changed items but only inserted or deleted items.</TextBlock>
+                        </Grid>
+                    </CheckBox.ToolTip>
+                </CheckBox>
+
+                <CheckBox Grid.Row="1" Content="Show if same file"  IsEnabled="False"/>
+                <CheckBox Grid.Row="2" Content="Show if same directory"  IsEnabled="False"/>
             </Grid>
         </GroupBox>
 

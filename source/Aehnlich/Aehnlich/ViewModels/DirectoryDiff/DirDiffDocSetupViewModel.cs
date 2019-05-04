@@ -9,6 +9,9 @@
         private string _LeftDirectoryPath;
         private string _RightDirectoryPath;
         private bool _IsRecursive;
+        private bool _ShowOnlyInA;
+        private bool _ShowOnlyInB;
+        private bool _ShowIfDifferent;
         #endregion fields
 
         #region ctors
@@ -34,6 +37,9 @@
         protected DirDiffDocSetupViewModel()
         {
             _IsRecursive = true;
+            _ShowOnlyInA = true;
+            _ShowOnlyInB = true;
+            _ShowIfDifferent = true;
         }
         #endregion ctors
 
@@ -44,6 +50,10 @@
         /// </summary>
         public ICommand CreateNewDirectoryCompareCommand { get; }
 
+        /// <summary>
+        /// Gets/sets the left directory path to be matched/diff'ed
+        /// against the <see cref="RightDirectoryPath"/>.
+        /// </summary>
         public string LeftDirectoryPath
         {
             get { return _LeftDirectoryPath; }
@@ -57,6 +67,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets/sets the right directory path to be matched/diff'ed
+        /// against the <see cref="LeftDirectoryPath"/>.
+        /// </summary>
         public string RightDirectoryPath
         {
             get { return _RightDirectoryPath; }
@@ -70,6 +84,10 @@
             }
         }
 
+        /// <summary>
+        /// Determines whether only the content in a given directory is compared
+        /// or whether content in sub-directories is also taken into account.
+        /// </summary>
         public bool IsRecursive
         {
             get { return _IsRecursive; }
@@ -82,6 +100,45 @@
                 }
             }
         }
+
+        public bool ShowOnlyInA
+        {
+            get { return _ShowOnlyInA; }
+            set
+            {
+                if (_ShowOnlyInA != value)
+                {
+                    _ShowOnlyInA = value;
+                    NotifyPropertyChanged(() => ShowOnlyInA);
+                }
+            }
+        }
+
+        public bool ShowOnlyInB
+        {
+            get { return _ShowOnlyInB; }
+            set
+            {
+                if (_ShowOnlyInB != value)
+                {
+                    _ShowOnlyInB = value;
+                    NotifyPropertyChanged(() => ShowOnlyInB);
+                }
+            }
+        }
+
+        public bool ShowIfDifferent
+        {
+            get { return _ShowIfDifferent; }
+            set
+            {
+                if (_ShowIfDifferent != value)
+                {
+                    _ShowIfDifferent = value;
+                    NotifyPropertyChanged(() => ShowIfDifferent);
+                }
+            }
+        }
         #endregion properties
 
         #region methods
@@ -90,6 +147,9 @@
             var setup = new ShowDirDiffArgs(LeftDirectoryPath, RightDirectoryPath);
 
             setup.Recursive = this.IsRecursive;
+            setup.ShowOnlyInA = ShowOnlyInA;
+            setup.ShowOnlyInB = ShowOnlyInB;
+            setup.ShowDifferent = ShowIfDifferent;
 
             return setup;
         }
