@@ -16,6 +16,6 @@
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void DirDiffDoc_CompareFilesrequest(object sender, OpenFileDiffEventArgs e);
+        void DocDiffDoc_CompareFilesRequest(object sender, OpenFileDiffEventArgs e);
     }
 }

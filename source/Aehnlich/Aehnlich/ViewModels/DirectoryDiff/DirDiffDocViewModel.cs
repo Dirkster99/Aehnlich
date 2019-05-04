@@ -1,11 +1,12 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
     using Aehnlich.Interfaces;
-    using AehnlichDirViewModelLib.Events;
     using System;
-    using System.Windows;
     using System.Windows.Input;
 
+    /// <summary>
+    /// Enumerates the stages (modes) of a <see cref="DirDiffDocViewModel"/>.
+    /// </summary>
     internal enum DirDiffDocStages
     {
         /// <summary>
@@ -19,6 +20,21 @@
         DirDiffView
     }
 
+    /// <summary>
+    /// Implements a document viewmodel for documents that display directory diff information.
+    /// 
+    /// This information is dependent on setup parameters (eg: left path and right path)
+    /// which can be defined using the <see cref="DirDiffDocSetupViewModel"/> which is
+    /// exposed via the <see cref="SelectedDirDiffItem"/> property.
+    /// 
+    /// The <see cref="SelectedDirDiffItem"/> property can also contain a <see cref="DirDiffDocViewViewModel"/>
+    /// to display the results of the processing after the setup has taken place.
+    /// 
+    /// Summary: The viewmodel supports two stages (setup and view) - the current stage and associated
+    /// viewmodel can be determined via the:
+    /// - <see cref="CurrentStage"/> and
+    /// - <see cref="SelectedDirDiffItem"/> properties.
+    /// </summary>
     internal class DirDiffDocViewModel : DocumentBaseViewModel
     {
         #region fields
@@ -107,6 +123,9 @@
         /// </summary>
         public override ICommand SaveCommand { get { return null; } }
 
+        /// <summary>
+        /// Gets the stage that is currently managed in this viewmodel.
+        /// </summary>
         public DirDiffDocStages CurrentStage
         {
             get { return _CurrentStage; }
@@ -120,6 +139,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets the viewmodel that is associated with the <see cref="CurrentStage"/>
+        /// to represent all relevant data for display in the UI.
+        /// </summary>
         public object SelectedDirDiffItem
         {
             get { return _SelectedDirDiffItem; }
@@ -183,13 +206,10 @@
                         ContentId = SetupContentID + Guid.NewGuid().ToString();
 
                         // Subscripe document manager to diff file open event
-                        var newPage = new DirDiffDocViewViewModel(_DocumentManager.DirDiffDoc_CompareFilesrequest);
-
-                        // Initialize directory diff and execute async task based comparison
-                        newPage.Initilize(setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath);
-
-                        newPage.DirDiffDoc.CompareDirectoriesCommand.Execute(
-                            new object[2] { setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath });
+                        var newPage = new DirDiffDocViewViewModel(
+                                                        _DocumentManager.DocDiffDoc_CompareFilesRequest
+                                                        ,setupPage.LeftDirectoryPath
+                                                        , setupPage.RightDirectoryPath);
 
                         SelectedDirDiffItem = newPage;
                         CurrentStage = DirDiffDocStages.DirDiffView;

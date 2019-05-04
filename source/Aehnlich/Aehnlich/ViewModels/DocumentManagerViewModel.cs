@@ -109,17 +109,14 @@
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void DirDiffDoc_CompareFilesrequest(object sender, OpenFileDiffEventArgs e)
+        public void DocDiffDoc_CompareFilesRequest(object sender, OpenFileDiffEventArgs e)
         {
             var newDoc = new DocDiffDocViewViewModel(this, e.ItemPathA, e.ItemPathB);
 
             var oldDoc = FindDocument(newDoc.ContentId);
 
-            if (oldDoc == null)
-            {
-                AddDocument(newDoc, true);
-                newDoc.ExecuteCompare();
-            }
+            if (oldDoc == null)              // Add new document and activate it
+                AddDocument(newDoc, true);  // CompareFilesCommand is executed via ViewLoadedCommand()
             else
                 AcitvateDocument(oldDoc);
         }

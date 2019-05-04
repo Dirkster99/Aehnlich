@@ -23,7 +23,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid Margin="3">
+                        <Grid Margin="3" DataContext="{Binding DocDiffDoc}">
                             <Grid.Resources>
                                 <conv:BoolToVisibilityPropConverter x:Key="ProgressVisibilityPropConverter"
                                                 FalseValue="Visible"

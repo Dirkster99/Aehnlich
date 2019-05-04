@@ -37,7 +37,8 @@
                                     </docs:PanesTemplateSelector.DirDiffDocumentViewTemplate>
                                     <docs:PanesTemplateSelector.DocDiffDocumentViewTemplate>
                                         <DataTemplate>
-                                            <views:DocDiffDocControl DataContext="{Binding DocDiffDoc}" />
+                                            <views:DocDiffDocControl ViewLoadedCommand="{Binding ViewLoadedCommand}"
+                                                                     />
                                         </DataTemplate>
                                     </docs:PanesTemplateSelector.DocDiffDocumentViewTemplate>
                                 </docs:PanesTemplateSelector>
