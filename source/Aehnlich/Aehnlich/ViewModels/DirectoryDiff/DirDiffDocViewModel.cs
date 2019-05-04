@@ -205,6 +205,9 @@
                     {
                         ContentId = SetupContentID + Guid.NewGuid().ToString();
 
+                        Title = GetTitle(setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath);
+                        ToolTip = GetTooltip(setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath); ;
+
                         // Subscripe document manager to diff file open event
                         var newPage = new DirDiffDocViewViewModel(
                                                         _DocumentManager.DocDiffDoc_CompareFilesRequest

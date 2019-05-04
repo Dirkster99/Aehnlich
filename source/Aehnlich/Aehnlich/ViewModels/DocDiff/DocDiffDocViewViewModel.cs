@@ -28,9 +28,10 @@
             : this()
         {
             _DocumentManager = docManager;
-            this.ContentId = string.Format("DocDiff{0}_{1}", leftFilePath, rightFilePath);
+            this.ContentId = GetContentId(leftFilePath, rightFilePath);
 
-            Title = "Compare Files";
+            Title = GetTitle(leftFilePath, rightFilePath);
+            ToolTip = GetTooltip(leftFilePath, rightFilePath);
             DocDiffDoc = AehnlichViewModelsLib.ViewModels.Factory.ConstructAppViewModel(leftFilePath, rightFilePath);
         }
 
@@ -130,6 +131,18 @@
         /// to save all relevant user settings for recovery on appliaction re-start.
         /// </summary>
         public override void SaveSettings() { }
+
+        /// <summary>
+        /// Gets the content id for a (text) diff document based on the left and right paths
+        /// of the diff document viewmodel.
+        /// </summary>
+        /// <param name="leftFilePath"></param>
+        /// <param name="rightFilePath"></param>
+        /// <returns></returns>
+        internal static string GetContentId(string leftFilePath, string rightFilePath)
+        {
+            return string.Format("DocDiff{0}_{1}", leftFilePath, rightFilePath);
+        }
 
         /// <summary>
         /// (Re-)Loads all data items necessary to display the diff information for

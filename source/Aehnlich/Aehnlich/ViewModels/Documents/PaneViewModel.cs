@@ -5,10 +5,11 @@
     internal abstract class PaneViewModel : Base.ViewModelBase
     {
         #region fields
-        private string _title;
+        private string _Title;
+        private string _ToolTip;
         private string _contentId;
-        private bool _isSelected;
-        private bool _isActive;
+        private bool _IsSelected;
+        private bool _IsActive;
         #endregion fields
 
         #region ctors
@@ -46,13 +47,29 @@
         /// </summary>
         public string Title
         {
-            get { return _title; }
+            get { return _Title; }
             protected set
             {
-                if (_title != value)
+                if (_Title != value)
                 {
-                    _title = value;
+                    _Title = value;
                     NotifyPropertyChanged(() => Title);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the ToolTip of a document (for display on mouseover on document tab)
+        /// </summary>
+        public string ToolTip
+        {
+            get { return _ToolTip; }
+            protected set
+            {
+                if (_ToolTip != value)
+                {
+                    _ToolTip = value;
+                    NotifyPropertyChanged(() => ToolTip);
                 }
             }
         }
@@ -69,12 +86,12 @@
 
         public bool IsSelected
         {
-            get { return _isSelected; }
+            get { return _IsSelected; }
             set
             {
-                if (_isSelected != value)
+                if (_IsSelected != value)
                 {
-                    _isSelected = value;
+                    _IsSelected = value;
                     NotifyPropertyChanged(() => IsSelected);
                 }
             }
@@ -82,12 +99,12 @@
 
         public bool IsActive
         {
-            get { return _isActive; }
+            get { return _IsActive; }
             set
             {
-                if (_isActive != value)
+                if (_IsActive != value)
                 {
-                    _isActive = value;
+                    _IsActive = value;
                     NotifyPropertyChanged(() => IsActive);
                 }
             }

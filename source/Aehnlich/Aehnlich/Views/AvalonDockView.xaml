@@ -47,8 +47,11 @@
                                 <docs:PanesStyleSelector>
                                     <docs:PanesStyleSelector.DocumentStyle>
                                         <Style TargetType="{x:Type avalonDock:LayoutItem}">
-                                            <Setter Property="Title" Value="{Binding Model.Title}"/>
-                                            <!--Setter Property="ToolTip" Value="{Binding Model.StartPageTip}"/-->
+                                            <Style.Resources>
+                                                <conv:TruncateMiddleConverter x:Key="TruncateMiddleConverter"/>
+                                            </Style.Resources>
+                                            <Setter Property="Title" Value="{Binding Model.Title, Mode=OneWay, Converter={StaticResource TruncateMiddleConverter}}"/>
+                                            <Setter Property="ToolTip" Value="{Binding Model.ToolTip}"/>
                                             <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}"/>
                                             <!--Setter Property="IconSource" Value="{Binding Model.IconSource}"/-->
                                             <Setter Property="ContentId" Value="{Binding Model.ContentId,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>

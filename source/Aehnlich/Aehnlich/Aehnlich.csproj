@@ -127,6 +127,7 @@
     </ApplicationDefinition>
     <Compile Include="Behaviors\SelectionChangedBehavior.cs" />
     <Compile Include="Converters\ActiveDocumentConverter.cs" />
+    <Compile Include="Converters\TruncateMiddleConverter.cs" />
     <Compile Include="ViewModels\DirectoryDiff\DirDiffContentTemplateSelector.cs" />
     <Compile Include="ViewModels\DirectoryDiff\DirDiffDocViewViewModel.cs" />
     <Compile Include="ViewModels\DirectoryDiff\DirDiffDocSetupViewModel.cs" />

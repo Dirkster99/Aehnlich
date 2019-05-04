@@ -122,6 +122,52 @@
         /// to save all relevant user settings for recovery on appliaction re-start.
         /// </summary>
         abstract public void SaveSettings();
+
+        /// <summary>
+        /// Gets a title for display in the document tab.
+        /// </summary>
+        /// <param name="leftPath"></param>
+        /// <param name="rightPath"></param>
+        /// <returns></returns>
+        protected virtual string GetTitle(string leftFilePath, string rightFilePath)
+        {
+            string leftDirName = string.Empty;
+            string rightDirName = string.Empty;
+
+            try
+            {
+                leftDirName = System.IO.Path.GetFileName(leftFilePath);
+            }
+            catch
+            {
+                // System.IO likes to throw things on wrong strings
+                // so we go without the name if things go wrong...
+            }
+
+            try
+            {
+                rightDirName = System.IO.Path.GetFileName(rightFilePath);
+            }
+            catch
+            {
+                // System.IO likes to throw things on wrong strings
+                // so we go without the name if things go wrong...
+            }
+
+            return leftDirName + ":" + rightDirName;
+        }
+
+        /// <summary>
+        /// Gets a tool tip for display on mouseover over the document tab.
+        /// </summary>
+        /// <param name="leftPath"></param>
+        /// <param name="rightPath"></param>
+        /// <returns></returns>
+        protected virtual string GetTooltip(string leftPath, string rightPath)
+        {
+            return leftPath + "\n" +
+                   rightPath;
+        }
         #endregion methods
     }
 }
