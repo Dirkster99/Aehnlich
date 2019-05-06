@@ -1,28 +1,26 @@
-﻿namespace AehnlichViewLib.Converters
+﻿namespace Aehnlich.Converters
 {
     using System;
     using System.Globalization;
-    using System.Windows;
     using System.Windows.Data;
 
     /// <summary>
-    /// Converts a boolean value into a configurable
-    /// value of type <seealso cref="Visibility"/>.
-    /// 
-    /// Source: http://stackoverflow.com/questions/3128023/wpf-booleantovisibilityconverter-that-converts-to-hidden-instead-of-collapsed-wh
+    /// Converts a string null or string empty value into a specific bool value
+    /// and all other values into the other bool value as configured in the properties
+    /// of this class.
     /// </summary>
-    [ValueConversion(typeof(bool), typeof(Visibility))]
-    public sealed class BoolToVisibilityPropConverter : IValueConverter
+    [ValueConversion(typeof(string), typeof(bool))]
+    public sealed class StringEmptyToBoolPropConverter : IValueConverter
     {
         #region constructor
         /// <summary>
         /// Class constructor
         /// </summary>
-        public BoolToVisibilityPropConverter()
+        public StringEmptyToBoolPropConverter()
         {
             // set defaults
-            TrueValue = Visibility.Visible;
-            FalseValue = Visibility.Collapsed;
+            NullValue = false;
+            NotNullValue = true;
         }
         #endregion constructor
 
@@ -31,19 +29,19 @@
         /// Gets/sets the <see cref="Visibility"/> value that is associated
         /// (converted into) with the boolean true value.
         /// </summary>
-        public Visibility TrueValue { get; set; }
+        public bool NullValue { get; set; }
 
         /// <summary>
         /// Gets/sets the <see cref="Visibility"/> value that is associated
         /// (converted into) with the boolean false value.
         /// </summary>
-        public Visibility FalseValue { get; set; }
+        public bool NotNullValue { get; set; }
         #endregion properties
 
         #region methods
         /// <summary>
-        /// Converts a bool value into <see cref="Visibility"/> as configured in the
-        /// <see cref="TrueValue"/> and <see cref="FalseValue"/> properties.
+        /// Converts a <see cref="string"/> value into a <see cref="bool"/> value
+        /// as configured in the <see cref="NullValue"/> and <see cref="NotNullValue"/> properties.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>
@@ -52,15 +50,18 @@
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is bool))
-                return null;
+            if (value == null)
+                return NullValue;
 
-            return (bool)value ? TrueValue : FalseValue;
+            var str = value as string;
+            if (string.IsNullOrEmpty(str))
+                return NullValue;
+
+            return NotNullValue;
         }
 
         /// <summary>
-        /// Converts a <see cref="Visibility"/> value into bool as configured in the
-        /// <see cref="TrueValue"/> and <see cref="FalseValue"/> properties.
+        /// Not Implemented
         /// </summary>
         /// <param name="value"></param>
         /// <param name="targetType"></param>
@@ -69,13 +70,7 @@
         /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (Equals(value, TrueValue))
-                return true;
-
-            if (Equals(value, FalseValue))
-                return false;
-
-            return null;
+            return Binding.DoNothing;
         }
         #endregion methods
     }

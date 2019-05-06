@@ -76,25 +76,5 @@
                 // Make sure disposing objects does not crash the app shut down process
             }
         }
-
-        #region Column Width A B Synchronization
-        private void MainSplitter_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
-        {
-            DiffDir.ColumnWidthA = this.TopColumnA.Width;
-            DiffDir.ColumnWidthB = this.TopColumnB.Width;
-        }
-
-        private void GridSplitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
-        {
-            DiffDir.ColumnWidthA = this.TopColumnA.Width;
-            DiffDir.ColumnWidthB = this.TopColumnB.Width;
-        }
-
-        private void DiffDir_ColumnWidthChanged(object sender, AehnlichViewLib.Events.ColumnWidthChangedEvent e)
-        {
-            this.TopColumnA.Width = e.ColumnWidthA;
-            this.TopColumnB.Width = e.ColumnWidthB;
-        }
-        #endregion Column Width A B Synchronization
     }
 }

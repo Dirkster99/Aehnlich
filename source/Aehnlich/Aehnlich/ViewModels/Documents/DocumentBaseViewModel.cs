@@ -157,6 +157,9 @@
                 // so we go without the name if things go wrong...
             }
 
+            if (string.Compare(leftDirName, rightDirName, true) == 0)
+                return leftDirName;
+
             return leftDirName + ":" + rightDirName;
         }
 

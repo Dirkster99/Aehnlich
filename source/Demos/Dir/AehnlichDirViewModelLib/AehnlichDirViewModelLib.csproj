@@ -73,13 +73,25 @@
     <Compile Include="ViewModels\DirDiffDocViewModel.cs" />
     <Compile Include="ViewModels\DirEntryViewModel.cs" />
     <Compile Include="ViewModels\ObservableRangeCollection.cs" />
+    <Compile Include="Views\DirDiffView.xaml.cs">
+      <DependentUpon>DirDiffView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\AehnlichLib\AehnlichLib.csproj">
       <Project>{C0D1E820-EB48-4B79-BCD6-C2DE7CC367F2}</Project>
       <Name>AehnlichLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\AehnlichViewLib\AehnlichViewLib.csproj">
+      <Project>{342915ec-e1ca-4aad-bddb-810ee65e4233}</Project>
+      <Name>AehnlichViewLib</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Views\DirDiffView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

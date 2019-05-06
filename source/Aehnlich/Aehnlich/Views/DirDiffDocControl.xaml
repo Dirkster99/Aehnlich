@@ -32,7 +32,8 @@
                                     <local:DirDiffContentTemplateSelector.ViewPage>
                                         <!-- View Stage -->
                                         <DataTemplate>
-                                            <local:DirDiffView ViewLoadedCommand="{Binding ViewLoadedCommand}" />
+                                            <local:DirDiffView
+                                                ViewLoadedCommand="{Binding ViewLoadedCommand}" />
                                         </DataTemplate>
                                     </local:DirDiffContentTemplateSelector.ViewPage>
                                 </local:DirDiffContentTemplateSelector>

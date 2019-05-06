@@ -66,6 +66,9 @@
     <Compile Include="Converters\MultiParToParConverter.cs" />
     <Compile Include="Enums\ChangeDiffOptions.cs" />
     <Compile Include="Events\CaretPositionChangedEvent.cs" />
+    <Compile Include="Views\FileDiffView.xaml.cs">
+      <DependentUpon>FileDiffView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\IDiffDocViewModel.cs" />
     <Compile Include="Interfaces\IDiffLines.cs" />
     <Compile Include="Interfaces\IDiffLineViewModel.cs" />
@@ -112,6 +115,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\FileDiffView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GotoControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

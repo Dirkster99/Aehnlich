@@ -340,7 +340,7 @@ namespace AehnlichLib.Dir
                         directoriesB = new DirectoryInfo[] { };
 
                     // Merge them and Diff them
-                    var mergeIdx = new Merge.MergeIndex(directoriesA, directoriesB, false);
+                    var mergeIdx = new Merge.MergeIndex(directoriesA, directoriesB, false, _ShowOnlyInA, _ShowOnlyInB);
                     mergeIdx.Merge();
 
                     foreach (var item in mergeIdx.MergedEntries)
@@ -558,7 +558,7 @@ namespace AehnlichLib.Dir
                             else
                                 filesB = new FileInfo[] { };
 
-                            mergeIdx = new Merge.MergeIndex(filesA, filesB, false);
+                            mergeIdx = new Merge.MergeIndex(filesA, filesB, false, _ShowOnlyInA, _ShowOnlyInB);
                         }
                         else
                         {
@@ -573,7 +573,7 @@ namespace AehnlichLib.Dir
                                 filesB = new FileInfo[] { };
 
                             // Assumption: Filter generates sorted entries
-                            mergeIdx = new Merge.MergeIndex(filesA, filesB, true);
+                            mergeIdx = new Merge.MergeIndex(filesA, filesB, true, _ShowOnlyInA, _ShowOnlyInB);
                         }
 
                         // Merge and Diff them

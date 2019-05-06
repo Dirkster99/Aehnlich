@@ -21,12 +21,17 @@
         /// <param name="isSorted"></param>
         public MergeIndex(FileSystemInfo[] infosA,
                           FileSystemInfo[] infosB,
-                          bool isSorted)
+                          bool isSorted,
+                          bool showOnlyInA,
+                          bool showOnlyInB)
             : this()
         {
             this.InfosA = infosA;
             this.InfosB = infosB;
             this.IsSorted = isSorted;
+
+            this.ShowOnlyInA = showOnlyInA;
+            this.ShowOnlyInB = showOnlyInB;
         }
 
         /// <summary>
@@ -43,6 +48,10 @@
         public FileSystemInfo[] InfosB { get; }
 
         public bool IsSorted { get; protected set; }
+
+        public bool ShowOnlyInA { get; }
+
+        public bool ShowOnlyInB { get; }
 
         public List<MergedEntry> MergedEntries { get; protected set; }
         #endregion properties
@@ -108,26 +117,34 @@
                 else if (compareResult < 0)
                 {
                     // iCompareResult < 0 -> the item is only in A
-                    mergedEntries.Add(new MergedEntry(infoA, null));
+                    if (ShowOnlyInA == true)
+                    {
+                        mergedEntries.Add(new MergedEntry(infoA, null));
+                    }
+
                     indexA++;
                 }
                 else
                 {
                     // iCompareResult > 0 -> The item is only in B
-                    mergedEntries.Add(new MergedEntry(null, infoB));
+                    if (ShowOnlyInB == true)
+                    {
+                        mergedEntries.Add(new MergedEntry(null, infoB));
+                    }
+
                     indexB++;
                 }
             }
 
             // Add any remaining entries
-            if (indexA < countA)
+            if (indexA < countA && ShowOnlyInA == true)
             {
                 for (; indexA < countA; indexA++)
                 {
                     mergedEntries.Add(new MergedEntry(InfosA[indexA++], null));
                 }
             }
-            else if (indexB < countB)
+            else if (indexB < countB && ShowOnlyInB == true)
             {
                 for (; indexB < countB; indexB++)
                 {

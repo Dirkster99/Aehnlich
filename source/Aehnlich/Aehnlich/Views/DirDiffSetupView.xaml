@@ -4,9 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aehnlich.Views"
+             xmlns:conv="clr-namespace:Aehnlich.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+        <Grid.Resources>
+            <conv:StringEmptyToBoolPropConverter x:Key="StringEmptyToBool"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -24,34 +34,54 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Content="Left:" Grid.Column="0" Grid.Row="0"
-               VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3" />
-        <TextBox Grid.Column="1" Grid.Row="0"
-                 Text="{Binding LeftDirectoryPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 Margin="3"/>
+        <Label
+            Grid.Column="0" Grid.Row="0"
+            Content="Left:"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Right"
+            Margin="3" />
+        
+        <TextBox
+            Grid.Column="1" Grid.Row="0"
+            Text="{Binding LeftDirectoryPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            Margin="3"/>
 
-        <Label Content="Right:" Grid.Column="0" Grid.Row="1"
-               VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3" />
-        <TextBox Grid.Column="1" Grid.Row="1"
-                 Text="{Binding RightDirectoryPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 Margin="3" />
+        <Label
+            Content="Right:" Grid.Column="0" Grid.Row="1"
+            VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3" />
+        
+        <TextBox
+            Grid.Column="1" Grid.Row="1"
+            Text="{Binding RightDirectoryPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            Margin="3" />
 
-        <Label Content="File Filter:" Grid.Column="0" Grid.Row="2"
-               VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3,9,3,3" />
+        <Label
+            Content="File Filter:" Grid.Column="0" Grid.Row="2"
+            VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3,9,3,3" />
+        
         <ComboBox
             Grid.Column="1" Grid.Row="2"
-            VerticalAlignment="Center" Margin="3,9,3,3" IsEnabled="False" />
+            ItemsSource="{Binding CustomFilters}"
+            SelectedItem="{Binding CustomFiltersSelectedItem}"
+            IsEditable="True"
+            Text="{Binding NewFilterItem, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+            VerticalAlignment="Center" Margin="3,9,3,3" />
 
-        <StackPanel
-            Orientation="Horizontal" Grid.Column="1" Grid.Row="4"
-            IsEnabled="False"
-            Margin="3,12,3,3">
-            <RadioButton Content="Include" Margin="3,3,12,3"/>
-            <RadioButton Content="Exclude" Margin="3"/>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="4" Margin="3,12,3,3">
+            <RadioButton
+                Content="Include"
+                IsChecked="{Binding IncludeFilter}"
+                IsEnabled="{Binding FilterText,Converter={StaticResource StringEmptyToBool}}"
+                Margin="3,3,12,3" />
+            <RadioButton
+                Content="Exclude"
+                IsChecked="{Binding ExcludeFilter}"
+                IsEnabled="{Binding FilterText,Converter={StaticResource StringEmptyToBool}}"
+                Margin="3"/>
         </StackPanel>
 
         <GroupBox Header="Mismatched Items" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Margin="3,12,3,3">
-            <Grid IsEnabled="False">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -60,12 +90,16 @@
                 <CheckBox
                     Grid.Row="0"
                     Content="Show if only on left"
-                    IsChecked="{Binding ShowOnlyInA}" />
+                    IsChecked="{Binding ShowOnlyInA}"
+                    ToolTip="Uncheck this option if you do not want to see (removed) items that exist only in the left view."
+                    />
 
                 <CheckBox
                     Grid.Row="1"
                     Content="Show if only on right"
-                    IsChecked="{Binding ShowOnlyInB}" />
+                    IsChecked="{Binding ShowOnlyInB}"
+                    ToolTip="Uncheck this option if you do not want to see (inserted) items that exist only in the right view."
+                    />
             </Grid>
         </GroupBox>
 
@@ -80,7 +114,6 @@
                 <CheckBox Grid.Row="0"
                           Content="Show if different"
                           IsChecked="{Binding ShowIfDifferent}"
-                          IsEnabled="False"
                           >
                     <CheckBox.ToolTip>
                         <Grid>
@@ -95,8 +128,19 @@
                     </CheckBox.ToolTip>
                 </CheckBox>
 
-                <CheckBox Grid.Row="1" Content="Show if same file"  IsEnabled="False"/>
-                <CheckBox Grid.Row="2" Content="Show if same directory"  IsEnabled="False"/>
+                <CheckBox
+                    Grid.Row="1"
+                    IsChecked="{Binding ShowIfSameFile}"
+                    Content="Show if same file"
+                    ToolTip="Uncheck this options if you do not want to review equal files."
+                    />
+                
+                <CheckBox
+                    Grid.Row="2"
+                    IsChecked="{Binding ShowIfSameDirectory}"
+                    Content="Show if same directory"
+                    ToolTip="Uncheck this options if you do not want highlighting for directories with different content. That is, only inserted or deleted directories are highlighted if this option is not checked."
+                    />
             </Grid>
         </GroupBox>
 
@@ -105,11 +149,12 @@
             Content="Recursive" IsChecked="{Binding IsRecursive}" 
             Margin="3,12"/>
 
-        <Button
-            Content="Compare" Grid.Column="1" Grid.Row="8"
-            Command="{Binding CreateNewDirectoryCompareCommand}"
-            VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="3"
-            />
+        </Grid>
 
+        <Button
+            Content="Compare" Grid.Column="1" Grid.Row="0"
+            Command="{Binding CreateNewDirectoryCompareCommand}"
+            VerticalAlignment="Top" HorizontalAlignment="Right" Margin="12,3,3,3"
+            />
     </Grid>
 </UserControl>
