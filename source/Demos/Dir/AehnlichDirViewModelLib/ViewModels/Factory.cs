@@ -1,7 +1,7 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
     using AehnlichDirViewModelLib.Interfaces;
-    using AehnlichDirViewModelLib.Models;
+    using AehnlichLib.Dir;
 
     /// <summary>
     /// Implements a factory that constructs, initiates and returns internal objects.
@@ -25,6 +25,15 @@
         public static IAppViewModel ConstructAppViewModel(ShowDirDiffArgs args)
         {
             return new AppViewModel(args);
+        }
+
+        /// <summary>
+        /// Gets a viewmodel that supports a simple list based selection from a list of modes.
+        /// </summary>
+        /// <returns></returns>
+        public static IFileDiffModeViewModel ConstructFileDiffModes()
+        {
+            return new FileDiffModeViewModel();
         }
     }
 }

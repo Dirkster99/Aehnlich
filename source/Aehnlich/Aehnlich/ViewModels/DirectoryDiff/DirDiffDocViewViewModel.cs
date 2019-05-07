@@ -2,8 +2,7 @@
 {
     using AehnlichDirViewModelLib.Events;
     using AehnlichDirViewModelLib.Interfaces;
-    using AehnlichDirViewModelLib.Models;
-    using AehnlichLib.Models;
+    using AehnlichLib.Dir;
     using System;
     using System.Windows;
     using System.Windows.Input;

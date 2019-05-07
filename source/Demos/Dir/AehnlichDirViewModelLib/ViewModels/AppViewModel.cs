@@ -2,14 +2,13 @@
 {
     using AehnlichDirViewModelLib.Enums;
     using AehnlichDirViewModelLib.Interfaces;
-    using AehnlichDirViewModelLib.Models;
     using AehnlichDirViewModelLib.ViewModels.Base;
     using AehnlichLib.Dir;
     using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
-    using AehnlichLib.Models;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Input;
@@ -28,13 +27,11 @@
         private readonly List<IListItemViewModel> _DiffViewModes;
         private IListItemViewModel _DiffViewModeSelected;
 
-        private readonly List<IDiffFileModeItemViewModel> _DiffFileModes;
-        private IDiffFileModeItemViewModel _DiffFileModeSelected;
-
         private bool _Disposed;
         private CancellationTokenSource _cancelTokenSource;
         private readonly DiffProgressViewModel _DiffProgress;
         private readonly DirDiffDocViewModel _DirDiffDoc;
+        private readonly IFileDiffModeViewModel _FileDiffMode;
         #endregion fields
 
         #region ctors
@@ -46,6 +43,12 @@
             : this()
         {
             _Args = args;
+
+            // Update redundant copy of file diff mode viewmodel selection in this viewmodel
+            // This enables the user to change this property within the document view
+            _FileDiffMode.DiffFileModeSelected =
+                _FileDiffMode.DiffFileModes.ToList().First(i => i.Key == (uint)args.CompareDirFileMode);
+
             _LeftDirPath = args.LeftDir;
             _RightDirPath = args.RightDir;
         }
@@ -60,13 +63,23 @@
 
             _DirDiffDoc = new DirDiffDocViewModel();
             _DiffViewModes = ResetViewModeDefaults();
-
-            _DiffFileModes = new List<IDiffFileModeItemViewModel>();
-            _DiffFileModeSelected = CreateCompareFileModes(_DiffFileModes);
+            _FileDiffMode = Factory.ConstructFileDiffModes();
         }
         #endregion ctors
 
         #region properties
+        /// <summary>
+        /// Gets a viewmodel that defines a comparison strategy for files
+        /// (using lastupdate, size in bytes, and/or byte-by-byte comparison)
+        /// </summary>
+        public IFileDiffModeViewModel FileDiffMode
+        {
+            get
+            {
+                return _FileDiffMode;
+            }
+        }
+
         /// <summary>
         /// Gets the viewmodel for the document that contains the diff information
         /// on a left directory (A) and a right directory (B) and its contents.
@@ -79,40 +92,6 @@
             }
         }
 
-        #region Diff File Mode Selection
-        /// <summary>
-        /// Gets a list of modies that can be used to compare one directory
-        /// and its contents, to the other directory.
-        /// </summary>
-        public List<IDiffFileModeItemViewModel> DiffFileModes
-        {
-            get
-            {
-                return _DiffFileModes;
-            }
-        }
-
-        /// <summary>
-        /// Gets/sets the mode that is currently used to compare one directory
-        /// and its contents with the other directory.
-        /// </summary>
-        public IDiffFileModeItemViewModel DiffFileModeSelected
-        {
-            get
-            {
-                return _DiffFileModeSelected;
-            }
-
-            set
-            {
-                if (_DiffFileModeSelected != value)
-                {
-                    _DiffFileModeSelected = value;
-                    NotifyPropertyChanged(() => DiffFileModeSelected);
-                }
-            }
-        }
-        #endregion
 
         #region CompareCommand
         /// <summary>
@@ -150,7 +129,7 @@
                             string.IsNullOrEmpty(rightDir) == true)
                             return;
 
-                        CompareFilesCommand_Executed(leftDir, rightDir, _DiffFileModeSelected.ModeKey);
+                        CompareFilesCommand_Executed(leftDir, rightDir, _FileDiffMode.DiffFileModeSelected.ModeKey);
                         NotifyPropertyChanged(() => DirDiffDoc);
                     },
                     (p) =>
@@ -359,6 +338,7 @@
                 return;
 
             ShowDirDiffArgs args = _Args;
+            _Args.CompareDirFileMode = dirFileMode;
 
             // Construct deffault options if there are no others
             if (_Args == null)
@@ -369,12 +349,7 @@
                 _Args.RightDir = rightDir;
             }
 
-            var diff = new DirectoryDiff(args.ShowOnlyInA, args.ShowOnlyInB,
-                                         args.ShowDifferent, args.ShowSame,
-                                         args.Recursive,
-                                         args.IgnoreDirectoryComparison,
-                                         args.FileFilter,
-                                         dirFileMode, args.LastUpDateFilePrecision);
+            var diff = new DirectoryDiff(args);
 
             try
             {
@@ -495,34 +470,6 @@
             DiffViewModeSelected = lst[0]; // Select default view mode
 
             return lst;
-        }
-
-        private static IDiffFileModeItemViewModel CreateCompareFileModes(
-            IList<IDiffFileModeItemViewModel> diffFileModes)
-        {
-            DiffFileModeItemViewModel defaultItem = null;
-
-            diffFileModes.Add(
-                new DiffFileModeItemViewModel("File Length",
-                "Compare the byte length of each file",
-                DiffDirFileMode.ByteLength));
-
-            diffFileModes.Add(
-                new DiffFileModeItemViewModel("Last Change",
-                "Compare last modification time of change of each file",
-                DiffDirFileMode.LastUpdate));
-
-            defaultItem = new DiffFileModeItemViewModel("File Length + Last Change",
-                "Compare the byte length and last modification time of each file",
-                DiffDirFileMode.ByteLength_LastUpdate);
-
-            diffFileModes.Add(defaultItem);
-
-            diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes",
-                "Compare each file by their length, last modification time, and byte-by-byte sequence",
-                DiffDirFileMode.ByteLength_LastUpdate_AllBytes));
-
-            return defaultItem;
         }
         #endregion methods
     }

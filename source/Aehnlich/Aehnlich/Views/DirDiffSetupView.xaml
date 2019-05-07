@@ -26,6 +26,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -56,11 +57,36 @@
             Margin="3" />
 
         <Label
-            Content="File Filter:" Grid.Column="0" Grid.Row="2"
+            Content="Compare:" Grid.Column="0" Grid.Row="2"
+            VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3" />
+
+        <!-- File Diff Mode Selection (Last Update, Length, Byte-By-Byte compare) -->
+        <ComboBox
+            Grid.Column="1" Grid.Row="2"
+            DataContext="{Binding FileDiffMode}"
+            ItemsSource="{Binding DiffFileModes}"
+            SelectedItem="{Binding DiffFileModeSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            DisplayMemberPath="Name"
+            Width="200"
+            ToolTipService.ShowOnDisabled="true"
+            HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3"
+            >
+            <ComboBox.ToolTip>
+                <StackPanel>
+                    <TextBlock Text="Select a diff file mode to determine speed and quality of file comparison"/>
+                    <Separator/>
+                    <TextBlock Text="{Binding DiffFileModeSelected.Description,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+            </ComboBox.ToolTip>
+        </ComboBox>
+
+
+        <Label
+            Content="File Filter:" Grid.Column="0" Grid.Row="3"
             VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3,9,3,3" />
         
         <ComboBox
-            Grid.Column="1" Grid.Row="2"
+            Grid.Column="1" Grid.Row="3"
             ItemsSource="{Binding CustomFilters}"
             SelectedItem="{Binding CustomFiltersSelectedItem}"
             IsEditable="True"
@@ -144,11 +170,10 @@
             </Grid>
         </GroupBox>
 
-        <CheckBox
-            Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7"
-            Content="Recursive" IsChecked="{Binding IsRecursive}" 
-            Margin="3,12"/>
-
+            <CheckBox
+                Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7"
+                Content="Recursive" IsChecked="{Binding IsRecursive}" 
+                Margin="3,12"/>
         </Grid>
 
         <Button

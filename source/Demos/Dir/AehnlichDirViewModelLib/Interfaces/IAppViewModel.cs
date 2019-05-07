@@ -1,7 +1,6 @@
 ﻿namespace AehnlichDirViewModelLib.Interfaces
 {
     using AehnlichLib.Interfaces;
-    using AehnlichLib.Models;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows.Input;
@@ -20,16 +19,10 @@
 
         #region Diff File Mode Selection
         /// <summary>
-        /// Gets a list of modies that can be used to compare one directory
-        /// and its contents, to the other directory.
+        /// Gets a viewmodel that defines a comparison strategy for files
+        /// (using lastupdate, size in bytes, and/or byte-by-byte comparison)
         /// </summary>
-        List<IDiffFileModeItemViewModel> DiffFileModes { get; }
-
-        /// <summary>
-        /// Gets/sets the mode that is currently used to compare one directory
-        /// and its contents with the other directory.
-        /// </summary>
-        IDiffFileModeItemViewModel DiffFileModeSelected { get; set; }
+        IFileDiffModeViewModel FileDiffMode { get; }
         #endregion
 
         #region CompareCommand
@@ -66,7 +59,8 @@
         IReadOnlyList<IListItemViewModel> DiffViewModes { get; }
 
         /// <summary>
-        /// Gets the currently selected view mode for the display of diff results.
+        /// Gets the currently selected view mode (Files and Directories or Files Only)
+        /// for the display of diff results.
         /// </summary>
         IListItemViewModel DiffViewModeSelected { get; }
 
@@ -92,6 +86,5 @@
         /// <param name="rightDirPath"></param>
         void Initialize(string leftDirPath, string rightDirPath);
         #endregion methods
-
     }
 }

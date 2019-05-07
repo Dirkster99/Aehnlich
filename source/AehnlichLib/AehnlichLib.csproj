@@ -62,6 +62,7 @@
     <Compile Include="Dir\Merge\MergedEntry.cs" />
     <Compile Include="Dir\Merge\MergeIndex.cs" />
     <Compile Include="Dir\PathUtil.cs" />
+    <Compile Include="Dir\ShowDirDiffArgs.cs" />
     <Compile Include="Enums\CompareType.cs" />
     <Compile Include="Enums\DiffType.cs" />
     <Compile Include="Enums\EditType.cs" />

@@ -1,5 +1,6 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
+    using AehnlichDirViewModelLib.Interfaces;
     using AehnlichDirViewModelLib.Models;
     using AehnlichLib.Dir;
     using System.Collections.Generic;
@@ -20,6 +21,7 @@
         private bool _IncludeFilter;
         private bool _ExcludeFilter;
         private string _NewFilterItem;
+        private readonly IFileDiffModeViewModel _FileDiffMode;
         private readonly ObservableRangeCollection<string> _CustomFilters;
         #endregion fields
 
@@ -65,6 +67,8 @@
             _CustomFilters.Add("*.txt");
             _CustomFilters.Add("*.sql");
             _CustomFilters.Add("*.obj;*.pdb;*.exe;*.dll;*.cache;*.tlog;*.trx;*.FileListAbsolute.txt");
+
+            _FileDiffMode = AehnlichDirViewModelLib.ViewModels.Factory.ConstructFileDiffModes();
         }
         #endregion ctors
 
@@ -265,12 +269,26 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Gets a viewmodel that defines a comparison strategy for files
+        /// (using lastupdate, size in bytes, and/or byte-by-byte comparison)
+        /// </summary>
+        public IFileDiffModeViewModel FileDiffMode
+        {
+            get
+            {
+                return _FileDiffMode;
+            }
+        }
         #endregion properties
 
         #region methods
         internal ShowDirDiffArgs GetDirDiffSetup()
         {
             var setup = new ShowDirDiffArgs(LeftDirectoryPath, RightDirectoryPath);
+
+            setup.CompareDirFileMode = this.FileDiffMode.DiffFileModeSelected.ModeKey;
 
             setup.Recursive = this.IsRecursive;
             setup.ShowOnlyInA = ShowOnlyInA;
@@ -279,6 +297,7 @@
             setup.ShowSame = ShowIfSameFile;
             setup.IgnoreDirectoryComparison = !ShowIfSameDirectory;
 
+            // Set file filter aka '*.cs' if any selected
             if (string.IsNullOrEmpty(FilterText) == false)
                 setup.FileFilter = new DirectoryDiffFileFilter(FilterText, IncludeFilter);
 

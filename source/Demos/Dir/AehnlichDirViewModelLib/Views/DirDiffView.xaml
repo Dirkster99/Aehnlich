@@ -62,7 +62,8 @@
                            Height="16" SnapsToDevicePixels="True"/>
                 </Button>
 
-                <ComboBox
+                <!-- File Diff Mode Selection (Last Update, Length, Byte-By-Byte compare) -->
+                <ComboBox DataContext="{Binding FileDiffMode}"
                     ItemsSource="{Binding DiffFileModes}"
                     SelectedItem="{Binding DiffFileModeSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                     DisplayMemberPath="Name"

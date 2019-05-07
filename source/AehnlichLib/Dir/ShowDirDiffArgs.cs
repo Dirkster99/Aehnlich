@@ -1,6 +1,6 @@
-﻿namespace AehnlichDirViewModelLib.Models
+﻿namespace AehnlichLib.Dir
 {
-    using AehnlichLib.Dir;
+    using AehnlichLib.Enums;
 
     /// <summary>
     /// Defines the arguments (options) that are applicable for the directory diff
@@ -33,6 +33,7 @@
             Recursive = true;
             IgnoreDirectoryComparison = false;
 
+            CompareDirFileMode = DiffDirFileMode.ByteLength_LastUpdate;
             LastUpDateFilePrecision = 2.0;
         }
         #endregion ctors
@@ -115,6 +116,12 @@
         /// and either no C-Sharp files or equal C-Sharp files.
         /// </summary>
         public DirectoryDiffFileFilter FileFilter { get; set; }
+
+        /// <summary>
+        /// Determines the modus operandi per <see cref="DiffDirFileMode"/> that is used to
+        /// compare two files and pronounce them as different or equal.
+        /// </summary>
+        public DiffDirFileMode CompareDirFileMode { get; set; }
 
         /// <summary>
         /// Gets the precision (in secondes) of the last modifiaction date time comparison

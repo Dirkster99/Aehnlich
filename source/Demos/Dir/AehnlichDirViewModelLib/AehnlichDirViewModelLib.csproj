@@ -61,7 +61,6 @@
     <Compile Include="Interfaces\IDirEntryViewModel.cs" />
     <Compile Include="Interfaces\IListItemViewModel.cs" />
     <Compile Include="Models\FileSystemCommands.cs" />
-    <Compile Include="Models\ShowDirDiffArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
@@ -69,6 +68,8 @@
     <Compile Include="ViewModels\DiffFileModeItemViewModel.cs" />
     <Compile Include="ViewModels\DiffProgressViewModel.cs" />
     <Compile Include="ViewModels\Factory.cs" />
+    <Compile Include="ViewModels\FileDiffModeViewModel.cs" />
+    <Compile Include="Interfaces\IFileDiffModeViewModel.cs" />
     <Compile Include="ViewModels\ListItemViewModel.cs" />
     <Compile Include="ViewModels\DirDiffDocViewModel.cs" />
     <Compile Include="ViewModels\DirEntryViewModel.cs" />

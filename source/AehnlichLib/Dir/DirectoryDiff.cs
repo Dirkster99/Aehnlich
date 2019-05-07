@@ -31,87 +31,19 @@ namespace AehnlichLib.Dir
         /// <summary>
         /// Class constructor
         /// </summary>
-        /// <param name="showOnlyInA">
-        /// Determines whether comparison results should only be relevant for the left view A.
-        /// 
-        /// Setting this to false will ignore differences that are relevant for B only. That is,
-        /// directories that are missing in view B will not be flagged as difference.
-        /// </param>
-        /// <param name="showOnlyInB">
-        /// Determines whether comparison results should only be relevant for the right view B.
-        /// 
-        /// Setting this to false will ignore differences that are relevant for A only. That is,
-        /// directories that are missing in view A will not be flagged as difference.
-        /// </param>
-        /// <param name="showDifferent">
-        /// Determines whether the result set also contains similar items, such as folders with
-        /// similar or the same content, or whether the result contains only items that are present
-        /// in one view but not the other view.
-        /// 
-        /// Setting this to false to generates only insert/delete item differences in the result.
-        /// Set it to true to generate insert/delete and update (similar) item differences in
-        /// the result set.
-        /// </param>
-        /// <param name="showSame">
-        /// Determines whether the result set also contains equal items or not.
-        /// 
-        /// Set this to false to generate a result set that contains only
-        /// insert/delete/update item differences but no equal items
-        /// (equal items are not part of the result set even if they exists).
-        /// Setting this to true also includes equal items in the generated result set.
-        /// </param>
-        /// <param name="recursive">Determines whether or not only files and folders in a given directory
-        /// are compared without comparing contents of sub-directories.</param>
-        /// <param name="ignoreDirectoryComparison">Determines whether sub-directories with different content
-        /// (both sub-directories exist in both directories A and B) are flagged as different if they contain
-        /// different files/directories or not.
-        /// 
-        /// Setting this parameter to true ignores directories completely (they are never flagged as different).
-        /// Setting it to false leads to generating entries with a hint towards difference even for directories.</param>
-        /// <param name="filter">
-        /// This can be used to setup a file filter that determines the type of file(s)
-        /// that can be included or excluded in the comparison of directories.
-        /// 
-        /// Setting this for instance to DirectoryDiffFileFilter("*.cs", true) leads
-        /// to comparing only C-Sharp files (all other files are ignored).
-        /// 
-        /// And directories are equal if they contain the same sub-directory structure
-        /// and either no C-Sharp files or equal C-Sharp files.
-        /// </param>
-        /// <param name="diffMode">
-        /// Determines the modus operandi per <see cref="DiffDirFileMode"/> that is used to
-        /// compare two files and pronounce them as different or equal.
-        /// </param>
-        /// <param name="lastUpDatePrecision">
-        /// Gets the precision (in secondes) of the last modifiaction date time comparison
-        /// between two files. The default for this value is 2 seconds since some file systems
-        /// such as, FAT/VFAT (https://superuser.com/questions/937380/get-creation-time-of-file-in-milliseconds)
-        /// store their time information in that precision only.
-        /// 
-        /// The creation timestamp of a file in windows depends on the file system:
-        /// -FAT/VFAT has a maximum resolution of 2s
-        /// -NTFS has a maximum resolution of 100 ns
-        /// </param>
-        public DirectoryDiff(
-            bool showOnlyInA,
-            bool showOnlyInB,
-            bool showDifferent,
-            bool showSame,
-            bool recursive,
-            bool ignoreDirectoryComparison,
-            DirectoryDiffFileFilter filter,
-            DiffDirFileMode diffMode,
-            double lastUpDatePrecision)
+        /// <param name="args">Determines the options that control the way in which
+        /// the diff is computed (eg.: whether sub-directories should be considered or not).</param>
+        public DirectoryDiff(ShowDirDiffArgs args)
         {
-            _ShowOnlyInA = showOnlyInA;
-            _ShowOnlyInB = showOnlyInB;
-            _ShowDifferent = showDifferent;
-            _ShowSame = showSame;
-            _Recursive = recursive;
-            _IgnoreDirectoryComparison = ignoreDirectoryComparison;
-            _Filter = filter;
-            _DiffMode = diffMode;
-            _LastUpDatePrecision = lastUpDatePrecision;
+            _ShowOnlyInA = args.ShowOnlyInA;
+            _ShowOnlyInB = args.ShowOnlyInB;
+            _ShowDifferent = args.ShowDifferent;
+            _ShowSame = args.ShowSame;
+            _Recursive = args.Recursive;
+            _IgnoreDirectoryComparison = args.IgnoreDirectoryComparison;
+            _Filter = args.FileFilter;
+            _DiffMode = args.CompareDirFileMode;
+            _LastUpDatePrecision = args.LastUpDateFilePrecision;
         }
 
         /// <summary>
