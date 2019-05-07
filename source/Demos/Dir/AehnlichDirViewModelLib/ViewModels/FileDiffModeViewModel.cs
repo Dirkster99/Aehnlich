@@ -80,9 +80,17 @@
 
             diffFileModes.Add(defaultItem);
 
-            diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes",
+            diffFileModes.Add(new DiffFileModeItemViewModel("Last Change + File Length + All Bytes",
                 "Compare each file by their length, last modification time, and byte-by-byte sequence",
                 DiffDirFileMode.ByteLength_LastUpdate_AllBytes));
+
+            diffFileModes.Add(new DiffFileModeItemViewModel("Byte Length + All Bytes",
+                "Compare each file by their length and byte-by-byte sequence",
+                DiffDirFileMode.ByteLength_AllBytes));
+
+            diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes",
+                "Compare each file by their Byte-by-byte sequence only",
+                DiffDirFileMode.ByteLength_AllBytes));
 
             return defaultItem;
         }

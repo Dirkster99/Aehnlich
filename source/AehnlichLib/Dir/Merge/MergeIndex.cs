@@ -73,6 +73,7 @@
                 return 0;
             }
 
+            // Sort entries alphabetically if not already sorted (pre-condition for merge)
             if (IsSorted == false)
             {
                 // Are we sort/merging directories or files?
@@ -136,19 +137,20 @@
                 }
             }
 
-            // Add any remaining entries
             if (indexA < countA && ShowOnlyInA == true)
             {
+                // Add any remaining entries that are only one the left
                 for (; indexA < countA; indexA++)
                 {
-                    mergedEntries.Add(new MergedEntry(InfosA[indexA++], null));
+                    mergedEntries.Add(new MergedEntry(InfosA[indexA], null));
                 }
             }
             else if (indexB < countB && ShowOnlyInB == true)
             {
+                // Add any remaining entries that are only one the right
                 for (; indexB < countB; indexB++)
                 {
-                    mergedEntries.Add(new MergedEntry(null, InfosB[indexB++]));
+                    mergedEntries.Add(new MergedEntry(null, InfosB[indexB]));
                 }
             }
 
