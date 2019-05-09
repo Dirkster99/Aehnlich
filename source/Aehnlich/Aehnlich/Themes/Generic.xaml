@@ -5,7 +5,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Aehnlich;component/Views/AvalonDockView.xaml"/>
         <ResourceDictionary Source="/Aehnlich;component/Views/Dir/DirDiffDocControl.xaml"/>
-        <ResourceDictionary Source="/Aehnlich;component/Views/DocDiffDocControl.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

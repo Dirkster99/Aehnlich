@@ -8,6 +8,7 @@
                     xmlns:conv="clr-namespace:Aehnlich.Converters"
                     xmlns:docs="clr-namespace:Aehnlich.Views.Documents"
                     xmlns:views="clr-namespace:Aehnlich.Views"
+                    xmlns:behav="clr-namespace:AehnlichViewLib.Behaviors;assembly=AehnlichViewLib"
                     xmlns:DirViews="clr-namespace:Aehnlich.Views.Dir"
                     xmlns:fileviews="clr-namespace:AehnlichViewModelsLib.Views;assembly=AehnlichViewModelsLib"
                     >
@@ -39,9 +40,16 @@
                                     </docs:PanesTemplateSelector.DirDiffDocumentViewTemplate>
                                     <docs:PanesTemplateSelector.DocDiffDocumentViewTemplate>
                                         <DataTemplate>
-                                            <!-- Show File Based Text Diffs -->
-                                            <views:DocDiffDocControl
-                                                ViewLoadedCommand="{Binding ViewLoadedCommand}" />
+                                            <Grid Margin="3">
+                                                <Grid.Resources>
+                                                    <behav:BindingProxy Data="{Binding}" x:Key="DocProxy" />
+                                                </Grid.Resources>
+
+                                                <!-- Show File Based Text Diffs -->
+                                                <fileviews:FileDiffView
+                                                    DataContext="{Binding DocDiffDoc}"
+                                                    ViewLoadedCommand="{Binding Path=Data.ViewLoadedCommand, Source={StaticResource DocProxy}}" />
+                                            </Grid>
                                         </DataTemplate>
                                     </docs:PanesTemplateSelector.DocDiffDocumentViewTemplate>
                                 </docs:PanesTemplateSelector>

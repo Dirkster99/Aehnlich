@@ -164,9 +164,6 @@
     <Compile Include="Views\Dir\DirDiffDocControl.xaml.cs">
       <DependentUpon>DirDiffDocControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DocDiffDocControl.xaml.cs">
-      <DependentUpon>DocDiffDocControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Documents\PanesStyleSelector.cs" />
     <Compile Include="Views\Documents\PanesTemplateSelector.cs" />
     <Page Include="BindToMLib\AvalonDock_Dark_LightBrushs.xaml">
@@ -206,10 +203,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\AvalonDockView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DocDiffDocControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -274,6 +267,7 @@
   <ItemGroup>
     <Folder Include="Resources\Icons\Dark\" />
     <Folder Include="Resources\Icons\Light\" />
+    <Folder Include="Views\Text\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
