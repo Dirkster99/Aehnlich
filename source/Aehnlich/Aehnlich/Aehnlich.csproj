@@ -135,10 +135,10 @@
     <Compile Include="Interfaces\IDocumentManagerViewModel.cs" />
     <Compile Include="ViewModels\DocDiff\DocDiffDocViewViewModel.cs" />
     <Compile Include="ViewModels\IAenlichAppViewModel.cs" />
-    <Compile Include="Views\DirDiffSetupView.xaml.cs">
+    <Compile Include="Views\Dir\DirDiffSetupView.xaml.cs">
       <DependentUpon>DirDiffSetupView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DirDiffView.xaml.cs">
+    <Compile Include="Views\Dir\DirDiffView.xaml.cs">
       <DependentUpon>DirDiffView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Events\DocumentChangedEventArgs.cs" />
@@ -161,7 +161,7 @@
     <Compile Include="Views\AvalonDockView.xaml.cs">
       <DependentUpon>AvalonDockView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DirDiffDocControl.xaml.cs">
+    <Compile Include="Views\Dir\DirDiffDocControl.xaml.cs">
       <DependentUpon>DirDiffDocControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocDiffDocControl.xaml.cs">
@@ -173,11 +173,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\DirDiffSetupView.xaml">
+    <Page Include="Views\Dir\DirDiffSetupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DirDiffView.xaml">
+    <Page Include="Views\Dir\DirDiffView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -201,7 +201,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\DirDiffDocControl.xaml">
+    <Page Include="Views\Dir\DirDiffDocControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

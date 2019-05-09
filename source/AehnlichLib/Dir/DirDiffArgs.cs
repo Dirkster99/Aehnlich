@@ -6,7 +6,7 @@
     /// Defines the arguments (options) that are applicable for the directory diff
     /// process and viewmodel.
     /// </summary>
-    public class ShowDirDiffArgs
+    public class DirDiffArgs
     {
         #region ctors
         /// <summary>
@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="leftDir"></param>
         /// <param name="rightDir"></param>
-        public ShowDirDiffArgs(string leftDir, string rightDir)
+        public DirDiffArgs(string leftDir, string rightDir)
             : this()
         {
             this.LeftDir = leftDir;
@@ -24,7 +24,7 @@
         /// <summary>
         /// Hidden class constructor
         /// </summary>
-        protected ShowDirDiffArgs()
+        protected DirDiffArgs()
         {
             ShowOnlyInA = true;
             ShowOnlyInB = true;

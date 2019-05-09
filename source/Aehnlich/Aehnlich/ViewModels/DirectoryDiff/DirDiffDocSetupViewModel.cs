@@ -284,9 +284,9 @@
         #endregion properties
 
         #region methods
-        internal ShowDirDiffArgs GetDirDiffSetup()
+        internal DirDiffArgs GetDirDiffSetup()
         {
-            var setup = new ShowDirDiffArgs(LeftDirectoryPath, RightDirectoryPath);
+            var setup = new DirDiffArgs(LeftDirectoryPath, RightDirectoryPath);
 
             setup.CompareDirFileMode = this.FileDiffMode.DiffFileModeSelected.ModeKey;
 

@@ -8,6 +8,8 @@
                     xmlns:conv="clr-namespace:Aehnlich.Converters"
                     xmlns:docs="clr-namespace:Aehnlich.Views.Documents"
                     xmlns:views="clr-namespace:Aehnlich.Views"
+                    xmlns:DirViews="clr-namespace:Aehnlich.Views.Dir"
+                    xmlns:fileviews="clr-namespace:AehnlichViewModelsLib.Views;assembly=AehnlichViewModelsLib"
                     >
     
     <Style TargetType="{x:Type local:AvalonDockView}">
@@ -32,13 +34,14 @@
                                 <docs:PanesTemplateSelector>
                                     <docs:PanesTemplateSelector.DirDiffDocumentViewTemplate>
                                         <DataTemplate>
-                                            <views:DirDiffDocControl />
+                                            <DirViews:DirDiffDocControl />
                                         </DataTemplate>
                                     </docs:PanesTemplateSelector.DirDiffDocumentViewTemplate>
                                     <docs:PanesTemplateSelector.DocDiffDocumentViewTemplate>
                                         <DataTemplate>
-                                            <views:DocDiffDocControl ViewLoadedCommand="{Binding ViewLoadedCommand}"
-                                                                     />
+                                            <!-- Show File Based Text Diffs -->
+                                            <views:DocDiffDocControl
+                                                ViewLoadedCommand="{Binding ViewLoadedCommand}" />
                                         </DataTemplate>
                                     </docs:PanesTemplateSelector.DocDiffDocumentViewTemplate>
                                 </docs:PanesTemplateSelector>

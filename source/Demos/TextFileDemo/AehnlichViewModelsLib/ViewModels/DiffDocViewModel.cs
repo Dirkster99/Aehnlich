@@ -28,7 +28,7 @@
     internal class DiffDocViewModel : Base.ViewModelBase, IDiffDocViewModel
     {
         #region fields
-        private ShowDiffArgs _Args;
+        private TextBinaryDiffArgs _Args;
         private uint _NumberOfLines, _MaxNumberOfLines;
 
         private readonly DiffSideViewModel _ViewA;
@@ -587,7 +587,7 @@
         /// </summary>
         /// <param name="args"></param>
         /// <param name="r"></param>
-        public void ShowDifferences(ShowDiffArgs args, ProcessTextDiff r)
+        public void ShowDifferences(TextBinaryDiffArgs args, ProcessTextDiff r)
         {
             string captionA = string.Empty;
             string captionB = string.Empty;
@@ -737,7 +737,7 @@
         /// <param name="changeDiffTreatAsBinaryLines"></param>
         private void SetData(IList<string> listA, IList<string> listB,
                              EditScript script,
-                             ShowDiffArgs args,
+                             TextBinaryDiffArgs args,
                              bool changeDiffIgnoreCase,
                              bool changeDiffIgnoreWhiteSpace,
                              bool changeDiffTreatAsBinaryLines)

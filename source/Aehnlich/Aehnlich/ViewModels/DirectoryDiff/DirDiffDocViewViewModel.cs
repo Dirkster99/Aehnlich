@@ -19,7 +19,7 @@
         /// Class constructor
         /// </summary>
         public DirDiffDocViewViewModel(EventHandler<OpenFileDiffEventArgs> openFileContentDiffRequestHandler
-                                       , ShowDirDiffArgs args)
+                                       , DirDiffArgs args)
             : this()
         {
             DirDiffDoc = AehnlichDirViewModelLib.ViewModels.Factory.ConstructAppViewModel(args);

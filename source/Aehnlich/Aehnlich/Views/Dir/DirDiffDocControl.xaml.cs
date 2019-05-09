@@ -1,4 +1,4 @@
-﻿namespace Aehnlich.Views
+﻿namespace Aehnlich.Views.Dir
 {
     using System.Windows;
     using System.Windows.Controls;

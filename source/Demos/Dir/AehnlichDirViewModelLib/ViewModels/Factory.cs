@@ -22,7 +22,7 @@
         /// </summary>
         /// <param name="args">Options to be used in this directory diff.</param>
         /// <returns></returns>
-        public static IAppViewModel ConstructAppViewModel(ShowDirDiffArgs args)
+        public static IAppViewModel ConstructAppViewModel(DirDiffArgs args)
         {
             return new AppViewModel(args);
         }

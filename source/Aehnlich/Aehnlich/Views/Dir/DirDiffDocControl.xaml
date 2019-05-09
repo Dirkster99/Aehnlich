@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     
-                    xmlns:local="clr-namespace:Aehnlich.Views"
+                    xmlns:local="clr-namespace:Aehnlich.Views.Dir"
+                    xmlns:templ="clr-namespace:Aehnlich.ViewModels.DirectoryDiff"
                     >
     <!--
         This is the Dirctory Diff Document control that represent the wohle page and contains
@@ -22,21 +23,21 @@
                               Each type of viewmodel represents a stage in the lifecycle of the document.
                             -->
                             <ContentControl.ContentTemplateSelector>
-                                <local:DirDiffContentTemplateSelector >
-                                    <local:DirDiffContentTemplateSelector.SetupPage>
+                                <templ:DirDiffContentTemplateSelector >
+                                    <templ:DirDiffContentTemplateSelector.SetupPage>
                                         <!-- Setup Stage -->
                                         <DataTemplate>
                                             <local:DirDiffSetupView/>
                                         </DataTemplate>
-                                    </local:DirDiffContentTemplateSelector.SetupPage>
-                                    <local:DirDiffContentTemplateSelector.ViewPage>
+                                    </templ:DirDiffContentTemplateSelector.SetupPage>
+                                    <templ:DirDiffContentTemplateSelector.ViewPage>
                                         <!-- View Stage -->
                                         <DataTemplate>
                                             <local:DirDiffView
                                                 ViewLoadedCommand="{Binding ViewLoadedCommand}" />
                                         </DataTemplate>
-                                    </local:DirDiffContentTemplateSelector.ViewPage>
-                                </local:DirDiffContentTemplateSelector>
+                                    </templ:DirDiffContentTemplateSelector.ViewPage>
+                                </templ:DirDiffContentTemplateSelector>
                             </ContentControl.ContentTemplateSelector>
                         </ContentControl>
                     </Border>

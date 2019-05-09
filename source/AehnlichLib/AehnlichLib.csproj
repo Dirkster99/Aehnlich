@@ -62,7 +62,7 @@
     <Compile Include="Dir\Merge\MergedEntry.cs" />
     <Compile Include="Dir\Merge\MergeIndex.cs" />
     <Compile Include="Dir\PathUtil.cs" />
-    <Compile Include="Dir\ShowDirDiffArgs.cs" />
+    <Compile Include="Dir\DirDiffArgs.cs" />
     <Compile Include="Enums\CompareType.cs" />
     <Compile Include="Enums\DiffType.cs" />
     <Compile Include="Enums\EditType.cs" />
@@ -78,7 +78,7 @@
     <Compile Include="Text\EditScript.cs" />
     <Compile Include="Text\MyersDiff.cs" />
     <Compile Include="Text\ProcessTextDiff.cs" />
-    <Compile Include="Text\ShowDiffArgs.cs" />
+    <Compile Include="Text\TextBinaryDiffArgs.cs" />
     <Compile Include="Text\StringHasher.cs" />
     <Compile Include="Text\SubArray.cs" />
     <Compile Include="Text\TextDiff.cs" />

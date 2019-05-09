@@ -14,14 +14,14 @@
     public class ProcessTextDiff
     {
         #region fields
-        private readonly ShowDiffArgs _Args;
+        private readonly TextBinaryDiffArgs _Args;
         #endregion fields
 
         #region ctors
         /// <summary>
         /// Class constructor
         /// </summary>
-        public ProcessTextDiff(ShowDiffArgs args)
+        public ProcessTextDiff(TextBinaryDiffArgs args)
             : this()
         {
             _Args = args;
@@ -95,7 +95,7 @@
         private static void GetFileLines(string fileNameA, string fileNameB,
                                          out IList<string> a, out IList<string> b,
                                          out int leadingCharactersToIgnore,
-                                         ShowDiffArgs args,
+                                         TextBinaryDiffArgs args,
                                          IDiffProgress progress)
         {
             a = null;
@@ -148,7 +148,7 @@
             }
         }
 
-        private static void GetTextLines(string textA, string textB, ShowDiffArgs args,
+        private static void GetTextLines(string textA, string textB, TextBinaryDiffArgs args,
                                          out IList<string> a, out IList<string> b,
                                          IDiffProgress progress)
         {
@@ -186,7 +186,7 @@
             string name,
             string input,
             bool throwOnError,
-            ShowDiffArgs args,
+            TextBinaryDiffArgs args,
             IDiffProgress progress)
         {
             IList<string> result = null;

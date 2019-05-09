@@ -467,7 +467,7 @@
         {
             try
             {
-                var args = new ShowDiffArgs(filePathA, filePathB, DiffType.File);
+                var args = new TextBinaryDiffArgs(filePathA, filePathB, DiffType.File);
                 var processDiff = new ProcessTextDiff(args);
 
                 _DiffProgress.ResetProgressValues(_cancelTokenSource.Token);

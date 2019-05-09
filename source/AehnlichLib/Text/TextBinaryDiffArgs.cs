@@ -2,7 +2,11 @@
 {
     using AehnlichLib.Enums;
 
-    public class ShowDiffArgs
+    /// <summary>
+    /// Class defines core properties that can be defined as arguments when diffing text or binary files
+    /// or text in general (original name ShowDiffArgs).
+    /// </summary>
+    public class TextBinaryDiffArgs
     {
         #region Constructors
         /// <summary>
@@ -12,7 +16,7 @@
         /// <param name="itemB"></param>
         /// <param name="diffType"></param>
         /// <param name="spacesPerTab"></param>
-        public ShowDiffArgs(string itemA, string itemB, DiffType diffType, int spacesPerTab)
+        public TextBinaryDiffArgs(string itemA, string itemB, DiffType diffType, int spacesPerTab)
             : this()
         {
             this.A = itemA;
@@ -27,7 +31,7 @@
         /// <param name="itemA"></param>
         /// <param name="itemB"></param>
         /// <param name="diffType"></param>
-        public ShowDiffArgs(string itemA, string itemB, DiffType diffType)
+        public TextBinaryDiffArgs(string itemA, string itemB, DiffType diffType)
             :this()
         {
             this.A = itemA;
@@ -38,7 +42,7 @@
         /// <summary>
         /// Hidden standard constructor
         /// </summary>
-        protected ShowDiffArgs()
+        protected TextBinaryDiffArgs()
         {
             SpacesPerTab = 4;
             LeadingCharactersToIgnore = 0;
@@ -56,11 +60,25 @@
         #endregion
 
         #region Public Properties
-
+        /// <summary>
+        /// Gets either a path to the left text A or the text itself directly.
+        /// The interpretation of the properties string content depends on the
+        /// setting in <see cref="DiffType"/> property.
+        /// </summary>
         public string A { get; }
 
+        /// <summary>
+        /// Gets either a path to the left text B or the text itself directly.
+        /// The interpretation of the properties string content depends on the
+        /// setting in <see cref="DiffType"/> property.
+        /// </summary>
         public string B { get; }
 
+        /// <summary>
+        /// This should be either set to <see cref="DiffType.File"/> or <see cref="DiffType.Text"/>
+        /// to interprete values in properties <see cref="A"/> and <see cref="B"/> either as file
+        /// based input or direct string based input.
+        /// </summary>
         public DiffType DiffType { get; }
 
         public int SpacesPerTab { get; }

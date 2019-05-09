@@ -33,7 +33,7 @@ namespace AehnlichLib.Dir
         /// </summary>
         /// <param name="args">Determines the options that control the way in which
         /// the diff is computed (eg.: whether sub-directories should be considered or not).</param>
-        public DirectoryDiff(ShowDirDiffArgs args)
+        public DirectoryDiff(DirDiffArgs args)
         {
             _ShowOnlyInA = args.ShowOnlyInA;
             _ShowOnlyInB = args.ShowOnlyInB;

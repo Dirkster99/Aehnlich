@@ -21,7 +21,7 @@
     internal class DirDiffDocViewModel : Base.ViewModelBase, IDirDiffDocViewModel
     {
         #region fields
-        private ShowDirDiffArgs _CompareOptions;
+        private DirDiffArgs _CompareOptions;
         private string _LblFilter;
         private string _PathB, _PathA;
         private DateTime _ViewActivation_A, _ViewActivation_B;
@@ -551,7 +551,7 @@
         #endregion properties
 
         #region methods
-        internal void ShowDifferences(ShowDirDiffArgs args,
+        internal void ShowDifferences(DirDiffArgs args,
                                       IDirectoryDiffRoot diffResults
                                       )
         {

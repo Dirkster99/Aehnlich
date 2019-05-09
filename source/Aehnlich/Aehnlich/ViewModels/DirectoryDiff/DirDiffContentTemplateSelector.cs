@@ -1,4 +1,4 @@
-﻿namespace Aehnlich.Views
+﻿namespace Aehnlich.ViewModels.DirectoryDiff
 {
     using Aehnlich.ViewModels.Documents;
     using System.Windows;

@@ -18,7 +18,7 @@
         #region fields
         private string _RightDirPath;
         private string _LeftDirPath;
-        private readonly ShowDirDiffArgs _Args;
+        private readonly DirDiffArgs _Args;
 
         private ICommand _CompareDirectoriesCommand;
         private ICommand _CancelCompareCommand;
@@ -39,7 +39,7 @@
         /// Class constructor from specific diff options (rather than using defaults)
         /// </summary>
         /// <param name="args"></param>
-        public AppViewModel(ShowDirDiffArgs args)
+        public AppViewModel(DirDiffArgs args)
             : this()
         {
             _Args = args;
@@ -337,12 +337,12 @@
             if (_cancelTokenSource.IsCancellationRequested == true)
                 return;
 
-            ShowDirDiffArgs args = _Args;
+            DirDiffArgs args = _Args;
             _Args.CompareDirFileMode = dirFileMode;
 
             // Construct deffault options if there are no others
             if (_Args == null)
-                args = new ShowDirDiffArgs(leftDir, rightDir);
+                args = new DirDiffArgs(leftDir, rightDir);
             else
             {
                 _Args.LeftDir = leftDir;
