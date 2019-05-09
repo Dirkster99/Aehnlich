@@ -2,19 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
-    using AehnlichViewLib.Controls.AvalonEditEx;
     using AehnlichViewLib.Interfaces;
     using AehnlichViewModelsLib.Enums;
     using AehnlichViewModelsLib.Events;
     using AehnlichViewModelsLib.ViewModels;
-    using ICSharpCode.AvalonEdit.Document;
 
     /// <summary>
     /// Defines the viewmodel that controls one side of a text diff view with two sides
     /// (left view A and right view B) where both views are synchronized towards the displayed
     /// line numbers and content being highlighted to visual differences (add, remove, change, no chaneg).
     /// </summary>
-    public interface IDiffSideViewModel : ILineDiffProvider, IDisposable
+    public interface IDiffSideViewModel : ILineDiffProvider, IDiffView, IDisposable
     {
         #region Events
         /// <summary>
@@ -24,42 +22,6 @@
         #endregion Events
 
         #region Properties
-        /// <summary>
-        /// Gets/sets the <see cref="TextDocument"/> viewmodel of the attached AvalonEdit
-        /// text editor control.
-        /// </summary>
-        TextDocument Document { get; set; }
-
-        /// <summary>
-        /// Gets/sets the textbox controller that is used to drive the view
-        /// from within the viewmodel (with event based commands like goto line x,y).
-        /// </summary>
-        TextBoxController TxtControl { get; }
-
-        /// <summary>
-        /// Gets/set the time stamp of the last time when the attached view
-        /// has been activated (GotFocus).
-        /// </summary>
-        DateTime ViewActivation { get; set; }
-
-        #region Caret Position
-        /// <summary>
-        /// Gets/sets the column of a display position.
-        /// </summary>
-        int Column { get; set; }
-
-        /// <summary>
-        /// Gets/sets the line of a display position.
-        /// </summary>
-        int Line { get; set; }
-        #endregion Caret Position
-
-        /// <summary>
-        /// Gets/sets whether the currently shown text in the textedior has been changed
-        /// without saving or not.
-        /// </summary>
-        bool IsDirty { get; set; }
-
         /// <summary>
         /// Gets Text/binary specific diff options (eg. ignore white space) which are applied
         /// to compute the text differences shown in the view.
@@ -148,7 +110,7 @@
         #region FirstDiff NextDiff PrevDiff LastDiff
         /// <summary>
         /// Determine whether or not we can goto the first difference in the model
-        /// based on the current caret position in <see cref="Line"/> and <see cref="Column"/>.
+        /// based on the current caret position in Line and Column.
         /// 
         /// The function returns false:
         /// - if there is no difference or
@@ -158,7 +120,7 @@
 
         /// <summary>
         /// Determine whether or not we can goto the last difference in the model
-        /// based on the current caret position in <see cref="Line"/> and <see cref="Column"/>.
+        /// based on the current caret position in Line and Column.
         /// 
         /// The function returns false:
         /// - if there is no difference or
@@ -168,7 +130,7 @@
 
         /// <summary>
         /// Determine whether or not we can goto the last difference in the model
-        /// based on the current caret position in <see cref="Line"/> and <see cref="Column"/>.
+        /// based on the current caret position in Line and Column.
         /// 
         /// The function returns false:
         /// - if there is no difference or
@@ -178,7 +140,7 @@
 
         /// <summary>
         /// Determine whether or not we can goto the last difference in the model
-        /// based on the current caret position in <see cref="Line"/> and <see cref="Column"/>.
+        /// based on the current caret position in Line and Column.
         /// 
         /// The function returns false:
         /// - if there is no difference or

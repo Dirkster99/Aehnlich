@@ -216,6 +216,21 @@
         }
 
         /// <summary>
+        /// Gets whether the diff view control is enabled or not.
+        /// </summary>
+        public bool IsEnabled { get { return true; } }
+
+        /// <summary>
+        /// Gets whether line numbers should be shown in the diff view control or not.
+        /// </summary>
+        public bool ShowLineNumbers { get { return true; } }
+
+        /// <summary>
+        /// Gets whether the text displayed in the diff should be editable or not.
+        /// </summary>
+        public bool IsReadOnly { get { return true; } }
+
+        /// <summary>
         /// Gets Text/binary specific diff options (eg. ignore white space) which are applied
         /// to compute the text differences shown in the view.
         /// </summary>

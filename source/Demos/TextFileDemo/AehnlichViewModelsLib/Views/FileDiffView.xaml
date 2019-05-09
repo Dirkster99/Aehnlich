@@ -451,8 +451,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0"
-                                                    DataContext="{Binding DiffProgress}">
+                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
                                 <TextBlock Text="We are working on it ... "/>
                             </StackPanel>
 
@@ -471,18 +470,22 @@
                 </Grid>
 
                 <ctrl:DiffControl
-                        Name="DiffCtrl" Grid.Row="1"
-                        LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                        RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                        ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
-                        DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                        SetFocus="{Binding FocusControl, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                  
-                        WidthColumnA="{Binding ElementName=ColumnA,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                        WidthColumnB="{Binding ElementName=ColumnB,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    Name="DiffCtrl" Grid.Row="1"
+                        
+                    LeftDiffView="{Binding DiffCtrl.ViewA}"
+                    RightDiffView="{Binding DiffCtrl.ViewB}"
+                    
+                    LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                    RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                    ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
+                    DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                    SetFocus="{Binding FocusControl, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                              
+                    WidthColumnA="{Binding ElementName=ColumnA,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    WidthColumnB="{Binding ElementName=ColumnB,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
 
-                        Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
-                        Margin="3,0,3,0"/>
+                    Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
+                    Margin="3,0,3,0"/>
             </Grid>
         </Grid>
 

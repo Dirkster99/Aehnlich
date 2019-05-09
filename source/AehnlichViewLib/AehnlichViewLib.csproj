@@ -89,6 +89,7 @@
     <Compile Include="Events\ColumnWidthChangedEvent.cs" />
     <Compile Include="Events\DiffLineInfoChangedEvent.cs" />
     <Compile Include="Interfaces\IDiffLineInfo.cs" />
+    <Compile Include="Interfaces\IDiffView.cs" />
     <Compile Include="Interfaces\ILineDiffProvider.cs" />
     <Compile Include="Models\DiffColorDefinitions.cs" />
     <Compile Include="Models\DiffViewPort.cs" />

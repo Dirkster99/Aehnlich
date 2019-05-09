@@ -8,6 +8,8 @@
                     >
 
     <Style TargetType="{x:Type local:DiffControl}">
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontSize" Value="12pt"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DiffControl}">
@@ -38,23 +40,23 @@
                             <!-- Editor IsEnabled if Document is bound with not null to work around crash -->
                             <local:DiffView
                                 x:Name="PART_TextLeft" Grid.Column="0" Grid.Row="1" Margin="3"
-                                IsEnabled="{Binding DiffCtrl.ViewA.Document, Converter={StaticResource NullToEnabledPropConverter}}"
-                                Document="{Binding DiffCtrl.ViewA.Document, UpdateSourceTrigger=PropertyChanged}"
-                                ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
-                                ShowLineNumbers="True"
-				                IsModified="{Binding DiffCtrl.ViewA.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsReadOnly="True"
+                                LineDiffDataProvider="{Binding LeftDiffView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                IsEnabled="{Binding LeftDiffView.IsEnabled, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}, Converter={StaticResource NullToEnabledPropConverter}}"
+                                Document="{Binding LeftDiffView.Document, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                ShowLineNumbers="{Binding LeftDiffView.ShowLineNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+				                IsModified="{Binding LeftDiffView.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                IsReadOnly="{Binding LeftDiffView.IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                 
-                                Column="{Binding DiffCtrl.ViewA.Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                Line="{Binding DiffCtrl.ViewA.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                TextBoxController="{Binding DiffCtrl.ViewA.TxtControl}"
-                                ActivationTimeStamp="{Binding DiffCtrl.ViewA.ViewActivation, Mode=OneWayToSource}"
+                                Column="{Binding  LeftDiffView.Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                Line="{Binding  LeftDiffView.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                TextBoxController="{Binding LeftDiffView.TxtControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                ActivationTimeStamp="{Binding LeftDiffView.ViewActivation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
 
+                                ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
                                 Options="{TemplateBinding DiffViewOptions}"
-                                LineDiffDataProvider="{Binding DiffCtrl.ViewA, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                 
-                                FontFamily="Consolas"
-                                FontSize="12pt"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
                                 HorizontalScrollBarVisibility="Visible"
                                 VerticalScrollBarVisibility="Visible"
                             />
@@ -62,23 +64,23 @@
                             <!-- Editor IsEnabled if Document is bound with not null to work around crash -->
                             <local:DiffView
                                 x:Name="PART_TextRight" Grid.Column="2" Grid.Row="2" Margin="3"
-                                IsEnabled="{Binding DiffCtrl.ViewA.Document, Converter={StaticResource NullToEnabledPropConverter}}"
-                                Document="{Binding DiffCtrl.ViewB.Document, UpdateSourceTrigger=PropertyChanged}"
-                                ItemsSource="{Binding DiffCtrl.ViewB.DocLineDiffs}"
-                                ShowLineNumbers="True"
-				                IsModified="{Binding DiffCtrl.ViewB.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsReadOnly="True"
+                                LineDiffDataProvider="{Binding RightDiffView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                IsEnabled="{Binding RightDiffView.IsEnabled, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}, Converter={StaticResource NullToEnabledPropConverter}}"
+                                Document="{Binding RightDiffView.Document, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                ShowLineNumbers="{Binding RightDiffView.ShowLineNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+				                IsModified="{Binding RightDiffView.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                IsReadOnly="{Binding RightDiffView.IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                 
-                                Column="{Binding DiffCtrl.ViewB.Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                Line="{Binding DiffCtrl.ViewB.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                TextBoxController="{Binding DiffCtrl.ViewB.TxtControl}"
-                                ActivationTimeStamp="{Binding DiffCtrl.ViewB.ViewActivation, Mode=OneWayToSource}"
+                                Column="{Binding  RightDiffView.Column, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                Line="{Binding  RightDiffView.Line, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                TextBoxController="{Binding RightDiffView.TxtControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
+                                ActivationTimeStamp="{Binding RightDiffView.ViewActivation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
 
+                                ItemsSource="{Binding DiffCtrl.ViewB.DocLineDiffs}"
                                 Options="{TemplateBinding DiffViewOptions}"
-                                LineDiffDataProvider="{Binding DiffCtrl.ViewB, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 
-                                FontFamily="Consolas"
-                                FontSize="12pt"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
                                 HorizontalScrollBarVisibility="Visible"
                                 VerticalScrollBarVisibility="Visible"
                                 />

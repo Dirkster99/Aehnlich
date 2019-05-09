@@ -63,9 +63,9 @@
                 </Button>
 
                 <!-- File Diff Mode Selection (Last Update, Length, Byte-By-Byte compare) -->
-                <ComboBox DataContext="{Binding FileDiffMode}"
-                    ItemsSource="{Binding DiffFileModes}"
-                    SelectedItem="{Binding DiffFileModeSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                <ComboBox
+                    ItemsSource="{Binding FileDiffMode.DiffFileModes}"
+                    SelectedItem="{Binding FileDiffMode.DiffFileModeSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                     DisplayMemberPath="Name"
                     IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                     Width="200"
@@ -75,7 +75,7 @@
                         <StackPanel>
                             <TextBlock Text="Select a diff file mode to determine speed and quality of file comparison"/>
                             <Separator/>
-                            <TextBlock Text="{Binding DiffFileModeSelected.Description,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Text="{Binding FileDiffMode.DiffFileModeSelected.Description,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </ComboBox.ToolTip>
                 </ComboBox>

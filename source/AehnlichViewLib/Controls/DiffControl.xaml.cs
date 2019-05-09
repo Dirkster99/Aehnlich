@@ -1,6 +1,7 @@
 ﻿namespace AehnlichViewLib.Controls
 {
     using AehnlichViewLib.Enums;
+    using AehnlichViewLib.Interfaces;
     using AehnlichViewLib.Models;
     using ICSharpCode.AvalonEdit;
     using System;
@@ -20,6 +21,20 @@
         #region fields
         public const string PART_RightDiffView = "PART_TextRight";
         public const string PART_LeftDiffView = "PART_TextLeft";
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="LeftDiffView"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LeftDiffViewProperty =
+            DependencyProperty.Register("LeftDiffView", typeof(IDiffView),
+                typeof(DiffControl), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Implements the backing store of the <see cref="RightDiffView"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RightDiffViewProperty =
+            DependencyProperty.Register("RightDiffView", typeof(IDiffView),
+                typeof(DiffControl), new PropertyMetadata(null));
 
         /// <summary>
         /// Implements the backing store of the <see cref="SetFocus"/> dependency property.
@@ -85,6 +100,26 @@
         #endregion ctors
 
         #region properties
+        /// <summary>
+        /// Gets/sets an interface definition that should be implemented by the viewmodel to configure
+        /// and drive all available aspects of the left diff view A.
+        /// </summary>
+        public IDiffView LeftDiffView
+        {
+            get { return (IDiffView)GetValue(LeftDiffViewProperty); }
+            set { SetValue(LeftDiffViewProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets/sets an interface definition that should be implemented by the viewmodel to configure
+        /// and drive all available aspects of the right diff view B.
+        /// </summary>
+        public IDiffView RightDiffView
+        {
+            get { return (IDiffView)GetValue(RightDiffViewProperty); }
+            set { SetValue(RightDiffViewProperty, value); }
+        }
+
         public TextEditorOptions DiffViewOptions
         {
             get { return (TextEditorOptions)GetValue(DiffViewOptionsProperty); }
