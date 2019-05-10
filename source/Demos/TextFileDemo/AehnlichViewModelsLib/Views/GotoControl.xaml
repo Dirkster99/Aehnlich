@@ -54,14 +54,14 @@
 
         <Button Grid.Column="2"
                 ToolTip="Close"
-                Command="{Binding CloseGotoThisLineCommand}"
+                Command="{Binding CloseDialogCommand}"
                 BorderThickness="0"
                 BorderBrush="Transparent"
-                HorizontalAlignment="Right" VerticalAlignment="Center"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
                 MinHeight="12" MinWidth="12"
                 
                 Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                Margin="6,0,0,0"
+                Margin="6,0,3,3"
                 >
             <Button.Background>
                 <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_CloseKey}}"/>

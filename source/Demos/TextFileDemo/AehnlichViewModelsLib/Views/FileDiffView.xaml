@@ -13,7 +13,9 @@
             xmlns:conv="clr-namespace:AehnlichViewLib.Converters;assembly=AehnlichViewLib"
             xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
             xmlns:range="clr-namespace:AehnlichViewLib.Controls.Overview;assembly=AehnlichViewLib"
-                        
+
+            xmlns:dlgenum="clr-namespace:AehnlichViewModelsLib.Enums"
+
             xmlns:sc="clr-namespace:SuggestBoxLib;assembly=SuggestBoxLib"
 
              mc:Ignorable="d" 
@@ -99,7 +101,8 @@
                 </Button>
 
                 <Button
-                    Command="{Binding GotoLineCommand}"
+                    Command="{Binding InlineDialogCommand}"
+                    CommandParameter="{x:Static dlgenum:InlineDialogMode.Goto}"
                     ToolTip="Goto Line"
                     ToolTipService.IsEnabled="True"
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
@@ -110,6 +113,24 @@
                     >
                     <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoLineKey}}"
                            Height="16" SnapsToDevicePixels="True" />
+                </Button>
+
+                <Button
+                    Command="{Binding InlineDialogCommand}"
+                    CommandParameter="{x:Static dlgenum:InlineDialogMode.Options}"
+                    ToolTip="Options"
+                    ToolTipService.IsEnabled="True"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Margin="0,0,3,0"
+                    Padding="0"
+                    >
+                    <TextBlock Text="Options"/>
+                    <!--
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    
+                    Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoLineKey}}"
+                           Height="16" SnapsToDevicePixels="True" /-->
                 </Button>
 
                 <Separator />
@@ -329,10 +350,27 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="0" Margin="3,0,3,3"
-                                      Visibility="{Binding InlineDialog, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InlineDilaogToVisibilityPropConverter}}"
-                                  >
-                <usctrl:GotoControl DataContext="{Binding GotoLineController}" />
+            <Grid
+                xmlns:dlg="clr-namespace:AehnlichViewModelsLib.ViewModels.Dialogs"                
+                Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="0" Margin="3,0,3,3"
+                Visibility="{Binding InlineDialog, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InlineDilaogToVisibilityPropConverter}}"
+            >
+                <ContentControl  Content="{Binding SelectedDialogItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ContentControl.ContentTemplateSelector>
+                        <dlg:DialogtTemplateSelector>
+                            <dlg:DialogtTemplateSelector.GotoLineDialog>
+                                <DataTemplate DataType="x:Type dlg:IGotoLineControllerViewModel">
+                                    <usctrl:GotoControl />
+                                </DataTemplate>
+                            </dlg:DialogtTemplateSelector.GotoLineDialog>
+                            <dlg:DialogtTemplateSelector.OptionsDialog>
+                                <DataTemplate DataType="x:Type dlg:IOptionsControllerViewModel">
+                                    <usctrl:OptionsControl />
+                                </DataTemplate>
+                            </dlg:DialogtTemplateSelector.OptionsDialog>
+                        </dlg:DialogtTemplateSelector>
+                    </ContentControl.ContentTemplateSelector>
+                </ContentControl>
             </Grid>
 
             <range:RangeScrollbar Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="30" Margin="3"
@@ -348,9 +386,6 @@
                                   LargeChange="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                   IsRepeatButtonVisible="False"
                                 >
-                <!--
-                    Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
-                -->
                 <range:RangeScrollbar.ItemTemplate>
                     <DataTemplate DataType="{x:Type vms:IDiffLineViewModel}">
                         <Rectangle Name="elp"

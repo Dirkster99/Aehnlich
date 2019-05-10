@@ -15,13 +15,13 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <ContentControl Content="{Binding SelectedDirDiffItem}">
-                            <!--
+                        <!--
                               The TemplateSelector is invoked with the viewmodel instance bound on the Content property.
                               The TemplateSelector selects a matching view to a given type of viewmodel.
                             
                               Each type of viewmodel represents a stage in the lifecycle of the document.
                             -->
+                        <ContentControl Content="{Binding SelectedDirDiffItem}">
                             <ContentControl.ContentTemplateSelector>
                                 <templ:DirDiffContentTemplateSelector >
                                     <templ:DirDiffContentTemplateSelector.SetupPage>

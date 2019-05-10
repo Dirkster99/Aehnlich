@@ -2,9 +2,6 @@
 public class
 {
     #region fields
-    
-    
-    
     #endregion fields
     
     #region ctors

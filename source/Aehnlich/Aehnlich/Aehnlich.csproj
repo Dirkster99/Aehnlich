@@ -267,7 +267,6 @@
   <ItemGroup>
     <Folder Include="Resources\Icons\Dark\" />
     <Folder Include="Resources\Icons\Light\" />
-    <Folder Include="Views\Text\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

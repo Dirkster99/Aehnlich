@@ -66,6 +66,8 @@
     <Compile Include="Converters\MultiParToParConverter.cs" />
     <Compile Include="Enums\ChangeDiffOptions.cs" />
     <Compile Include="Events\CaretPositionChangedEvent.cs" />
+    <Compile Include="ViewModels\Dialogs\DialogtTemplateSelector.cs" />
+    <Compile Include="ViewModels\Dialogs\OptionsControllerViewModel.cs" />
     <Compile Include="Views\FileDiffView.xaml.cs">
       <DependentUpon>FileDiffView.xaml</DependentUpon>
     </Compile>
@@ -82,7 +84,7 @@
     <Compile Include="ViewModels\DiffDocViewModel.cs" />
     <Compile Include="ViewModels\DiffProgressViewModel.cs" />
     <Compile Include="ViewModels\Factory.cs" />
-    <Compile Include="ViewModels\GotoLineControllerViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\GotoLineControllerViewModel.cs" />
     <Compile Include="Interfaces\IGotoLineControllerViewModel.cs" />
     <Compile Include="Interfaces\IDiffViewPosition.cs" />
     <Compile Include="Interfaces\IDiffSideViewModel.cs" />
@@ -98,6 +100,9 @@
     <Compile Include="ViewModels\Suggest\SuggestSourceViewModel.cs" />
     <Compile Include="Views\GotoControl.xaml.cs">
       <DependentUpon>GotoControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OptionsControl.xaml.cs">
+      <DependentUpon>OptionsControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +125,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GotoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OptionsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

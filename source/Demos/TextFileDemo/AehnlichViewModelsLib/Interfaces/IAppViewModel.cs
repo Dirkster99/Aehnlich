@@ -36,15 +36,23 @@
         /// </summary>
         Focus FocusControl { get; }
 
+        #region DialogSelection
         /// <summary>
-        /// Gets view model that drives the Goto Line inline dialog view.
+        /// Gets view model that drives the dialog view
+        /// (Goto Line inline dialog or options inline dialog).
         /// </summary>
-        IGotoLineControllerViewModel GotoLineController { get; }
+        object SelectedDialogItem { get; }
 
         /// <summary>
         /// Gets/sets the current inline dialog mode.
         /// </summary>
         InlineDialogMode InlineDialog { get; set; }
+
+        /// <summary>
+        /// Gets a command to toggle the dialog view into an inline dialog view.
+        /// </summary>
+        ICommand InlineDialogCommand { get; }
+        #endregion DialogSelection
 
         /// <summary>
         /// Gets the number of text lines currently visible in the text view
@@ -76,11 +84,6 @@
         /// activated if the right or left control has focus.
         /// </summary>
         ICommand FindTextCommand { get; }
-
-        /// <summary>
-        /// Gets a command to scroll the view to a certain line within the available lines.
-        /// </summary>
-        ICommand GotoLineCommand { get; }
 
         /// <summary>
         /// Gets a command that should be invoked:

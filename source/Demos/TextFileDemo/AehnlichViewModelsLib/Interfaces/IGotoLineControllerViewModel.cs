@@ -4,9 +4,30 @@
     using System.Windows.Input;
 
     /// <summary>
-    /// Defines public properties and methods of the <see cref="GotoLineControllerViewModel"/>.
+    /// Defines base properties and methods that should be implemented by all inline dialogs.
     /// </summary>
-    public interface IGotoLineControllerViewModel : INotifyPropertyChanged
+    public interface IControllerBase : INotifyPropertyChanged
+    {
+        /// <summary>
+        /// Gets a command that closes the dialog via the delegate function
+        /// that was supplied at constructor time of this object.
+        /// </summary>
+        ICommand CloseDialogCommand { get; }
+    }
+
+
+    /// <summary>
+    /// Defines public properties and methods of the Goto Line Dialog Controller ViewModel.
+    /// </summary>
+    public interface IOptionsControllerViewModel : IControllerBase, INotifyPropertyChanged
+    {
+
+    }
+
+    /// <summary>
+    /// Defines public properties and methods of the Goto Line Dialog Controller ViewModel.
+    /// </summary>
+    public interface IGotoLineControllerViewModel : IControllerBase, INotifyPropertyChanged
     {
         /// <summary>
         /// Gets the minimum linenumber value.
@@ -33,11 +54,5 @@
         /// via the Action that was supplied at constructor time of of the object.
         /// </summary>
         ICommand GotoThisLineCommand { get; }
-
-        /// <summary>
-        /// Gets a command that closes the dialog via the delegate function
-        /// that was supplied at constructor time of this object.
-        /// </summary>
-        ICommand CloseGotoThisLineCommand { get; }
     }
 }

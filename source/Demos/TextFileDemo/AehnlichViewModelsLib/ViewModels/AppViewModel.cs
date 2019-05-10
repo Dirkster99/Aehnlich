@@ -15,6 +15,7 @@
     using AehnlichLib.Text;
     using System.Threading.Tasks;
     using AehnlichLib.Interfaces;
+    using AehnlichViewModelsLib.ViewModels.Dialogs;
 
     internal class AppViewModel : Base.ViewModelBase, IAppViewModel
     {
@@ -25,7 +26,7 @@
         private ICommand _OpenFileFromActiveViewCommand;
         private ICommand _CopyTextSelectionFromActiveViewCommand;
         private ICommand _FindTextCommand;
-        private ICommand _GotoLineCommand;
+        private ICommand _InlineDialogCommand;
 
         private double _OverViewValue = 0;
 
@@ -33,7 +34,11 @@
         private bool _IgnoreNextSliderValueChange = false;
         private int _LastLineToSync = 0;
         private readonly DiffDocViewModel _DiffCtrl;
+
+        private object _SelectedDialogItem;
         private readonly GotoLineControllerViewModel _GotoLineController;
+        private readonly OptionsControllerViewModel _OptionsController;
+
         private readonly object _lockObject = new object();
 
         private InlineDialogMode _InlineDialog;
@@ -70,7 +75,11 @@
 
             _InlineDialog = InlineDialogMode.None;
             _DiffCtrl = new DiffDocViewModel();
+
+
             _GotoLineController = new GotoLineControllerViewModel(DiffCtrl.GotoTextLine, ToogleInlineDialog);
+            _OptionsController = new OptionsControllerViewModel(ToogleInlineDialog);
+
             _FocusControl = Focus.LeftFilePath;
         }
         #endregion ctors
@@ -400,24 +409,29 @@
         }
 
         /// <summary>
-        /// Gets a command to scroll the view to a certain line within the available lines.
+        /// Gets a command to toggle the dialog view into an inline dialog view.
         /// </summary>
-        public ICommand GotoLineCommand
+        public ICommand InlineDialogCommand
         {
             get
             {
-                if (_GotoLineCommand == null)
+                if (_InlineDialogCommand == null)
                 {
-                    _GotoLineCommand = new RelayCommand<object>((p) =>
+                    _InlineDialogCommand = new RelayCommand<object>((p) =>
                     {
-                        ToogleInlineDialog(InlineDialogMode.Goto);
+                        if ((p is InlineDialogMode) == false)
+                            return;
+
+                        var param = (InlineDialogMode)p;      // Toggle requested inline dialog
+                        ToogleInlineDialog(param);
+
                     }, (p) =>
                      {
                          return DiffCtrl.IsDiffDataAvailable;
                      });
                 }
 
-                return _GotoLineCommand;
+                return _InlineDialogCommand;
             }
         }
 
@@ -437,14 +451,20 @@
             }
         }
 
-        /// <summary>
-        /// Gets view model that drives the Goto Line inline dialog view.
-        /// </summary>
-        public IGotoLineControllerViewModel GotoLineController
+        public object SelectedDialogItem
         {
             get
             {
-                return _GotoLineController;
+                return _SelectedDialogItem;
+            }
+
+            set
+            {
+                if (_SelectedDialogItem != value)
+                {
+                    _SelectedDialogItem = value;
+                    NotifyPropertyChanged(() => SelectedDialogItem);
+                }
             }
         }
 
@@ -511,7 +531,7 @@
 
                         ////FocusControl = Focus.None;
                         ////FocusControl = Focus.LeftView;
-                        GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
+                        _GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
 
                         // Position view on first difference if thats available
                         if (_DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
@@ -583,9 +603,29 @@
         private InlineDialogMode ToogleInlineDialog(InlineDialogMode forThisDialog)
         {
             if (InlineDialog != forThisDialog)
+            {
                 InlineDialog = forThisDialog;
+
+                // Set the content
+                switch (forThisDialog)
+                {
+                    case InlineDialogMode.Goto:
+                        SelectedDialogItem = _GotoLineController;
+                        break;
+                    case InlineDialogMode.Options:
+                        SelectedDialogItem = _OptionsController;
+                        break;
+                    case InlineDialogMode.None:
+                    default:
+                        break;
+                }
+            }
             else
+            {
+                // Close dialog
                 InlineDialog = InlineDialogMode.None;
+                SelectedDialogItem = null;
+            }
 
             return InlineDialog;
         }

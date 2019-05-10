@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewModelsLib.ViewModels
+﻿namespace AehnlichViewModelsLib.ViewModels.Dialogs
 {
     using System;
     using System.Windows;
@@ -16,7 +16,7 @@
         private ICommand _GotoThisLineCommand;
         private uint _MinLineValue;
         private uint _Value;
-        private ICommand _CloseGotoThisLineCommand;
+        private ICommand _CloseDialogCommand;
 
         readonly private Action<uint> _gotoLineAction;
         readonly private Func<InlineDialogMode, InlineDialogMode> _closeFunc;
@@ -174,13 +174,13 @@
         /// Gets a command that closes the dialog via the delegate function
         /// that was supplied at constructor time of this object.
         /// </summary>
-        public ICommand CloseGotoThisLineCommand
+        public ICommand CloseDialogCommand
         {
             get
             {
-                if (_CloseGotoThisLineCommand == null)
+                if (_CloseDialogCommand == null)
                 {
-                    _CloseGotoThisLineCommand = new RelayCommand<object>((p) =>
+                    _CloseDialogCommand = new RelayCommand<object>((p) =>
                     {
                         _closeFunc(InlineDialogMode.None);
                     },
@@ -190,7 +190,7 @@
                     });
                 }
 
-                return _CloseGotoThisLineCommand;
+                return _CloseDialogCommand;
             }
         }
         #endregion properties

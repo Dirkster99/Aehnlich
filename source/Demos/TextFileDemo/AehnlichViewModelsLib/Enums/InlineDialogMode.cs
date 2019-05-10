@@ -13,6 +13,11 @@
         /// <summary>
         /// Showing the Goto Line inline dialog.
         /// </summary>
-        Goto
+        Goto,
+
+        /// <summary>
+        /// Showing the Options inline dialog.
+        /// </summary>
+        Options
     }
 }
