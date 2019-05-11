@@ -1,7 +1,6 @@
 ﻿namespace AehnlichViewModelsLib.Interfaces
 {
     using AehnlichLib.Enums;
-    using AehnlichLib.Interfaces;
     using AehnlichViewModelsLib.ViewModels;
     using ICSharpCode.AvalonEdit;
     using System;
@@ -204,6 +203,12 @@
                           IDiffSideViewModel viewA,
                           IDiffSideViewModel viewB,
                           bool positionCursor);
+
+        /// <summary>
+        /// Sets the text editor display options that control the left and right text diff view.
+        /// Both diff views are bound to one options object to ensure consistent displays.
+        /// </summary>
+        void SetDiffViewOptions(TextEditorOptions options);
         #endregion methods
     }
 }

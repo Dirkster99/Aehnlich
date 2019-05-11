@@ -212,6 +212,8 @@
     <Content Include="Icons\Light\Search_16x.svg" />
     <Resource Include="Icons\Light\Search_16x.ico" />
     <Resource Include="Icons\Light\ThisLine.ico" />
+    <Resource Include="Icons\Light\Settings.ico" />
+    <Content Include="Icons\Light\Settings_16x.svg" />
     <Content Include="Icons\Light\ThisLine_16x.svg" />
     <Content Include="Icons\Light\tilde.svg" />
     <Resource Include="Icons\Light\OpenFile.ico" />

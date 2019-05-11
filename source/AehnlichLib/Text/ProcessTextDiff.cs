@@ -102,10 +102,9 @@
             b = null;
             leadingCharactersToIgnore = 0;
             CompareType compareType = args.CompareType;
-            bool isAuto = compareType == CompareType.Auto;
 
             if (compareType == CompareType.Binary ||
-                (isAuto && (DiffUtility.IsBinaryFile(fileNameA) || DiffUtility.IsBinaryFile(fileNameB))))
+                (args.IsAuto && (DiffUtility.IsBinaryFile(fileNameA) || DiffUtility.IsBinaryFile(fileNameB))))
             {
                 using (FileStream fileA = File.OpenRead(fileNameA))
                 using (FileStream fileB = File.OpenRead(fileNameB))
@@ -124,14 +123,14 @@
                 }
             }
 
-            if (compareType == CompareType.Xml || (isAuto && (a == null || b == null)))
+            if (compareType == CompareType.Xml || (args.IsAuto && (a == null || b == null)))
             {
-                a = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameA, fileNameA, !isAuto, args, progress);
+                a = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameA, fileNameA, !args.IsAuto, args, progress);
 
                 // If A failed to parse with Auto, then there's no reason to try B.
                 if (a != null)
                 {
-                    b = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameB, fileNameB, !isAuto, args, progress);
+                    b = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameB, fileNameB, !args.IsAuto, args, progress);
                 }
 
                 // If we get here and the compare type was XML, then both

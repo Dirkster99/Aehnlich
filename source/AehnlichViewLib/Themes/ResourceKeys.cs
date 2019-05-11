@@ -93,6 +93,7 @@
         public static readonly ComponentResourceKey ICON_FolderDownKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_FolderDownKey");
         #endregion Browse Folder Icons
 
+        public static readonly ComponentResourceKey ICON_SettingsKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_SettingsKey");
         #endregion ICONs
 
         #region Diff Colors

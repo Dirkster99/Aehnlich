@@ -91,4 +91,8 @@
                   UriSource="/AehnlichViewLib;component/Icons/Light/FolderOpen_Down1_16x.ico" />
     <!-- Browse Folder Icons -->
 
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_SettingsKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/Settings.ico" />
+    
 </ResourceDictionary>

@@ -61,6 +61,7 @@
     <Compile Include="Behaviors\OnEnterToCommandBehavior.cs" />
     <Compile Include="Converters\DiffContextToColorPropConverter.cs" />
     <Compile Include="Converters\DiffContextToVisibilityPropConverter.cs" />
+    <Compile Include="Converters\EnumMatchToBooleanConverter.cs" />
     <Compile Include="Converters\InlineDilaogToVisibilityPropConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityPropConverter.cs" />
     <Compile Include="Converters\MultiParToParConverter.cs" />

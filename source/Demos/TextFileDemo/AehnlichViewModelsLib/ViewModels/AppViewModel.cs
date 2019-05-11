@@ -487,7 +487,8 @@
         {
             try
             {
-                var args = new TextBinaryDiffArgs(filePathA, filePathB, DiffType.File);
+                DiffCtrl.SetDiffViewOptions( _OptionsController.GetDisplayOptions());
+                var args = _OptionsController.GetTextBinaryDiffSetup(filePathA, filePathB);
                 var processDiff = new ProcessTextDiff(args);
 
                 _DiffProgress.ResetProgressValues(_cancelTokenSource.Token);

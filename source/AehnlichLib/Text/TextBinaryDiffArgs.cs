@@ -45,7 +45,6 @@
         protected TextBinaryDiffArgs()
         {
             SpacesPerTab = 4;
-            LeadingCharactersToIgnore = 0;
             IgnoreCase = true;
             IgnoreTextWhitespace = true;
             ShowChangeAsDeleteInsert = false;
@@ -81,21 +80,49 @@
         /// </summary>
         public DiffType DiffType { get; }
 
-        public int SpacesPerTab { get; }
+        public int SpacesPerTab { get; set; }
 
-        public int LeadingCharactersToIgnore { get; }
+        /// <summary>
+        /// Gets/sets wether the text should by compared text case-sensitive
+        /// or not (case-insensitive).
+        /// </summary>
+        public bool IgnoreCase { get; set; }
 
-        public bool IgnoreCase { get; }
+        /// <summary>
+        /// Gets/sets whether to ignore starting and ending white spaces when comparing strings.
+        /// 
+        /// Turn this on to get these equalities:
+        /// - Strings that contain only whitespaces are equal.
+        /// - Two strings like '  A' and 'A  ' are equal.
+        /// </summary>
+        public bool IgnoreTextWhitespace { get; set; }
 
-        public bool IgnoreTextWhitespace { get; }
+        /// <summary>
+        /// Gets/sets whether lines that can be aligned as change are displayed as
+        /// changed lines with in-line differences, or whether line differences are
+        /// only compared and displayed with inserted and deleted lines.
+        /// </summary>
+        public bool ShowChangeAsDeleteInsert { get; set; }
 
-        public bool ShowChangeAsDeleteInsert { get; }
-
-        public bool IgnoreXmlWhitespace { get; }
+        /// <summary>
+        /// Gets/sets whether to ignore insignificant white space when comparing Xml content.
+        /// </summary>
+        public bool IgnoreXmlWhitespace { get; set; }
 
         public HashType HashType { get; }
 
+        /// <summary>
+        /// Gets/sets whether the type of media being compared is determined automatically,
+        /// or should be interpreted as Text, XML, or Binary.
+        /// </summary>
         public CompareType CompareType { get; set; }
+
+        /// <summary>
+        /// Gets whether the type of media information content being compared should be
+        /// determined automatically, or not.
+        /// </summary>
+        public bool IsAuto { get { return this.CompareType == CompareType.Auto; } }
+
 
         public int BinaryFootprintLength { get; }
         #endregion

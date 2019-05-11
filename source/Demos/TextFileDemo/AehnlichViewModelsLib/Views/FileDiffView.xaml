@@ -115,24 +115,6 @@
                            Height="16" SnapsToDevicePixels="True" />
                 </Button>
 
-                <Button
-                    Command="{Binding InlineDialogCommand}"
-                    CommandParameter="{x:Static dlgenum:InlineDialogMode.Options}"
-                    ToolTip="Options"
-                    ToolTipService.IsEnabled="True"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <TextBlock Text="Options"/>
-                    <!--
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    
-                    Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoLineKey}}"
-                           Height="16" SnapsToDevicePixels="True" /-->
-                </Button>
-
                 <Separator />
 
                 <Button
@@ -206,6 +188,21 @@
                     </Button.CommandParameter>
                     
                     <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_RefreshKey}}"/>
+                </Button>
+
+                <Button
+                    Command="{Binding InlineDialogCommand}"
+                    CommandParameter="{x:Static dlgenum:InlineDialogMode.Options}"
+                    ToolTip="Options"
+                    ToolTipService.IsEnabled="True"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    MinHeight="16" MinWidth="16"
+                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                    Margin="0,0,3,0"
+                    Padding="0"
+                    >
+                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_SettingsKey}}"
+                           Height="16" SnapsToDevicePixels="True" />
                 </Button>
 
                 <Separator
@@ -355,7 +352,8 @@
                 Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="0" Margin="3,0,3,3"
                 Visibility="{Binding InlineDialog, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InlineDilaogToVisibilityPropConverter}}"
             >
-                <ContentControl  Content="{Binding SelectedDialogItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                <ContentControl Content="{Binding SelectedDialogItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="12">
                     <ContentControl.ContentTemplateSelector>
                         <dlg:DialogtTemplateSelector>
                             <dlg:DialogtTemplateSelector.GotoLineDialog>

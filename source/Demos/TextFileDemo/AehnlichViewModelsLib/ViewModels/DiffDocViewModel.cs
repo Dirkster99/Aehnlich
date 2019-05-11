@@ -50,7 +50,7 @@
         private string _StatusText;
         private bool _disposed;
         private int _CountInserts, _CountDeletes, _CountChanges;
-        private readonly TextEditorOptions _DiffViewOptions;
+        private TextEditorOptions _DiffViewOptions;
         #endregion fields
 
         #region ctors
@@ -85,6 +85,15 @@
             get
             {
                 return _DiffViewOptions;
+            }
+
+            internal set
+            {
+                if (_DiffViewOptions != value)
+                {
+                    _DiffViewOptions = value;
+                    NotifyPropertyChanged(() => DiffViewOptions);
+                }
             }
         }
 
@@ -686,7 +695,7 @@
 
                 if (modelLineA.Counterpart.Number.HasValue)
                 {
-                    int counterPartLine = Math.Min((int)modelLineA.Counterpart.Number+1, ViewB.DocLineDiffs.Count);
+                    int counterPartLine = Math.Min((int)modelLineA.Counterpart.Number + 1, ViewB.DocLineDiffs.Count);
                     int realLineB = vmViewB.FindThisTextLine(counterPartLine);
                     vmViewB.GotoTextLine((int)realLineB);
                 }
@@ -721,6 +730,16 @@
                 viewB.ScrollToLine(gotoPos.Line + 1, positionCursor);
                 viewB.SetPosition(gotoPos);
             }
+        }
+
+        /// <summary>
+        /// Sets the text editor display options that control the left and right text diff view.
+        /// Both diff views are bound to one options object to ensure consistent displays.
+        /// </summary>
+        public void SetDiffViewOptions(TextEditorOptions options)
+        {
+            if (options != null)
+                this.DiffViewOptions = options;
         }
 
         /// <summary>
