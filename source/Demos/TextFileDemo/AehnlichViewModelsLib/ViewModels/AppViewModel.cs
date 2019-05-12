@@ -487,7 +487,7 @@
         {
             try
             {
-                DiffCtrl.SetDiffViewOptions( _OptionsController.GetDisplayOptions());
+                DiffCtrl.SetDiffViewOptions( _OptionsController.DiffDisplayOptions);
                 var args = _OptionsController.GetTextBinaryDiffSetup(filePathA, filePathB);
                 var processDiff = new ProcessTextDiff(args);
 

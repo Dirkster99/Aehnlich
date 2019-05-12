@@ -49,12 +49,26 @@ namespace AehnlichViewModelsLib.ViewModels.Dialogs
             {
                 ShowTabs = false,
                 ConvertTabsToSpaces = true,
-                IndentationSize = 4
+                IndentationSize = 4,
+                HighlightCurrentLine = true,
+                EnableVirtualSpace = true,
+                AllowScrollBelowDocument = true
             };
         }
         #endregion ctors
 
         #region properties
+        /// <summary>
+        /// Gets the view options for the AvalonEdit view/editor.
+        /// </summary>
+        public TextEditorOptions DiffDisplayOptions
+        {
+            get
+            {
+                return _DiffDisplayOptions;
+            }
+        }
+
         /// <summary>
         /// Gets/sets whether the type of media being compared is determined automatically,
         /// or should be interpreted as Text, XML, or Binary.
@@ -208,11 +222,6 @@ namespace AehnlichViewModelsLib.ViewModels.Dialogs
             setup.SpacesPerTab = (int)this.SpacesPerTabValue;
 
             return setup;
-        }
-
-        internal TextEditorOptions GetDisplayOptions()
-        {
-            return _DiffDisplayOptions;
         }
         #endregion methods
     }

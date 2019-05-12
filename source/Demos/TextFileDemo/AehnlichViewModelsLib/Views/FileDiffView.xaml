@@ -22,539 +22,546 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.Resources>
-            <conv:BoolToVisibilityPropConverter x:Key="ProgressVisibilityPropConverter"
-                                                FalseValue="Visible"
-                                                TrueValue="Collapsed"
-                                                />
-            <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
-            <conv:BooleanInvertConverter x:Key="BooleanInvertConverter"/>
-            <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
-            <conv1:DiffContextToVisibilityPropConverter x:Key="DiffContextToVisibilityPropConverter"/>
-            <conv1:DiffContextToColorPropConverter x:Key="DiffContextToColorPropConverter"
-                                                  AddedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"
-                                                  DeletedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
-                                                  ContextValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
-                                                  />
             <conv1:InlineDilaogToVisibilityPropConverter x:Key="InlineDilaogToVisibilityPropConverter"/>
         </Grid.Resources>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="4*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Margin="0,0,0,3" Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <StackPanel Grid.Column="0" VerticalAlignment="Center"
-                                     Background="Transparent"
-                                     Orientation="Horizontal"
-                                     MinHeight="16"
-                                 >
-                <Button
-                    Command="{Binding OpenFileFromActiveViewCommand}"
-                    ToolTip="Open File"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_OpenFileKey}}"
-                           Height="16" SnapsToDevicePixels="True" />
-                </Button>
-
-                <Separator />
-
-                <Button
-                    Command="{Binding CopyTextSelectionFromActiveViewCommand}"
-                    ToolTip="Copy Text"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_CopyKey}}"
-                           Height="16" SnapsToDevicePixels="True" />
-                </Button>
-
-                <Button
-                    Command="{Binding FindTextCommand}"
-                    ToolTip="Find"
-                    ToolTipService.IsEnabled="True"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_FindKey}}"
-                           Height="16" SnapsToDevicePixels="True" />
-                </Button>
-
-                <Button
-                    Command="{Binding InlineDialogCommand}"
-                    CommandParameter="{x:Static dlgenum:InlineDialogMode.Goto}"
-                    ToolTip="Goto Line"
-                    ToolTipService.IsEnabled="True"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoLineKey}}"
-                           Height="16" SnapsToDevicePixels="True" />
-                </Button>
-
-                <Separator />
-
-                <Button
-                    Command="{Binding DiffCtrl.GoToFirstDifferenceCommand}"
-                    ToolTip="Go to First Difference"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoTopKey}}"
-                           Height="16" SnapsToDevicePixels="True" />
-                </Button>
-
-                <Button
-                    Command="{Binding DiffCtrl.GoToNextDifferenceCommand}"
-                    ToolTip="Go to Next Difference"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoNextKey}}"
-                           Height="16" SnapsToDevicePixels="True" />
-                </Button>
-
-                <Button
-                    Command="{Binding DiffCtrl.GoToPrevDifferenceCommand}"
-                    ToolTip="Go to Previous Difference"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoPrevKey}}"
-                           Height="16" SnapsToDevicePixels="True" />
-                </Button>
-
-                <Button
-                    Command="{Binding DiffCtrl.GoToLastDifferenceCommand}"
-                    ToolTip="Go to Last Difference"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoBottomKey}}"
-                           Height="16" SnapsToDevicePixels="True" />
-                </Button>
-
-                <Separator Margin="3,0,3,0"/>
-
-                <Button
-                    Command="{Binding CompareFilesCommand}"
-                    ToolTip="Recompare"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <Button.CommandParameter>
-                        <MultiBinding Converter="{StaticResource MultiParToParConverter}">
-                            <Binding Path="FilePathA" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
-                            <Binding Path="FilePathB" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
-                        </MultiBinding>
-                    </Button.CommandParameter>
-                    
-                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_RefreshKey}}"/>
-                </Button>
-
-                <Button
-                    Command="{Binding InlineDialogCommand}"
-                    CommandParameter="{x:Static dlgenum:InlineDialogMode.Options}"
-                    ToolTip="Options"
-                    ToolTipService.IsEnabled="True"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    MinHeight="16" MinWidth="16"
-                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                    Margin="0,0,3,0"
-                    Padding="0"
-                    >
-                    <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_SettingsKey}}"
-                           Height="16" SnapsToDevicePixels="True" />
-                </Button>
-
-                <Separator
-                    Margin="0,0,3,0"
-                    Visibility="{Binding DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
-                    />
-
-                <Border
-                    BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
-                    Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
-                    >
-                    <Grid 
-                        HorizontalAlignment="Stretch"
-                        MinHeight="16" MinWidth="16"
-                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"                        
-                    >
-                        <Grid.ToolTip>
-                            <TextBlock Text="{Binding DiffCtrl.CountChanges, StringFormat=Changed: {0}}" />
-                        </Grid.ToolTip>
-
-                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"
-                               SnapsToDevicePixels="True" />
-                    </Grid>
-                </Border>
-
-                <Border BorderBrush="Gray"
-                        BorderThickness="1"
-                        Margin="0,0,3,0"
-                        Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
-                        >
-                    <Grid HorizontalAlignment="Stretch"
-                                              MinHeight="16" MinWidth="16"
-                                              Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
-                        <Grid.ToolTip>
-                            <TextBlock Text="{Binding DiffCtrl.CountDeletes, StringFormat=Deleted: {0}}" />
-                        </Grid.ToolTip>
-
-                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"
-                               SnapsToDevicePixels="True" />
-                    </Grid>
-
-                </Border>
-
-                <Border BorderBrush="Gray"
-                        BorderThickness="1"
-                        Margin="0,0,3,0"
-                        Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"
-                        >
-                    <Grid HorizontalAlignment="Stretch"
-                                            MinHeight="16" MinWidth="16"
-                                            Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"                        
-                                        >
-                        <Grid.ToolTip>
-                            <TextBlock Text="{Binding DiffCtrl.CountInserts, StringFormat=Added: {0}}" />
-                        </Grid.ToolTip>
-
-                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AddedKey}}"
-                               SnapsToDevicePixels="True" />
-                    </Grid>
-                </Border>
-
-                <Separator
-                    Margin="0,0,3,0"
-                    Visibility="{Binding DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
-                    />
-
-                <TextBlock
-                    DataContext="{Binding DiffCtrl}"
-                    Text="{Binding Similarity_Text}"
-                    Margin="0,0,3,0"
-                    VerticalAlignment="Center"
-                    ToolTip="Similarity"
-                />
-
-                <Separator
-                    Margin="0,0,3,0"
-                    Visibility="{Binding DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
-                />
-
-                <!-- IsDiffDataAvailable -->
-                <StackPanel
-                    Orientation="Horizontal"
-                    VerticalAlignment="Center"
-                    DataContext="{Binding DiffCtrl}"
-                    Visibility="{Binding IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
-                >
-                    <TextBlock Margin="0,0,3,0" Text="Ln:" ToolTip="Current Line">
-                                            <TextBlock Text="{Binding SynchronizedLine,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                        </TextBlock>
-                    <TextBlock Margin="0,0,3,0" Text=", Col:" ToolTip="Current Column">
-                                        <TextBlock Text="{Binding SynchronizedColumn,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                    </TextBlock>
-                </StackPanel>
-            </StackPanel>
-
-            <!-- Debugging Values -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed">
-                <TextBlock
-                    Margin="3" VerticalAlignment="Center"
-                    Text="{Binding NumberOfTextLinesInViewPort}"
-                    ToolTip="AppVM.NumberOfTextLinesInViewPort"
-                />
-
-                <TextBlock
-                    Margin="3" VerticalAlignment="Center"
-                    Text="{Binding DiffCtrl.MaxNumberOfLines}"
-                    ToolTip="AppVM.MaxNumberOfLines"
-                />
-
-                <TextBlock
-                    Margin="3" VerticalAlignment="Center"
-                    Text="{Binding OverViewValue}"
-                    ToolTip="AppVM.OverViewValue"
-                />
-
-                <TextBlock
-                    Margin="3" VerticalAlignment="Center"
-                    Text="{Binding ElementName=OverviewCtrl,Path=Minimum}"
-                    ToolTip="OverviewCtrl.Minimum"
-                />
-
-                <TextBlock
-                    Margin="3" VerticalAlignment="Center"
-                    Text="{Binding ElementName=OverviewCtrl,Path=Maximum}"
-                    ToolTip="OverviewCtrl.Maximum"
-                />
-
-            </StackPanel>
+        <Grid Grid.Row="0" Grid.Column="0" 
+            xmlns:dlg="clr-namespace:AehnlichViewModelsLib.ViewModels.Dialogs"                
+            Margin="3,0,3,3"
+            Visibility="{Binding InlineDialog, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InlineDilaogToVisibilityPropConverter}}"
+        >
+            <ContentControl Content="{Binding SelectedDialogItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                    Margin="12">
+                <ContentControl.ContentTemplateSelector>
+                    <dlg:DialogtTemplateSelector>
+                        <dlg:DialogtTemplateSelector.GotoLineDialog>
+                            <DataTemplate DataType="x:Type dlg:IGotoLineControllerViewModel">
+                                <usctrl:GotoControl />
+                            </DataTemplate>
+                        </dlg:DialogtTemplateSelector.GotoLineDialog>
+                        <dlg:DialogtTemplateSelector.OptionsDialog>
+                            <DataTemplate DataType="x:Type dlg:IOptionsControllerViewModel">
+                                <usctrl:OptionsControl />
+                            </DataTemplate>
+                        </dlg:DialogtTemplateSelector.OptionsDialog>
+                    </dlg:DialogtTemplateSelector>
+                </ContentControl.ContentTemplateSelector>
+            </ContentControl>
         </Grid>
 
-        <Grid Grid.Column="0" Grid.Row="1">
+        <Grid Grid.Row="1">           
+            <Grid.Resources>
+                <conv:BoolToVisibilityPropConverter x:Key="ProgressVisibilityPropConverter"
+                                                    FalseValue="Visible"
+                                                    TrueValue="Collapsed"
+                                                    />
+                <conv:BoolToVisibilityPropConverter x:Key="BoolToVisibilityPropConverter"/>
+                <conv:BooleanInvertConverter x:Key="BooleanInvertConverter"/>
+                <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
+                <conv1:DiffContextToVisibilityPropConverter x:Key="DiffContextToVisibilityPropConverter"/>
+                <conv1:DiffContextToColorPropConverter x:Key="DiffContextToColorPropConverter"
+                                                      AddedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"
+                                                      DeletedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
+                                                      ContextValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
+                                                      />
+            </Grid.Resources>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid
-                xmlns:dlg="clr-namespace:AehnlichViewModelsLib.ViewModels.Dialogs"                
-                Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="0" Margin="3,0,3,3"
-                Visibility="{Binding InlineDialog, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InlineDilaogToVisibilityPropConverter}}"
-            >
-                <ContentControl Content="{Binding SelectedDialogItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                Margin="12">
-                    <ContentControl.ContentTemplateSelector>
-                        <dlg:DialogtTemplateSelector>
-                            <dlg:DialogtTemplateSelector.GotoLineDialog>
-                                <DataTemplate DataType="x:Type dlg:IGotoLineControllerViewModel">
-                                    <usctrl:GotoControl />
-                                </DataTemplate>
-                            </dlg:DialogtTemplateSelector.GotoLineDialog>
-                            <dlg:DialogtTemplateSelector.OptionsDialog>
-                                <DataTemplate DataType="x:Type dlg:IOptionsControllerViewModel">
-                                    <usctrl:OptionsControl />
-                                </DataTemplate>
-                            </dlg:DialogtTemplateSelector.OptionsDialog>
-                        </dlg:DialogtTemplateSelector>
-                    </ContentControl.ContentTemplateSelector>
-                </ContentControl>
+            <Grid Margin="0,0,0,3" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center"
+                                         Background="Transparent"
+                                         Orientation="Horizontal"
+                                         MinHeight="16"
+                                     >
+                    <Button
+                        Command="{Binding OpenFileFromActiveViewCommand}"
+                        ToolTip="Open File"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        >
+                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_OpenFileKey}}"
+                               Height="16" SnapsToDevicePixels="True" />
+                    </Button>
+
+                    <Separator />
+
+                    <Button
+                        Command="{Binding CopyTextSelectionFromActiveViewCommand}"
+                        ToolTip="Copy Text"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        >
+                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_CopyKey}}"
+                               Height="16" SnapsToDevicePixels="True" />
+                    </Button>
+
+                    <Button
+                        Command="{Binding FindTextCommand}"
+                        ToolTip="Find"
+                        ToolTipService.IsEnabled="True"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        >
+                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_FindKey}}"
+                               Height="16" SnapsToDevicePixels="True" />
+                    </Button>
+
+                    <Button
+                        Command="{Binding InlineDialogCommand}"
+                        CommandParameter="{x:Static dlgenum:InlineDialogMode.Goto}"
+                        ToolTip="Goto Line"
+                        ToolTipService.IsEnabled="True"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        >
+                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoLineKey}}"
+                               Height="16" SnapsToDevicePixels="True" />
+                    </Button>
+
+                    <Separator />
+
+                    <Button
+                        Command="{Binding DiffCtrl.GoToFirstDifferenceCommand}"
+                        ToolTip="Go to First Difference"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        >
+                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoTopKey}}"
+                               Height="16" SnapsToDevicePixels="True" />
+                    </Button>
+
+                    <Button
+                        Command="{Binding DiffCtrl.GoToNextDifferenceCommand}"
+                        ToolTip="Go to Next Difference"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        >
+                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoNextKey}}"
+                               Height="16" SnapsToDevicePixels="True" />
+                    </Button>
+
+                    <Button
+                        Command="{Binding DiffCtrl.GoToPrevDifferenceCommand}"
+                        ToolTip="Go to Previous Difference"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        >
+                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoPrevKey}}"
+                               Height="16" SnapsToDevicePixels="True" />
+                    </Button>
+
+                    <Button
+                        Command="{Binding DiffCtrl.GoToLastDifferenceCommand}"
+                        ToolTip="Go to Last Difference"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        >
+                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_GotoBottomKey}}"
+                               Height="16" SnapsToDevicePixels="True" />
+                    </Button>
+
+                    <Separator Margin="3,0,3,0"/>
+
+                    <Button
+                        Command="{Binding CompareFilesCommand}"
+                        ToolTip="Recompare"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        >
+                        <Button.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiParToParConverter}">
+                                <Binding Path="FilePathA" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="FilePathB" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    
+                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_RefreshKey}}"/>
+                    </Button>
+
+                    <Button
+                        Command="{Binding InlineDialogCommand}"
+                        CommandParameter="{x:Static dlgenum:InlineDialogMode.Options}"
+                        ToolTip="Options"
+                        ToolTipService.IsEnabled="True"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        MinHeight="16" MinWidth="16"
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        >
+                        <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_SettingsKey}}"
+                               Height="16" SnapsToDevicePixels="True" />
+                    </Button>
+
+                    <Separator
+                        Margin="0,0,3,0"
+                        Visibility="{Binding DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                        />
+
+                    <Border
+                        BorderBrush="Gray" BorderThickness="1" Margin="0,0,3,0"
+                        Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
+                        >
+                        <Grid 
+                            HorizontalAlignment="Stretch"
+                            MinHeight="16" MinWidth="16"
+                            Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"                        
+                        >
+                            <Grid.ToolTip>
+                                <TextBlock Text="{Binding DiffCtrl.CountChanges, StringFormat=Changed: {0}}" />
+                            </Grid.ToolTip>
+
+                            <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"
+                                   SnapsToDevicePixels="True" />
+                        </Grid>
+                    </Border>
+
+                    <Border BorderBrush="Gray"
+                            BorderThickness="1"
+                            Margin="0,0,3,0"
+                            Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
+                            >
+                        <Grid HorizontalAlignment="Stretch"
+                                                  MinHeight="16" MinWidth="16"
+                                                  Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}">
+                            <Grid.ToolTip>
+                                <TextBlock Text="{Binding DiffCtrl.CountDeletes, StringFormat=Deleted: {0}}" />
+                            </Grid.ToolTip>
+
+                            <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_DeletedKey}}"
+                                   SnapsToDevicePixels="True" />
+                        </Grid>
+
+                    </Border>
+
+                    <Border BorderBrush="Gray"
+                            BorderThickness="1"
+                            Margin="0,0,3,0"
+                            Background="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"
+                            >
+                        <Grid HorizontalAlignment="Stretch"
+                                                MinHeight="16" MinWidth="16"
+                                                Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"                        
+                                            >
+                            <Grid.ToolTip>
+                                <TextBlock Text="{Binding DiffCtrl.CountInserts, StringFormat=Added: {0}}" />
+                            </Grid.ToolTip>
+
+                            <Image Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AddedKey}}"
+                                   SnapsToDevicePixels="True" />
+                        </Grid>
+                    </Border>
+
+                    <Separator
+                        Margin="0,0,3,0"
+                        Visibility="{Binding DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                        />
+
+                    <TextBlock
+                        DataContext="{Binding DiffCtrl}"
+                        Text="{Binding Similarity_Text}"
+                        Margin="0,0,3,0"
+                        VerticalAlignment="Center"
+                        ToolTip="Similarity"
+                    />
+
+                    <Separator
+                        Margin="0,0,3,0"
+                        Visibility="{Binding DiffCtrl.IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                    />
+
+                    <!-- IsDiffDataAvailable -->
+                    <StackPanel
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        DataContext="{Binding DiffCtrl}"
+                        Visibility="{Binding IsDiffDataAvailable,Converter={StaticResource BoolToVisibilityPropConverter}}"
+                    >
+                        <TextBlock Margin="0,0,3,0" Text="Ln:" ToolTip="Current Line">
+                                                <TextBlock Text="{Binding SynchronizedLine,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                            </TextBlock>
+                        <TextBlock Margin="0,0,3,0" Text=", Col:" ToolTip="Current Column">
+                                            <TextBlock Text="{Binding SynchronizedColumn,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Debugging Values -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="Collapsed">
+                    <TextBlock
+                        Margin="3" VerticalAlignment="Center"
+                        Text="{Binding NumberOfTextLinesInViewPort}"
+                        ToolTip="AppVM.NumberOfTextLinesInViewPort"
+                    />
+
+                    <TextBlock
+                        Margin="3" VerticalAlignment="Center"
+                        Text="{Binding DiffCtrl.MaxNumberOfLines}"
+                        ToolTip="AppVM.MaxNumberOfLines"
+                    />
+
+                    <TextBlock
+                        Margin="3" VerticalAlignment="Center"
+                        Text="{Binding OverViewValue}"
+                        ToolTip="AppVM.OverViewValue"
+                    />
+
+                    <TextBlock
+                        Margin="3" VerticalAlignment="Center"
+                        Text="{Binding ElementName=OverviewCtrl,Path=Minimum}"
+                        ToolTip="OverviewCtrl.Minimum"
+                    />
+
+                    <TextBlock
+                        Margin="3" VerticalAlignment="Center"
+                        Text="{Binding ElementName=OverviewCtrl,Path=Maximum}"
+                        ToolTip="OverviewCtrl.Maximum"
+                    />
+
+                </StackPanel>
             </Grid>
 
-            <range:RangeScrollbar Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="30" Margin="3"
-                                  Name="OverviewCtrl"
-                                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                                  DocumentSize="{Binding DiffCtrl.MaxNumberOfLines,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                  ViewportSize="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                  Minimum="0"
-                                  Maximum="{Binding DiffCtrl.MaxNumberOfLines,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                  Value="{Binding OverViewValue, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                  ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                  SmallChange="1.00"
-                                  LargeChange="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                  IsRepeatButtonVisible="False"
-                                >
-                <range:RangeScrollbar.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vms:IDiffLineViewModel}">
-                        <Rectangle Name="elp"
-                                           Fill="{Binding Context,Converter={StaticResource DiffContextToColorPropConverter}}"
-                                           Width="{Binding ElementName=OverviewCtrl,Path=ActualWidth}" Height="1"
-                                           Visibility="{Binding Context,Converter={StaticResource DiffContextToVisibilityPropConverter}}"
-				                           range:RangePanel.Position="{Binding IndexLineNumber}"
-				                           range:RangePanel.Alignment="Begin"
-                                           HorizontalAlignment="Stretch"
-                                           Margin="3,0,3,0"
-				                        />
-                    </DataTemplate>
-                </range:RangeScrollbar.ItemTemplate>
-            </range:RangeScrollbar>
+            <Grid Grid.Column="0" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid  Grid.Column="0" Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" Name="ColumnA"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*" Name="ColumnB"/>
-                    </Grid.ColumnDefinitions>
+                <range:RangeScrollbar Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="30" Margin="3"
+                                      Name="OverviewCtrl"
+                                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                      DocumentSize="{Binding DiffCtrl.MaxNumberOfLines,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                      ViewportSize="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                      Minimum="0"
+                                      Maximum="{Binding DiffCtrl.MaxNumberOfLines,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                      Value="{Binding OverViewValue, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                      ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                      SmallChange="1.00"
+                                      LargeChange="{Binding NumberOfTextLinesInViewPort,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                      IsRepeatButtonVisible="False"
+                                    >
+                    <range:RangeScrollbar.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vms:IDiffLineViewModel}">
+                            <Rectangle Name="elp"
+                                               Fill="{Binding Context,Converter={StaticResource DiffContextToColorPropConverter}}"
+                                               Width="{Binding ElementName=OverviewCtrl,Path=ActualWidth}" Height="1"
+                                               Visibility="{Binding Context,Converter={StaticResource DiffContextToVisibilityPropConverter}}"
+				                               range:RangePanel.Position="{Binding IndexLineNumber}"
+				                               range:RangePanel.Alignment="Begin"
+                                               HorizontalAlignment="Stretch"
+                                               Margin="3,0,3,0"
+				                            />
+                        </DataTemplate>
+                    </range:RangeScrollbar.ItemTemplate>
+                </range:RangeScrollbar>
 
-                    <sc:SuggestBox
-                        x:Name="PART_LeftFileNameTextBox" Grid.Column="0" Grid.Row="0" Margin="0,3"
-                        Hint="Enter a file system path"
-                        Text="{Binding FilePathA.FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                        ValidText="{Binding FilePathA.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                        TextChangedCommand="{Binding FilePathA.SuggestTextChangedCommand}"
-                        ItemsSource="{Binding FilePathA.ListQueryResult}"
-                        
-                        IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                        behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
-                        
-                        ToolTipService.IsEnabled="True"
-                        ToolTip="{Binding FilePathA.FilePath, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                    />
-
-                    <GridSplitter
-                        Grid.Column="1" Grid.Row="0"
-                        HorizontalAlignment="Stretch"
-                        Background="Transparent"
-                        Width="6"
-                        
-                        ToolTipService.IsEnabled="True"
-                        ToolTip="{Binding DiffCtrl.ToolTipText, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                    />
-
-                    <sc:SuggestBox
-                        x:Name="PART_RightFileNameTextBox" Grid.Column="2" Grid.Row="0" Margin="0,3"
-                        Hint="Enter a file system path"
-                        Text="{Binding FilePathB.FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                        ValidText="{Binding FilePathB.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                        TextChangedCommand="{Binding FilePathB.SuggestTextChangedCommand}"
-                        ItemsSource="{Binding FilePathB.ListQueryResult}"
-                        
-                        IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                        behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
-                        
-                        ToolTipService.IsEnabled="True"
-                        ToolTip="{Binding FilePathB.FilePath, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                    />
-                </Grid>
-
-                <Grid
-                    Grid.Row="1"
-                    Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityPropConverter}}"
-                    Margin="3"
-                >
+                <Grid Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Grid
-                        Grid.Row="0"
-                        Margin="3"
-                    >
+                    <Grid  Grid.Column="0" Grid.Row="0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" Name="ColumnA"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" Name="ColumnB"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button
-                            Grid.Column="0"
-                            Command="{Binding CancelTextCompareCommand}"
-                            MinHeight="23" MinWidth="85"
-                            Content="Cancel"
-                            VerticalAlignment="Top"/>
+                        <sc:SuggestBox
+                            x:Name="PART_LeftFileNameTextBox" Grid.Column="0" Grid.Row="0" Margin="0,3"
+                            Hint="Enter a file system path"
+                            Text="{Binding FilePathA.FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            ValidText="{Binding FilePathA.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                            TextChangedCommand="{Binding FilePathA.SuggestTextChangedCommand}"
+                            ItemsSource="{Binding FilePathA.ListQueryResult}"
+                        
+                            IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                            behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
+                        
+                            ToolTipService.IsEnabled="True"
+                            ToolTip="{Binding FilePathA.FilePath, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        />
 
-                        <Grid Grid.Column="1" Margin="6,3">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                        <GridSplitter
+                            Grid.Column="1" Grid.Row="0"
+                            HorizontalAlignment="Stretch"
+                            Background="Transparent"
+                            Width="6"
+                        
+                            ToolTipService.IsEnabled="True"
+                            ToolTip="{Binding DiffCtrl.ToolTipText, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        />
 
-                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
-                                <TextBlock Text="We are working on it ... "/>
-                            </StackPanel>
+                        <sc:SuggestBox
+                            x:Name="PART_RightFileNameTextBox" Grid.Column="2" Grid.Row="0" Margin="0,3"
+                            Hint="Enter a file system path"
+                            Text="{Binding FilePathB.FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            ValidText="{Binding FilePathB.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                            TextChangedCommand="{Binding FilePathB.SuggestTextChangedCommand}"
+                            ItemsSource="{Binding FilePathB.ListQueryResult}"
+                        
+                            IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                            behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
+                        
+                            ToolTipService.IsEnabled="True"
+                            ToolTip="{Binding FilePathB.FilePath, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        />
+                    </Grid>
 
-                            <ProgressBar
-                                Grid.Row="1" Height="3" Margin="0,3,0,0"
-                                DataContext="{Binding DiffProgress}"
-                                IsIndeterminate="{Binding IsIndeterminate, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                Value="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                Minimum="{Binding MinimumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                Maximum="{Binding MaximumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Bottom"
-                            />
+                    <Grid
+                        Grid.Row="1"
+                        Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityPropConverter}}"
+                        Margin="3"
+                    >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid
+                            Grid.Row="0"
+                            Margin="3"
+                        >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button
+                                Grid.Column="0"
+                                Command="{Binding CancelTextCompareCommand}"
+                                MinHeight="23" MinWidth="85"
+                                Content="Cancel"
+                                VerticalAlignment="Top"/>
+
+                            <Grid Grid.Column="1" Margin="6,3">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                    <TextBlock Text="We are working on it ... "/>
+                                </StackPanel>
+
+                                <ProgressBar
+                                    Grid.Row="1" Height="3" Margin="0,3,0,0"
+                                    DataContext="{Binding DiffProgress}"
+                                    IsIndeterminate="{Binding IsIndeterminate, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                    Value="{Binding ProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                    Minimum="{Binding MinimumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                    Maximum="{Binding MaximumProgressValue, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Bottom"
+                                />
+                            </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
 
-                <ctrl:DiffControl
-                    Name="DiffCtrl" Grid.Row="1"
+                    <ctrl:DiffControl
+                        Name="DiffCtrl" Grid.Row="1"
                         
-                    LeftDiffView="{Binding DiffCtrl.ViewA}"
-                    RightDiffView="{Binding DiffCtrl.ViewB}"
+                        LeftDiffView="{Binding DiffCtrl.ViewA}"
+                        RightDiffView="{Binding DiffCtrl.ViewB}"
                     
-                    LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                    RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                    ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
-                    DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                    SetFocus="{Binding FocusControl, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        LeftFileName="{Binding FilePathA, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        RightFileName="{Binding FilePathB, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
+                        DiffViewOptions="{Binding DiffCtrl.DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                        SetFocus="{Binding FocusControl, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                               
-                    WidthColumnA="{Binding ElementName=ColumnA,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                    WidthColumnB="{Binding ElementName=ColumnB,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        WidthColumnA="{Binding ElementName=ColumnA,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        WidthColumnB="{Binding ElementName=ColumnB,Path=Width,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
 
-                    Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
-                    Margin="3,0,3,0"/>
+                        Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
+                        Margin="3,0,3,0"/>
+                </Grid>
+            </Grid>
+
+            <GridSplitter
+                    Grid.Column="0" Grid.Row="2"
+                    HorizontalAlignment="Stretch"
+                    Background="Transparent"
+                    Height="6" />
+
+            <!-- Horizontal ViewLineDiff with 2 text diff lines in each line -->
+            <Grid Grid.Column="0" Grid.Row="3" Margin="3"
+                                  Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
+                                  >
+                <ctrl:DiffView
+                        DataContext="{Binding DiffCtrl.ViewLineDiff}"
+                        Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
+                        ItemsSource="{Binding DocLineDiffs}"
+                        ShowLineNumbers="True"
+			            IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsReadOnly="True"
+
+                        Options="{Binding ElementName=DiffCtrl,Path=DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+            
+                        Column="{Binding Column, Mode=OneWayToSource}"
+                        Line="{Binding Line, Mode=OneWayToSource}"
+                        TextBoxController="{Binding TxtControl}"
+                        EditorCurrentLineBackground="{x:Null}"
+                        EditorCurrentLineBorderThickness="0"
+            
+                        Focusable="False"
+
+                        FontFamily="Consolas"
+                        FontSize="12pt"
+                        HorizontalScrollBarVisibility="Visible"
+                        VerticalScrollBarVisibility="Visible"
+                    />
             </Grid>
         </Grid>
-
-        <GridSplitter
-                Grid.Column="0" Grid.Row="2"
-                HorizontalAlignment="Stretch"
-                Background="Transparent"
-                Height="6" />
-
-        <!-- Horizontal ViewLineDiff with 2 text diff lines in each line -->
-        <Grid Grid.Column="0" Grid.Row="3" Margin="3"
-                              Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
-                              >
-            <ctrl:DiffView
-                    DataContext="{Binding DiffCtrl.ViewLineDiff}"
-                    Document="{Binding Document, UpdateSourceTrigger=PropertyChanged}"
-                    ItemsSource="{Binding DocLineDiffs}"
-                    ShowLineNumbers="True"
-			        IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    IsReadOnly="True"
-
-                    Options="{Binding ElementName=DiffCtrl,Path=DiffViewOptions,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-            
-                    Column="{Binding Column, Mode=OneWayToSource}"
-                    Line="{Binding Line, Mode=OneWayToSource}"
-                    TextBoxController="{Binding TxtControl}"
-                    EditorCurrentLineBackground="{x:Null}"
-                    EditorCurrentLineBorderThickness="0"
-            
-                    Focusable="False"
-
-                    FontFamily="Consolas"
-                    FontSize="12pt"
-                    HorizontalScrollBarVisibility="Visible"
-                    VerticalScrollBarVisibility="Visible"
-                />
-        </Grid>
-    </Grid>
+   </Grid>
 </UserControl>

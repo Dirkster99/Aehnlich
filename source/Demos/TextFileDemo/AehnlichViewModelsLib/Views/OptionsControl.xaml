@@ -25,9 +25,10 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <GroupBox Header="Compare" Grid.Column="0" Margin="12">
+            <GroupBox Header="Compare" Grid.Column="0" Margin="3">
                 <StackPanel Orientation="Vertical">
                     <RadioButton Content="Auto"
                                  IsChecked="{Binding OptionCompareType,
@@ -47,7 +48,7 @@
                 </StackPanel>
             </GroupBox>
 
-            <GroupBox Header="Compare Options" Grid.Column="1" Margin="12">
+            <GroupBox Header="Compare Options" Grid.Column="1" Margin="3">
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Orientation="Vertical">
                         <CheckBox
@@ -68,13 +69,12 @@
 
                         <StackPanel Orientation="Vertical" Margin="3,12">
                             <Label Content="Spaces per Tab:"/>
-                            <ctrl:UIntegerUpDown Grid.Column="0" Margin="0,3,3,0"
-                                 DisplayLength="8"
+                            <ctrl:UIntegerUpDown Margin="0,3,3,0"
+                                 DisplayLength="3"
                                  Value="{Binding SpacesPerTabValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                  MinValue="{Binding SpacesPerTabMin}"
                                  MaxValue="{Binding SpacesPerTabMax}"
                                  HorizontalAlignment="Left" VerticalAlignment="Center"
-                                 Name="IntegerUpDown"
                                  IsReadOnly="False"
                                  ToolTip="{Binding SpacesPerTabTip}"
                             />
@@ -83,7 +83,114 @@
                 </StackPanel>
             </GroupBox>
 
-            <StackPanel Grid.Column="2" Orientation="Vertical"
+            <GroupBox Header="View Options" Grid.Column="2" Margin="3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Margin="3" Grid.Column="0">
+                        <StackPanel Orientation="Vertical" Margin="3,12">
+                            <Label Content="Indentation Size:"/>
+                            <ctrl:UIntegerUpDown Margin="0,3,3,0"
+                                     DisplayLength="3"
+                                     Value="{Binding DiffDisplayOptions.IndentationSize,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                     MinValue="1"
+                                     MaxValue="12"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                                     IsReadOnly="False"
+                            />
+                        </StackPanel>
+
+                        <CheckBox
+                            Content="Show Column Ruler"
+                            IsChecked="{Binding DiffDisplayOptions.ShowColumnRuler}" />
+
+                        <StackPanel Orientation="Vertical" Margin="3,12">
+                            <Label Content="Column Ruler Position:"/>
+                            <ctrl:UIntegerUpDown
+                                Margin="0,3,3,0"
+                                IsEnabled="{Binding DiffDisplayOptions.ShowColumnRuler}"
+                                DisplayLength="3"
+                                Value="{Binding DiffDisplayOptions.ColumnRulerPosition,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                MinValue="1"
+                                MaxValue="255"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                IsReadOnly="False"
+                            />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Margin="3"  Grid.Column="1">
+                        <CheckBox
+                            Content="Show Tabs"
+                            IsChecked="{Binding DiffDisplayOptions.ShowTabs}" />
+
+                        <CheckBox
+                            Content="Show Spaces"
+                            IsChecked="{Binding DiffDisplayOptions.ShowSpaces}" />
+
+                        <CheckBox
+                            Content="Show End of Line"
+                            IsChecked="{Binding DiffDisplayOptions.ShowEndOfLine}" />
+
+                        <CheckBox
+                            Content="Show Box for Control-Characters"
+                            IsChecked="{Binding DiffDisplayOptions.ShowBoxForControlCharacters}" />
+
+                        <CheckBox
+                            Content="Convert Tabs to Spaces"
+                            IsChecked="{Binding DiffDisplayOptions.ConvertTabsToSpaces}" />
+
+                        <CheckBox
+                            Content="Highlight Current Line"
+                            IsChecked="{Binding DiffDisplayOptions.HighlightCurrentLine}" />
+
+                        <CheckBox
+                            Content="Enable Ime Support"
+                            IsChecked="{Binding DiffDisplayOptions.EnableImeSupport}" />
+
+                        <CheckBox
+                            Content="Enable Virtual Space"
+                            IsChecked="{Binding DiffDisplayOptions.EnableVirtualSpace}" />
+
+                        <CheckBox
+                            Content="Enable Rectangular Selection"
+                            IsChecked="{Binding DiffDisplayOptions.EnableRectangularSelection}" />
+
+                        <CheckBox
+                            Content="Allow ScrollBelow Document"
+                            IsChecked="{Binding DiffDisplayOptions.AllowScrollBelowDocument}" />
+
+                        <CheckBox
+                            Content="Cut/Copy Whole Line"
+                            IsChecked="{Binding DiffDisplayOptions.CutCopyWholeLine}" />
+
+                        <CheckBox
+                            Content="Require Control Modifier For Hyperlink Click"
+                            IsChecked="{Binding DiffDisplayOptions.RequireControlModifierForHyperlinkClick}" />
+
+                        <CheckBox
+                            Content="Enable Email Hyperlinks"
+                            IsChecked="{Binding DiffDisplayOptions.EnableEmailHyperlinks}" />
+
+                        <CheckBox
+                            Content="Enable Hyperlinks"
+                            IsChecked="{Binding DiffDisplayOptions.EnableHyperlinks}" />
+
+                        <CheckBox
+                            Content="Allow Toggle Overstrike Mode"
+                            IsChecked="{Binding DiffDisplayOptions.AllowToggleOverstrikeMode}" />
+
+                        <CheckBox
+                            Content="Highlight Current Line"
+                            IsChecked="{Binding DiffDisplayOptions.HighlightCurrentLine}" />
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+            
+            <StackPanel Grid.Column="3" Orientation="Vertical"
                         HorizontalAlignment="Right" Margin="12">
 
                 <Button Content="Close" Margin="3"
