@@ -1,4 +1,4 @@
-﻿namespace Aehnlich.Behaviors
+﻿namespace AehnlichViewModelsLib.Behaviors
 {
     using System.Windows;
     using System.Windows.Controls;

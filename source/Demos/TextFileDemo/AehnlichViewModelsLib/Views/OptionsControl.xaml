@@ -76,7 +76,6 @@
                                  MaxValue="{Binding SpacesPerTabMax}"
                                  HorizontalAlignment="Left" VerticalAlignment="Center"
                                  IsReadOnly="False"
-                                 ToolTip="{Binding SpacesPerTabTip}"
                             />
                         </StackPanel>
                     </StackPanel>

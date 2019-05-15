@@ -2,9 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:AehnlichViewLib.Controls"
                     xmlns:conv="clr-namespace:AehnlichViewLib.Converters"
-                    
-                    xmlns:sc="clr-namespace:SuggestBoxLib;assembly=SuggestBoxLib"
-                    xmlns:behav="clr-namespace:AehnlichViewLib.Behaviors"
                     >
 
     <Style TargetType="{x:Type local:DiffControl}">
@@ -39,7 +36,7 @@
                             
                             <!-- Editor IsEnabled if Document is bound with not null to work around crash -->
                             <local:DiffView
-                                x:Name="PART_TextLeft" Grid.Column="0" Grid.Row="1" Margin="3"
+                                x:Name="PART_TextLeft" Grid.Column="0" Grid.Row="1" Margin="0,3"
                                 LineDiffDataProvider="{Binding LeftDiffView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 IsEnabled="{Binding LeftDiffView.IsEnabled, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}, Converter={StaticResource NullToEnabledPropConverter}}"
                                 Document="{Binding LeftDiffView.Document, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
@@ -55,15 +52,18 @@
                                 ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
                                 Options="{TemplateBinding DiffViewOptions}"
                                 
+                                SyntaxHighlighting="{Binding LeftDiffView.HighlightingDefinition, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 FontFamily="{TemplateBinding FontFamily}"
                                 FontSize="{TemplateBinding FontSize}"
                                 HorizontalScrollBarVisibility="Visible"
                                 VerticalScrollBarVisibility="Visible"
                             />
+                            <!--
+                            -->
 
                             <!-- Editor IsEnabled if Document is bound with not null to work around crash -->
                             <local:DiffView
-                                x:Name="PART_TextRight" Grid.Column="2" Grid.Row="2" Margin="3"
+                                x:Name="PART_TextRight" Grid.Column="2" Grid.Row="2" Margin="0,3"
                                 LineDiffDataProvider="{Binding RightDiffView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 IsEnabled="{Binding RightDiffView.IsEnabled, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}, Converter={StaticResource NullToEnabledPropConverter}}"
                                 Document="{Binding RightDiffView.Document, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
@@ -79,6 +79,7 @@
                                 ItemsSource="{Binding DiffCtrl.ViewB.DocLineDiffs}"
                                 Options="{TemplateBinding DiffViewOptions}"
 
+                                SyntaxHighlighting="{Binding RightDiffView.HighlightingDefinition, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 FontFamily="{TemplateBinding FontFamily}"
                                 FontSize="{TemplateBinding FontSize}"
                                 HorizontalScrollBarVisibility="Visible"

@@ -52,7 +52,7 @@ namespace AehnlichViewModelsLib.ViewModels.Dialogs
                 IndentationSize = 4,
                 HighlightCurrentLine = true,
                 EnableVirtualSpace = true,
-                AllowScrollBelowDocument = true
+                AllowScrollBelowDocument = false
             };
         }
         #endregion ctors

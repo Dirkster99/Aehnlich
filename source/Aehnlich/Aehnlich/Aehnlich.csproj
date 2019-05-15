@@ -125,7 +125,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Behaviors\SelectionChangedBehavior.cs" />
     <Compile Include="Converters\ActiveDocumentConverter.cs" />
     <Compile Include="Converters\StringEmptyToBoolPropConverter.cs" />
     <Compile Include="Converters\TruncateMiddleConverter.cs" />
@@ -265,6 +264,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Behaviors\" />
     <Folder Include="Resources\Icons\Dark\" />
     <Folder Include="Resources\Icons\Light\" />
   </ItemGroup>

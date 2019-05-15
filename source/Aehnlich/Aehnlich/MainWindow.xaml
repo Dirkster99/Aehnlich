@@ -6,7 +6,7 @@
                  
         xmlns:reskeys="clr-namespace:MLib.Themes;assembly=MLib"
         xmlns:MWindow="clr-namespace:MWindowLib;assembly=MWindowLib"
-        xmlns:behav="clr-namespace:Aehnlich.Behaviors"
+        xmlns:behav="clr-namespace:AehnlichViewModelsLib.Behaviors;assembly=AehnlichViewModelsLib"
         xmlns:views="clr-namespace:Aehnlich.Views"
                      
         mc:Ignorable="d"

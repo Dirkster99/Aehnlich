@@ -19,9 +19,9 @@
                         <ControlTemplate TargetType="{x:Type local:RangeScrollbar}">
                             <Grid x:Name="Bg" SnapsToDevicePixels="True">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                    <RowDefinition Height="Auto" MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
                                     <RowDefinition Height="1E-05*"/>
-                                    <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                    <RowDefinition Height="Auto" MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
                                 </Grid.RowDefinitions>
                                 <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1"/>
                                 <RepeatButton x:Name="PART_LineUpButton"

@@ -2,8 +2,8 @@
 {
     using AehnlichViewLib.Controls.AvalonEditEx;
     using ICSharpCode.AvalonEdit.Document;
+    using ICSharpCode.AvalonEdit.Highlighting;
     using System;
-    using System.Collections;
     using System.ComponentModel;
 
     /// <summary>
@@ -19,13 +19,27 @@
         TextDocument Document   { get; set; }
 
         /// <summary>
+        /// Gets/sets the textbox controller that is used to drive the view
+        /// from within the viewmodel (with event based commands like goto line x,y).
+        /// </summary>
+        TextBoxController TxtControl { get; }
+
+        /// <summary>
+        /// AvalonEdit exposes a Highlighting property that controls whether keywords,
+        /// comments and other interesting text parts are colored or highlighted in any
+        /// other visual way. This property exposes the highlighting information for the
+        /// text file managed in this viewmodel class.
+        /// </summary>
+        IHighlightingDefinition HighlightingDefinition { get; }
+
+        /// <summary>
         /// Gets a source of items that can be used to populate marker elements
         /// on the overview bar. This should ideally be an ObservableCollection{T} or
         /// at least an <see cref="IList{T}"/> where T is a <see cref="DiffContext"/>
         /// for a particular line in the merged text views.
         /// </summary>
-//        IEnumerable ItemsSource { get; }
-        
+        //        IEnumerable ItemsSource { get; }
+
         /// <summary>
         /// Gets/sets whether the currently shown text in the textedior has been changed
         /// without saving or not.
@@ -58,12 +72,6 @@
         /// </summary>
         int Line { get; set; }
         #endregion Caret Position
-        
-        /// <summary>
-        /// Gets/sets the textbox controller that is used to drive the view
-        /// from within the viewmodel (with event based commands like goto line x,y).
-        /// </summary>
-        TextBoxController TxtControl { get; }
         
         /// <summary>
         /// Gets/set the time stamp of the last time when the attached view

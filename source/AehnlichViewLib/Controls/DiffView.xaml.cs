@@ -17,6 +17,7 @@
     using ICSharpCode.AvalonEdit.Search;
     using AehnlichViewLib.Interfaces;
     using System.Linq;
+    using ICSharpCode.AvalonEdit.Highlighting;
 
     /// <summary>
     /// Implements a <see cref="TextEditor"/> based view that can be used to highlight
@@ -349,6 +350,66 @@
             set { SetValue(EditorCurrentLineBorderThicknessProperty, value); }
         }
         #endregion EditorCurrentLine Highlighting Colors
+
+        #region Syntax highlighting
+        /// <summary>
+        /// The <see cref="SyntaxHighlighting"/> property.
+        /// </summary>
+        public static readonly DependencyProperty SyntaxHighlightingProperty =
+            DependencyProperty.Register("SyntaxHighlighting", typeof(IHighlightingDefinition),
+                typeof(DiffView),
+                new FrameworkPropertyMetadata(OnSyntaxHighlightingChanged));
+
+        /// <summary>
+        /// Gets/sets the syntax highlighting definition used to colorize the text.
+        /// </summary>
+        public IHighlightingDefinition SyntaxHighlighting
+        {
+            get { return (IHighlightingDefinition)GetValue(SyntaxHighlightingProperty); }
+            set { SetValue(SyntaxHighlightingProperty, value); }
+        }
+
+        IVisualLineTransformer colorizer;
+
+        static void OnSyntaxHighlightingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DiffView)d).OnSyntaxHighlightingChanged(e.NewValue as IHighlightingDefinition);
+        }
+
+        /// <summary>
+        /// Method is executed when the syntax highlighting defined through dp has changed.
+        /// </summary>
+        /// <param name="newValue"></param>
+        protected virtual void OnSyntaxHighlightingChanged(IHighlightingDefinition newValue)
+        {
+            if (colorizer != null)
+            {
+                this.TextArea.TextView.LineTransformers.Remove(colorizer);
+                colorizer = null;
+            }
+            if (newValue != null)
+            {
+                colorizer = CreateColorizer(newValue);
+
+                if (colorizer != null)
+                    this.TextArea.TextView.LineTransformers.Insert(0, colorizer);
+            }
+        }
+
+        /// <summary>
+        /// Creates the highlighting colorizer for the specified highlighting definition.
+        /// Allows derived classes to provide custom colorizer implementations for special highlighting definitions.
+        /// </summary>
+        /// <returns></returns>
+        protected override IVisualLineTransformer CreateColorizer(IHighlightingDefinition highlightingDefinition)
+        {
+            if (highlightingDefinition == null)
+                throw new ArgumentNullException("highlightingDefinition");
+
+            return new HighlightingColorizer(highlightingDefinition);
+        }
+        #endregion
+
         #endregion properties
 
         #region methods

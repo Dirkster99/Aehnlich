@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\NewLocationRequestBehavior.cs" />
     <Compile Include="Behaviors\OnEnterToCommandBehavior.cs" />
+    <Compile Include="Behaviors\SelectionChangedBehavior.cs" />
     <Compile Include="Converters\DiffContextToColorPropConverter.cs" />
     <Compile Include="Converters\DiffContextToVisibilityPropConverter.cs" />
     <Compile Include="Converters\EnumMatchToBooleanConverter.cs" />

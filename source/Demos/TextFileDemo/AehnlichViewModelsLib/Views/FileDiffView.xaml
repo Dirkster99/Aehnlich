@@ -17,6 +17,7 @@
             xmlns:dlgenum="clr-namespace:AehnlichViewModelsLib.Enums"
 
             xmlns:sc="clr-namespace:SuggestBoxLib;assembly=SuggestBoxLib"
+	        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -34,8 +35,9 @@
             Margin="3,0,3,3"
             Visibility="{Binding InlineDialog, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InlineDilaogToVisibilityPropConverter}}"
         >
-            <ContentControl Content="{Binding SelectedDialogItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                    Margin="12">
+            <ContentControl
+                Content="{Binding SelectedDialogItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                Margin="12">
                 <ContentControl.ContentTemplateSelector>
                     <dlg:DialogtTemplateSelector>
                         <dlg:DialogtTemplateSelector.GotoLineDialog>
@@ -63,11 +65,12 @@
                 <conv:BooleanInvertConverter x:Key="BooleanInvertConverter"/>
                 <conv1:MultiParToParConverter x:Key="MultiParToParConverter"/>
                 <conv1:DiffContextToVisibilityPropConverter x:Key="DiffContextToVisibilityPropConverter"/>
-                <conv1:DiffContextToColorPropConverter x:Key="DiffContextToColorPropConverter"
-                                                      AddedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"
-                                                      DeletedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
-                                                      ContextValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
-                                                      />
+                <conv1:DiffContextToColorPropConverter
+                    x:Key="DiffContextToColorPropConverter"
+                    AddedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"
+                    DeletedValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}"
+                    ContextValue="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"
+                />
             </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -365,19 +368,13 @@
                 </StackPanel>
             </Grid>
 
-            <Grid Grid.Column="0" Grid.Row="1">
+            <Grid Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <range:RangeScrollbar Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="30" Margin="3"
+                <range:RangeScrollbar Grid.Column="0" Grid.Row="0" Width="30" Margin="3,0,3,3"
                                       Name="OverviewCtrl"
                                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                       DocumentSize="{Binding DiffCtrl.MaxNumberOfLines,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
@@ -393,19 +390,20 @@
                     <range:RangeScrollbar.ItemTemplate>
                         <DataTemplate DataType="{x:Type vms:IDiffLineViewModel}">
                             <Rectangle Name="elp"
-                                               Fill="{Binding Context,Converter={StaticResource DiffContextToColorPropConverter}}"
-                                               Width="{Binding ElementName=OverviewCtrl,Path=ActualWidth}" Height="1"
-                                               Visibility="{Binding Context,Converter={StaticResource DiffContextToVisibilityPropConverter}}"
-				                               range:RangePanel.Position="{Binding IndexLineNumber}"
-				                               range:RangePanel.Alignment="Begin"
-                                               HorizontalAlignment="Stretch"
-                                               Margin="3,0,3,0"
-				                            />
+                                       Fill="{Binding Context,Converter={StaticResource DiffContextToColorPropConverter}}"
+                                       Width="{Binding ElementName=OverviewCtrl,Path=ActualWidth}"
+                                       Height="1"
+                                       Visibility="{Binding Context,Converter={StaticResource DiffContextToVisibilityPropConverter}}"
+			                           range:RangePanel.Position="{Binding IndexLineNumber}"
+			                           range:RangePanel.Alignment="Begin"
+                                       HorizontalAlignment="Stretch"
+                                       Margin="0"
+			                    />
                         </DataTemplate>
                     </range:RangeScrollbar.ItemTemplate>
                 </range:RangeScrollbar>
 
-                <Grid Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="0">
+                <Grid Grid.Column="1" Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -418,20 +416,42 @@
                             <ColumnDefinition Width="*" Name="ColumnB"/>
                         </Grid.ColumnDefinitions>
 
-                        <sc:SuggestBox
-                            x:Name="PART_LeftFileNameTextBox" Grid.Column="0" Grid.Row="0" Margin="0,3"
-                            Hint="Enter a file system path"
-                            Text="{Binding FilePathA.FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                            ValidText="{Binding FilePathA.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                            TextChangedCommand="{Binding FilePathA.SuggestTextChangedCommand}"
-                            ItemsSource="{Binding FilePathA.ListQueryResult}"
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
                         
-                            IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                            behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
+                            <sc:SuggestBox
+                                x:Name="PART_LeftFileNameTextBox" Grid.Column="0"
+                                Hint="Enter a file system path"
+                                Text="{Binding FilePathA.FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                ValidText="{Binding FilePathA.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                TextChangedCommand="{Binding FilePathA.SuggestTextChangedCommand}"
+                                ItemsSource="{Binding FilePathA.ListQueryResult}"
                         
-                            ToolTipService.IsEnabled="True"
-                            ToolTip="{Binding FilePathA.FilePath, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                        />
+                                IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
+                        
+                                ToolTipService.IsEnabled="True"
+                                ToolTip="{Binding FilePathA.FilePath, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,0,3,3"
+                            />
+
+                            <ComboBox
+                                Grid.Column="1"
+			                    SelectedItem="{Binding DiffCtrl.ViewA.HighlightingDefinition,UpdateSourceTrigger=PropertyChanged}"
+			                    ItemsSource="{Binding Source={x:Static avalonEdit:HighlightingManager.Instance}, Path=HighlightingDefinitions}"
+                                MinWidth="50"
+                                Margin="0,0,0,3"
+                                behav:SelectionChangedCommand.ChangedCommand="{Binding DiffCtrl.ViewA.HighlightingChangeCommand}"
+			                />
+                            <!--
+                                Name="highlightingComboBox"
+                                SelectionChanged="HighlightingComboBox_SelectionChanged"
+                            -->
+                        </Grid>
+
 
                         <GridSplitter
                             Grid.Column="1" Grid.Row="0"
@@ -443,20 +463,41 @@
                             ToolTip="{Binding DiffCtrl.ToolTipText, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                         />
 
-                        <sc:SuggestBox
-                            x:Name="PART_RightFileNameTextBox" Grid.Column="2" Grid.Row="0" Margin="0,3"
-                            Hint="Enter a file system path"
-                            Text="{Binding FilePathB.FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                            ValidText="{Binding FilePathB.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                            TextChangedCommand="{Binding FilePathB.SuggestTextChangedCommand}"
-                            ItemsSource="{Binding FilePathB.ListQueryResult}"
+                        <Grid  Grid.Column="2" Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <sc:SuggestBox
+                                x:Name="PART_RightFileNameTextBox"
+                                Hint="Enter a file system path"
+                                Text="{Binding FilePathB.FilePath, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                ValidText="{Binding FilePathB.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                TextChangedCommand="{Binding FilePathB.SuggestTextChangedCommand}"
+                                ItemsSource="{Binding FilePathB.ListQueryResult}"
                         
-                            IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                            behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
+                                IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
                         
-                            ToolTipService.IsEnabled="True"
-                            ToolTip="{Binding FilePathB.FilePath, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                        />
+                                ToolTipService.IsEnabled="True"
+                                ToolTip="{Binding FilePathB.FilePath, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                Margin="0,0,3,3"
+                            />
+
+                            <ComboBox
+                                Grid.Column="1"
+			                    SelectedItem="{Binding DiffCtrl.ViewB.HighlightingDefinition,UpdateSourceTrigger=PropertyChanged}"
+			                    ItemsSource="{Binding Source={x:Static avalonEdit:HighlightingManager.Instance}, Path=HighlightingDefinitions}"
+                                MinWidth="50"
+                                Margin="0,0,3,3"
+                                behav:SelectionChangedCommand.ChangedCommand="{Binding DiffCtrl.ViewB.HighlightingChangeCommand}"
+			                />
+                            <!--
+                                Name="highlightingComboBox"
+                                SelectionChanged="HighlightingComboBox_SelectionChanged"
+                            -->
+                        </Grid>
                     </Grid>
 
                     <Grid

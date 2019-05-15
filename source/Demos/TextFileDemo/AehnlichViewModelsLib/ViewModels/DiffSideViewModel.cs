@@ -16,6 +16,9 @@
     using System.Threading.Tasks;
     using System.Windows.Data;
     using System.Windows;
+    using ICSharpCode.AvalonEdit.Highlighting;
+    using System.Windows.Input;
+    using AehnlichViewModelsLib.ViewModels.Base;
 
     /// <summary>
     /// Implements the viewmodel that controls one side of a text diff view with two sides
@@ -53,6 +56,8 @@
         /// </summary>
         private int _maxImaginaryLineNumber = 1;
         private bool _disposed;
+        private IHighlightingDefinition _HighlightingDefinition;
+        private ICommand _HighlightingChangeCommand;
         #endregion DiffLines
         #endregion fields
 
@@ -128,6 +133,62 @@
                 }
             }
         }
+
+        #region Highlighting Definition
+        /// <summary>
+        /// AvalonEdit exposes a Highlighting property that controls whether keywords,
+        /// comments and other interesting text parts are colored or highlighted in any
+        /// other visual way. This property exposes the highlighting information for the
+        /// text file managed in this viewmodel class.
+        /// </summary>
+        public IHighlightingDefinition HighlightingDefinition
+        {
+            get
+            {
+                return _HighlightingDefinition;
+            }
+
+            set
+            {
+                if (_HighlightingDefinition != value)
+                {
+                    _HighlightingDefinition = value;
+                    NotifyPropertyChanged(() => HighlightingDefinition);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a command that changes the currently selected syntax highlighting in the editor.
+        /// </summary>
+        public ICommand HighlightingChangeCommand
+        {
+            get
+            {
+                if (_HighlightingChangeCommand == null)
+                {
+                    _HighlightingChangeCommand = new RelayCommand<object>((p) =>
+                    {
+                        var parames = p as object[];
+
+                        if (parames == null)
+                            return;
+
+                        if (parames.Length != 1)
+                            return;
+
+                        var param = parames[0] as IHighlightingDefinition;
+                        if (param == null)
+                            return;
+
+                        HighlightingDefinition = param;
+                    });
+                }
+
+                return _HighlightingChangeCommand;
+            }
+        }
+        #endregion Highlighting Definition
 
         /// <summary>
         /// Gets/set the time stamp of the last time when the attached view
@@ -527,6 +588,18 @@
                               IDiffLines lines, string text, int spacesPerTab)
         {
             this.FileName = filename;
+
+            try
+            {
+                string ext = System.IO.Path.GetExtension(filename);
+                HighlightingDefinition = HighlightingManager.Instance.GetDefinitionByExtension(ext);
+            }
+            catch
+            {
+                // We go without highlighting in case System.IO throws an exception here
+                HighlightingDefinition = null;
+            }
+
             _position.SetPosition(0, 0);
             _spacesPerTab = spacesPerTab;
             Line = 0;
