@@ -164,6 +164,9 @@ namespace AehnlichViewModelsLib.ViewModels.Dialogs
         }
 
         #region SpacesPerTab Option
+        /// <summary>
+        /// Gets the number of space characters that should be used to convert a tab character to spaces.
+        /// </summary>
         public uint SpacesPerTabValue
         {
             get { return _SpacesPerTabValue; }
@@ -181,7 +184,6 @@ namespace AehnlichViewModelsLib.ViewModels.Dialogs
         public uint SpacesPerTabMin { get { return 1; } }
 
         public uint SpacesPerTabMax { get { return 8; } }
-
         #endregion SpacesPerTab Option
 
         /// <summary>

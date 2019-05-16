@@ -130,10 +130,16 @@
                 {
                   new Uri("/MWindowLib;component/Themes/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
                  ,new Uri("/Aehnlich;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
                  ,new Uri("/Xceed.Wpf.AvalonDock.Themes.VS2013;component/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
                  ,new Uri("/Aehnlich;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/AehnlichViewLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
                  ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
+                 ,new Uri("/AehnlichViewLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
+                 ,new Uri("/Aehnlich;component/BindToMLib/AehnlichViewLib_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+                 ,new Uri("/SuggestBoxLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
+                 ,new Uri("/Aehnlich;component/BindToMLib/SuggestionLibDarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
                 }, settings.Themes);
             }
@@ -149,10 +155,16 @@
                 {
                   new Uri("/MWindowLib;component/Themes/LightTheme.xaml", UriKind.RelativeOrAbsolute)
                  ,new Uri("/Aehnlich;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
                  ,new Uri("/Xceed.Wpf.AvalonDock.Themes.VS2013;component/LightTheme.xaml", UriKind.RelativeOrAbsolute)
                  ,new Uri("/Aehnlich;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/AehnlichViewLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
                  ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
+                 ,new Uri("/AehnlichViewLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+                 ,new Uri("/Aehnlich;component/BindToMLib/AehnlichViewLib_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+                 ,new Uri("/SuggestBoxLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+                 ,new Uri("/Aehnlich;component/BindToMLib/SuggestionLibDarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
                 }, settings.Themes);
             }

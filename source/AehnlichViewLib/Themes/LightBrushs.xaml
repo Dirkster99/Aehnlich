@@ -8,30 +8,108 @@
     <!-- Accent Color Brush Definition
        - Look for references on ControlAccentBrushKey to find where this is being set in code -->
     <Color x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-           ResourceId=ControlAccentColorKey}">#1ba1e2</Color>
+           ResourceId=ControlAccentColorKey}"
+           options:Freeze="true"
+           >#1ba1e2</Color>
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=ControlAccentBrushKey}"
-                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}" />
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     options:Freeze="true" />
 
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=VerticalSLideThumbBorderBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     options:Freeze="true" />
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                             ResourceId=VerticalSLideThumbMouseOverBrushKey}"
                      Color="Transparent"
-    />
+                     options:Freeze="true" />
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                             ResourceId=VerticalSLideThumbMouseOverBorderBrushKey}"
                      Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
-    />
-    
-    
+                     options:Freeze="true" />
+
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=VerticalSLideThumbForegroundBrushKey}"
                      Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
-                     Opacity="0.35"
-    />
+                     Opacity="0.25"
+                     options:Freeze="true" />
 
+    <!-- Normal Control Foreground and Background Colors-->
+    <Color x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+           ResourceId=ControlNormalForegroundKey}"
+           options:Freeze="true"
+           >#FF000000</Color>
+
+    <Color x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+           ResourceId=ControlNormalBackgroundKey}"
+           options:Freeze="true"
+           >#FFFFFFFF</Color>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=ControlNormalForegroundBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlNormalForegroundKey}}"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=ControlNormalBackgroundBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlNormalBackgroundKey}}"
+                     options:Freeze="true" />
+
+    <!-- TextEditor LightBrushs -->
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorCurrentLineBackgroundColor}"
+                     Color="#2FCCCDCE"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorBackground}"
+                     Color="#FFFFFFFF"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorForeground}"
+                     Color="#FF000000"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorLineNumbersForeground}"
+                     Color="#FFa0a0f0"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorSelectionBrush}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     Opacity="0.75"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorSelectionBorder}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     Opacity="0.75"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorNonPrintableCharacterBrush}"
+                     Color="#3F8080FF"
+                     options:Freeze="true" />
+
+    <!-- Style hyperlink displayed within text in text editor -->
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorLinkTextForegroundBrush}"
+                     Color="#FF4040FF"
+                     options:Freeze="true" />
+    
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorLinkTextBackgroundBrush}"
+                     Color="#00000000"
+                     options:Freeze="true" />
+    <!-- TextEditor LightBrushs -->
+    
+    
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=ButtonNormalOuterBorderKey}"
                      Color="#FF707070"

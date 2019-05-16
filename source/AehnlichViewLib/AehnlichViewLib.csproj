@@ -76,12 +76,13 @@
     <Compile Include="Controls\Utils\ExtensionMethods.cs" />
     <Compile Include="Controls\Utils\TextFormatterFactory.cs" />
     <Compile Include="Converters\AssociatedIconConverter.cs" />
-    <Compile Include="Behaviors\BindingProxy .cs" />
+    <Compile Include="Converters\BindingProxy .cs" />
     <Compile Include="Converters\BooleanInvertConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityPropConverter.cs" />
     <Compile Include="Converters\DiffToForegroundColorConverter.cs" />
     <Compile Include="Converters\DiffToBackgroundColorConverter.cs" />
     <Compile Include="Converters\DoubleBytesToStringReadableSizeConverter.cs" />
+    <Compile Include="Converters\InvertColorConverter.cs" />
     <Compile Include="Converters\NullToVisibilityPropConverter.cs" />
     <Compile Include="Converters\NullToEnabledPropConverter.cs" />
     <Compile Include="Converters\SentinelConverter.cs" />

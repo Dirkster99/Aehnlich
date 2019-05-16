@@ -165,9 +165,17 @@
     </Compile>
     <Compile Include="Views\Documents\PanesStyleSelector.cs" />
     <Compile Include="Views\Documents\PanesTemplateSelector.cs" />
+    <Page Include="BindToMLib\AehnlichViewLib_Dark_LightBrushs.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="BindToMLib\AvalonDock_Dark_LightBrushs.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BindToMLib\SuggestionLibDarkLightBrushs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dir\DirDiffSetupView.xaml">
       <SubType>Designer</SubType>

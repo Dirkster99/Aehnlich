@@ -24,7 +24,7 @@
                 <ControlTemplate TargetType="{x:Type local:DiffDirView}">
                     <Grid>
                         <Grid.Resources>
-                            <behav:BindingProxy x:Key="DocumentContextProxy" Data="{Binding DirDiffDoc}" />
+                            <conv:BindingProxy x:Key="DocumentContextProxy" Data="{Binding DirDiffDoc}" />
 
                             <conv:DiffToForegroundColorConverter x:Key="DiffToForegroundColorConverter"/>
                             <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter"/>

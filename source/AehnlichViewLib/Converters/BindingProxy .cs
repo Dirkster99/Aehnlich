@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewLib.Behaviors
+﻿namespace AehnlichViewLib.Converters
 {
     using System.Windows;
 

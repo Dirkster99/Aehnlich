@@ -10,7 +10,6 @@
     xmlns:conv1="clr-namespace:AehnlichDirViewModelLib.Converters"
 
     xmlns:conv="clr-namespace:AehnlichViewLib.Converters;assembly=AehnlichViewLib"
-    xmlns:behav="clr-namespace:AehnlichViewLib.Behaviors;assembly=AehnlichViewLib"
     xmlns:ctrl="clr-namespace:AehnlichViewLib.Controls;assembly=AehnlichViewLib"
     xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
     xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
@@ -343,7 +342,7 @@
                               SelectedItemsSourceB="{Binding DirDiffDoc.SelectedItemsB,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                               >
                 <ctrl:DiffDirView.Resources>
-                    <behav:BindingProxy x:Key="ControlContextProxy" Data="{Binding DirDiffDoc}" />
+                    <conv:BindingProxy x:Key="ControlContextProxy" Data="{Binding DirDiffDoc}" />
                 </ctrl:DiffDirView.Resources>
                 <ctrl:DiffDirView.Visibility>
                     <MultiBinding Converter="{StaticResource MultiBoolToVisibilityPropConverter}">

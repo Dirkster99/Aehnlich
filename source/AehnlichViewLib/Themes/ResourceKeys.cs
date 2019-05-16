@@ -26,13 +26,32 @@
 
         public static readonly ComponentResourceKey VerticalSLideThumbMouseOverBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "VerticalSLideThumbMouseOverBorderBrushKey");
 
+        public static readonly ComponentResourceKey VerticalSLideThumbBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "VerticalSLideThumbBorderBrushKey");
+
         /// <summary>
         /// Styles the foreground color of the thumb of the vertical color spectrum slider.
         /// </summary>
         public static readonly ComponentResourceKey VerticalSLideThumbForegroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "VerticalSLideThumbForegroundBrushKey");
 
         public static readonly ComponentResourceKey ButtonNormalOuterBorderKey = new ComponentResourceKey(typeof(ResourceKeys), "ButtonNormalOuterBorderKey");
+
+        public static readonly ComponentResourceKey ControlNormalBackgroundKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlNormalBackgroundKey");
+        public static readonly ComponentResourceKey ControlNormalForegroundKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlNormalForegroundKey");
+        public static readonly ComponentResourceKey ControlNormalForegroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlNormalForegroundBrushKey");
+        public static readonly ComponentResourceKey ControlNormalBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlNormalBackgroundBrushKey");
         #endregion Brush Keys
+
+        #region TextEditor BrushKeys
+        public static readonly ComponentResourceKey EditorCurrentLineBackgroundColor = new ComponentResourceKey(typeof(ResourceKeys), "EditorCurrentLineBackgroundColor");
+        public static readonly ComponentResourceKey EditorBackground = new ComponentResourceKey(typeof(ResourceKeys), "EditorBackground");
+        public static readonly ComponentResourceKey EditorForeground = new ComponentResourceKey(typeof(ResourceKeys), "EditorForeground");
+        public static readonly ComponentResourceKey EditorLineNumbersForeground = new ComponentResourceKey(typeof(ResourceKeys), "EditorLineNumbersForeground");
+        public static readonly ComponentResourceKey EditorSelectionBrush = new ComponentResourceKey(typeof(ResourceKeys), "EditorSelectionBrush");
+        public static readonly ComponentResourceKey EditorSelectionBorder = new ComponentResourceKey(typeof(ResourceKeys), "EditorSelectionBorder");
+        public static readonly ComponentResourceKey EditorNonPrintableCharacterBrush = new ComponentResourceKey(typeof(ResourceKeys), "EditorNonPrintableCharacterBrush");
+        public static readonly ComponentResourceKey EditorLinkTextForegroundBrush = new ComponentResourceKey(typeof(ResourceKeys), "EditorLinkTextForegroundBrush");
+        public static readonly ComponentResourceKey EditorLinkTextBackgroundBrush = new ComponentResourceKey(typeof(ResourceKeys), "EditorLinkTextBackgroundBrush");
+        #endregion TextEditor BrushKeys
 
         #region DiffView Currentline Keys
         /// <summary>
@@ -114,7 +133,6 @@
         #endregion Diff Colors
 
         /***
-                public static readonly ComponentResourceKey ControlNormalBackgroundKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlNormalBackgroundKey");
                 public static readonly ComponentResourceKey ControlDisabledBackgroundKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlDisabledBackgroundKey");
                 public static readonly ComponentResourceKey ControlNormalBorderKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlNormalBorderKey");
                 public static readonly ComponentResourceKey ControlMouseOverBorderKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlMouseOverBorderKey");
