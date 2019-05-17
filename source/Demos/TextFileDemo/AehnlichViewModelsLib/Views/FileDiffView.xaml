@@ -429,6 +429,7 @@
                                 ValidText="{Binding FilePathA.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                 TextChangedCommand="{Binding FilePathA.SuggestTextChangedCommand}"
                                 ItemsSource="{Binding FilePathA.ListQueryResult}"
+                                ShowElipses="Center"
                         
                                 IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                 behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
@@ -476,6 +477,7 @@
                                 ValidText="{Binding FilePathB.IsTextValid,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                 TextChangedCommand="{Binding FilePathB.SuggestTextChangedCommand}"
                                 ItemsSource="{Binding FilePathB.ListQueryResult}"
+                                ShowElipses="Center"
                         
                                 IsEnabled="{Binding DiffProgress.IsProgressbarVisible,Converter={StaticResource BooleanInvertConverter},Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                 behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
