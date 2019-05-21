@@ -83,7 +83,7 @@
 
                 if (brush != default(SolidColorBrush))
                 {
-                    foreach (var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, (int)_DiffView.ActualWidth))
+                    foreach (var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, v.VisualLength))
                     {
                         drawingContext.DrawRectangle(brush, BorderlessPen,
                             new Rect(0, rc.Top, textView.ActualWidth, rc.Height));
