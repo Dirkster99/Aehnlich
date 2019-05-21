@@ -1,5 +1,6 @@
 ﻿namespace Aehnlich
 {
+    using Aehnlich.ViewModels.Themes;
     using log4net;
     using log4net.Config;
     using MLib.Interfaces;

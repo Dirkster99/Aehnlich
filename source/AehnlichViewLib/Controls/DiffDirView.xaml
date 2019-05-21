@@ -8,6 +8,7 @@
                     xmlns:conv="clr-namespace:AehnlichViewLib.Converters"
                     xmlns:behav="clr-namespace:AehnlichViewLib.Behaviors"
                     >
+  
     <Style TargetType="{x:Type local:DiffDirView}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="ColorBackgroundAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}"/>
@@ -15,7 +16,8 @@
         <Setter Property="ColorBackgroundContext" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}"/>
         <Setter Property="ColorBackgroundImaginaryLineAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundImaginaryAddedBrushKey}}"/>
         <Setter Property="ColorBackgroundImaginaryLineDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundImaginaryDeletedBrushKey}}"/>
-        
+
+        <Setter Property="ColorForegroundBlank" Value="{DynamicResource {x:Static reskeys:ResourceKeys.CellForegroundBrushKey}}"/>
         <Setter Property="ColorForegroundAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorForegroundAddedBrushKey}}"/>
         <Setter Property="ColorForegroundDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorForegroundDeletedBrushKey}}"/>
         <Setter Property="ColorForegroundContext" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorForegroundContextBrushKey}}"/>
@@ -45,9 +47,6 @@
                         <DataGrid
                             Grid.Column="0" Grid.Row="0" Name="PART_GridA"
                             SnapsToDevicePixels="True"      
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
                         
                             ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
                             ItemTemplate="{TemplateBinding ItemTemplate}"
@@ -65,6 +64,11 @@
                             behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
                             behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=PART_GridA,Path=SelectedItem}"
                             VirtualizingPanel.VirtualizationMode="Standard"
+                            
+                            Style="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridStyleKey}}"
+                            ColumnHeaderStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridHeaderStyleKey}}"
+                            CellStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridCellStyleKey}}"
+
                         ><!-- Do not use VirtualizingPanel.VirtualizationMode="Recycling" since recycled row coloring will cause wrong coloring -->
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
@@ -214,11 +218,15 @@
                             ScrollViewer.CanContentScroll="True"
                             AutoGenerateColumns="False"
                             GridLinesVisibility="None"
-                            Background="Transparent"
                             ColumnWidth="*"
                             behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
                             behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=PART_GridB,Path=SelectedItem}"
                             VirtualizingPanel.VirtualizationMode="Standard"
+                            
+                            Style="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridStyleKey}}"
+                            ColumnHeaderStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridHeaderStyleKey}}"
+                            CellStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridCellStyleKey}}"
+
                         ><!-- Do not use VirtualizingPanel.VirtualizationMode="Recycling" since recycled row coloring will cause wrong coloring -->
                             <DataGrid.Resources>
                                 <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter"/>

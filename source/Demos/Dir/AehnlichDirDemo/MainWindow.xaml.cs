@@ -38,7 +38,7 @@
             string rightDirPath = Properties.Settings.Default.RightDirPath;
 
             // Construct AppViewModel and attach to datacontext
-            var appVM = Factory.ConstructAppViewModel();
+            var appVM = Factory.ConstructAppViewModel(new AehnlichLib.Dir.DirDiffArgs(leftDirPath, rightDirPath));
 
             this.DataContext = appVM;
 

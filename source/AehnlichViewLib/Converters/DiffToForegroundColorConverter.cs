@@ -56,7 +56,7 @@
             }
 
             // Entries appear to be equal
-            return Binding.DoNothing;
+            return colorDefs.ColorForegroundBlank;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

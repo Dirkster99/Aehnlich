@@ -56,7 +56,7 @@
         /// <summary>
         /// Class constructor
         /// </summary>
-        public AppViewModel()
+        protected AppViewModel()
         {
             _cancelTokenSource = new CancellationTokenSource();
             _DiffProgress = new DiffProgressViewModel();

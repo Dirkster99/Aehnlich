@@ -136,6 +136,7 @@
 
                  ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
                  ,new Uri("/AehnlichViewLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
+                 ,new Uri("/AehnlichViewLib;component/Themes/DataGridDarkBrushs.xaml", UriKind.RelativeOrAbsolute)
                  ,new Uri("/Aehnlich;component/BindToMLib/AehnlichViewLib_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
                  ,new Uri("/SuggestBoxLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
@@ -161,6 +162,7 @@
 
                  ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
                  ,new Uri("/AehnlichViewLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+                 ,new Uri("/AehnlichViewLib;component/Themes/DataGridLightBrushs.xaml", UriKind.RelativeOrAbsolute)
                  ,new Uri("/Aehnlich;component/BindToMLib/AehnlichViewLib_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
                  ,new Uri("/SuggestBoxLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)

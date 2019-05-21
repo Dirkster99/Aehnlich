@@ -1,4 +1,4 @@
-﻿namespace Aehnlich.ViewModels
+﻿namespace Aehnlich.ViewModels.Themes
 {
     using MLib.Themes;
 

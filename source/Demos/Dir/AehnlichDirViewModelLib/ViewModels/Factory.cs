@@ -11,15 +11,6 @@
         /// <summary>
         /// Gets an initialized application viewmodel.
         /// </summary>
-        /// <returns></returns>
-        public static IAppViewModel ConstructAppViewModel()
-        {
-            return new AppViewModel();
-        }
-
-        /// <summary>
-        /// Gets an initialized application viewmodel.
-        /// </summary>
         /// <param name="args">Options to be used in this directory diff.</param>
         /// <returns></returns>
         public static IAppViewModel ConstructAppViewModel(DirDiffArgs args)

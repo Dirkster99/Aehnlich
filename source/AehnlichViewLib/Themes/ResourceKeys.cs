@@ -132,6 +132,108 @@
         public static readonly ComponentResourceKey ColorBackgroundImaginaryAddedBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ColorBackgroundImaginaryAddedBrushKey");
         #endregion Diff Colors
 
+        #region Grid Theming
+        #region Grid Styles
+        /// <summary>
+        /// Gets the default style to be applied for the data grid.
+        /// </summary>
+        public static readonly ComponentResourceKey DefaultDataGridStyleKey = new ComponentResourceKey(typeof(ResourceKeys), "DefaultDataGridStyleKey");
+
+        /// <summary>
+        /// Gets the default style to be applied for the header column gripper
+        /// which can be used to resize a column.
+        /// </summary>
+        public static readonly ComponentResourceKey DefaultColumnHeaderGripperStyleKey = new ComponentResourceKey(typeof(ResourceKeys), "DefaultColumnHeaderGripperStyleKey");
+
+        /// <summary>
+        /// Gets the default style to be applied for data grid header cells.
+        /// </summary>
+        public static readonly ComponentResourceKey DefaultDataGridHeaderStyleKey = new ComponentResourceKey(typeof(ResourceKeys), "DefaultDataGridHeaderStyleKey");
+
+        /// <summary>
+        /// Gets the default style to be applied for data grid cells.
+        /// </summary>
+        public static readonly ComponentResourceKey DefaultDataGridCellStyleKey = new ComponentResourceKey(typeof(ResourceKeys), "DefaultDataGridCellStyleKey");
+        #endregion Grid Styles
+
+        #region DataGridHeader Keys
+        /// <summary>
+        /// Gets the Brush key of the border color
+        /// of the vertical Data Grid Header line between each header item.
+        /// </summary>
+        public static readonly ComponentResourceKey DataGridHeaderBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DataGridHeaderBorderBrushKey");
+
+        /// <summary>
+        /// Gets the background color of the datagrid header row.
+        /// </summary>
+        public static readonly ComponentResourceKey DataGridHeaderBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DataGridHeaderBackgroundBrushKey");
+
+        /// <summary>
+        /// Gets the foreground color of the datagrid header row.
+        /// </summary>
+        public static readonly ComponentResourceKey DataGridHeaderForegroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DataGridHeaderForegroundBrushKey");
+
+        /// <summary>
+        /// Gets the foreground color of the sort arrow display in the datagrid header row.
+        /// </summary>
+        public static readonly ComponentResourceKey DataGridHeaderSortArrowForegroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DataGridHeaderSortArrowForegroundBrushKey");
+
+        /// <summary>
+        /// Gets the FontFamily to be used for text displays inside the DataGrid control.
+        /// <seealso cref="DefaultFontFamily"/>
+        /// </summary>
+        public static readonly ComponentResourceKey DataGridHeaderFontFamily = new ComponentResourceKey(typeof(ResourceKeys), "DefaultFontFamily");
+
+        /// <summary>
+        /// Gets the font size of the text displayed in the DataGrid header row.
+        /// </summary>
+        public static readonly ComponentResourceKey DataGridHeaderFontSize = new ComponentResourceKey(typeof(ResourceKeys), "DataGridHeaderFontSize");
+        #endregion DataGridHeader Keys
+
+        public static readonly ComponentResourceKey DataGridBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DataGridBorderBrushKey");
+
+        /// <summary>
+        /// Gets the Brush key of the border color
+        /// between each column in the data display area of the DataGrid.
+        /// </summary>
+        public static readonly ComponentResourceKey VerticalGridLinesBrush = new ComponentResourceKey(typeof(ResourceKeys), "VerticalGridLinesBrush");
+
+        /// <summary>
+        /// Gets the Brush key of the border color
+        /// between each row in the data display area of the DataGrid.
+        /// </summary>
+        public static readonly ComponentResourceKey HorizontalGridLinesBrush = new ComponentResourceKey(typeof(ResourceKeys), "HorizontalGridLinesBrush");
+
+        public static readonly ComponentResourceKey ControlBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlBorderBrushKey");
+
+        public static readonly ComponentResourceKey CellForegroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "CellForegroundBrushKey");
+        public static readonly ComponentResourceKey CellBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "CellBackgroundBrushKey");
+
+        /// <summary>
+        /// Gets the foreground brush key of a datagrid cell that is selected and focused.
+        /// </summary>
+        public static readonly ComponentResourceKey SelectedFocusedCellForegroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "SelectedFocusedCellForegroundBrushKey");
+
+        /// <summary>
+        /// Gets the background brush key of a datagrid cell that is selected and focused.
+        /// </summary>
+        public static readonly ComponentResourceKey SelectedFocusedCellBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "SelectedFocusedCellBackgroundBrushKey");
+
+        /// <summary>
+        /// Gets the foreground brush key of a datagrid cell that is selected but not focused.
+        /// </summary>
+        public static readonly ComponentResourceKey SelectedCellForegroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "SelectedCellForegroundBrushKey");
+
+        /// <summary>
+        /// Gets the background brush key of a datagrid cell that is selected but not focused.
+        /// </summary>
+        public static readonly ComponentResourceKey SelectedCellBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "SelectedCellBackgroundBrushKey");
+
+        public static readonly ComponentResourceKey CellBorderBrushKey                = new ComponentResourceKey(typeof(ResourceKeys), "CellBorderBrushKey");
+        public static readonly ComponentResourceKey SelectedCellBorderBrushKey        = new ComponentResourceKey(typeof(ResourceKeys), "SelectedCellBorderBrushKey");
+        public static readonly ComponentResourceKey SelectedFocusedCellBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "SelectedFocusedCellBorderBrushKey");
+        #endregion Grid Theming
+
         /***
                 public static readonly ComponentResourceKey ControlDisabledBackgroundKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlDisabledBackgroundKey");
                 public static readonly ComponentResourceKey ControlNormalBorderKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlNormalBorderKey");

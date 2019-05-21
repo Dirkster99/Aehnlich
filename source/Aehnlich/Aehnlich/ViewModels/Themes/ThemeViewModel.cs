@@ -1,6 +1,5 @@
-﻿namespace Aehnlich.ViewModels
+﻿namespace Aehnlich.ViewModels.Themes
 {
-    using MLib;
     using MLib.Interfaces;
     using MLib.Themes;
     using Settings.Interfaces;

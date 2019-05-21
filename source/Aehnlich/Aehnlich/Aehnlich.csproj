@@ -155,8 +155,8 @@
     <Compile Include="ViewModels\Documents\DocumentBaseViewModel.cs" />
     <Compile Include="ViewModels\Documents\PaneViewModel.cs" />
     <Compile Include="ViewModels\ObservableRangeCollection.cs" />
-    <Compile Include="ViewModels\ThemeDefinitionViewModel.cs" />
-    <Compile Include="ViewModels\ThemeViewModel.cs" />
+    <Compile Include="ViewModels\Themes\ThemeDefinitionViewModel.cs" />
+    <Compile Include="ViewModels\Themes\ThemeViewModel.cs" />
     <Compile Include="Views\AvalonDockView.xaml.cs">
       <DependentUpon>AvalonDockView.xaml</DependentUpon>
     </Compile>

@@ -1,0 +1,111 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:AehnlichViewLib.Themes"
+    xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+    xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    >
+
+    <!-- Grid Theming -->
+
+    <!-- Begin DataGrid Header Keys-->
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=DataGridHeaderBorderBrushKey}"
+                     Color="Transparent" options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=DataGridHeaderBackgroundBrushKey}"
+                     Color="#444444" options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=DataGridHeaderForegroundBrushKey}"
+                     Color="White" options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=DataGridHeaderSortArrowForegroundBrushKey}"
+                     Color="White" options:Freeze="true"/>
+
+    <FontFamily x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                ResourceId=DataGridHeaderFontFamily}" options:Freeze="true">
+        <!--Arial-->
+        <!--Calibri-->
+        <!--Georgia-->
+        <!--Helvetica-->
+        <!--Lucida Sans-->
+        Segoe UI
+        <!--Times New Roman-->
+        <!--Verdana-->
+    </FontFamily>
+
+    <sys:Double x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                ResourceId=DataGridHeaderFontSize}" options:Freeze="true">11</sys:Double>
+    <!-- End of DataGrid Header Keys-->
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=DataGridBorderBrushKey}"
+                     Color="#33101010" options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=VerticalGridLinesBrush}"
+                     Color="White" options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=HorizontalGridLinesBrush}"
+                     Color="White" options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=ControlBorderBrushKey}"
+                     Color="White" options:Freeze="true"/>
+
+
+
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=CellForegroundBrushKey}"
+                     Color="White" options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=CellBackgroundBrushKey}"
+                     Color="Transparent" options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=SelectedFocusedCellForegroundBrushKey}"
+                     Color="White" options:Freeze="true"/>
+    
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=SelectedFocusedCellBackgroundBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     Opacity="0.55"
+                     options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=SelectedCellForegroundBrushKey}"
+                     Color="White" options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=SelectedCellBackgroundBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     Opacity="0.30"
+                     options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=CellBorderBrushKey}"
+                     Color="Transparent"
+                     options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=SelectedFocusedCellBorderBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     Opacity="0.55"
+                     options:Freeze="true"/>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=SelectedCellBorderBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     Opacity="0.30"
+                     options:Freeze="true"/>
+    
+    <!-- Grid Theming -->
+
+</ResourceDictionary>
