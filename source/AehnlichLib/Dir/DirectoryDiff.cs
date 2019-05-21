@@ -1,8 +1,10 @@
 namespace AehnlichLib.Dir
 {
+    using AehnlichLib.Dir.DataSource;
     using AehnlichLib.Dir.Merge;
     using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
+    using AehnlichLib.Interfaces.Dir;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -218,8 +220,11 @@ namespace AehnlichLib.Dir
             // below works with RELATIVE path references to given root entries
             index.Add(string.Empty, diffRoot.RootEntry);
 
+            var dirA = new DirectoryInfoImpl(directoryA.FullName);
+            var dirB = new DirectoryInfoImpl(directoryB.FullName);
+
             // Assign base directories of level order traversal
-            var root = new MergedEntry(directoryA, directoryB);
+            var root = new MergedEntry(dirA, dirB);
 
             queue.Enqueue(new Tuple<int, MergedEntry>(0, root));
 
@@ -247,6 +252,10 @@ namespace AehnlichLib.Dir
                     }
                     else
                     {
+                        // FIXME
+                        // continue;
+                        // There are conditions for this case but these needs to be specified and tested here
+                        //
                         // parentPath should always been pushed before since we do Level Order Traversal
                         // So, it must be available here - something is horribly wrong if we ever got here
                         throw new NotSupportedException(string.Format("ParentPath '{0}', BasePath '{1}'"
@@ -257,19 +266,19 @@ namespace AehnlichLib.Dir
                 if (_Recursive || iLevel == 0)
                 {
                     // Process the node if either sub-directory has children
-                    DirectoryInfo[] directoriesA = null;
-                    DirectoryInfo[] directoriesB = null;
+                    IDirectoryInfo[] directoriesA = null;
+                    IDirectoryInfo[] directoriesB = null;
 
                     // Get the arrays of subdirectories and merge them into 1 list
                     if (current.InfoA != null)
-                        directoriesA = ((DirectoryInfo)current.InfoA).GetDirectories();
+                        directoriesA = ((IDirectoryInfo)current.InfoA).GetDirectories();
                     else
-                        directoriesA = new DirectoryInfo[] { };
+                        directoriesA = new DirectoryInfoImpl[] { };
 
                     if (current.InfoB != null)
-                        directoriesB = ((DirectoryInfo)current.InfoB).GetDirectories();
+                        directoriesB = ((IDirectoryInfo)current.InfoB).GetDirectories();
                     else
-                        directoriesB = new DirectoryInfo[] { };
+                        directoriesB = new DirectoryInfoImpl[] { };
 
                     // Merge them and Diff them
                     var mergeIdx = new Merge.MergeIndex(directoriesA, directoriesB, false, _ShowOnlyInA, _ShowOnlyInB);
@@ -441,7 +450,7 @@ namespace AehnlichLib.Dir
                     }
 
                     string sDirA, sDirB;
-                    DirectoryInfo dirA = null, dirB = null;
+                    IDirectoryInfo dirA = null, dirB = null;
                     bool dirA_Exists = false;
                     bool dirB_Exists = false;
 
@@ -449,8 +458,8 @@ namespace AehnlichLib.Dir
                     {
                         if (node.InA)
                         {
-                            sDirA = System.IO.Path.Combine(root.RootPathA, node.BasePath);
-                            dirA = new DirectoryInfo(sDirA);
+                            sDirA = FileSystemInfoImpl.Combine(root.RootPathA, node.BasePath);
+                            dirA = new DirectoryInfoImpl(sDirA);
                             dirA_Exists = dirA.Exists;
                         }
                     }
@@ -463,8 +472,8 @@ namespace AehnlichLib.Dir
                     {
                         if (node.InB)
                         {
-                            sDirB = System.IO.Path.Combine(root.RootPathB, node.BasePath);
-                            dirB = new DirectoryInfo(sDirB);
+                            sDirB = FileSystemInfoImpl.Combine(root.RootPathB, node.BasePath);
+                            dirB = new DirectoryInfoImpl(sDirB);
                             dirB_Exists = dirB.Exists;
                         }
                     }
@@ -476,19 +485,19 @@ namespace AehnlichLib.Dir
                     if (dirA_Exists == true || dirB_Exists == true)
                     {
                         // Get the arrays of files and merge them into 1 list
-                        FileInfo[] filesA, filesB;
+                        IFileInfo[] filesA, filesB;
                         Merge.MergeIndex mergeIdx = null;
                         if (root.Filter == null)
                         {
                             if (dirA_Exists)
                                 filesA = dirA.GetFiles();
                             else
-                                filesA = new FileInfo[] { };
+                                filesA = new FileInfoImpl[] { };
 
                             if (dirB_Exists)
                                 filesB = dirB.GetFiles();
                             else
-                                filesB = new FileInfo[] { };
+                                filesB = new FileInfoImpl[] { };
 
                             mergeIdx = new Merge.MergeIndex(filesA, filesB, false, _ShowOnlyInA, _ShowOnlyInB);
                         }
@@ -497,12 +506,12 @@ namespace AehnlichLib.Dir
                             if (dirA_Exists)
                                 filesA = root.Filter.Filter(dirA);
                             else
-                                filesA = new FileInfo[] { };
+                                filesA = new FileInfoImpl[] { };
 
                             if (dirB_Exists)
                                 filesB = root.Filter.Filter(dirB);
                             else
-                                filesB = new FileInfo[] { };
+                                filesB = new FileInfoImpl[] { };
 
                             // Assumption: Filter generates sorted entries
                             mergeIdx = new Merge.MergeIndex(filesA, filesB, true, _ShowOnlyInA, _ShowOnlyInB);
@@ -577,9 +586,9 @@ namespace AehnlichLib.Dir
 
                     try
                     {
-                        if (item.InfoA is FileInfo)
+                        if (item.InfoA is IFileInfo)
                         {
-                            lengthA = ((FileInfo)item.InfoA).Length;
+                            lengthA = ((IFileInfo)item.InfoA).Length;
                             lengthSumA += lengthA;
                         }
                     }
@@ -595,9 +604,9 @@ namespace AehnlichLib.Dir
 
                     try
                     {
-                        if (item.InfoB is FileInfo)
+                        if (item.InfoB is IFileInfo)
                         {
-                            lengthB = ((FileInfo)item.InfoB).Length;
+                            lengthB = ((IFileInfo)item.InfoB).Length;
                             lengthSumB += lengthB;
                         }
                     }
@@ -642,7 +651,7 @@ namespace AehnlichLib.Dir
                         {
                             try
                             {
-                                if (DiffUtility.AreFilesDifferent((FileInfo)item.InfoA, (FileInfo)item.InfoB) == true)
+                                if (DiffUtility.AreFilesDifferent(item.InfoA.FullName, item.InfoB.FullName) == true)
                                     different = true;
                             }
                             catch (IOException ex)

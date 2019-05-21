@@ -1,15 +1,15 @@
 ﻿namespace AehnlichLib.Dir.Merge
 {
+    using AehnlichLib.Interfaces.Dir;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
 
     [DebuggerDisplay("InfoA = {InfoA}, InfoB = {InfoB}, BothGotChildren = {BothGotChildren}")]
     internal class MergedEntry
     {
         #region ctors
-        public MergedEntry(FileSystemInfo infoA,
-                           FileSystemInfo infoB)
+        public MergedEntry(IFileSystemInfo infoA,
+                            IFileSystemInfo infoB)
             : this()
         {
             this.InfoA = infoA;
@@ -25,16 +25,16 @@
         #endregion ctors
 
         #region properties
-        public FileSystemInfo InfoA { get; }
+        public IFileSystemInfo InfoA { get; }
 
-        public FileSystemInfo InfoB { get; }
+        public IFileSystemInfo InfoB { get; }
 
         public bool BothGotChildren
         {
             get
             {
-                var dirA = InfoA as DirectoryInfo;
-                var dirB = InfoB as DirectoryInfo;
+                var dirA = InfoA as IDirectoryInfo;
+                var dirB = InfoB as IDirectoryInfo;
 
                 if (dirA == null || dirB == null)
                     return false;

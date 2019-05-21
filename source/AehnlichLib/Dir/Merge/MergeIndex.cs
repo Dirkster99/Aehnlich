@@ -1,9 +1,10 @@
 ﻿namespace AehnlichLib.Dir.Merge
 {
+    using AehnlichLib.Dir.DataSource;
+    using AehnlichLib.Interfaces.Dir;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
 
     /// <summary>
     /// Implements a merge algorithm to give all common entries (entries with same name)
@@ -19,11 +20,11 @@
         /// <param name="infosA"></param>
         /// <param name="infosB"></param>
         /// <param name="isSorted"></param>
-        public MergeIndex(FileSystemInfo[] infosA,
-                          FileSystemInfo[] infosB,
-                          bool isSorted,
-                          bool showOnlyInA,
-                          bool showOnlyInB)
+        public MergeIndex(IFileSystemInfo[] infosA,
+                           IFileSystemInfo[] infosB,
+                           bool isSorted,
+                           bool showOnlyInA,
+                           bool showOnlyInB)
             : this()
         {
             this.InfosA = infosA;
@@ -43,9 +44,9 @@
         #endregion ctors
 
         #region properties
-        public FileSystemInfo[] InfosA { get; }
+        public IFileSystemInfo[] InfosA { get; }
 
-        public FileSystemInfo[] InfosB { get; }
+        public IFileSystemInfo[] InfosB { get; }
 
         public bool IsSorted { get; protected set; }
 
@@ -77,17 +78,17 @@
             if (IsSorted == false)
             {
                 // Are we sort/merging directories or files?
-                if (InfosA is DirectoryInfo[] && InfosB is DirectoryInfo[])
+                if (InfosA is IDirectoryInfo[] && InfosB is IDirectoryInfo[])
                 {
                     // Sort directories
-                    Array.Sort((DirectoryInfo[])InfosA, FileSystemInfoComparer.DirectoryComparer);
-                    Array.Sort((DirectoryInfo[])InfosB, FileSystemInfoComparer.DirectoryComparer);
+                    Array.Sort((IDirectoryInfo[])InfosA, FileSystemInfoComparer2.DirectoryComparer);
+                    Array.Sort((IDirectoryInfo[])InfosB, FileSystemInfoComparer2.DirectoryComparer);
                 }
                 else
                 {
                     // Sort files
-                    Array.Sort((FileInfo[])InfosA, FileSystemInfoComparer.FileComparer);
-                    Array.Sort((FileInfo[])InfosB, FileSystemInfoComparer.FileComparer);
+                    Array.Sort((IFileInfo[])InfosA, FileSystemInfoComparer2.FileComparer);
+                    Array.Sort((IFileInfo[])InfosB, FileSystemInfoComparer2.FileComparer);
                 }
 
                 IsSorted = true;
@@ -104,8 +105,8 @@
             // Go through each line and align (merge) it with the other
             while (indexA < countA && indexB < countB)
             {
-                FileSystemInfo infoA = InfosA[indexA];
-                FileSystemInfo infoB = InfosB[indexB];
+                IFileSystemInfo infoA = InfosA[indexA];
+                IFileSystemInfo infoB = InfosB[indexB];
 
                 int compareResult = string.Compare(infoA.Name, infoB.Name, true);
                 if (compareResult == 0)
