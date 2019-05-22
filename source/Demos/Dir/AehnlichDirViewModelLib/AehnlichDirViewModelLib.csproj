@@ -87,6 +87,10 @@
       <Project>{342915ec-e1ca-4aad-bddb-810ee65e4233}</Project>
       <Name>AehnlichViewLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\FsDataLib\FsDataLib.csproj">
+      <Project>{6c8f39a8-965b-4f96-b0dc-5c731519ac65}</Project>
+      <Name>FsDataLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\DirDiffView.xaml">

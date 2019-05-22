@@ -15,7 +15,7 @@
         /// <returns></returns>
         public static IAppViewModel ConstructAppViewModel(DirDiffArgs args)
         {
-            return new AppViewModel(args);
+            return new AppViewModel(args, new FsDataLib.Dir.DirDataSourceFactory());
         }
 
         /// <summary>

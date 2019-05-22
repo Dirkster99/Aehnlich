@@ -1,4 +1,4 @@
-namespace AehnlichLib.Dir.DataSource
+namespace FsDataLib.Dir
 {
     using AehnlichLib.Interfaces.Dir;
 

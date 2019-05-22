@@ -1,10 +1,7 @@
-using System;
-
 namespace AehnlichLib.Interfaces.Dir
 {
-    internal interface IFileSystemInfo
+    public interface IFileSystemInfo
     {
-        #region properties
         /// <summary>
         /// Gets the full path of the directory or file.
         ///
@@ -51,11 +48,6 @@ namespace AehnlichLib.Interfaces.Dir
         ///   T:System.ArgumentOutOfRangeException:
         ///     The caller attempts to set an invalid write time.
         /// </summary>
-        DateTime LastWriteTime { get; }
-        #endregion properties
-
-        #region methods
-
-        #endregion methods
+        System.DateTime LastWriteTime { get; }
     }
 }

@@ -6,6 +6,7 @@
     using AehnlichLib.Dir;
     using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
+    using AehnlichLib.Interfaces.Dir;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -32,6 +33,7 @@
         private readonly DiffProgressViewModel _DiffProgress;
         private readonly DirDiffDocViewModel _DirDiffDoc;
         private readonly IFileDiffModeViewModel _FileDiffMode;
+        private readonly IDataSource _PathDataProvider;
         #endregion fields
 
         #region ctors
@@ -39,10 +41,15 @@
         /// Class constructor from specific diff options (rather than using defaults)
         /// </summary>
         /// <param name="args"></param>
-        public AppViewModel(DirDiffArgs args)
+        /// <param name="dataSourceFactory"></param>
+        public AppViewModel(DirDiffArgs args,
+                            IDataSourceFactory dataSourceFactory)
             : this()
         {
             _Args = args;
+
+            // Get a data object provider for browsing directories and files
+            _PathDataProvider = dataSourceFactory.CreateDataSource();
 
             // Update redundant copy of file diff mode viewmodel selection in this viewmodel
             // This enables the user to change this property within the document view
@@ -122,8 +129,8 @@
                         else
                             return;
 
-                        leftDir = PathUtil.GetPathIfDirExists(leftDir);
-                        rightDir = PathUtil.GetPathIfDirExists(rightDir);
+                        leftDir = _PathDataProvider.GetPathIfDirExists(leftDir);
+                        rightDir = _PathDataProvider.GetPathIfDirExists(rightDir);
 
                         if (string.IsNullOrEmpty(leftDir) == true ||
                             string.IsNullOrEmpty(rightDir) == true)
@@ -356,7 +363,7 @@
                 _DiffProgress.ResetProgressValues(_cancelTokenSource.Token);
 
                 Task.Factory.StartNew<IDiffProgress>(
-                        (p) => diff.Execute(args.LeftDir, args.RightDir, _DiffProgress)
+                        (p) => diff.Execute(args.LeftDir, args.RightDir, _DiffProgress, _PathDataProvider)
                       , TaskCreationOptions.LongRunning, _cancelTokenSource.Token)
                 .ContinueWith((r) =>
                 {
@@ -407,8 +414,8 @@
         {
             try
             {
-                leftDir = PathUtil.GetPathIfDirExists(leftDir);
-                rightDir = PathUtil.GetPathIfDirExists(rightDir);
+                leftDir = _PathDataProvider.GetPathIfDirExists(leftDir);
+                rightDir = _PathDataProvider.GetPathIfDirExists(rightDir);
 
                 if (string.IsNullOrEmpty(leftDir) == true || string.IsNullOrEmpty(rightDir) == true)
                     return false;

@@ -2,7 +2,6 @@ namespace AehnlichLib.Dir
 {
     using AehnlichLib.Interfaces;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Text;
     using System.Xml;
@@ -13,53 +12,6 @@ namespace AehnlichLib.Dir
     public static class DiffUtility
 	{
         #region Public Members
-
-        public static bool AreFilesDifferent(string fileName1, string fileName2)
-        {
-            return AreFilesDifferent(new FileInfo(fileName1), new FileInfo(fileName2));
-        }
-
-        /// <summary>
-        /// Returns false if both files are equal and true if they differ
-		/// (based on a byte size comparison or byte by byte comparison).
-        /// </summary>
-        /// <param name="info1"></param>
-        /// <param name="info2"></param>
-        /// <returns></returns>
-		public static bool AreFilesDifferent(FileInfo info1, FileInfo info2)
-		{
-            // Before we open the files, compare the sizes.  If they are different,
-            // then the files are certainly different.
-			if (info1.Length != info2.Length)
-			{
-				return true;
-			}
-
-			using (FileStream stream1 = info1.OpenRead())
-			using (FileStream stream2 = info2.OpenRead())
-			{
-				// The previous length check should ensure these are equal.
-				Debug.Assert(stream1.Length == stream2.Length, "The streams' lengths must be the same.");
-
-				// They have the same lengths, so we have to check byte-by-byte.  As soon as we find a difference, we can quit.
-				int byte1, byte2;
-				do
-				{
-					byte1 = stream1.ReadByte();
-					byte2 = stream2.ReadByte();
-
-					if (byte1 != byte2)
-					{
-						return true;
-					}
-				}
-				while (byte1 >= 0 && byte2 >= 0);
-
-				// The files were byte-by-byte equal.
-				return false;
-			}
-		}
-
 		public static IList<string> GetFileTextLines(string fileName, IDiffProgress progress)
 		{
 			using (StreamReader reader = new StreamReader(fileName, Encoding.Default, true))

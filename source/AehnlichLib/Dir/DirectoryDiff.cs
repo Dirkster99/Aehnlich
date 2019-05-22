@@ -1,13 +1,11 @@
 namespace AehnlichLib.Dir
 {
-    using AehnlichLib.Dir.DataSource;
     using AehnlichLib.Dir.Merge;
     using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
     using AehnlichLib.Interfaces.Dir;
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
 
     /// <summary>
@@ -61,6 +59,8 @@ namespace AehnlichLib.Dir
         /// </summary>
         /// <param name="directoryA"></param>
         /// <param name="directoryB"></param>
+        /// <param name="progress"></param>
+        /// <param name="source"></param>
         /// <returns>Null if an unkown error occured or if either directory cannot be accessed
         /// (or does not exist), otherwise returns a <see cref="IDiffProgress"/> object
         /// where the <see cref="IDiffProgress.ResultData"/> property contains a
@@ -68,14 +68,15 @@ namespace AehnlichLib.Dir
         /// differences in detail.</returns>
         public IDiffProgress Execute(string directoryA,
                                      string directoryB,
-                                     IDiffProgress progress)
+                                     IDiffProgress progress,
+                                     IDataSource source)
         {
             try
             {
-                var dirA = new DirectoryInfo(directoryA);
-                var dirB = new DirectoryInfo(directoryB);
+                var dirA = source.CreateDirectory(directoryA);
+                var dirB = source.CreateDirectory(directoryB);
 
-                return this.Execute(dirA, dirB, progress);
+                return this.Execute(dirA, dirB, progress, source);
             }
             catch
             {
@@ -89,21 +90,24 @@ namespace AehnlichLib.Dir
         /// </summary>
         /// <param name="directoryA"></param>
         /// <param name="directoryB"></param>
+        /// <param name="progress"></param>
+        /// <param name="source"></param>
         /// <returns>Null if an unkown error occured or if either directory cannot be accessed
         /// (or does not exist), otherwise returns a <see cref="IDiffProgress"/> object
         /// where the <see cref="IDiffProgress.ResultData"/> property contains a
         /// <see cref="IDirectoryDiffRoot"/> data structure that describes the directory
         /// differences in detail.</returns>
-        public IDiffProgress Execute(DirectoryInfo directoryA,
-                                     DirectoryInfo directoryB,
-                                     IDiffProgress progress)
+        public IDiffProgress Execute(IDirectoryInfo directoryA,
+                                     IDirectoryInfo directoryB,
+                                     IDiffProgress progress,
+                                     IDataSource source)
         {
             try
             {
                 // Create a faux base entry to pass to Execute
                 var diffRoot = new DirectoryDiffRoot(directoryA.FullName,
-                                                        directoryB.FullName,
-                                                        _Recursive, _Filter, _DiffMode);
+                                                     directoryB.FullName,
+                                                     _Recursive, _Filter, _DiffMode, source);
 
                 progress.ResultData = diffRoot;
                 progress.ShowIndeterminatedProgress();
@@ -137,17 +141,19 @@ namespace AehnlichLib.Dir
         /// </summary>
         /// <param name="directoryA"></param>
         /// <param name="directoryB"></param>
+        /// <param name="source"></param>
         /// <returns>Null if an unkown error occured or if either directory cannot be accessed
         /// (or does not exist), otherwise the <see cref="IDirectoryDiffRoot"/> data structure
         /// that describes the directory differences.</returns>
-        public IDirectoryDiffRoot Execute(string directoryA, string directoryB)
+        public IDirectoryDiffRoot Execute(string directoryA, string directoryB,
+                                          IDataSource source)
         {
             try
             {
-                var dirA = new DirectoryInfo(directoryA);
-                var dirB = new DirectoryInfo(directoryB);
+                var dirA = source.CreateDirectory(directoryA);
+                var dirB = source.CreateDirectory(directoryB);
 
-                return this.Execute(dirA, dirB);
+                return this.Execute(dirA, dirB, source);
             }
             catch
             {
@@ -161,17 +167,19 @@ namespace AehnlichLib.Dir
         /// </summary>
         /// <param name="directoryA"></param>
         /// <param name="directoryB"></param>
+        /// <param name="source"></param>
         /// <returns>Null if an unkown error occured or if either directory cannot be accessed
         /// (or does not exist), otherwise the <see cref="IDirectoryDiffRoot"/> data structure
         /// that describes the directory differences.</returns>
-        public IDirectoryDiffRoot Execute(DirectoryInfo directoryA, DirectoryInfo directoryB)
+        public IDirectoryDiffRoot Execute(IDirectoryInfo directoryA, IDirectoryInfo directoryB,
+                                          IDataSource source)
         {
             try
             {
                 // Create a faux base entry to pass to Execute
                 var diffRoot = new DirectoryDiffRoot(directoryA.FullName,
                                                      directoryB.FullName,
-                                                     _Recursive, _Filter, _DiffMode);
+                                                     _Recursive, _Filter, _DiffMode, source);
 
                 if (directoryA.Exists == false || directoryB.Exists == false)
                     return null;
@@ -201,14 +209,14 @@ namespace AehnlichLib.Dir
         /// Tip: Use a Post Order algorithm to look at each directory in the structure and aggregate
         ///      results up-wards within the directory structure.
         /// </summary>
-        /// <param name="directoryA"></param>
-        /// <param name="directoryB"></param>
+        /// <param name="dirA"></param>
+        /// <param name="dirB"></param>
         /// <param name="recursive"></param>
         /// <param name="filter"></param>
         /// <param name="diffRoot"></param>
         /// <returns>A root diff entry that describes directory differences through its properties.</returns>
-        private int BuildSubDirs(DirectoryInfo directoryA,
-                                 DirectoryInfo directoryB,
+        private int BuildSubDirs(IDirectoryInfo dirA,
+                                 IDirectoryInfo dirB,
                                  bool recursive,
                                  DirectoryDiffFileFilter filter,
                                  DirectoryDiffRoot diffRoot)
@@ -219,9 +227,6 @@ namespace AehnlichLib.Dir
             // Associate root level entry with empty path since path associations
             // below works with RELATIVE path references to given root entries
             index.Add(string.Empty, diffRoot.RootEntry);
-
-            var dirA = new DirectoryInfoImpl(directoryA.FullName);
-            var dirB = new DirectoryInfoImpl(directoryB.FullName);
 
             // Assign base directories of level order traversal
             var root = new MergedEntry(dirA, dirB);
@@ -273,12 +278,12 @@ namespace AehnlichLib.Dir
                     if (current.InfoA != null)
                         directoriesA = ((IDirectoryInfo)current.InfoA).GetDirectories();
                     else
-                        directoriesA = new DirectoryInfoImpl[] { };
+                        directoriesA = null;
 
                     if (current.InfoB != null)
                         directoriesB = ((IDirectoryInfo)current.InfoB).GetDirectories();
                     else
-                        directoriesB = new DirectoryInfoImpl[] { };
+                        directoriesB = null;
 
                     // Merge them and Diff them
                     var mergeIdx = new Merge.MergeIndex(directoriesA, directoriesB, false, _ShowOnlyInA, _ShowOnlyInB);
@@ -458,12 +463,12 @@ namespace AehnlichLib.Dir
                     {
                         if (node.InA)
                         {
-                            sDirA = FileSystemInfoImpl.Combine(root.RootPathA, node.BasePath);
-                            dirA = new DirectoryInfoImpl(sDirA);
+                            sDirA = root.Source.Combine(root.RootPathA, node.BasePath);
+                            dirA = root.Source.CreateDirectory(sDirA);
                             dirA_Exists = dirA.Exists;
                         }
                     }
-                    catch // System.IO may throw on non-existing, authorization issues
+                    catch // This may throw on non-existing, authorization issues
                     {    // So, we catch it it and ignore these for now
                         dirA_Exists = false;
                     }
@@ -472,12 +477,12 @@ namespace AehnlichLib.Dir
                     {
                         if (node.InB)
                         {
-                            sDirB = FileSystemInfoImpl.Combine(root.RootPathB, node.BasePath);
-                            dirB = new DirectoryInfoImpl(sDirB);
+                            sDirB = root.Source.Combine(root.RootPathB, node.BasePath);
+                            dirB = root.Source.CreateDirectory(sDirB);
                             dirB_Exists = dirB.Exists;
                         }
                     }
-                    catch // System.IO may throw on non-existing, authorization issues
+                    catch // This may throw on non-existing, authorization issues
                     {    // So, we catch it it and ignore these for now
                         dirB_Exists = false;
                     }
@@ -492,12 +497,12 @@ namespace AehnlichLib.Dir
                             if (dirA_Exists)
                                 filesA = dirA.GetFiles();
                             else
-                                filesA = new FileInfoImpl[] { };
+                                filesA = null;
 
                             if (dirB_Exists)
                                 filesB = dirB.GetFiles();
                             else
-                                filesB = new FileInfoImpl[] { };
+                                filesB = null;
 
                             mergeIdx = new Merge.MergeIndex(filesA, filesB, false, _ShowOnlyInA, _ShowOnlyInB);
                         }
@@ -506,12 +511,12 @@ namespace AehnlichLib.Dir
                             if (dirA_Exists)
                                 filesA = root.Filter.Filter(dirA);
                             else
-                                filesA = new FileInfoImpl[] { };
+                                filesA = null;
 
                             if (dirB_Exists)
                                 filesB = root.Filter.Filter(dirB);
                             else
-                                filesB = new FileInfoImpl[] { };
+                                filesB = null;
 
                             // Assumption: Filter generates sorted entries
                             mergeIdx = new Merge.MergeIndex(filesA, filesB, true, _ShowOnlyInA, _ShowOnlyInB);
@@ -525,14 +530,10 @@ namespace AehnlichLib.Dir
 
                         // Add size of files to size of this directory (which includes size of sub-directories)
                         if (dirA_Exists)
-                        {
                             node.LengthA += lengthSumA;
-                        }
 
                         if (dirB_Exists)
-                        {
                             node.LengthB += lengthSumB;
-                        }
 
                         node.SetDiffBasedOnChildren(_IgnoreDirectoryComparison);
                     }
@@ -651,10 +652,10 @@ namespace AehnlichLib.Dir
                         {
                             try
                             {
-                                if (DiffUtility.AreFilesDifferent(item.InfoA.FullName, item.InfoB.FullName) == true)
+                                if (root.Source.AreFilesDifferent(item.InfoA.FullName, item.InfoB.FullName) == true)
                                     different = true;
                             }
-                            catch (IOException ex)
+                            catch (System.IO.IOException ex)
                             {
                                 except = ex;
                             }

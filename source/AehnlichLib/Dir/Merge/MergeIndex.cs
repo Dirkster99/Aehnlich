@@ -1,6 +1,5 @@
 ﻿namespace AehnlichLib.Dir.Merge
 {
-    using AehnlichLib.Dir.DataSource;
     using AehnlichLib.Interfaces.Dir;
     using System;
     using System.Collections.Generic;
@@ -21,10 +20,10 @@
         /// <param name="infosB"></param>
         /// <param name="isSorted"></param>
         public MergeIndex(IFileSystemInfo[] infosA,
-                           IFileSystemInfo[] infosB,
-                           bool isSorted,
-                           bool showOnlyInA,
-                           bool showOnlyInB)
+                          IFileSystemInfo[] infosB,
+                          bool isSorted,
+                          bool showOnlyInA,
+                          bool showOnlyInB)
             : this()
         {
             this.InfosA = infosA;
@@ -48,6 +47,10 @@
 
         public IFileSystemInfo[] InfosB { get; }
 
+        public int InfosA_Length { get { return (InfosA == null ? 0 : InfosA.Length); } }
+
+        public int InfosB_Length { get { return (InfosB == null ? 0 : InfosB.Length); } }
+
         public bool IsSorted { get; protected set; }
 
         public bool ShowOnlyInA { get; }
@@ -64,11 +67,11 @@
         /// - inserting empty items in <see cref="InfosA"/> or <seealso cref="InfosB"/>
         /// </summary>
         /// <returns>Resulting number of merged entries - this should always be:
-        /// max(<seealso cref="InfosA"/>.Count, <seealso cref="InfosB"/>.Count)</returns>
+        /// max(<seealso cref="InfosA_Length"/>, <seealso cref="InfosB_Length"/>)</returns>
         public int Merge()
         {
             // Not much to merge here
-            if (InfosA.Length == 0 && InfosB.Length == 0)
+            if (InfosA_Length == 0 && InfosB_Length == 0)
             {
                 MergedEntries = new List<MergedEntry>();
                 return 0;
@@ -77,19 +80,12 @@
             // Sort entries alphabetically if not already sorted (pre-condition for merge)
             if (IsSorted == false)
             {
-                // Are we sort/merging directories or files?
-                if (InfosA is IDirectoryInfo[] && InfosB is IDirectoryInfo[])
-                {
-                    // Sort directories
-                    Array.Sort((IDirectoryInfo[])InfosA, FileSystemInfoComparer2.DirectoryComparer);
-                    Array.Sort((IDirectoryInfo[])InfosB, FileSystemInfoComparer2.DirectoryComparer);
-                }
-                else
-                {
-                    // Sort files
-                    Array.Sort((IFileInfo[])InfosA, FileSystemInfoComparer2.FileComparer);
-                    Array.Sort((IFileInfo[])InfosB, FileSystemInfoComparer2.FileComparer);
-                }
+                // Sort directories/files using their common base implementation
+                if (InfosA_Length > 0)
+                    Array.Sort((IFileSystemInfo[])InfosA, FileSystemInfoComparer.Comparer);
+
+                if (InfosB_Length > 0)
+                    Array.Sort((IFileSystemInfo[])InfosB, FileSystemInfoComparer.Comparer);
 
                 IsSorted = true;
             }
@@ -99,8 +95,8 @@
             int indexA = 0;
             int indexB = 0;
 
-            int countA = InfosA.Length;
-            int countB = InfosB.Length;
+            int countA = InfosA_Length;
+            int countB = InfosB_Length;
 
             // Go through each line and align (merge) it with the other
             while (indexA < countA && indexB < countB)
@@ -155,7 +151,7 @@
                 }
             }
 
-            Debug.Assert(mergedEntries.Count <= (InfosA.Length + InfosB.Length));
+            Debug.Assert(mergedEntries.Count <= (InfosA_Length + InfosB_Length));
             MergedEntries = mergedEntries;
 
             return mergedEntries.Count;

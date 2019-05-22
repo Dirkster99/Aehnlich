@@ -1,6 +1,5 @@
-namespace AehnlichLib.Dir.DataSource
+namespace FsDataLib.Dir
 {
-    using AehnlichLib.Enums;
     using AehnlichLib.Interfaces.Dir;
     using System.Collections.Generic;
 

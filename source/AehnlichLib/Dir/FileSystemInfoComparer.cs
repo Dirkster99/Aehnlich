@@ -1,4 +1,4 @@
-namespace AehnlichLib.Dir.DataSource
+namespace AehnlichLib.Dir
 {
     using AehnlichLib.Interfaces.Dir;
     using System.Collections.Generic;
@@ -7,14 +7,14 @@ namespace AehnlichLib.Dir.DataSource
     /// Implements an internal class with static comparers for files and directories
     /// to determine whehter files or directories are equal or not (based on their case-insensitive name).
     /// </summary>
-    internal class FileSystemInfoComparer2 : IComparer<IFileSystemInfo>, IComparer<IFileInfo>, IComparer<IDirectoryInfo>
+    internal class FileSystemInfoComparer : IComparer<IFileSystemInfo>, IComparer<IFileInfo>, IComparer<IDirectoryInfo>
     {
         #region Public Fields
         /// <summary>
         /// Determines whether 2 <see cref="IFileSystemInfo"/> objects are equal based
         /// on comparing their names with case-insensitivity.
         /// </summary>
-        public static readonly FileSystemInfoComparer2 Comparer = new FileSystemInfoComparer2();
+        public static readonly FileSystemInfoComparer Comparer = new FileSystemInfoComparer();
 
         /// <summary>
         /// Determines whether 2 <see cref="IFileInfo"/> objects are equal based

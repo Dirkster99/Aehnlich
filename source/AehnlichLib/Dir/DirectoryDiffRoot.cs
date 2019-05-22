@@ -2,6 +2,7 @@ namespace AehnlichLib.Dir
 {
     using AehnlichLib.Enums;
     using AehnlichLib.Interfaces;
+    using AehnlichLib.Interfaces.Dir;
 
     /// <summary>
     /// Implements an object root of an object data graph that models directories
@@ -36,7 +37,8 @@ namespace AehnlichLib.Dir
         public DirectoryDiffRoot(string rootPathA, string rootPathB,
                                  bool recursive,
                                  DirectoryDiffFileFilter filter,
-                                 DiffDirFileMode diffMode)
+                                 DiffDirFileMode diffMode,
+                                 IDataSource dataSource)
             : this()
         {
             this.RootPathA = rootPathA;
@@ -45,6 +47,7 @@ namespace AehnlichLib.Dir
             _Recursive = recursive;
             _Filter = filter;
             _DiffMode = diffMode;
+            this.Source = dataSource;
         }
 
         /// <summary>
@@ -60,6 +63,12 @@ namespace AehnlichLib.Dir
             CountFilesChanged = 0;
         }
         #endregion Constructors
+
+        /// <summary>
+        /// Gets an object that provides routines and objects for working with
+        /// data objects that refer to directories and files.
+        /// </summary>
+        public IDataSource Source { get; }
 
         /// <summary>
         /// Gets the root directory level path of the diff directory A (left side).

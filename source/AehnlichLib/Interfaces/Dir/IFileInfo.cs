@@ -1,6 +1,6 @@
 namespace AehnlichLib.Interfaces.Dir
 {
-    internal interface IFileInfo : IFileSystemInfo
+    public interface IFileInfo : IFileSystemInfo
     {
         #region properties
         /// <summary>

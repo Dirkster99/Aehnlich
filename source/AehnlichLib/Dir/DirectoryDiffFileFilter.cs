@@ -1,6 +1,5 @@
 namespace AehnlichLib.Dir
 {
-    using AehnlichLib.Dir.DataSource;
     using AehnlichLib.Interfaces.Dir;
     using System;
     using System.Collections.Generic;
@@ -50,14 +49,14 @@ namespace AehnlichLib.Dir
             }
 
             // Sort them
-            files.Sort(FileSystemInfoComparer2.Comparer);
+            files.Sort(FileSystemInfoComparer.Comparer);
 
             // Throw out duplicates
             IFileInfo previousFile = null;
             for (int i = 0; i < files.Count; /*Incremented in the loop*/)
             {
                 IFileInfo currentFile = files[i];
-                if (previousFile != null && FileSystemInfoComparer2.Comparer.Compare(currentFile, previousFile) == 0)
+                if (previousFile != null && FileSystemInfoComparer.Comparer.Compare(currentFile, previousFile) == 0)
                 {
                     files.RemoveAt(i);
 
@@ -78,7 +77,7 @@ namespace AehnlichLib.Dir
             else
             {
                 IFileInfo[] allFiles = directory.GetFiles();
-                Array.Sort(allFiles, FileSystemInfoComparer2.FileComparer);
+                Array.Sort(allFiles, FileSystemInfoComparer.FileComparer);
 
                 List<IFileInfo> filesToInclude = new List<IFileInfo>();
                 int numExcludes = files.Count;
@@ -91,7 +90,7 @@ namespace AehnlichLib.Dir
                     if (e < numExcludes)
                     {
                         IFileInfo fileE = files[e];
-                        compareResult = FileSystemInfoComparer2.Comparer.Compare(fileA, fileE);
+                        compareResult = FileSystemInfoComparer.Comparer.Compare(fileA, fileE);
                     }
 
                     if (compareResult == 0)
