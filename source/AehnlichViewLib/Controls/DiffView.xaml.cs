@@ -143,8 +143,8 @@
         #endregion EditorCurrentLine Highlighting Colors
 
         private INotifyCollectionChanged _observeableDiffContext;
-
         private DiffLineBackgroundRenderer _DiffBackgroundRenderer;
+        private IVisualLineTransformer _Colorizer;
         #endregion fields
 
         #region ctors
@@ -156,6 +156,11 @@
             DefaultStyleKeyProperty.OverrideMetadata(
                 typeof(DiffView),
                 new FrameworkPropertyMetadata(typeof(DiffView)));
+
+            // We attach ourselves to the TextEditor's
+            // SyntaxHighlighting Dependency Property Changed to react on it as well
+            TextEditor.SyntaxHighlightingProperty.OverrideMetadata(typeof(DiffView),
+                new FrameworkPropertyMetadata(OnSyntaxHighlightingChanged));
         }
         #endregion ctors
 
@@ -350,55 +355,35 @@
             set { SetValue(EditorCurrentLineBorderThicknessProperty, value); }
         }
         #endregion EditorCurrentLine Highlighting Colors
+        #endregion properties
 
-        #region Syntax highlighting
-        /// <summary>
-        /// The <see cref="SyntaxHighlighting"/> property.
-        /// </summary>
-        public static readonly DependencyProperty SyntaxHighlightingProperty =
-            DependencyProperty.Register("SyntaxHighlighting", typeof(IHighlightingDefinition),
-                typeof(DiffView),
-                new FrameworkPropertyMetadata(OnSyntaxHighlightingChanged));
-
-        /// <summary>
-        /// Gets/sets the syntax highlighting definition used to colorize the text.
-        /// </summary>
-        public IHighlightingDefinition SyntaxHighlighting
-        {
-            get { return (IHighlightingDefinition)GetValue(SyntaxHighlightingProperty); }
-            set { SetValue(SyntaxHighlightingProperty, value); }
-        }
-
-        IVisualLineTransformer colorizer;
-
-        static void OnSyntaxHighlightingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((DiffView)d).OnSyntaxHighlightingChanged(e.NewValue as IHighlightingDefinition);
-        }
-
+        #region methods
+        #region Syntax highlighting changed
         /// <summary>
         /// Method is executed when the syntax highlighting defined through dp has changed.
         /// </summary>
         /// <param name="newValue"></param>
         protected virtual void OnSyntaxHighlightingChanged(IHighlightingDefinition newValue)
         {
-            if (colorizer != null)
+            if (_Colorizer != null)
             {
-                this.TextArea.TextView.LineTransformers.Remove(colorizer);
-                colorizer = null;
+                this.TextArea.TextView.LineTransformers.Remove(_Colorizer);
+                _Colorizer = null;
             }
+
             if (newValue != null)
             {
-                colorizer = CreateColorizer(newValue);
+                _Colorizer = CreateColorizer(newValue);
 
-                if (colorizer != null)
-                    this.TextArea.TextView.LineTransformers.Insert(0, colorizer);
+                if (_Colorizer != null)
+                    this.TextArea.TextView.LineTransformers.Insert(0, _Colorizer);
             }
         }
 
         /// <summary>
         /// Creates the highlighting colorizer for the specified highlighting definition.
-        /// Allows derived classes to provide custom colorizer implementations for special highlighting definitions.
+        /// Allows derived classes to provide custom colorizer implementations for special
+        /// highlighting definitions.
         /// </summary>
         /// <returns></returns>
         protected override IVisualLineTransformer CreateColorizer(IHighlightingDefinition highlightingDefinition)
@@ -408,11 +393,8 @@
 
             return new HighlightingColorizer(highlightingDefinition);
         }
-        #endregion
+        #endregion  Syntax highlighting changed
 
-        #endregion properties
-
-        #region methods
         /// <summary>
         /// Is called after the template was applied.
         /// </summary>
@@ -424,7 +406,12 @@
             this.Unloaded += new RoutedEventHandler(this.OnUnloaded);
         }
 
-        #region static handlers
+        #region private static handlers
+        static void OnSyntaxHighlightingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DiffView)d).OnSyntaxHighlightingChanged(e.NewValue as IHighlightingDefinition);
+        }
+
         private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((DiffView)d).OnColorChanged(e.NewValue);
@@ -444,7 +431,7 @@
         {
             (d as DiffView).OnLineDiffDataProviderChanged(e);
         }
-        #endregion static handlers
+        #endregion private static handlers
 
         /// <summary>
         /// Reset the <seealso cref="SolidColorBrush"/> to be used for highlighting the current editor line.

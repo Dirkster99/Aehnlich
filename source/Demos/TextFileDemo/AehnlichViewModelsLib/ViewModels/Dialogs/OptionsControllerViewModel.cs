@@ -50,7 +50,7 @@ namespace AehnlichViewModelsLib.ViewModels.Dialogs
                 ShowTabs = false,
                 ConvertTabsToSpaces = true,
                 IndentationSize = 4,
-                HighlightCurrentLine = true,
+                HighlightCurrentLine = false,
                 EnableVirtualSpace = true,
                 AllowScrollBelowDocument = false
             };
