@@ -542,6 +542,14 @@
         {
             base.OnApplyTemplate();
 
+            _PART_ColumnA = GetTemplateChild("PART_ColumnA") as ColumnDefinition;
+            _PART_ColumnB = GetTemplateChild("PART_ColumnB") as ColumnDefinition;
+
+            _PART_GridSplitter = GetTemplateChild("PART_GridSplitter") as GridSplitter;
+
+            _PART_GridA = GetTemplateChild(PART_GridA) as DataGrid;
+            _PART_GridB = GetTemplateChild(PART_GridB) as DataGrid;
+
             this.Loaded += new RoutedEventHandler(this.OnLoaded);
         }
 
@@ -552,14 +560,6 @@
         /// <param name="e"></param>
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            _PART_ColumnA = GetTemplateChild("PART_ColumnA") as ColumnDefinition;
-            _PART_ColumnB = GetTemplateChild("PART_ColumnB") as ColumnDefinition;
-
-            _PART_GridSplitter = GetTemplateChild("PART_GridSplitter") as GridSplitter;
-
-            _PART_GridA = GetTemplateChild(PART_GridA) as DataGrid;
-            _PART_GridB = GetTemplateChild(PART_GridB) as DataGrid;
-
             _leftGridScrollViewer = GetScrollViewer(_PART_GridA);
             _rightGridScrollViewer = GetScrollViewer(_PART_GridB);
 

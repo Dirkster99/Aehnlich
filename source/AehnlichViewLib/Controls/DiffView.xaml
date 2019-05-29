@@ -43,6 +43,7 @@
 				                         Thickness="1"/>
                                 </Setter.Value>
                             </Setter>
+                            <Setter Property="SelectionCornerRadius" Value="0"/>
                             <Setter Property="SelectionForeground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
                             <Setter Property="Template">
                                 <Setter.Value>

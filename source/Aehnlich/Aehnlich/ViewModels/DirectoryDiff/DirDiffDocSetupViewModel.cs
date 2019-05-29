@@ -1,8 +1,8 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
     using AehnlichDirViewModelLib.Interfaces;
-    using AehnlichDirViewModelLib.Models;
     using AehnlichLib.Dir;
+    using AehnlichLib.Interfaces.Dir;
     using System.Collections.Generic;
     using System.Windows.Input;
 
@@ -23,6 +23,7 @@
         private string _NewFilterItem;
         private readonly IFileDiffModeViewModel _FileDiffMode;
         private readonly ObservableRangeCollection<string> _CustomFilters;
+        private readonly IDataSource _DirDataSource;
         #endregion fields
 
         #region ctors
@@ -34,9 +35,11 @@
         /// to view the actual directory comparison results.
         /// </param>
         public DirDiffDocSetupViewModel(ICommand createViewPageCommand,
-                                        string leftDirPath, string rightDirPath)
+                                        string leftDirPath, string rightDirPath,
+                                        IDataSource dirDataSource)
             : this()
         {
+            _DirDataSource = dirDataSource;
             LeftDirectoryPath = leftDirPath;
             RightDirectoryPath = rightDirPath;
             CreateNewDirectoryCompareCommand = createViewPageCommand;
@@ -242,6 +245,16 @@
                     NotifyPropertyChanged(() => ShowIfDifferent);
                 }
             }
+        }
+
+        /// <summary>
+        /// Invoke method to normalize left and right paths
+        /// to ensure proper processing in later steps.
+        /// </summary>
+        internal void NormalizePaths()
+        {
+            RightDirectoryPath = _DirDataSource.NormalizePath(RightDirectoryPath);
+            LeftDirectoryPath = _DirDataSource.NormalizePath(LeftDirectoryPath);
         }
 
         public bool ShowIfSameFile

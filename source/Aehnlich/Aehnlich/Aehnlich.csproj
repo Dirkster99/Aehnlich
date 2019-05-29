@@ -137,8 +137,8 @@
     <Compile Include="Views\Dir\DirDiffSetupView.xaml.cs">
       <DependentUpon>DirDiffSetupView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dir\DirDiffView.xaml.cs">
-      <DependentUpon>DirDiffView.xaml</DependentUpon>
+    <Compile Include="Views\Dir\DirDiffDocView.xaml.cs">
+      <DependentUpon>DirDiffDocView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Events\DocumentChangedEventArgs.cs" />
     <Compile Include="Interfaces\IDocumentBaseViewModel.cs" />
@@ -181,7 +181,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dir\DirDiffView.xaml">
+    <Page Include="Views\Dir\DirDiffDocView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -257,6 +257,10 @@
     <ProjectReference Include="..\..\Demos\TextFileDemo\AehnlichViewModelsLib\AehnlichViewModelsLib.csproj">
       <Project>{4cdcebd2-5062-453e-b9af-f66811c3e31a}</Project>
       <Name>AehnlichViewModelsLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FsDataLib\FsDataLib.csproj">
+      <Project>{6C8F39A8-965B-4F96-B0DC-5C731519AC65}</Project>
+      <Name>FsDataLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Components\ServiceLocator\ServiceLocator.csproj">
       <Project>{252126d1-e1d9-49c3-910b-fcf2266265ef}</Project>

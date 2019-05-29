@@ -7,7 +7,7 @@
     /// <summary>
     /// Interaction logic for DirDiffView.xaml
     /// </summary>
-    public partial class DirDiffView : UserControl
+    public partial class DirDiffDocView : UserControl
     {
         #region fields
         /// <summary>
@@ -15,14 +15,14 @@
         /// </summary>
         public static readonly DependencyProperty ViewLoadedCommandProperty =
             DependencyProperty.Register("ViewLoadedCommand", typeof(ICommand),
-                typeof(DirDiffView), new PropertyMetadata(null));
+                typeof(DirDiffDocView), new PropertyMetadata(null));
         #endregion fields
 
         #region ctors
         /// <summary>
         /// Class constructor
         /// </summary>
-        public DirDiffView()
+        public DirDiffDocView()
         {
             InitializeComponent();
         }

@@ -1,6 +1,7 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
     using Aehnlich.Interfaces;
+    using AehnlichLib.Interfaces.Dir;
     using System;
     using System.Windows.Input;
 
@@ -45,6 +46,7 @@
         private object _SelectedDirDiffItem;
 
         private readonly IDocumentManagerViewModel _DocumentManager;
+        private readonly IDataSource _DirDataSource;
         #endregion fields
 
         #region ctors
@@ -56,10 +58,12 @@
         /// <param name="rightDirPath"></param>
         public DirDiffDocViewModel(IDocumentManagerViewModel docManager,
                                    string leftDirPath,
-                                   string rightDirPath)
+                                   string rightDirPath,
+                                   IDataSource dirDataSource)
             : this()
         {
             _DocumentManager = docManager;
+            _DirDataSource = dirDataSource;
 
             Title = "Compare Directories";
             ContentId = SetupContentID;
@@ -70,7 +74,9 @@
                 (p) => CreatePageViewCommand_Executed(p),
                 (p) => CreatePageViewCommand_CanExecute(p));
 
-            _SelectedDirDiffItem = new DirDiffDocSetupViewModel(createViewPageCommand, leftDirPath, rightDirPath);
+            _SelectedDirDiffItem =
+                new DirDiffDocSetupViewModel(createViewPageCommand,
+                                             leftDirPath, rightDirPath, dirDataSource);
         }
 
         /// <summary>
@@ -204,11 +210,14 @@
             switch (this.CurrentStage)
             {
                 case DirDiffDocStages.DirDiffSetup:
+                    // Get setup from Directory comapre setup viewmodel
                     var setupPage = SelectedDirDiffItem as DirDiffDocSetupViewModel;
 
                     if (setupPage != null)
                     {
                         ContentId = SetupContentID + Guid.NewGuid().ToString();
+
+                        setupPage.NormalizePaths();
 
                         Title = GetTitle(setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath);
                         ToolTip = GetTooltip(setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath); ;

@@ -4,10 +4,10 @@
     using Aehnlich.Interfaces;
     using Aehnlich.ViewModels.Documents;
     using AehnlichDirViewModelLib.Events;
+    using FsDataLib.Dir;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Windows;
     using System.Windows.Threading;
 
     public class DocumentManagerViewModel : Base.ViewModelBase, IDocumentManagerViewModel
@@ -135,8 +135,14 @@
                 string leftDir = Properties.Settings.Default.LeftDirPath;
                 string rightDir = Properties.Settings.Default.RightDirPath;
 
+                var dataSourceFactory = new DirDataSourceFactory();
+                var dataSource = dataSourceFactory.CreateDataSource();
+
+                leftDir = dataSource.NormalizePath(leftDir);
+                rightDir = dataSource.NormalizePath(rightDir);
+
                 // Or create a new directory setup page if their is currently none to use
-                newDoc = new DirDiffDocViewModel(this, leftDir, rightDir);
+                newDoc = new DirDiffDocViewModel(this, leftDir, rightDir, dataSource);
                 AddDocument(newDoc, true);
             }
             else
