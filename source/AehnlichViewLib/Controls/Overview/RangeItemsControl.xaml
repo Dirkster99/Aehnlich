@@ -3,15 +3,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:AehnlichViewLib.Controls.Overview">
 
-    <Style TargetType="{x:Type local:RangeItemsControl}" BasedOn="{StaticResource {x:Type ItemsControl}}">
+    <Style BasedOn="{StaticResource {x:Type ItemsControl}}" TargetType="{x:Type local:RangeItemsControl}">
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <local:RangePanel 
-                        Minimum="{Binding Minimum, RelativeSource={RelativeSource AncestorType={x:Type local:RangeItemsControl}}}" 
+                    <local:RangePanel
                         Maximum="{Binding Maximum, RelativeSource={RelativeSource AncestorType={x:Type local:RangeItemsControl}}}"
-                        Orientation="{Binding Orientation, RelativeSource={RelativeSource AncestorType={x:Type local:RangeItemsControl}}}"
-                        />
+                        Minimum="{Binding Minimum, RelativeSource={RelativeSource AncestorType={x:Type local:RangeItemsControl}}}"
+                        Orientation="{Binding Orientation, RelativeSource={RelativeSource AncestorType={x:Type local:RangeItemsControl}}}" />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>

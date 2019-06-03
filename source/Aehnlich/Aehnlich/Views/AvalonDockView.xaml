@@ -1,36 +1,35 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:Aehnlich.Views"
-                    
-                    xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
-                    xmlns:avalonDockLayout="clr-namespace:Xceed.Wpf.AvalonDock.Layout;assembly=Xceed.Wpf.AvalonDock"
-                    
-                    xmlns:conv="clr-namespace:Aehnlich.Converters"
-                    xmlns:docs="clr-namespace:Aehnlich.Views.Documents"
-                    xmlns:views="clr-namespace:Aehnlich.Views"
-                    xmlns:conv1="clr-namespace:AehnlichViewLib.Converters;assembly=AehnlichViewLib"
-                    xmlns:DirViews="clr-namespace:Aehnlich.Views.Dir"
-                    xmlns:fileviews="clr-namespace:AehnlichViewModelsLib.Views;assembly=AehnlichViewModelsLib"
-                    >
-    
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:DirViews="clr-namespace:Aehnlich.Views.Dir"
+    xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+    xmlns:avalonDockLayout="clr-namespace:Xceed.Wpf.AvalonDock.Layout;assembly=Xceed.Wpf.AvalonDock"
+    xmlns:conv="clr-namespace:Aehnlich.Converters"
+    xmlns:conv1="clr-namespace:AehnlichViewLib.Converters;assembly=AehnlichViewLib"
+    xmlns:docs="clr-namespace:Aehnlich.Views.Documents"
+    xmlns:fileviews="clr-namespace:AehnlichViewModelsLib.Views;assembly=AehnlichViewModelsLib"
+    xmlns:local="clr-namespace:Aehnlich.Views"
+    xmlns:views="clr-namespace:Aehnlich.Views">
+
     <Style TargetType="{x:Type local:AvalonDockView}">
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:AvalonDockView}">
                     <ControlTemplate.Resources>
-                        <conv:ActiveDocumentConverter x:Key="ActiveDocumentConverter"/>
+                        <conv:ActiveDocumentConverter x:Key="ActiveDocumentConverter" />
                     </ControlTemplate.Resources>
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
 
-                        <avalonDock:DockingManager Name="PART_DockView"
-                                                   DocumentsSource="{Binding DocumentManager.Documents}"
-                                                   ActiveContent="{Binding DocumentManager.ActiveDocument, Mode=TwoWay, Converter={StaticResource ActiveDocumentConverter}}"
-                                                   >
+                        <avalonDock:DockingManager
+                            Name="PART_DockView"
+                            ActiveContent="{Binding DocumentManager.ActiveDocument, Mode=TwoWay, Converter={StaticResource ActiveDocumentConverter}}"
+                            DocumentsSource="{Binding DocumentManager.Documents}">
                             <avalonDock:DockingManager.LayoutItemTemplateSelector>
                                 <docs:PanesTemplateSelector>
                                     <docs:PanesTemplateSelector.DirDiffDocumentViewTemplate>
@@ -42,13 +41,11 @@
                                         <DataTemplate>
                                             <Grid Margin="3">
                                                 <Grid.Resources>
-                                                    <conv1:BindingProxy Data="{Binding}" x:Key="DocProxy" />
+                                                    <conv1:BindingProxy x:Key="DocProxy" Data="{Binding}" />
                                                 </Grid.Resources>
 
-                                                <!-- Show File Based Text Diffs -->
-                                                <fileviews:FileDiffView
-                                                    DataContext="{Binding DocDiffDoc}"
-                                                    ViewLoadedCommand="{Binding Path=Data.ViewLoadedCommand, Source={StaticResource DocProxy}}" />
+                                                <!--  Show File Based Text Diffs  -->
+                                                <fileviews:FileDiffView DataContext="{Binding DocDiffDoc}" ViewLoadedCommand="{Binding Path=Data.ViewLoadedCommand, Source={StaticResource DocProxy}}" />
                                             </Grid>
                                         </DataTemplate>
                                     </docs:PanesTemplateSelector.DocDiffDocumentViewTemplate>
@@ -59,13 +56,13 @@
                                     <docs:PanesStyleSelector.DocumentStyle>
                                         <Style TargetType="{x:Type avalonDock:LayoutItem}">
                                             <Style.Resources>
-                                                <conv:TruncateMiddleConverter x:Key="TruncateMiddleConverter"/>
+                                                <conv:TruncateMiddleConverter x:Key="TruncateMiddleConverter" />
                                             </Style.Resources>
-                                            <Setter Property="Title" Value="{Binding Model.Title, Mode=OneWay, Converter={StaticResource TruncateMiddleConverter}}"/>
-                                            <Setter Property="ToolTip" Value="{Binding Model.ToolTip}"/>
-                                            <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}"/>
-                                            <!--Setter Property="IconSource" Value="{Binding Model.IconSource}"/-->
-                                            <Setter Property="ContentId" Value="{Binding Model.ContentId,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                            <Setter Property="Title" Value="{Binding Model.Title, Mode=OneWay, Converter={StaticResource TruncateMiddleConverter}}" />
+                                            <Setter Property="ToolTip" Value="{Binding Model.ToolTip}" />
+                                            <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />
+                                            <!--  Setter Property="IconSource" Value="{Binding Model.IconSource}"/  -->
+                                            <Setter Property="ContentId" Value="{Binding Model.ContentId, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                                         </Style>
                                     </docs:PanesStyleSelector.DocumentStyle>
                                 </docs:PanesStyleSelector>
@@ -83,5 +80,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
 </ResourceDictionary>

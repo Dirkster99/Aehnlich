@@ -1,58 +1,62 @@
-﻿<MWindow:MetroWindow x:Class="Aehnlich.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                 
-        xmlns:reskeys="clr-namespace:MLib.Themes;assembly=MLib"
-        xmlns:MWindow="clr-namespace:MWindowLib;assembly=MWindowLib"
-        xmlns:behav="clr-namespace:AehnlichViewModelsLib.Behaviors;assembly=AehnlichViewModelsLib"
-        xmlns:views="clr-namespace:Aehnlich.Views"
-                     
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
-        ShowIcon="False"
-        >
+﻿<MWindow:MetroWindow
+    x:Class="Aehnlich.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:MWindow="clr-namespace:MWindowLib;assembly=MWindowLib"
+    xmlns:behav="clr-namespace:AehnlichViewModelsLib.Behaviors;assembly=AehnlichViewModelsLib"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reskeys="clr-namespace:MLib.Themes;assembly=MLib"
+    xmlns:views="clr-namespace:Aehnlich.Views"
+    Title="MainWindow"
+    Width="525"
+    Height="350"
+    ShowIcon="False"
+    mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Column="0" Margin="3">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-                
+
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <ComboBox
-                Grid.Row="1" ItemsSource="{Binding AppTheme.ListOfThemes}"
-                DisplayMemberPath="Model.Name"
-                SelectedItem="{Binding AppTheme.SelectedTheme, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                behav:SelectionChangedCommand.ChangedCommand="{Binding ThemeSelectionChangedCommand}"
-                IsEnabled="{Binding AppTheme.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                Grid.Row="1"
                 Margin="3"
+                behav:SelectionChangedCommand.ChangedCommand="{Binding ThemeSelectionChangedCommand}"
+                DisplayMemberPath="Model.Name"
+                IsEnabled="{Binding AppTheme.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding AppTheme.ListOfThemes}"
+                SelectedItem="{Binding AppTheme.SelectedTheme, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 ToolTip="Select a Theme"
-                ToolTipService.IsEnabled="True"
-             />
+                ToolTipService.IsEnabled="True" />
 
             <Button
-                Content="Directory Compare" Grid.Column="1" Grid.Row="1"
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="3"
                 Command="{Binding NewDirectoryCompareCommand}"
-                Margin="3"    
-                />
+                Content="Directory Compare" />
         </Grid>
 
-        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" >
-            <views:AvalonDockView  />
+        <Grid
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <views:AvalonDockView />
         </Grid>
     </Grid>
 </MWindow:MetroWindow>

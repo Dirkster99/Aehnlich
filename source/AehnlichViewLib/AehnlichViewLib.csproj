@@ -242,9 +242,6 @@
     <Resource Include="Icons\Light\GoToTop.ico" />
     <Content Include="Icons\Light\GoToTop_16x.svg" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\AvalonEditEx\Highlighting\" />
-    <Folder Include="Interfaces\Highlighting\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,185 +1,221 @@
-﻿<UserControl x:Class="Aehnlich.Views.Dir.DirDiffSetupView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-
-             xmlns:conv="clr-namespace:Aehnlich.Converters"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="Aehnlich.Views.Dir.DirDiffSetupView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="clr-namespace:Aehnlich.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <Grid Margin="3">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <Grid>
-        <Grid.Resources>
-            <conv:StringEmptyToBoolPropConverter x:Key="StringEmptyToBool"/>
-        </Grid.Resources>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+            <Grid.Resources>
+                <conv:StringEmptyToBoolPropConverter x:Key="StringEmptyToBool" />
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Label
-            Grid.Column="0" Grid.Row="0"
-            Content="Left:"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Right"
-            Margin="3" />
-        
-        <TextBox
-            Grid.Column="1" Grid.Row="0"
-            Text="{Binding LeftDirectoryPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-            Margin="3"/>
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="3"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Content="Left:" />
 
-        <Label
-            Content="Right:" Grid.Column="0" Grid.Row="1"
-            VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3" />
-        
-        <TextBox
-            Grid.Column="1" Grid.Row="1"
-            Text="{Binding RightDirectoryPath,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-            Margin="3" />
+            <TextBox
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="3"
+                Text="{Binding LeftDirectoryPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-        <Label
-            Content="Compare:" Grid.Column="0" Grid.Row="2"
-            VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3" />
+            <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="3"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Content="Right:" />
 
-        <!-- File Diff Mode Selection (Last Update, Length, Byte-By-Byte compare) -->
-        <ComboBox
-            Grid.Column="1" Grid.Row="2"
-            DataContext="{Binding FileDiffMode}"
-            ItemsSource="{Binding DiffFileModes}"
-            SelectedItem="{Binding DiffFileModeSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-            DisplayMemberPath="Name"
-            Width="200"
-            ToolTipService.ShowOnDisabled="true"
-            HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3"
-            >
-            <ComboBox.ToolTip>
-                <StackPanel>
-                    <TextBlock Text="Select a diff file mode to determine speed and quality of file comparison"/>
-                    <Separator/>
-                    <TextBlock Text="{Binding DiffFileModeSelected.Description,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
-            </ComboBox.ToolTip>
-        </ComboBox>
+            <TextBox
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="3"
+                Text="{Binding RightDirectoryPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+            <Label
+                Grid.Row="2"
+                Grid.Column="0"
+                Margin="3"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Content="Compare:" />
+
+            <!--  File Diff Mode Selection (Last Update, Length, Byte-By-Byte compare)  -->
+            <ComboBox
+                Grid.Row="2"
+                Grid.Column="1"
+                Width="200"
+                Margin="3"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                DataContext="{Binding FileDiffMode}"
+                DisplayMemberPath="Name"
+                ItemsSource="{Binding DiffFileModes}"
+                SelectedItem="{Binding DiffFileModeSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ToolTipService.ShowOnDisabled="true">
+                <ComboBox.ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="Select a diff file mode to determine speed and quality of file comparison" />
+                        <Separator />
+                        <TextBlock Text="{Binding DiffFileModeSelected.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                </ComboBox.ToolTip>
+            </ComboBox>
 
 
-        <Label
-            Content="File Filter:" Grid.Column="0" Grid.Row="3"
-            VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3,9,3,3" />
-        
-        <ComboBox
-            Grid.Column="1" Grid.Row="3"
-            ItemsSource="{Binding CustomFilters}"
-            SelectedItem="{Binding CustomFiltersSelectedItem}"
-            IsEditable="True"
-            Text="{Binding NewFilterItem, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-            VerticalAlignment="Center" Margin="3,9,3,3" />
+            <Label
+                Grid.Row="3"
+                Grid.Column="0"
+                Margin="3,9,3,3"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Content="File Filter:" />
 
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="4" Margin="3,12,3,3">
-            <RadioButton
-                Content="Include"
-                IsChecked="{Binding IncludeFilter}"
-                IsEnabled="{Binding FilterText,Converter={StaticResource StringEmptyToBool}}"
-                Margin="3,3,12,3" />
-            <RadioButton
-                Content="Exclude"
-                IsChecked="{Binding ExcludeFilter}"
-                IsEnabled="{Binding FilterText,Converter={StaticResource StringEmptyToBool}}"
-                Margin="3"/>
-        </StackPanel>
+            <ComboBox
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="3,9,3,3"
+                VerticalAlignment="Center"
+                IsEditable="True"
+                ItemsSource="{Binding CustomFilters}"
+                SelectedItem="{Binding CustomFiltersSelectedItem}"
+                Text="{Binding NewFilterItem, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
-        <GroupBox Header="Mismatched Items" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Margin="3,12,3,3">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+            <StackPanel
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="3,12,3,3"
+                Orientation="Horizontal">
+                <RadioButton
+                    Margin="3,3,12,3"
+                    Content="Include"
+                    IsChecked="{Binding IncludeFilter}"
+                    IsEnabled="{Binding FilterText, Converter={StaticResource StringEmptyToBool}}" />
+                <RadioButton
+                    Margin="3"
+                    Content="Exclude"
+                    IsChecked="{Binding ExcludeFilter}"
+                    IsEnabled="{Binding FilterText, Converter={StaticResource StringEmptyToBool}}" />
+            </StackPanel>
 
-                <CheckBox
-                    Grid.Row="0"
-                    Content="Show if only on left"
-                    IsChecked="{Binding ShowOnlyInA}"
-                    ToolTip="Uncheck this option if you do not want to see (removed) items that exist only in the left view."
-                    />
+            <GroupBox
+                Grid.Row="5"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="3,12,3,3"
+                Header="Mismatched Items">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                <CheckBox
-                    Grid.Row="1"
-                    Content="Show if only on right"
-                    IsChecked="{Binding ShowOnlyInB}"
-                    ToolTip="Uncheck this option if you do not want to see (inserted) items that exist only in the right view."
-                    />
-            </Grid>
-        </GroupBox>
+                    <CheckBox
+                        Grid.Row="0"
+                        Content="Show if only on left"
+                        IsChecked="{Binding ShowOnlyInA}"
+                        ToolTip="Uncheck this option if you do not want to see (removed) items that exist only in the left view." />
 
-        <GroupBox Header="Matched Items" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Margin="3,12,3,3">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                    <CheckBox
+                        Grid.Row="1"
+                        Content="Show if only on right"
+                        IsChecked="{Binding ShowOnlyInB}"
+                        ToolTip="Uncheck this option if you do not want to see (inserted) items that exist only in the right view." />
+                </Grid>
+            </GroupBox>
 
-                <CheckBox Grid.Row="0"
-                          Content="Show if different"
-                          IsChecked="{Binding ShowIfDifferent}"
-                          >
-                    <CheckBox.ToolTip>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+            <GroupBox
+                Grid.Row="6"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="3,12,3,3"
+                Header="Matched Items">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0">Check this to see items that appear similar but are different in some way.</TextBlock>
-                            <TextBlock Grid.Row="1">Uncheck this if you do not want to see changed items but only inserted or deleted items.</TextBlock>
-                        </Grid>
-                    </CheckBox.ToolTip>
-                </CheckBox>
+                    <CheckBox
+                        Grid.Row="0"
+                        Content="Show if different"
+                        IsChecked="{Binding ShowIfDifferent}">
+                        <CheckBox.ToolTip>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                <CheckBox
-                    Grid.Row="1"
-                    IsChecked="{Binding ShowIfSameFile}"
-                    Content="Show if same file"
-                    ToolTip="Uncheck this options if you do not want to review equal files."
-                    />
-                
-                <CheckBox
-                    Grid.Row="2"
-                    IsChecked="{Binding ShowIfSameDirectory}"
-                    Content="Show if same directory"
-                    ToolTip="Uncheck this options if you do not want highlighting for directories with different content. That is, only inserted or deleted directories are highlighted if this option is not checked."
-                    />
-            </Grid>
-        </GroupBox>
+                                <TextBlock Grid.Row="0">Check this to see items that appear similar but are different in some way.</TextBlock>
+                                <TextBlock Grid.Row="1">Uncheck this if you do not want to see changed items but only inserted or deleted items.</TextBlock>
+                            </Grid>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
+
+                    <CheckBox
+                        Grid.Row="1"
+                        Content="Show if same file"
+                        IsChecked="{Binding ShowIfSameFile}"
+                        ToolTip="Uncheck this options if you do not want to review equal files." />
+
+                    <CheckBox
+                        Grid.Row="2"
+                        Content="Show if same directory"
+                        IsChecked="{Binding ShowIfSameDirectory}"
+                        ToolTip="Uncheck this options if you do not want highlighting for directories with different content. That is, only inserted or deleted directories are highlighted if this option is not checked." />
+                </Grid>
+            </GroupBox>
 
             <CheckBox
-                Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7"
-                Content="Recursive" IsChecked="{Binding IsRecursive}" 
-                Margin="3,12"/>
+                Grid.Row="7"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="3,12"
+                Content="Recursive"
+                IsChecked="{Binding IsRecursive}" />
         </Grid>
 
         <Button
-            Content="Compare" Grid.Column="1" Grid.Row="0"
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="12,3,3,3"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
             Command="{Binding CreateNewDirectoryCompareCommand}"
-            VerticalAlignment="Top" HorizontalAlignment="Right" Margin="12,3,3,3"
-            />
+            Content="Compare" />
     </Grid>
 </UserControl>

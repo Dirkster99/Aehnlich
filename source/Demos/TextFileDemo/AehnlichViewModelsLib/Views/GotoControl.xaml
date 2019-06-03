@@ -1,70 +1,77 @@
-﻿<UserControl x:Class="AehnlichViewModelsLib.Views.GotoControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             
-             xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
-             xmlns:ctrl="clr-namespace:NumericUpDownLib;assembly=NumericUpDownLib"
-             xmlns:behav="clr-namespace:AehnlichViewModelsLib.Behaviors"
-             xmlns:conv="clr-namespace:AehnlichViewModelsLib.Converters"
-             
-             mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="AehnlichViewModelsLib.Views.GotoControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behav="clr-namespace:AehnlichViewModelsLib.Behaviors"
+    xmlns:conv="clr-namespace:AehnlichViewModelsLib.Converters"
+    xmlns:ctrl="clr-namespace:NumericUpDownLib;assembly=NumericUpDownLib"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="100"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <Grid Margin="0">
         <Grid.Resources>
-            <conv:MultiParToParConverter x:Key="MultiParToParConverter"/>
+            <conv:MultiParToParConverter x:Key="MultiParToParConverter" />
         </Grid.Resources>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ctrl:UIntegerUpDown Grid.Column="0" Margin="0,3,3,0"
-                             DisplayLength="8"
-                             Value="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                             MinValue="{Binding MinLineValue}"
-                             MaxValue="{Binding MaxLineValue}"
-                             HorizontalAlignment="Left" VerticalAlignment="Center"
-                             Name="IntegerUpDown"
-                             IsReadOnly="False"
-                             ToolTip="{Binding GotoLineToolTip}"
-                             
-                             behav:OnEnterToCommandBehavior.Command="{Binding GotoThisLineCommand}"
-                        >
+        <ctrl:UIntegerUpDown
+            Name="IntegerUpDown"
+            Grid.Column="0"
+            Margin="0,3,3,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            behav:OnEnterToCommandBehavior.Command="{Binding GotoThisLineCommand}"
+            DisplayLength="8"
+            IsReadOnly="False"
+            MaxValue="{Binding MaxLineValue}"
+            MinValue="{Binding MinLineValue}"
+            ToolTip="{Binding GotoLineToolTip}"
+            Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <behav:OnEnterToCommandBehavior.CommandParameter>
                 <MultiBinding Converter="{StaticResource MultiParToParConverter}">
-                    <Binding ElementName="IntegerUpDown" Path="Value" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
-                    <Binding ElementName="IntegerUpDown" Mode="OneWay"/>
+                    <Binding
+                        ElementName="IntegerUpDown"
+                        Mode="OneWay"
+                        Path="Value"
+                        UpdateSourceTrigger="PropertyChanged" />
+                    <Binding ElementName="IntegerUpDown" Mode="OneWay" />
                 </MultiBinding>
             </behav:OnEnterToCommandBehavior.CommandParameter>
         </ctrl:UIntegerUpDown>
 
-        <Button Grid.Column="1"
-                ToolTip="Go to this line in the text."
-                HorizontalAlignment="Left" VerticalAlignment="Center"
-                Command="{Binding GotoThisLineCommand}"
-                CommandParameter="{Binding ElementName=IntegerUpDown,Path=Value}"
-                MinWidth="36"
-                Height="{Binding ElementName=IntegerUpDown,Path=ActualHeight}"
-                Margin="6,3,0,0"
-                Content="Go!"
-                />
+        <Button
+            Grid.Column="1"
+            Height="{Binding ElementName=IntegerUpDown, Path=ActualHeight}"
+            MinWidth="36"
+            Margin="6,3,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Command="{Binding GotoThisLineCommand}"
+            CommandParameter="{Binding ElementName=IntegerUpDown, Path=Value}"
+            Content="Go!"
+            ToolTip="Go to this line in the text." />
 
-        <Button Grid.Column="2"
-                ToolTip="Close"
-                Command="{Binding CloseDialogCommand}"
-                BorderThickness="0"
-                BorderBrush="Transparent"
-                HorizontalAlignment="Right" VerticalAlignment="Top"
-                MinHeight="12" MinWidth="12"
-                
-                Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
-                Margin="6,0,3,3"
-                >
+        <Button
+            Grid.Column="2"
+            Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+            MinWidth="12"
+            MinHeight="12"
+            Margin="6,0,3,3"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            BorderBrush="Transparent"
+            BorderThickness="0"
+            Command="{Binding CloseDialogCommand}"
+            ToolTip="Close">
             <Button.Background>
-                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_CloseKey}}"/>
+                <ImageBrush ImageSource="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_CloseKey}}" />
             </Button.Background>
         </Button>
     </Grid>

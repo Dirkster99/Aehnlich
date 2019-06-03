@@ -1,8 +1,9 @@
-﻿<Application x:Class="AehnlichDemo.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:AehnlichDemo"
-             StartupUri="MainWindow.xaml">
+﻿<Application
+    x:Class="AehnlichDemo.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:AehnlichDemo"
+    StartupUri="MainWindow.xaml">
     <!--Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
