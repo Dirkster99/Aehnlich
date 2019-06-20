@@ -37,7 +37,7 @@
                 Grid.Row="1"
                 Margin="3"
                 behav:SelectionChangedCommand.ChangedCommand="{Binding ThemeSelectionChangedCommand}"
-                DisplayMemberPath="Model.Name"
+                DisplayMemberPath="Model.DisplayName"
                 IsEnabled="{Binding AppTheme.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 ItemsSource="{Binding AppTheme.ListOfThemes}"
                 SelectedItem="{Binding AppTheme.SelectedTheme, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
