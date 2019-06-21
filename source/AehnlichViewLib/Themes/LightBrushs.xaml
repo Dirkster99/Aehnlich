@@ -61,11 +61,6 @@
 
     <!-- TextEditor LightBrushs -->
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=EditorCurrentLineBackgroundColor}"
-                     Color="#2FCCCDCE"
-                     options:Freeze="true" />
-
-    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=EditorBackground}"
                      Color="#FFFFFFFF"
                      options:Freeze="true" />
@@ -163,18 +158,18 @@
 
     <!-- Current Line Highlighting Keys -->
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=DiffViewCurrentLineBackgroundBrushKey}"
-                     Color="Transparent"
+                     ResourceId=EditorCurrentLineBackgroundBrushKey}"
+                     Color="#2FCCCDCE"
                      options:Freeze="true" />
-    
+
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=DiffViewCurrentLineBorderBrushKey}"
-                     Color="{DynamicResource {x:Static SystemColors.HighlightBrush}}"
+                     ResourceId=EditorCurrentLineBorderBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
                      Opacity=".6"
                      options:Freeze="true" />
 
     <!--System:Double x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=DiffViewCurrentLineBorderThicknessKey}">3</System:Double-->
+                     ResourceId=EditorCurrentLineBorderThicknessKey}">3</System:Double-->
     <!-- Current Line Highlighting Keys -->
 
 </ResourceDictionary>

@@ -60,4 +60,10 @@
                      Opacity="0.30"
                      options:Freeze="true"/>
 
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorCurrentLineBorderBrushKey}"
+                     Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     Opacity=".6"
+                     options:Freeze="true" />
+
 </ResourceDictionary>

@@ -42,7 +42,6 @@
         #endregion Brush Keys
 
         #region TextEditor BrushKeys
-        public static readonly ComponentResourceKey EditorCurrentLineBackgroundColor = new ComponentResourceKey(typeof(ResourceKeys), "EditorCurrentLineBackgroundColor");
         public static readonly ComponentResourceKey EditorBackground = new ComponentResourceKey(typeof(ResourceKeys), "EditorBackground");
         public static readonly ComponentResourceKey EditorForeground = new ComponentResourceKey(typeof(ResourceKeys), "EditorForeground");
         public static readonly ComponentResourceKey EditorLineNumbersForeground = new ComponentResourceKey(typeof(ResourceKeys), "EditorLineNumbersForeground");
@@ -54,14 +53,14 @@
         #endregion TextEditor BrushKeys
 
         #region DiffView Currentline Keys
+        public static readonly ComponentResourceKey EditorCurrentLineBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "EditorCurrentLineBackgroundBrushKey");
+
         /// <summary>
         /// Gets the color of highlighting for the currently highlighed line.
         /// </summary>
-        public static readonly ComponentResourceKey DiffViewCurrentLineBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DiffViewCurrentLineBackgroundBrushKey");
+        public static readonly ComponentResourceKey EditorCurrentLineBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "EditorCurrentLineBorderBrushKey");
 
-        public static readonly ComponentResourceKey DiffViewCurrentLineBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "DiffViewCurrentLineBorderBrushKey");
-
-        public static readonly ComponentResourceKey DiffViewCurrentLineBorderThicknessKey = new ComponentResourceKey(typeof(ResourceKeys), "DiffViewCurrentLineBorderThicknessKey");
+        public static readonly ComponentResourceKey EditorCurrentLineBorderThicknessKey = new ComponentResourceKey(typeof(ResourceKeys), "EditorCurrentLineBorderThicknessKey");
         #endregion Currentline Keys
 
         #region ICONs

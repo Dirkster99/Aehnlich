@@ -8,12 +8,14 @@
     <!-- Accent Color Brush Definition
        - Look for references on ControlAccentBrushKey to find where this is being set in code -->
     <Color x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-           ResourceId=ControlAccentColorKey}">#1ba1e2</Color>
+           ResourceId=ControlAccentColorKey}"
+           options:Freeze="true"
+           >#1ba1e2</Color>
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=ControlAccentBrushKey}"
                      Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
-                    options:Freeze="true" />
+                     options:Freeze="true" />
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=VerticalSLideThumbBorderBrushKey}"
@@ -23,38 +25,39 @@
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                             ResourceId=VerticalSLideThumbMouseOverBrushKey}"
                      Color="Transparent"
-    />
+                     options:Freeze="true" />
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                             ResourceId=VerticalSLideThumbMouseOverBorderBrushKey}"
                      Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
-    />
+                     options:Freeze="true" />
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                             ResourceId=VerticalSLideThumbForegroundBrushKey}"
                      Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
                      Opacity="0.25"
-    />
+                     options:Freeze="true" />
 
     <!-- Normal Control Foreground and Background Colors-->
     <Color x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-           ResourceId=ControlNormalForegroundKey}">#FFF4F4F5</Color>
+           ResourceId=ControlNormalForegroundKey}"
+           options:Freeze="true">#FFF4F4F5</Color>
 
     <Color x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-           ResourceId=ControlNormalBackgroundKey}">#FF2D2D30</Color>
+           ResourceId=ControlNormalBackgroundKey}"
+           options:Freeze="true">#FF2D2D30</Color>
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=ControlNormalForegroundBrushKey}"
-                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlNormalForegroundKey}}"/>
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlNormalForegroundKey}}"
+                     options:Freeze="true" />
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=ControlNormalBackgroundBrushKey}"
-                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlNormalBackgroundKey}}"/>
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlNormalBackgroundKey}}"
+                     options:Freeze="true" />
 
     <!-- TextEditor DarkBrushs -->
-    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=EditorCurrentLineBackgroundColor}" Color="#20FFFFFF" options:Freeze="true" />
-
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=EditorBackground}"                 Color="#FF181818"  options:Freeze="true" />
 
@@ -96,18 +99,18 @@
 
     <!-- Current Line Highlighting Keys -->
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=DiffViewCurrentLineBackgroundBrushKey}"
-                     Color="Transparent"
-                     />
+                     ResourceId=EditorCurrentLineBackgroundBrushKey}"
+                     Color="#20FFFFFF"
+                     options:Freeze="true" />
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=DiffViewCurrentLineBorderBrushKey}"
-                     Color="{DynamicResource {x:Static SystemColors.HighlightBrush}}"
+                     ResourceId=EditorCurrentLineBorderBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
                      Opacity=".6"
                      options:Freeze="true" />
 
     <!--system:Double x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=DiffViewCurrentLineBorderThicknessKey}">1.0</system:Double-->
+                     ResourceId=EditorCurrentLineBorderThicknessKey}">1.0</system:Double-->
     <!-- Current Line Highlighting Keys -->
 
 </ResourceDictionary>

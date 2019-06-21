@@ -68,7 +68,9 @@
             if (_Editor.EditorCurrentLineBorder != null)
             {
                 borderPen = new Pen(_Editor.EditorCurrentLineBorder, _Editor.EditorCurrentLineBorderThickness);
-                borderPen.Freeze();
+
+                if (borderPen.CanFreeze)
+                    borderPen.Freeze();
             }
 
             textView.EnsureVisualLines();
