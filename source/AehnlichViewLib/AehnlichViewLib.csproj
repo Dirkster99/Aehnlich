@@ -196,6 +196,8 @@
     <Resource Include="Icons\Light\minus.ico" />
     <Resource Include="Icons\Light\Close.ico" />
     <Resource Include="Icons\Light\arrow_down.ico" />
+    <Resource Include="Icons\Dark\desk-lamp-dark.ico" />
+    <Content Include="Icons\Dark\desk-lamp-dark.svg" />
     <Content Include="Icons\Light\arrow_down.svg" />
     <Resource Include="Icons\Light\arrow_left.ico" />
     <Content Include="Icons\Light\arrow_left.svg" />
@@ -208,6 +210,8 @@
     <Content Include="Icons\Dark\Close_White_16x.svg" />
     <Resource Include="Icons\Light\FolderOpen_Down.ico" />
     <Resource Include="Icons\Light\FolderOpen_Down1_16x.ico" />
+    <Resource Include="Icons\Light\desk-lamp-light.ico" />
+    <Content Include="Icons\Light\desk-lamp-light.svg" />
     <Content Include="Icons\Light\FolderOpen_Down1_16x.svg" />
     <Content Include="Icons\Light\FolderOpen_Down_16x.svg" />
     <Resource Include="Icons\Light\FolderOpen_Up.ico" />

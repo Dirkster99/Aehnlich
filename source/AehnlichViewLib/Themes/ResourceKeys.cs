@@ -53,15 +53,21 @@
         #endregion TextEditor BrushKeys
 
         #region DiffView Currentline Keys
+        /// <summary>
+        /// Gets the background color for highlighting for the currently highlighed line.
+        /// </summary>
         public static readonly ComponentResourceKey EditorCurrentLineBackgroundBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "EditorCurrentLineBackgroundBrushKey");
 
         /// <summary>
-        /// Gets the color of highlighting for the currently highlighed line.
+        /// Gets the border color for highlighting for the currently highlighed line.
         /// </summary>
         public static readonly ComponentResourceKey EditorCurrentLineBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "EditorCurrentLineBorderBrushKey");
 
+        /// <summary>
+        /// Gets the border thickness for highlighting for the currently highlighed line.
+        /// </summary>
         public static readonly ComponentResourceKey EditorCurrentLineBorderThicknessKey = new ComponentResourceKey(typeof(ResourceKeys), "EditorCurrentLineBorderThicknessKey");
-        #endregion Currentline Keys
+        #endregion DiffView Currentline Keys
 
         #region ICONs
 
@@ -110,6 +116,11 @@
         public static readonly ComponentResourceKey ICON_FolderUpKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_FolderUpKey");
         public static readonly ComponentResourceKey ICON_FolderDownKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_FolderDownKey");
         #endregion Browse Folder Icons
+
+        /// <summary>
+        /// Interactive option in AvalonEdit based view for switching highlighting ON/OFF
+        /// </summary>
+        public static readonly ComponentResourceKey ICON_HighlightingKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_HighlightingKey");
 
         public static readonly ComponentResourceKey ICON_SettingsKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_SettingsKey");
         #endregion ICONs

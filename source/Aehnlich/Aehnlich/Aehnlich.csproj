@@ -74,8 +74,11 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.HL.1.0.2\lib\net4\HL.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <HintPath>..\..\packages\Dirkster.HL.1.0.2\lib\net4\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -83,8 +86,8 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dirkster.MWindowLib.1.1.0.1\lib\net452\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
-    <Reference Include="MLib, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.MLib.1.1.0.1\lib\net4\MLib.dll</HintPath>
+    <Reference Include="MLib, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.MLib.1.1.1\lib\net4\MLib.dll</HintPath>
     </Reference>
     <Reference Include="MWindowInterfacesLib, Version=1.0.4.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dirkster.MWindowLib.1.1.0.1\lib\net452\MWindowInterfacesLib.dll</HintPath>
@@ -128,6 +131,7 @@
     <Compile Include="Converters\ActiveDocumentConverter.cs" />
     <Compile Include="Converters\StringEmptyToBoolPropConverter.cs" />
     <Compile Include="Converters\TruncateMiddleConverter.cs" />
+    <Compile Include="ViewModels\Themes\ThemeDefinitionViewModel.cs" />
     <Compile Include="ViewModels\DirectoryDiff\DirDiffContentTemplateSelector.cs" />
     <Compile Include="ViewModels\DirectoryDiff\DirDiffDocViewViewModel.cs" />
     <Compile Include="ViewModels\DirectoryDiff\DirDiffDocSetupViewModel.cs" />
@@ -155,7 +159,6 @@
     <Compile Include="ViewModels\Documents\DocumentBaseViewModel.cs" />
     <Compile Include="ViewModels\Documents\PaneViewModel.cs" />
     <Compile Include="ViewModels\ObservableRangeCollection.cs" />
-    <Compile Include="ViewModels\Themes\ThemeDefinitionViewModel.cs" />
     <Compile Include="ViewModels\Themes\ThemeViewModel.cs" />
     <Compile Include="Views\AvalonDockView.xaml.cs">
       <DependentUpon>AvalonDockView.xaml</DependentUpon>
@@ -277,8 +280,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Behaviors\" />
-    <Folder Include="Resources\Icons\Dark\" />
-    <Folder Include="Resources\Icons\Light\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

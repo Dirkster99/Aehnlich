@@ -19,6 +19,8 @@
     using ICSharpCode.AvalonEdit.Highlighting;
     using System.Windows.Input;
     using AehnlichViewModelsLib.ViewModels.Base;
+    using HL.Interfaces;
+    using System.Windows.Media;
 
     /// <summary>
     /// Implements the viewmodel that controls one side of a text diff view with two sides
@@ -58,6 +60,7 @@
         private bool _disposed;
         private IHighlightingDefinition _HighlightingDefinition;
         private ICommand _HighlightingChangeCommand;
+        private bool _IsHighlightingDefinitionOff;
         #endregion DiffLines
         #endregion fields
 
@@ -181,11 +184,29 @@
                         if (param == null)
                             return;
 
+                        IsHighlightingDefinitionOff = false;
                         HighlightingDefinition = param;
                     });
                 }
 
                 return _HighlightingChangeCommand;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value to indicate whether text highlighting should currently be shown or not.
+        /// </summary>
+        public bool IsHighlightingDefinitionOff
+        {
+            get { return _IsHighlightingDefinitionOff; }
+
+            private set
+            {
+                if (_IsHighlightingDefinitionOff != value)
+                {
+                    _IsHighlightingDefinitionOff = value;
+                    NotifyPropertyChanged(() => IsHighlightingDefinitionOff);
+                }
             }
         }
         #endregion Highlighting Definition
@@ -576,6 +597,15 @@
         }
 
         /// <summary>
+        /// Implements a user option to switches the highlighting in text documents off.
+        /// </summary>
+        internal void SwitchHighlightingDefinitionOff()
+        {
+            IsHighlightingDefinitionOff = true;
+            HighlightingDefinition = null;
+        }
+
+        /// <summary>
         /// Used to setup the ViewA/ViewB view that shows the left and right text views
         /// with the textual content and imaginary lines.
         /// each other.
@@ -592,7 +622,15 @@
             try
             {
                 string ext = System.IO.Path.GetExtension(filename);
-                HighlightingDefinition = HighlightingManager.Instance.GetDefinitionByExtension(ext);
+
+                var hlManager = GetService<IThemedHighlightingManager>();
+
+                // Use fallback to actual service implementation if injector is not used here...
+                if (hlManager == null)
+                    hlManager = HL.Manager.ThemedHighlightingManager.Instance;
+
+                if (IsHighlightingDefinitionOff == false)
+                    HighlightingDefinition = hlManager.GetDefinitionByExtension(ext);
             }
             catch
             {
@@ -720,6 +758,109 @@
             }
 
             return idx;
+        }
+
+        /// <summary>
+        /// Invoke this method to apply a change of theme to the content of the document
+        /// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
+        ///      WITH current text document loaded.)
+        /// </summary>
+        internal void OnAppThemeChanged(IThemedHighlightingManager hlManager)
+        {
+            if (hlManager == null)
+                return;
+
+            // Does this highlighting definition have an associated highlighting theme?
+            if (hlManager.CurrentTheme.HlTheme != null)
+            {
+                // A highlighting theme with GlobalStyles?
+                // Apply these styles to the resource keys of the editor
+                foreach (var item in hlManager.CurrentTheme.HlTheme.GlobalStyles)
+                {
+                    switch (item.TypeName)
+                    {
+                        case "DefaultStyle":
+                            ApplyToDynamicResource(AehnlichViewLib.Themes.ResourceKeys.EditorBackground, item.backgroundcolor);
+                            ApplyToDynamicResource(AehnlichViewLib.Themes.ResourceKeys.EditorForeground, item.foregroundcolor);
+                            break;
+
+                        case "CurrentLineBackground":
+                            ApplyToDynamicResource(AehnlichViewLib.Themes.ResourceKeys.EditorCurrentLineBackgroundBrushKey, item.backgroundcolor);
+                            ApplyToDynamicResource(AehnlichViewLib.Themes.ResourceKeys.EditorCurrentLineBorderBrushKey, item.bordercolor);
+                            break;
+
+                        case "LineNumbersForeground":
+                            ApplyToDynamicResource(AehnlichViewLib.Themes.ResourceKeys.EditorLineNumbersForeground, item.foregroundcolor);
+                            break;
+
+                        case "Selection":
+                            ApplyToDynamicResource(AehnlichViewLib.Themes.ResourceKeys.EditorSelectionBrush, item.backgroundcolor);
+                            ApplyToDynamicResource(AehnlichViewLib.Themes.ResourceKeys.EditorSelectionBorder, item.bordercolor);
+                            break;
+
+                        case "Hyperlink":
+                            ApplyToDynamicResource(AehnlichViewLib.Themes.ResourceKeys.EditorLinkTextBackgroundBrush, item.backgroundcolor);
+                            ApplyToDynamicResource(AehnlichViewLib.Themes.ResourceKeys.EditorLinkTextForegroundBrush, item.foregroundcolor);
+                            break;
+
+                        case "NonPrintableCharacter":
+                            ApplyToDynamicResource(AehnlichViewLib.Themes.ResourceKeys.EditorNonPrintableCharacterBrush, item.foregroundcolor);
+                            break;
+
+                        default:
+                            throw new System.ArgumentOutOfRangeException("GlobalStyle named '{0}' is not supported.", item.TypeName);
+                    }
+                }
+            }
+
+            if (IsHighlightingDefinitionOff == true)
+                return;
+
+            // 1st try: Find highlighting based on currently selected highlighting
+            // The highlighting name may be the same as before, but the highlighting theme has just changed
+            if (HighlightingDefinition != null)
+            {
+                // Reset property for currently select highlighting definition
+                HighlightingDefinition = hlManager.GetDefinition(HighlightingDefinition.Name);
+
+                if (HighlightingDefinition != null)
+                    return;
+            }
+
+            // 2nd try: Find highlighting based on extension of file currenlty being viewed
+            if (string.IsNullOrEmpty(this.FileName))
+                return;
+
+            string extension = System.IO.Path.GetExtension(this.FileName);
+
+            if (string.IsNullOrEmpty(extension))
+                return;
+
+            // Reset property for currently select highlighting definition
+            HighlightingDefinition = hlManager.GetDefinitionByExtension(extension);
+        }
+
+        /// <summary>
+        /// Re-define an existing <seealso cref="SolidColorBrush"/> and backup the originial color
+        /// as it was before the application of the custom coloring.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="newColor"></param>
+        private void ApplyToDynamicResource(ComponentResourceKey key, Color? newColor)
+        {
+            if (Application.Current.Resources[key] == null || newColor == null)
+                return;
+
+            // Re-coloring works with SolidColorBrushs linked as DynamicResource
+            if (Application.Current.Resources[key] is SolidColorBrush)
+            {
+                //backupDynResources.Add(resourceName);
+
+                var newColorBrush = new SolidColorBrush((Color)newColor);
+                newColorBrush.Freeze();
+
+                Application.Current.Resources[key] = newColorBrush;
+            }
         }
 
         #region IDisposable

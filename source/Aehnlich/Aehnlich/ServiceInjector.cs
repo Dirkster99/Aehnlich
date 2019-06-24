@@ -1,5 +1,7 @@
 ﻿namespace Aehnlich
 {
+    using HL.Interfaces;
+    using HL.Manager;
     using MLib;
     using MLib.Interfaces;
     using ServiceLocator;
@@ -21,6 +23,7 @@
             var appearance = AppearanceManager.GetInstance();
             ServiceContainer.Instance.AddService<ISettingsManager>(SettingsManager.GetInstance(appearance.CreateThemeInfos()));
             ServiceContainer.Instance.AddService<IAppearanceManager>(appearance);
+            ServiceContainer.Instance.AddService<IThemedHighlightingManager>(ThemedHighlightingManager.Instance);
 
             return ServiceContainer.Instance;
         }

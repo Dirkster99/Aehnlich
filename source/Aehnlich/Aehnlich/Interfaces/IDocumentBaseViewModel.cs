@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using HL.Interfaces;
 
     /// <summary>
     /// Defines a base interface that should be implemented

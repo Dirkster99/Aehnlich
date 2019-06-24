@@ -8,6 +8,7 @@
     using AehnlichViewModelsLib.Enums;
     using AehnlichViewModelsLib.Interfaces;
     using AehnlichViewModelsLib.ViewModels.Suggest;
+    using HL.Interfaces;
 
     /// <summary>
     /// Defines the interface for the viewmodel that implements the main application viewmodel.
@@ -104,6 +105,13 @@
         /// indeterminate progress display.
         /// </summary>
         IDiffProgress DiffProgress { get; }
+
+        /// <summary>
+        /// Invoke this method to apply a change of theme to the content of the document
+        /// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
+        ///      WITH current text document loaded.)
+        /// </summary>
+        void OnAppThemeChanged(IThemedHighlightingManager hlManager);
         #endregion Commands
     }
 }

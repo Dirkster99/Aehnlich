@@ -10,12 +10,11 @@
     using System.Windows.Input;
     using AehnlichViewModelsLib.Interfaces;
     using System.Threading;
-    using AehnlichLib.Enums;
-    using AehnlichLib.Models;
     using AehnlichLib.Text;
     using System.Threading.Tasks;
     using AehnlichLib.Interfaces;
     using AehnlichViewModelsLib.ViewModels.Dialogs;
+    using HL.Interfaces;
 
     internal class AppViewModel : Base.ViewModelBase, IAppViewModel
     {
@@ -600,6 +599,17 @@
             return true;
         }
         #endregion Compare Command
+
+        /// <summary>
+        /// Invoke this method to apply a change of theme to the content of the document
+        /// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
+        ///      WITH current text document loaded.)
+        /// </summary>
+        public void OnAppThemeChanged(IThemedHighlightingManager hlManager)
+        {
+            if (DiffCtrl != null)
+                DiffCtrl.OnAppThemeChanged(hlManager);
+        }
 
         private InlineDialogMode ToogleInlineDialog(InlineDialogMode forThisDialog)
         {

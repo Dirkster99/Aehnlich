@@ -8,7 +8,7 @@
     /// Implements a base class for all viewmodel classes
     /// that implements <seealso cref="INotifyPropertyChanged"/> interface for binding.
     /// </summary>
-    internal class ViewModelBase : INotifyPropertyChanged
+    internal class ViewModelBase : ModelBase, INotifyPropertyChanged
     {
         /// <summary>
         /// Standard implementation of <seealso cref="INotifyPropertyChanged"/>.

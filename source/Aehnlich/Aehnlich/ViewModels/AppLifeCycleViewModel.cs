@@ -1,11 +1,13 @@
 ﻿namespace Aehnlich.ViewModels
 {
+    using Aehnlich.ViewModels.Themes;
     using MLib.Interfaces;
     using Models;
     using Settings.Interfaces;
     using Settings.UserProfile;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Windows.Input;
 
@@ -24,6 +26,54 @@
         private bool _ShutDownInProgress_Cancel = false;
 
         private ICommand mExitApp = null;
+
+        // List shared XAML Resources between all Dark based WPF themes
+        private Uri[] DarkResources =
+        {
+             new Uri("/MLib;component/Themes/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/MWindowLib;component/Themes/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/Aehnlich;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+            ,new Uri("/Xceed.Wpf.AvalonDock.Themes.VS2013;component/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/Aehnlich;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+            ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/AehnlichViewLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/AehnlichViewLib;component/Themes/DataGridDarkBrushs.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/Aehnlich;component/BindToMLib/AehnlichViewLib_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+            ,new Uri("/SuggestBoxLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/Aehnlich;component/BindToMLib/SuggestionLibDarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+        };
+
+        // List shared XAML Resources between all Light based WPF themes
+        private Uri[] LightResources =
+        {
+             new Uri("/MLib;component/Themes/LightTheme.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/MWindowLib;component/Themes/LightTheme.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/Aehnlich;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+            ,new Uri("/Xceed.Wpf.AvalonDock.Themes.VS2013;component/LightTheme.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/Aehnlich;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+            ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/AehnlichViewLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/AehnlichViewLib;component/Themes/DataGridLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/Aehnlich;component/BindToMLib/AehnlichViewLib_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+
+            ,new Uri("/SuggestBoxLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/Aehnlich;component/BindToMLib/SuggestionLibDarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+        };
+
+        private string[][] _WpfThemes =
+        {
+            //           WPF Theme Name       Theme Base   HighlightingThemeKey
+            new string[]{"Dark"              ,"Dark" ,     "Dark" },
+            new string[]{"Light"             ,"Light",     "Light"},
+            new string[]{ "True Blue (Dark)" ,"Dark" ,     "TrueBlue" },
+            new string[]{ "True Blue (Light)","Light",     "TrueBlue" },
+            new string[]{ "VS 2019 (Dark)"   ,"Dark" ,     "VS2019_Dark" }
+        };
         #endregion fields
 
         #region properties
@@ -120,60 +170,58 @@
         private void CreateDefaultsSettings(ISettingsManager settings
                                           , IAppearanceManager appearance)
         {
-            try
+            var themeInfos = settings.Themes;
+            for (int i = 0; i < _WpfThemes.GetLength(0); i++)
             {
-                // Add default themings for Dark and Light
-                appearance.SetDefaultThemes(settings.Themes);
-
-                // Add additional Dark resources to those theme resources added above
-                appearance.AddThemeResources("Dark", new List<Uri>
+                var item = _WpfThemes[i];
+                List<Uri> WpfResources = null;
+                switch (item[1])
                 {
-                  new Uri("/MWindowLib;component/Themes/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/Aehnlich;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
+                    case "Light":
+                        WpfResources = new List<Uri>(LightResources);
+                        break;
 
-                 ,new Uri("/Xceed.Wpf.AvalonDock.Themes.VS2013;component/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/Aehnlich;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+                    case "Dark":
+                        WpfResources = new List<Uri>(DarkResources);
+                        break;
 
-                 ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/AehnlichViewLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/AehnlichViewLib;component/Themes/DataGridDarkBrushs.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/Aehnlich;component/BindToMLib/AehnlichViewLib_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-                 ,new Uri("/SuggestBoxLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/Aehnlich;component/BindToMLib/SuggestionLibDarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-                }, settings.Themes);
-            }
-            catch
-            {
-                // Ignore issues in theme definition stage to ensure app starts up
-            }
-
-            try
-            {
-                // Add additional Light resources to those theme resources added above
-                appearance.AddThemeResources("Light", new List<Uri>
+                    default:
+                        throw new ArgumentOutOfRangeException("WPF theme base:" + item[1] + " not supported.");
+                }
+                try
                 {
-                  new Uri("/MWindowLib;component/Themes/LightTheme.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/Aehnlich;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-                 ,new Uri("/Xceed.Wpf.AvalonDock.Themes.VS2013;component/LightTheme.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/Aehnlich;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-                 ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/AehnlichViewLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/AehnlichViewLib;component/Themes/DataGridLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/Aehnlich;component/BindToMLib/AehnlichViewLib_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-                 ,new Uri("/SuggestBoxLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
-                 ,new Uri("/Aehnlich;component/BindToMLib/SuggestionLibDarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
-
-                }, settings.Themes);
+                    // Combine resources into one consistent model
+                    var theme = new ThemeDefinitionViewModel(item[0], WpfResources, item[2]);
+                    themeInfos.AddThemeInfo(theme);
+                }
+                catch (Exception exc)
+                {
+                    Debug.WriteLine(exc.StackTrace);
+                }
             }
-            catch
-            {
-                // Ignore issues in theme definition stage to ensure app starts up
-            }
+
+            appearance.SetDefaultTheme(themeInfos, "Light"); // configure a default WPF theme
+
+////            try
+////            {
+////
+////                // Add additional Dark resources to those theme resources added above
+////                appearance.AddThemeResources("Dark", new List<Uri>(DarkResources), settings.Themes);
+////            }
+////            catch
+////            {
+////                // Ignore issues in theme definition stage to ensure app starts up
+////            }
+////
+////            try
+////            {
+////                // Add additional Light resources to those theme resources added above
+////                appearance.AddThemeResources("Light", new List<Uri>(LightResources), settings.Themes);
+////            }
+////            catch
+////            {
+////                // Ignore issues in theme definition stage to ensure app starts up
+////            }
 
             try
             {

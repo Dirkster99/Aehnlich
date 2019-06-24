@@ -2,6 +2,7 @@
 {
     using AehnlichLib.Enums;
     using AehnlichViewModelsLib.ViewModels;
+    using HL.Interfaces;
     using ICSharpCode.AvalonEdit;
     using System;
     using System.ComponentModel;
@@ -118,6 +119,11 @@
         #endregion Goto Diff Commands
 
         /// <summary>
+        /// Gets a command to switch the highlighting in both text documents (left and right side) OFF.
+        /// </summary>
+        ICommand HighlightingDefintionOffCommand { get; }
+
+        /// <summary>
         /// Gets the total number of labeled lines that are visible in the left view.
         /// This count DOES NOT include imaginary lines that may have
         /// been inserted to bring both texts into a synchronized
@@ -209,6 +215,13 @@
         /// Both diff views are bound to one options object to ensure consistent displays.
         /// </summary>
         void SetDiffViewOptions(TextEditorOptions options);
+
+        /// <summary>
+        /// Invoke this method to apply a change of theme to the content of the document
+        /// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
+        ///      WITH current text document loaded.)
+        /// </summary>
+        void OnAppThemeChanged(IThemedHighlightingManager hlManager);
         #endregion methods
     }
 }

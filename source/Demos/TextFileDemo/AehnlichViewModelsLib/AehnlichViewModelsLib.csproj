@@ -36,8 +36,11 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Dirkster.HL.1.0.2\lib\net4\HL.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <HintPath>..\..\..\packages\Dirkster.HL.1.0.2\lib\net4\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
     <Reference Include="NumericUpDownLib, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Dirkster.NumericUpDownLib.2.3.0\lib\net4\NumericUpDownLib.dll</HintPath>
@@ -68,6 +71,7 @@
     <Compile Include="Converters\MultiParToParConverter.cs" />
     <Compile Include="Enums\ChangeDiffOptions.cs" />
     <Compile Include="Events\CaretPositionChangedEvent.cs" />
+    <Compile Include="ViewModels\Base\ModelBase.cs" />
     <Compile Include="ViewModels\Dialogs\DialogtTemplateSelector.cs" />
     <Compile Include="ViewModels\Dialogs\OptionsControllerViewModel.cs" />
     <Compile Include="Views\FileDiffView.xaml.cs">
@@ -115,6 +119,10 @@
     <ProjectReference Include="..\..\..\AehnlichViewLib\AehnlichViewLib.csproj">
       <Project>{342915ec-e1ca-4aad-bddb-810ee65e4233}</Project>
       <Name>AehnlichViewLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Aehnlich\Components\ServiceLocator\ServiceLocator.csproj">
+      <Project>{252126d1-e1d9-49c3-910b-fcf2266265ef}</Project>
+      <Name>ServiceLocator</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

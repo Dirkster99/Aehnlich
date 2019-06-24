@@ -41,13 +41,11 @@
     <!-- Normal Control Foreground and Background Colors-->
     <Color x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
            ResourceId=ControlNormalForegroundKey}"
-           options:Freeze="true"
-           >#FF000000</Color>
+           options:Freeze="true">#FF000000</Color>
 
     <Color x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
            ResourceId=ControlNormalBackgroundKey}"
-           options:Freeze="true"
-           >#FFFFFFFF</Color>
+           options:Freeze="true">#FFFFFFFF</Color>
 
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=ControlNormalForegroundBrushKey}"
@@ -103,8 +101,23 @@
                      Color="#00000000"
                      options:Freeze="true" />
     <!-- TextEditor LightBrushs -->
-    
-    
+
+    <!-- Current Line Highlighting Keys -->
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorCurrentLineBackgroundBrushKey}"
+                     Color="#2FCCCDCE"
+                     options:Freeze="true" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorCurrentLineBorderBrushKey}"
+                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     Opacity=".6"
+                     options:Freeze="true" />
+
+    <!--System:Double x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                     ResourceId=EditorCurrentLineBorderThicknessKey}">3</System:Double-->
+    <!-- Current Line Highlighting Keys -->
+
     <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                      ResourceId=ButtonNormalOuterBorderKey}"
                      Color="#FF707070"
@@ -155,21 +168,5 @@
                      Color="White"
                      options:Freeze="true" />
     <!-- Foreground -->
-
-    <!-- Current Line Highlighting Keys -->
-    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=EditorCurrentLineBackgroundBrushKey}"
-                     Color="#2FCCCDCE"
-                     options:Freeze="true" />
-
-    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=EditorCurrentLineBorderBrushKey}"
-                     Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}"
-                     Opacity=".6"
-                     options:Freeze="true" />
-
-    <!--System:Double x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                     ResourceId=EditorCurrentLineBorderThicknessKey}">3</System:Double-->
-    <!-- Current Line Highlighting Keys -->
 
 </ResourceDictionary>

@@ -1,12 +1,23 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
     using Aehnlich.Interfaces;
+    using HL.Interfaces;
     using System.Windows.Input;
+
+    internal interface TextDocDifference
+    {
+        /// <summary>
+        /// Invoke this method to apply a change of theme to the content of the document
+        /// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
+        ///      WITH current text document loaded.)
+        /// </summary>
+        void OnAppThemeChanged(IThemedHighlightingManager hlManager);
+    }
 
     /// <summary>
     /// Implements a document viewmodel for documents that display (text) file diff information.
     /// </summary>
-    internal class DocDiffDocViewViewModel : DocumentBaseViewModel
+    internal class DocDiffDocViewViewModel : DocumentBaseViewModel, TextDocDifference
     {
         #region fields
         private readonly IDocumentManagerViewModel _DocumentManager;
@@ -142,6 +153,19 @@
         internal static string GetContentId(string leftFilePath, string rightFilePath)
         {
             return string.Format("DocDiff{0}_{1}", leftFilePath, rightFilePath);
+        }
+
+        /// <summary>
+        /// Invoke this method to apply a change of theme to the content of the document
+        /// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
+        ///      WITH current text document loaded.)
+        /// </summary>
+        public void OnAppThemeChanged(IThemedHighlightingManager hlManager)
+        {
+            if (DocDiffDoc != null)
+            {
+                DocDiffDoc.OnAppThemeChanged(hlManager);
+            }
         }
 
         /// <summary>

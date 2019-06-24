@@ -5,6 +5,7 @@
     using Aehnlich.ViewModels.Documents;
     using AehnlichDirViewModelLib.Events;
     using FsDataLib.Dir;
+    using HL.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -122,6 +123,23 @@
             }
             else
                 AcitvateDocument(oldDoc); // Just activate available document
+        }
+
+        /// <summary>
+        /// Invoke this method to apply a change of theme to the content of the document
+        /// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
+        ///      WITH current text document loaded.)
+        /// </summary>
+        internal void OnAppThemeChanged(IThemedHighlightingManager hlManager)
+        {
+            foreach (var doc in _Documents)
+            {
+                var textDoc = doc as TextDocDifference;
+                if (textDoc != null)
+                {
+                    textDoc.OnAppThemeChanged(hlManager);
+                }
+            }
         }
 
         internal void DirectoryCompareShow()

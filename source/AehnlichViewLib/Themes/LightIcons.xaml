@@ -94,5 +94,9 @@
     <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                   ResourceId=ICON_SettingsKey}"
                   UriSource="/AehnlichViewLib;component/Icons/Light/Settings.ico" />
-    
+
+    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                  ResourceId=ICON_HighlightingKey}"
+                  UriSource="/AehnlichViewLib;component/Icons/Light/desk-lamp-light.ico" />
+
 </ResourceDictionary>

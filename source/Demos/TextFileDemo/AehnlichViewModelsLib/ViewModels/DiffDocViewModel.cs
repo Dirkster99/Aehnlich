@@ -13,6 +13,7 @@
     using AehnlichViewModelsLib.Interfaces;
     using AehnlichViewModelsLib.ViewModels.Base;
     using AehnlichViewModelsLib.ViewModels.LineInfo;
+    using HL.Interfaces;
     using ICSharpCode.AvalonEdit;
 
     /// <summary>
@@ -51,6 +52,7 @@
         private bool _disposed;
         private int _CountInserts, _CountDeletes, _CountChanges;
         private TextEditorOptions _DiffViewOptions;
+        private RelayCommand<object> _HighlightingDefintionOffCommand;
         #endregion fields
 
         #region ctors
@@ -421,6 +423,36 @@
         #endregion Goto Diff Commands
 
         /// <summary>
+        /// Gets a command to switch the highlighting in both text documents (left and right side) OFF.
+        /// </summary>
+        public ICommand HighlightingDefintionOffCommand
+        {
+            get
+            {
+                if (_HighlightingDefintionOffCommand == null)
+                {
+                    _HighlightingDefintionOffCommand = new RelayCommand<object>((p) =>
+                    {
+                        if (_ViewA != null)
+                            _ViewA.SwitchHighlightingDefinitionOff();
+
+                        if (_ViewB != null)
+                            _ViewB.SwitchHighlightingDefinitionOff();
+                    },
+                    (p) =>
+                    {
+                        if (_ViewA != null && _ViewB != null)
+                            return !_ViewA.IsHighlightingDefinitionOff || !_ViewB.IsHighlightingDefinitionOff;
+
+                        return false;
+                    });
+                }
+
+                return _HighlightingDefintionOffCommand;
+            }
+        }
+
+        /// <summary>
         /// Gets the total number of labeled lines that are visible in the left view.
         /// This count DOES NOT include imaginary lines that may have
         /// been inserted to bring both texts into a synchronized
@@ -740,6 +772,20 @@
         {
             if (options != null)
                 this.DiffViewOptions = options;
+        }
+
+        /// <summary>
+        /// Invoke this method to apply a change of theme to the content of the document
+        /// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
+        ///      WITH current text document loaded.)
+        /// </summary>
+        public void OnAppThemeChanged(IThemedHighlightingManager hlManager)
+        {
+            if (_ViewA != null)
+                _ViewA.OnAppThemeChanged(hlManager);
+
+            if (_ViewB != null)
+                _ViewB.OnAppThemeChanged(hlManager);
         }
 
         /// <summary>

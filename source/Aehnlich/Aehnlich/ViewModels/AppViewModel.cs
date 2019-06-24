@@ -1,7 +1,9 @@
 ﻿namespace Aehnlich.ViewModels
 {
+    using Aehnlich.Models;
     using Aehnlich.ViewModels.Themes;
     using Base;
+    using HL.Interfaces;
     using MLib.Interfaces;
     using Settings.Interfaces;
     using System;
@@ -87,9 +89,7 @@
                         if (paramets != null)
                         {
                             if (paramets.Length == 1)
-                            {
                                 theme = paramets[0] as ThemeDefinitionViewModel;
-                            }
                         }
 
                         // Try to convert ThemeDefinitionViewModel command parameter
@@ -104,8 +104,12 @@
 
                         if (theme != null)
                         {
-                            _AppTheme.ApplyTheme(Application.Current.MainWindow,
-                                                 theme.Model.DisplayName);
+                            _AppTheme.ApplyTheme(Application.Current.MainWindow, theme.DisplayName);
+
+                            var hlManager = GetService<IThemedHighlightingManager>();
+                            hlManager.SetCurrentTheme(theme.HighlightingThemeName);
+
+                            _DocumentManager.OnAppThemeChanged(hlManager);
                         }
                     });
                 }

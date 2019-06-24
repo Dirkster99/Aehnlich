@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+    xmlns:HL="clr-namespace:HL.Manager;assembly=HL"
     xmlns:behav="clr-namespace:AehnlichViewModelsLib.Behaviors"
     xmlns:conv="clr-namespace:AehnlichViewLib.Converters;assembly=AehnlichViewLib"
     xmlns:conv1="clr-namespace:AehnlichViewModelsLib.Converters"
@@ -271,6 +272,25 @@
                             Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_SettingsKey}}" />
                     </Button>
 
+                    <Button
+                        Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Self}}"
+                        MinWidth="16"
+                        MinHeight="16"
+                        Margin="0,0,3,0"
+                        Padding="0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Command="{Binding DiffCtrl.HighlightingDefintionOffCommand}"
+                        ToolTip="Switch syntax highlighting off"
+                        ToolTipService.IsEnabled="True">
+                        <Image
+                            Height="16"
+                            SnapsToDevicePixels="True"
+                            Source="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_HighlightingKey}}" />
+                    </Button>
+
+                    
+
                     <Separator Margin="0,0,3,0" Visibility="{Binding DiffCtrl.IsDiffDataAvailable, Converter={StaticResource BoolToVisibilityPropConverter}}" />
 
                     <Border
@@ -479,7 +499,7 @@
                                 MinWidth="50"
                                 Margin="0,0,0,3"
                                 behav:SelectionChangedCommand.ChangedCommand="{Binding DiffCtrl.ViewA.HighlightingChangeCommand}"
-                                ItemsSource="{Binding Source={x:Static avalonEdit:HighlightingManager.Instance}, Path=HighlightingDefinitions}"
+                                ItemsSource="{Binding Source={x:Static HL:ThemedHighlightingManager.Instance}, Path=HighlightingDefinitions}"
                                 SelectedItem="{Binding DiffCtrl.ViewA.HighlightingDefinition, UpdateSourceTrigger=PropertyChanged}" />
                             <!--
                                 Name="highlightingComboBox"
@@ -522,7 +542,7 @@
                                 MinWidth="50"
                                 Margin="0,0,3,3"
                                 behav:SelectionChangedCommand.ChangedCommand="{Binding DiffCtrl.ViewB.HighlightingChangeCommand}"
-                                ItemsSource="{Binding Source={x:Static avalonEdit:HighlightingManager.Instance}, Path=HighlightingDefinitions}"
+                                ItemsSource="{Binding Source={x:Static HL:ThemedHighlightingManager.Instance}, Path=HighlightingDefinitions}"
                                 SelectedItem="{Binding DiffCtrl.ViewB.HighlightingDefinition, UpdateSourceTrigger=PropertyChanged}" />
                             <!--
                                 Name="highlightingComboBox"
