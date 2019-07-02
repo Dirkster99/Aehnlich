@@ -16,6 +16,7 @@ You can double click each directory to browse into the directory structure or us
 in the toolbar to browse back up in the structure.
 
 ![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/Aehnlich/Aehnlich_DirCompare_VS2016Dark.png)
+![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/Aehnlich/Aehnlich_DirCompare_VS2016Dark_00.png)
 ![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/DirDiffScreen.png)
 
 ### Files Summary
