@@ -4,6 +4,10 @@
 # Ähnlich
 The name Ähnlich is German for Similar. It is the name of a WPF Diff/Merge utility based on the WinForms implementation by [Bill Menees](http://menees.com/). This project is [CharityWare](http://charityware.info/), which means you are asked to donate at least $5 US to a charity of your choice if you are using this software. [See also this note](https://github.com/Dirkster99/Aehnlich/blob/master/source/AehnlichLib/Docs/Readme.txt) to better understand what this means.
 
+Other contributing projects are:
+- [AvalonDock](https://github.com/Dirkster99/AvalonDock) and
+- [AvalonEdit](https://github.com/icsharpcode/AvalonEdit).
+
 ## Comparing Directory and Files
 The module that compares directories and files supports 2 views:
 - Directories and Files
