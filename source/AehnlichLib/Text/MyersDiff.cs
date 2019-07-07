@@ -1,6 +1,7 @@
 namespace AehnlichLib.Text
 {
     using AehnlichLib.Enums;
+    using AehnlichLib.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -53,14 +54,14 @@ namespace AehnlichLib.Text
         /// Gets an edit script instance that gives all the Edits necessary to transform A into B.
         /// </summary>
         /// <returns>The edit script which is a list of <see cref="Edit"/> objects that describes the transformation.</returns>
-        public EditScript Execute()
+        public EditScript Execute(IDiffProgress progress)
         {
             List<Point> matchPoints = new List<Point>();
 
             SubArray<T> subArrayA = new SubArray<T>(this.listA);
             SubArray<T> subArrayB = new SubArray<T>(this.listB);
 
-            this.GetMatchPoints(subArrayA, subArrayB, matchPoints);
+            this.GetMatchPoints(subArrayA, subArrayB, matchPoints, progress);
             Debug.Assert(matchPoints.Count == this.GetLongestCommonSubsequenceLength(), "The number of match points must equal the LCS length.");
 
             EditScript result = this.ConvertMatchPointsToEditScript(subArrayA.Length, subArrayB.Length, matchPoints);
@@ -74,11 +75,11 @@ namespace AehnlichLib.Text
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
             Justification = "This performs a long, complex calculation.")]
-        public IList<T> GetLongestCommonSubsequence()
+        public IList<T> GetLongestCommonSubsequence(IDiffProgress progress)
         {
             List<T> result = new List<T>();
 
-            this.GetLcs(new SubArray<T>(this.listA), new SubArray<T>(this.listB), result);
+            this.GetLcs(new SubArray<T>(this.listA), new SubArray<T>(this.listB), progress, result);
 
             return result;
         }
@@ -264,7 +265,9 @@ namespace AehnlichLib.Text
             return script;
         }
 
-        private int FindMiddleSnake(SubArray<T> subArrayA, SubArray<T> subArrayB, out int pathStartX, out int pathEndX, out int pathK)
+        private int FindMiddleSnake(SubArray<T> subArrayA, SubArray<T> subArrayB,
+                                    IDiffProgress progress,
+                                    out int pathStartX, out int pathEndX, out int pathK)
         {
             // We don't have to check the result of this because the calling procedure
             // has already check the length preconditions.
@@ -281,6 +284,9 @@ namespace AehnlichLib.Text
             {
                 for (int k = -d; k <= d; k += 2)
                 {
+                    if (progress != null)
+                        progress.Token.ThrowIfCancellationRequested();
+
                     // Find the end of the furthest reaching forward D-path in diagonal k.
                     this.GetForwardDPaths(subArrayA, subArrayB, d, k);
 
@@ -309,6 +315,9 @@ namespace AehnlichLib.Text
 
                 for (int k = -d; k <= d; k += 2)
                 {
+                    if (progress != null)
+                        progress.Token.ThrowIfCancellationRequested();
+
                     // Find the end of the furthest reaching reverse D=path in diagonal k+iDelta
                     this.GetReverseDPaths(subArrayA, subArrayB, d, k, delta);
 
@@ -370,26 +379,29 @@ namespace AehnlichLib.Text
             return x;
         }
 
-        private void GetLcs(SubArray<T> subArrayA, SubArray<T> subArrayB, List<T> output)
+        private void GetLcs(SubArray<T> subArrayA, SubArray<T> subArrayB
+                            , IDiffProgress progress
+                            , List<T> output)
         {
             if (subArrayA.Length > 0 && subArrayB.Length > 0)
             {
                 // Find the length D and the middle snake from (x,y) to (u,v)
                 int x, u, k;
-                int d = this.FindMiddleSnake(subArrayA, subArrayB, out x, out u, out k);
+                int d = this.FindMiddleSnake(subArrayA, subArrayB, progress, out x, out u, out k);
                 int y = x - k;
                 int v = u - k;
 
                 if (d > 1)
                 {
-                    this.GetLcs(new SubArray<T>(subArrayA, 1, x), new SubArray<T>(subArrayB, 1, y), output);
+                    this.GetLcs(new SubArray<T>(subArrayA, 1, x), new SubArray<T>(subArrayB, 1, y), progress, output);
 
                     for (int i = x + 1; i <= u; i++)
                     {
                         output.Add(subArrayA[i]);
                     }
 
-                    this.GetLcs(new SubArray<T>(subArrayA, u + 1, subArrayA.Length - u), new SubArray<T>(subArrayB, v + 1, subArrayB.Length - v), output);
+                    this.GetLcs(new SubArray<T>(subArrayA, u + 1, subArrayA.Length - u),
+                                new SubArray<T>(subArrayB, v + 1, subArrayB.Length - v), progress, output);
                 }
                 else if (subArrayB.Length > subArrayA.Length)
                 {
@@ -408,19 +420,23 @@ namespace AehnlichLib.Text
             }
         }
 
-        private void GetMatchPoints(SubArray<T> subArrayA, SubArray<T> subArrayB, List<Point> matchPoints)
+        private void GetMatchPoints(SubArray<T> subArrayA, SubArray<T> subArrayB, List<Point> matchPoints,
+                                    IDiffProgress progress)
         {
+            if (progress != null)
+              progress.Token.ThrowIfCancellationRequested();
+
             if (subArrayA.Length > 0 && subArrayB.Length > 0)
             {
                 // Find the middle snake from (x,y) to (u,v)
                 int x, u, k;
-                int d = this.FindMiddleSnake(subArrayA, subArrayB, out x, out u, out k);
+                int d = this.FindMiddleSnake(subArrayA, subArrayB, progress, out x, out u, out k);
                 int y = x - k;
                 int v = u - k;
 
                 if (d > 1)
                 {
-                    this.GetMatchPoints(new SubArray<T>(subArrayA, 1, x), new SubArray<T>(subArrayB, 1, y), matchPoints);
+                    this.GetMatchPoints(new SubArray<T>(subArrayA, 1, x), new SubArray<T>(subArrayB, 1, y), matchPoints, progress);
 
                     for (int i = x + 1; i <= u; i++)
                     {
@@ -431,7 +447,7 @@ namespace AehnlichLib.Text
                     this.GetMatchPoints(
                         new SubArray<T>(subArrayA, u + 1, subArrayA.Length - u),
                         new SubArray<T>(subArrayB, v + 1, subArrayB.Length - v),
-                        matchPoints);
+                        matchPoints, progress);
                 }
                 else
                 {

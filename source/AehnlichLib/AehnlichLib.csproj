@@ -80,6 +80,7 @@
     <Compile Include="Text\DiagonalVector.cs" />
     <Compile Include="Text\Edit.cs" />
     <Compile Include="Text\EditScript.cs" />
+    <Compile Include="Text\FileCompInfo.cs" />
     <Compile Include="Text\MyersDiff.cs" />
     <Compile Include="Text\ProcessTextDiff.cs" />
     <Compile Include="Text\TextBinaryDiffArgs.cs" />

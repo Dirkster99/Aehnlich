@@ -56,16 +56,15 @@
 
             try
             {
-                if (System.IO.File.Exists(_Args.A) == false ||
-                    System.IO.File.Exists(_Args.B) == false)
-                    return progress;
-
                 IList<string> a, b;
                 int leadingCharactersToIgnore = 0;
 
                 if (_Args.DiffType == DiffType.File)
                 {
-                    GetFileLines(_Args.A, _Args.B, out a, out b, out leadingCharactersToIgnore, _Args, progress);
+                    var fileA = new FileCompInfo(_Args.A);
+                    var fileB = new FileCompInfo(_Args.B);
+
+                    GetFileLines(fileA, fileB, out a, out b, out leadingCharactersToIgnore, _Args, progress);
                 }
                 else
                 {
@@ -79,7 +78,7 @@
 
                 ListA = a;
                 ListB = b;
-                Script = diff.Execute(a, b);
+                Script = diff.Execute(a, b, progress);
 
                 progress.ResultData = this;
 
@@ -92,7 +91,8 @@
         }
 
         #region TextLineConverter
-        private static void GetFileLines(string fileNameA, string fileNameB,
+        private static void GetFileLines(FileCompInfo fileA,
+                                         FileCompInfo fileB,
                                          out IList<string> a, out IList<string> b,
                                          out int leadingCharactersToIgnore,
                                          TextBinaryDiffArgs args,
@@ -103,35 +103,28 @@
             leadingCharactersToIgnore = 0;
             CompareType compareType = args.CompareType;
 
-            if (compareType == CompareType.Binary ||
-                (args.IsAuto && (DiffUtility.IsBinaryFile(fileNameA) || DiffUtility.IsBinaryFile(fileNameB))))
+            // Nothing to compare if both files do not exist
+            if (fileA.FileExists == false && fileB.FileExists == false)
             {
-                using (FileStream fileA = File.OpenRead(fileNameA))
-                using (FileStream fileB = File.OpenRead(fileNameB))
-                {
-                    BinaryDiff diff = new BinaryDiff
-                    {
-                        FootprintLength = args.BinaryFootprintLength
-                    };
+                a = new List<string>();
+                b = new List<string>();
+                return;
+            }
 
-                    AddCopyCollection addCopy = diff.Execute(fileA, fileB);
-
-                    BinaryDiffLines lines = new BinaryDiffLines(fileA, addCopy, args.BinaryFootprintLength);
-                    a = lines.BaseLines;
-                    b = lines.VersionLines;
-                    leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
-                }
+            if (compareType == CompareType.Binary ||
+                (args.IsAuto && fileA.Is == FileType.Binary || fileB.Is == FileType.Binary))
+            {
+                GetBinaryFileLines(fileA, fileB, args, progress, out a, out b, out leadingCharactersToIgnore);
+                return;
             }
 
             if (compareType == CompareType.Xml || (args.IsAuto && (a == null || b == null)))
             {
-                a = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameA, fileNameA, !args.IsAuto, args, progress);
+                a = fileA.TryGetXmlLines(DiffUtility.GetXmlTextLines, !args.IsAuto, args, progress);
 
                 // If A failed to parse with Auto, then there's no reason to try B.
-                if (a != null)
-                {
-                    b = TryGetXmlLines(DiffUtility.GetXmlTextLines, fileNameB, fileNameB, !args.IsAuto, args, progress);
-                }
+                if (fileA.Is == FileType.Xml)
+                    b = fileB.TryGetXmlLines(DiffUtility.GetXmlTextLines, !args.IsAuto, args, progress);
 
                 // If we get here and the compare type was XML, then both
                 // inputs parsed correctly, and both lists should be non-null.
@@ -140,10 +133,57 @@
                 // handling logic.
             }
 
-            if (a == null || b == null)
+            if (fileA.Is != FileType.Xml || fileB.Is != FileType.Xml)
             {
-                a = DiffUtility.GetFileTextLines(fileNameA, progress);
-                b = DiffUtility.GetFileTextLines(fileNameB, progress);
+                if (fileA.FileExists)
+                    a = DiffUtility.GetFileTextLines(fileA.FileNamePath, progress);
+                else
+                    a = new List<string>();
+
+                if (fileB.FileExists)
+                    b = DiffUtility.GetFileTextLines(fileB.FileNamePath, progress);
+                else
+                    b = new List<string>();
+            }
+        }
+
+        private static void GetBinaryFileLines(FileCompInfo fileA, FileCompInfo fileB,
+                                               TextBinaryDiffArgs args,
+                                               IDiffProgress progress,
+                                               out IList<string> a, out IList<string> b,
+                                               out int leadingCharactersToIgnore)
+        {
+            a = new List<string>();
+            b = new List<string>();
+            leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
+
+            if (fileA.FileExists == true && fileB.FileExists == true)
+            {
+                using (FileStream fileStreamA = File.OpenRead(fileA.FileNamePath))
+                using (FileStream fileStreamB = File.OpenRead(fileB.FileNamePath))
+                {
+                    BinaryDiff diff = new BinaryDiff
+                    {
+                        FootprintLength = args.BinaryFootprintLength
+                    };
+
+                    AddCopyCollection addCopy = diff.Execute(fileStreamA, fileStreamB, progress);
+
+                    BinaryDiffLines lines = new BinaryDiffLines(fileStreamA, addCopy, args.BinaryFootprintLength);
+                    a = lines.BaseLines;
+                    b = lines.VersionLines;
+                    leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
+                }
+
+                return;
+            }
+            else
+            {
+                // TODO FIXME: Handling binary file diffs with files existing:
+                // 1) only on left or
+                // 2) only on right side
+                // is currently not supported by backend diff code
+                return;
             }
         }
 
@@ -200,6 +240,7 @@
                     StringBuilder sb = new StringBuilder("An XML comparison was attempted, but an XML exception occurred while parsing ");
                     sb.Append(name).AppendLine(".").AppendLine();
                     sb.AppendLine("Exception Message:").Append(ex.Message);
+
                     throw new XmlException(sb.ToString(), ex);
                 }
             }

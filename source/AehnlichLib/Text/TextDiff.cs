@@ -1,6 +1,7 @@
 namespace AehnlichLib.Text
 {
     using AehnlichLib.Enums;
+    using AehnlichLib.Interfaces;
     using System.Collections.Generic;
 
     /// <summary>
@@ -72,7 +73,8 @@ namespace AehnlichLib.Text
 	    /// </summary>
 		/// <param name="listA">sequenceA</param>
 		/// <param name="listB">sequenceB</param>
-		public EditScript Execute(IList<string> listA, IList<string> listB)
+		public EditScript Execute(IList<string> listA, IList<string> listB
+                                , IDiffProgress progress)
 		{
 			// Convert input string lists into arrays of integer hash values
 			int[] hashA = this.HashStringList(listA);
@@ -82,7 +84,7 @@ namespace AehnlichLib.Text
 			MyersDiff<int> diff = new MyersDiff<int>(hashA, hashB, this.supportChangeEditType);
 
 			// Gets an EditScript instance that describes all Edits necessary to transform ListA into ListB.
-			EditScript result = diff.Execute();
+			EditScript result = diff.Execute(progress);
 
 			return result;
 		}

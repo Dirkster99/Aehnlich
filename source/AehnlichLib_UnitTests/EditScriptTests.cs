@@ -17,12 +17,14 @@
             bool supportChangeEditType = false;
             var txtDiff = new TextDiff(HashType.HashCode, ignoreCase, ignoreWhiteSpace, leadingCharactersToIgnore, supportChangeEditType);
 
-            var editScript = txtDiff.Execute(new List<string>(), new List<string>());
+            var editScript = txtDiff.Execute(new List<string>(), new List<string>(), null);
+
             Assert.IsTrue(editScript.TotalEditLength == 0);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
 
             editScript = null;
-            editScript = txtDiff.Execute(new List<string>(), new List<string> { "abc", "ccc" });
+            editScript = txtDiff.Execute(new List<string>(), new List<string> { "abc", "ccc" }, null);
+
             Assert.IsTrue(editScript.TotalEditLength == 2);
             Assert.IsTrue(editScript.Count != editScript.TotalEditLength);
             Assert.IsTrue(editScript.Count == 1);
@@ -31,7 +33,8 @@
             Assert.IsTrue(editScript[0].StartA == 0 && editScript[0].StartB == 0);
 
             editScript = null;
-            editScript = txtDiff.Execute(new List<string> { "abc", "ccc" }, new List<string>() { });
+            editScript = txtDiff.Execute(new List<string> { "abc", "ccc" }, new List<string>() { }, null);
+
             Assert.IsTrue(editScript.TotalEditLength == 2);
             Assert.IsTrue(editScript.Count != editScript.TotalEditLength);
             Assert.IsTrue(editScript.Count == 1);
@@ -40,7 +43,8 @@
             Assert.IsTrue(editScript[0].StartA == 0 && editScript[0].StartB == 0);
 
             editScript = null;
-            editScript = txtDiff.Execute(new List<string> { "abc" }, new List<string> { "abc", "ccc" });
+            editScript = txtDiff.Execute(new List<string> { "abc" }, new List<string> { "abc", "ccc" }, null);
+
             Assert.IsTrue(editScript.TotalEditLength == 1);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
             Assert.IsTrue(editScript[0].EditType == EditType.Insert);
@@ -48,7 +52,8 @@
             Assert.IsTrue(editScript[0].StartA == 1 && editScript[0].StartB == 1);
 
             editScript = null;
-            editScript = txtDiff.Execute(new List<string> { "abc", "ccc" }, new List<string> { "abc" });
+            editScript = txtDiff.Execute(new List<string> { "abc", "ccc" }, new List<string> { "abc" }, null);
+
             Assert.IsTrue(editScript.TotalEditLength == 1);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
             Assert.IsTrue(editScript[0].EditType == EditType.Delete);
@@ -58,13 +63,15 @@
             // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             editScript = null;
             editScript = txtDiff.Execute(new List<string> { "abc", "ccc" },
-                                         new List<string> { "abc", "ccc" });
+                                         new List<string> { "abc", "ccc" }, null);
+
             Assert.IsTrue(editScript.TotalEditLength == 0);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
 
             editScript = null;
             editScript = txtDiff.Execute(new List<string> { "abc", "ccc" },
-                                         new List<string> { "abc", "cxc" });
+                                         new List<string> { "abc", "cxc" }, null);
+
             Assert.IsTrue(editScript.TotalEditLength == 2);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
             Assert.IsTrue(editScript[0].EditType == EditType.Delete);
@@ -77,7 +84,8 @@
 
             editScript = null;
             editScript = txtDiff.Execute(new List<string> { "abc", "ccc" },
-                                         new List<string> { "acc", "ccc" });
+                                         new List<string> { "acc", "ccc" }, null);
+
             Assert.IsTrue(editScript.TotalEditLength == 2);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
             Assert.IsTrue(editScript[0].EditType == EditType.Delete);
@@ -90,7 +98,7 @@
 
             editScript = null;
             editScript = txtDiff.Execute(new List<string> { "abc", "ccc" },
-                                         new List<string> { "acc", "cxc" });
+                                         new List<string> { "acc", "cxc" }, null);
             Assert.IsTrue(editScript.TotalEditLength == 4);
             Assert.IsTrue(editScript.Count != editScript.TotalEditLength);
             Assert.IsTrue(editScript.Count == 2);
@@ -112,31 +120,31 @@
             bool supportChangeEditType = false;
             var txtDiff = new TextDiff(HashType.HashCode, ignoreCase, ignoreWhiteSpace, leadingCharactersToIgnore, supportChangeEditType);
 
-            var editScript = txtDiff.Execute(new List<string>(), new List<string>());
+            var editScript = txtDiff.Execute(new List<string>(), new List<string>(), null);
             Assert.IsTrue(editScript.TotalEditLength == 0);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
 
             editScript = null;
-            editScript = txtDiff.Execute(new List<string>(), new List<string> { "abc" });
+            editScript = txtDiff.Execute(new List<string>(), new List<string> { "abc" }, null);
             Assert.IsTrue(editScript.TotalEditLength == 1);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
             Assert.IsTrue(editScript[0].EditType == EditType.Insert);
             Assert.IsTrue(editScript[0].Length == 1);
 
             editScript = null;
-            editScript = txtDiff.Execute(new List<string> { "abc" }, new List<string>());
+            editScript = txtDiff.Execute(new List<string> { "abc" }, new List<string>(), null);
             Assert.IsTrue(editScript.TotalEditLength == 1);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
             Assert.IsTrue(editScript[0].EditType == EditType.Delete);
             Assert.IsTrue(editScript[0].Length == 1);
 
             editScript = null;
-            editScript = txtDiff.Execute(new List<string> { "abc" }, new List<string> { "abc" });
+            editScript = txtDiff.Execute(new List<string> { "abc" }, new List<string> { "abc" }, null);
             Assert.IsTrue(editScript.TotalEditLength == 0);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
 
             editScript = null;
-            editScript = txtDiff.Execute(new List<string> { "acc" }, new List<string> { "abc" });
+            editScript = txtDiff.Execute(new List<string> { "acc" }, new List<string> { "abc" }, null);
             Assert.IsTrue(editScript.TotalEditLength == 2);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
             Assert.IsTrue(editScript[0].EditType == EditType.Delete);
@@ -153,7 +161,7 @@
             bool supportChangeEditType = true;
 
             var txtDiff = new TextDiff(HashType.HashCode, ignoreCase, ignoreWhiteSpace, leadingCharactersToIgnore, supportChangeEditType);
-            var editScript = txtDiff.Execute(new List<string> { "acc" }, new List<string> { "abc" });
+            var editScript = txtDiff.Execute(new List<string> { "acc" }, new List<string> { "abc" }, null);
             Assert.IsTrue(editScript.TotalEditLength == 2);
             Assert.IsTrue(editScript.Count != editScript.TotalEditLength);
             Assert.IsTrue(editScript.Count == 1);
@@ -161,7 +169,7 @@
             Assert.IsTrue(editScript[0].Length == 1);
 
             editScript = null;
-            editScript = txtDiff.Execute(new List<string> { "abc" }, new List<string> { "abc" });
+            editScript = txtDiff.Execute(new List<string> { "abc" }, new List<string> { "abc" }, null);
             Assert.IsTrue(editScript.TotalEditLength == 0);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
         }
@@ -175,7 +183,7 @@
             bool supportChangeEditType = false;
             var txtDiff = new TextDiff(HashType.HashCode, ignoreCase, ignoreWhiteSpace, leadingCharactersToIgnore, supportChangeEditType);
 
-            var editScript = txtDiff.Execute(new List<string> { "abc" }, new List<string> { "  abc  " });
+            var editScript = txtDiff.Execute(new List<string> { "abc" }, new List<string> { "  abc  " }, null);
             Assert.IsTrue(editScript.TotalEditLength == 0);
             Assert.IsTrue(editScript.Count == editScript.TotalEditLength);
         }

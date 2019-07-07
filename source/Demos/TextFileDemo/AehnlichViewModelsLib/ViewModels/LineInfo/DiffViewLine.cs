@@ -140,7 +140,7 @@
                         GetCharactersToDiff(this.Counterpart.text, options, out trimCountB),
                         false); // We don't want Change edits; just Deletes and Inserts.
                     
-                    _changeEditScript = diff.Execute();
+                    _changeEditScript = diff.Execute(null);
 
                     // If we trimmed/ignored leading whitespace, we have to offset each Edit to account for that.
                     foreach (Edit edit in _changeEditScript)

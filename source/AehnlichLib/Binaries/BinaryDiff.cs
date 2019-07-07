@@ -131,7 +131,8 @@ namespace AehnlichLib.Binaries
 		/// <param name="baseFile">The base file.</param>
 		/// <param name="versionFile">The version file.</param>
 		/// <returns>An AddCopyCollection that can be used later to construct the version file from the base file.</returns>
-		public AddCopyCollection Execute(Stream baseFile, Stream versionFile)
+		public AddCopyCollection Execute(Stream baseFile, Stream versionFile,
+                                         IDiffProgress progress)
 		{
 			if (!baseFile.CanSeek || !versionFile.CanSeek)
 			{
@@ -156,9 +157,11 @@ namespace AehnlichLib.Binaries
 
 			while (verPos <= (versionFile.Length - this.footprintLength))
 			{
-				// The GetTableEntry procedure will add the entry if it isn't already there.
-				// This gives us a default behavior of favoring the first match.
-				verHash = this.Footprint(versionFile, verPos, verHash, ref lastVerHashPos);
+                progress.Token.ThrowIfCancellationRequested();
+
+                // The GetTableEntry procedure will add the entry if it isn't already there.
+                // This gives us a default behavior of favoring the first match.
+                verHash = this.Footprint(versionFile, verPos, verHash, ref lastVerHashPos);
 				TableEntry verEntry = GetTableEntry(table, verHash, versionFile, verPos);
 
 				TableEntry baseEntry = null;
