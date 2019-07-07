@@ -8,6 +8,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Reflection;
     using System.Text;
     using System.Xml;
 
@@ -157,34 +158,48 @@
             b = new List<string>();
             leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
 
-            if (fileA.FileExists == true && fileB.FileExists == true)
+            // Neither left nor right file exist or cannot be accessed
+            if (fileA.FileExists == false && fileB.FileExists == false)
+                return;
+
+            Stream fileStreamA = null, fileStreamB = null;
+
+            try
             {
-                using (FileStream fileStreamA = File.OpenRead(fileA.FileNamePath))
-                using (FileStream fileStreamB = File.OpenRead(fileB.FileNamePath))
+                // Open the file or an internal empty stream to compare against
+                if (fileA.FileExists)
+                    fileStreamA = File.OpenRead(fileA.FileNamePath);
+                else
+                    fileStreamA = Assembly.GetExecutingAssembly().GetManifestResourceStream("AehnlichLib.Binaries.Resources.NonExistingFile.bin");
+
+                // Open the file or an internal empty stream to compare against
+                if (fileB.FileExists)
+                    fileStreamB = File.OpenRead(fileB.FileNamePath);
+                else
+                    fileStreamB = Assembly.GetExecutingAssembly().GetManifestResourceStream("AehnlichLib.Binaries.Resources.NonExistingFile.bin");
+
+                BinaryDiff diff = new BinaryDiff
                 {
-                    BinaryDiff diff = new BinaryDiff
-                    {
-                        FootprintLength = args.BinaryFootprintLength
-                    };
+                    FootprintLength = args.BinaryFootprintLength
+                };
 
-                    AddCopyCollection addCopy = diff.Execute(fileStreamA, fileStreamB, progress);
+                AddCopyCollection addCopy = diff.Execute(fileStreamA, fileStreamB, progress);
 
-                    BinaryDiffLines lines = new BinaryDiffLines(fileStreamA, addCopy, args.BinaryFootprintLength);
-                    a = lines.BaseLines;
-                    b = lines.VersionLines;
-                    leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
-                }
-
-                return;
+                BinaryDiffLines lines = new BinaryDiffLines(fileStreamA, addCopy, args.BinaryFootprintLength);
+                a = lines.BaseLines;
+                b = lines.VersionLines;
+                leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
             }
-            else
+            finally
             {
-                // TODO FIXME: Handling binary file diffs with files existing:
-                // 1) only on left or
-                // 2) only on right side
-                // is currently not supported by backend diff code
-                return;
+                if (fileStreamA != null)
+                    fileStreamA.Dispose();
+
+                if (fileStreamB != null)
+                    fileStreamB.Dispose();
             }
+
+            return;
         }
 
         private static void GetTextLines(string textA, string textB, TextBinaryDiffArgs args,

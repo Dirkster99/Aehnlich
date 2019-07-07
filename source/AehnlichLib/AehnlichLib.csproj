@@ -92,6 +92,7 @@
     <Content Include="Docs\Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Binaries\Resources\NonExistingFile.bin" />
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
