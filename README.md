@@ -4,6 +4,10 @@
 # Ähnlich
 The name Ähnlich is German for Similar. It is the name of a WPF Diff/Merge utility based on the WinForms implementation by [Bill Menees](http://menees.com/). This project is [CharityWare](http://charityware.info/), which means you are asked to donate at least $5 US to a charity of your choice if you are using this software. [See also this note](https://github.com/Dirkster99/Aehnlich/blob/master/source/AehnlichLib/Docs/Readme.txt) to better understand what this means.
 
+Other contributing projects are:
+- [AvalonDock](https://github.com/Dirkster99/AvalonDock) and
+- [AvalonEdit](https://github.com/icsharpcode/AvalonEdit).
+
 ## Comparing Directory and Files
 The module that compares directories and files supports 2 views:
 - Directories and Files
@@ -15,6 +19,8 @@ they have been added, deleted, or changed in the **right view** when compared to
 You can double click each directory to browse into the directory structure or use the arrow up button
 in the toolbar to browse back up in the structure.
 
+![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/Aehnlich/Aehnlich_DirCompare_VS2016Dark_00.png)
+![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/Aehnlich/Aehnlich_DirCompare_VS2016Dark.png)
 ![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/DirDiffScreen.png)
 
 ### Files Summary
@@ -25,6 +31,9 @@ the actual path of each file or open it in the Explorer etc.
 ![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/DirDiffScreen_1.png)
 
 ## Comparing Text Files
+![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/Aehnlich/Aehnlich_TextCompare_DarkVS2016.png)
+![](https://raw.githubusercontent.com/Dirkster99/Docu/master/Aehnlich/Aehnlich/Aehnlich_TextCompare_Light.png)
+
 ![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/00%20Docs/%C3%84hnlichDemo.png)
 
 ![](https://raw.githubusercontent.com/Dirkster99/Aehnlich/master/source/00%20Docs/%C3%84hnlich1.png)
