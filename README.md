@@ -6,7 +6,7 @@ The name Ähnlich is German for Similar. It is the name of a WPF Diff/Merge util
 
 Other contributing projects are:
 - [AvalonDock](https://github.com/Dirkster99/AvalonDock) and
-- [AvalonEdit](https://github.com/icsharpcode/AvalonEdit).
+- [AvalonEdit](https://github.com/icsharpcode/AvalonEdit) via [AvalonEditHighlightingThemes](https://github.com/Dirkster99/AvalonEditHighlightingThemes).
 
 ## Comparing Directory and Files
 The module that compares directories and files supports 2 views:
