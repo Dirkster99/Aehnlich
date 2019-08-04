@@ -48,7 +48,6 @@
                                 Document="{Binding LeftDiffView.Document, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 FontFamily="{TemplateBinding FontFamily}"
                                 FontSize="{TemplateBinding FontSize}"
-                                HorizontalScrollBarVisibility="Visible"
                                 IsEnabled="{Binding LeftDiffView.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}, Converter={StaticResource NullToEnabledPropConverter}}"
                                 IsModified="{Binding LeftDiffView.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 IsReadOnly="{Binding LeftDiffView.IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
@@ -59,7 +58,7 @@
                                 ShowLineNumbers="{Binding LeftDiffView.ShowLineNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 SyntaxHighlighting="{Binding LeftDiffView.HighlightingDefinition, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 TextBoxController="{Binding LeftDiffView.TxtControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
-                                VerticalScrollBarVisibility="Visible" />
+                                />
                             <!--
                             -->
 
@@ -74,7 +73,6 @@
                                 Document="{Binding RightDiffView.Document, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 FontFamily="{TemplateBinding FontFamily}"
                                 FontSize="{TemplateBinding FontSize}"
-                                HorizontalScrollBarVisibility="Visible"
                                 IsEnabled="{Binding RightDiffView.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}, Converter={StaticResource NullToEnabledPropConverter}}"
                                 IsModified="{Binding RightDiffView.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 IsReadOnly="{Binding RightDiffView.IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
@@ -85,7 +83,7 @@
                                 ShowLineNumbers="{Binding RightDiffView.ShowLineNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 SyntaxHighlighting="{Binding RightDiffView.HighlightingDefinition, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
                                 TextBoxController="{Binding RightDiffView.TxtControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffControl}}}"
-                                VerticalScrollBarVisibility="Visible" />
+                                />
                         </Grid>
                     </Border>
                 </ControlTemplate>

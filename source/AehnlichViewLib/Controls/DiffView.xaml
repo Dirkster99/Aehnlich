@@ -14,12 +14,14 @@
         <Setter Property="EditorCurrentLineBackground" Value="{DynamicResource {x:Static reskeys:ResourceKeys.EditorCurrentLineBackgroundBrushKey}}" />
         <Setter Property="EditorCurrentLineBorder" Value="{DynamicResource {x:Static reskeys:ResourceKeys.EditorCurrentLineBorderBrushKey}}" />
         <Setter Property="EditorCurrentLineBorderThickness" Value="{DynamicResource {x:Static reskeys:ResourceKeys.EditorCurrentLineBorderThicknessKey}}" />
-        
+
         <Setter Property="ColorBackgroundAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}" />
         <Setter Property="ColorBackgroundContext" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}" />
         <Setter Property="ColorBackgroundDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}" />
         <!--  AvalonEdit does not support RTL, so ensure we use LTR by default  -->
         <Setter Property="FlowDirection" Value="LeftToRight" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DiffView}">
@@ -65,21 +67,113 @@
                             </Setter>
                         </Style>
                     </ControlTemplate.Resources>
-                    <Border
-                        Background="{TemplateBinding Background}"
+                    <ScrollViewer
+                        Name="PART_ScrollViewer"
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalContentAlignment="Left"
+                        VerticalContentAlignment="Top"
+                        Background="Transparent"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                        <ScrollViewer
-                            Name="PART_ScrollViewer"
-                            Padding="{TemplateBinding Padding}"
-                            HorizontalContentAlignment="Left"
-                            VerticalContentAlignment="Top"
-                            CanContentScroll="True"
-                            Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TextArea}"
-                            Focusable="False"
-                            HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
-                            VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}" />
-                    </Border>
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CanContentScroll="True"
+                        Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TextArea}"
+                        Focusable="False"
+                        HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
+                        VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}">
+                        <ScrollViewer.Template>
+                            <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                                <Border
+                                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                    <Grid
+                                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                        Background="Transparent">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <!--  Ensure correct background color for TextEditor area only  -->
+                                        <Border
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Background="{DynamicResource {x:Static reskeys:ResourceKeys.EditorBackground}}"
+                                            BorderThickness="0">
+                                            <!--  Display TextEditor content in upper left corner  -->
+                                            <ScrollContentPresenter
+                                                CanContentScroll="True"
+                                                CanHorizontallyScroll="True"
+                                                CanVerticallyScroll="True"
+                                                Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DiffView}}, Path=TextArea}"
+                                                KeyboardNavigation.DirectionalNavigation="Local" />
+                                        </Border>
+
+                                        <!--  Display Vertical Scrollbar to the right  -->
+                                        <ScrollBar
+                                            Name="PART_VerticalScrollBar"
+                                            Grid.Column="1"
+                                            Maximum="{TemplateBinding ScrollableHeight}"
+                                            ViewportSize="{TemplateBinding ViewportHeight}"
+                                            Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                            Value="{TemplateBinding VerticalOffset}" />
+
+                                        <!--  Display mini-toolbar and Horizontal scrollbar at the bottom of the view  -->
+                                        <Grid
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Background="Transparent">
+                                            <Grid.ColumnDefinitions>
+                                                <!--  ColumnDefinition Width="Auto" /  -->
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <!--unit:UnitCombobox DataContext="{Binding SizeUnitLabel}"
+                                                                   FontSize="10"
+                                                                   Height="{Binding ElementName=PART_HorizontalScrollBar, Path=ActualHeight}"
+                                                                   ItemsSource="{Binding SelectedItem.DefaultValues}"
+                                                                   ToolTip="{Binding ValueTip}"
+                                                                   HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                                                   Grid.Column="0"
+                                                                   Margin="3,0"
+                                                                   Padding="0"
+                                                                   BorderThickness="1"
+                                                                   BorderBrush="Transparent"
+                                                                   IsEditable="True">
+                                                    <unit:UnitCombobox.Text>
+                                                        <Binding Path="StringValue" Mode="TwoWay" ValidatesOnDataErrors="True"/>
+                                                    </unit:UnitCombobox.Text>
+                                                </unit:UnitCombobox-->
+
+                                            <ScrollBar
+                                                Name="PART_HorizontalScrollBar"
+                                                Grid.Column="1"
+                                                VerticalAlignment="Center"
+                                                Maximum="{TemplateBinding ScrollableWidth}"
+                                                Orientation="Horizontal"
+                                                ViewportSize="{TemplateBinding ViewportWidth}"
+                                                Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                                Value="{TemplateBinding HorizontalOffset}" />
+                                        </Grid>
+                                        <!--  Using DialogBackgroundBrush since Editor can use a WPF Theme independent background color  -->
+                                        <!--DockPanel Grid.Column="1" Grid.Row="1"
+                                                       LastChildFill="false"
+                                                       Background="White">
+                                                <Rectangle Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Width="1" Fill="White" DockPanel.Dock="Left" />
+                                                <Rectangle Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Height="1" Fill="White" DockPanel.Dock="Top" />
+                                            </DockPanel-->
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </ScrollViewer.Template>
+
+                    </ScrollViewer>
                     <ControlTemplate.Triggers>
                         <Trigger Property="WordWrap" Value="True">
                             <Setter TargetName="PART_ScrollViewer" Property="HorizontalScrollBarVisibility" Value="Disabled" />

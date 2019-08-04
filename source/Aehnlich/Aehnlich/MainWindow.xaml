@@ -21,6 +21,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="16" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Column="0" Margin="3">

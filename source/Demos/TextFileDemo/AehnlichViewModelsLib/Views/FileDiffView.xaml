@@ -76,7 +76,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="4*" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.ColumnSpan="2" Margin="0,0,0,3">
@@ -637,7 +637,6 @@
                     Focusable="False"
                     FontFamily="Consolas"
                     FontSize="12pt"
-                    HorizontalScrollBarVisibility="Visible"
                     IsModified="{Binding Path=IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     IsReadOnly="True"
                     ItemsSource="{Binding DocLineDiffs}"
@@ -645,7 +644,7 @@
                     Options="{Binding ElementName=DiffCtrl, Path=DiffViewOptions, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                     ShowLineNumbers="True"
                     TextBoxController="{Binding TxtControl}"
-                    VerticalScrollBarVisibility="Visible" />
+                    />
             </Grid>
         </Grid>
     </Grid>
