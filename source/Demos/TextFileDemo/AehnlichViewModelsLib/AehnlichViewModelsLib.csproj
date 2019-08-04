@@ -42,8 +42,8 @@
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Dirkster.HL.1.0.3\lib\net4\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
-    <Reference Include="NumericUpDownLib, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Dirkster.NumericUpDownLib.2.3.0\lib\net4\NumericUpDownLib.dll</HintPath>
+    <Reference Include="NumericUpDownLib, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Dirkster.NumericUpDownLib.2.3.1\lib\net4\NumericUpDownLib.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
