@@ -394,6 +394,13 @@
                 <ctrl:DiffDirView.ContextMenuA>
                     <ContextMenu>
                         <MenuItem
+                            Command="{Binding Data.BrowseItemCommand, Source={StaticResource ControlContextProxy}}"
+                            CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                            Header="Compare..."
+                            IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        <Separator/>
+                        
+                        <MenuItem
                             Command="{Binding Data.OpenContainingFolderCommand, Source={StaticResource ControlContextProxy}}"
                             CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathA, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                             Header="Open Containing Folder"
@@ -414,6 +421,13 @@
                 </ctrl:DiffDirView.ContextMenuA>
                 <ctrl:DiffDirView.ContextMenuB>
                     <ContextMenu>
+                        <MenuItem
+                            Command="{Binding Data.BrowseItemCommand, Source={StaticResource ControlContextProxy}}"
+                            CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                            Header="Compare..."
+                            IsEnabled="{Binding Path=PlacementTarget.DataContext.IsItemInB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        <Separator/>
+
                         <MenuItem
                             Command="{Binding Data.OpenContainingFolderCommand, Source={StaticResource ControlContextProxy}}"
                             CommandParameter="{Binding Path=PlacementTarget.DataContext.ItemPathB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
