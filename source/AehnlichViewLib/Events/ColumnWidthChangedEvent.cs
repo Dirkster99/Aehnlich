@@ -7,8 +7,8 @@
     {
         public ColumnWidthChangedEvent(GridLength columnWidthA, GridLength columnWidthB)
         {
-            ColumnWidthA = columnWidthA;
-            ColumnWidthB = columnWidthB;
+            ColumnWidthA = new GridLength(columnWidthA.Value, columnWidthA.GridUnitType);
+            ColumnWidthB = new GridLength(columnWidthB.Value, columnWidthB.GridUnitType);
         }
 
         public GridLength ColumnWidthA { get; }

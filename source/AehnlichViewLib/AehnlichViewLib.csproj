@@ -64,6 +64,7 @@
     <Compile Include="Controls\DiffDirView.xaml.cs">
       <DependentUpon>DiffDirView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IGridSplitterSupport.cs" />
     <Compile Include="Controls\Overview\DoublesToVisibilityConverter.cs" />
     <Compile Include="Controls\Overview\RangeAlignment.cs" />
     <Compile Include="Controls\Overview\RangeItemsControl.xaml.cs">
@@ -97,12 +98,12 @@
     <Compile Include="Interfaces\IDiffColorDefinitions.cs" />
     <Compile Include="Models\Segment.cs" />
     <Compile Include="Themes\ResourceKeys.cs" />
-    <Page Include="Controls\DiffControl.xaml">
+    <Page Include="Controls\DiffTextView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="Controls\DiffControl.xaml.cs">
-      <DependentUpon>DiffControl.xaml</DependentUpon>
+    <Compile Include="Controls\DiffTextView.xaml.cs">
+      <DependentUpon>DiffTextView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Controls\DiffDirView.xaml">

@@ -1,6 +1,7 @@
 ﻿namespace AehnlichViewLib.Controls
 {
     using AehnlichViewLib.Enums;
+    using AehnlichViewLib.Events;
     using AehnlichViewLib.Interfaces;
     using AehnlichViewLib.Models;
     using ICSharpCode.AvalonEdit;
@@ -16,88 +17,128 @@
     /// </summary>
     [TemplatePart(Name = PART_LeftDiffView, Type = typeof(DiffView))]
     [TemplatePart(Name = PART_RightDiffView, Type = typeof(DiffView))]
-    public class DiffControl : Control
+    [TemplatePart(Name = PART_ColumnA, Type = typeof(ColumnDefinition))]
+    [TemplatePart(Name = PART_ColumnB, Type = typeof(ColumnDefinition))]
+    [TemplatePart(Name = PART_GridSplitter, Type = typeof(GridSplitter))]
+    public class DiffTextView : Control, IGridSplitterSupport
     {
         #region fields
         public const string PART_RightDiffView = "PART_TextRight";
         public const string PART_LeftDiffView = "PART_TextLeft";
+
+        #region Column IGridSplitterSupport
+        /// <summary>
+        /// Defines the name of the right required column. The size of this column can be
+        /// synchronized with content in the control's client application via
+        /// <see cref="IGridSplitterSupport"/>.
+        /// </summary>
+        public const string PART_ColumnA = "PART_ColumnA";
+
+        /// <summary>
+        /// Defines the name of the left required column. The size of this column can be
+        /// synchronized with content in the control's client application via
+        /// <see cref="IGridSplitterSupport"/>.
+        /// </summary>
+        public const string PART_ColumnB = "PART_ColumnB";
+
+        /// <summary>
+        /// Defines the name of the required middle gridsplitter.
+        /// The size of the left and right column of the grid splitter can be
+        /// synchronized with content in the control's client application via
+        /// <see cref="IGridSplitterSupport"/>.
+        /// </summary>
+        public const string PART_GridSplitter = "PART_GridSplitter";
+        #endregion Column IGridSplitterSupport
 
         /// <summary>
         /// Implements the backing store of the <see cref="LeftDiffView"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LeftDiffViewProperty =
             DependencyProperty.Register("LeftDiffView", typeof(IDiffView),
-                typeof(DiffControl), new PropertyMetadata(null));
+                typeof(DiffTextView), new PropertyMetadata(null));
 
         /// <summary>
         /// Implements the backing store of the <see cref="RightDiffView"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty RightDiffViewProperty =
             DependencyProperty.Register("RightDiffView", typeof(IDiffView),
-                typeof(DiffControl), new PropertyMetadata(null));
+                typeof(DiffTextView), new PropertyMetadata(null));
 
         /// <summary>
         /// Implements the backing store of the <see cref="SetFocus"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SetFocusProperty =
             DependencyProperty.Register("SetFocus", typeof(Focus),
-                typeof(DiffControl), new PropertyMetadata(Enums.Focus.LeftFilePath, OnSetFocusChanged));
+                typeof(DiffTextView), new PropertyMetadata(Enums.Focus.LeftFilePath, OnSetFocusChanged));
 
         /// <summary>
         /// Implements the backing store of the <see cref="LeftFileName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LeftFileNameProperty =
             DependencyProperty.Register("LeftFileName", typeof(string),
-                typeof(DiffControl), new PropertyMetadata(null));
+                typeof(DiffTextView), new PropertyMetadata(null));
 
         /// <summary>
         /// Implements the backing store of the <see cref="RightFileName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty RightFileNameProperty =
             DependencyProperty.Register("RightFileName", typeof(string),
-                typeof(DiffControl), new PropertyMetadata(null));
+                typeof(DiffTextView), new PropertyMetadata(null));
 
         /// <summary>
         /// Implements the backing store of the <see cref="ViewPortChangedCommand"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ViewPortChangedCommandProperty =
             DependencyProperty.Register("ViewPortChangedCommand", typeof(ICommand),
-                typeof(DiffControl), new PropertyMetadata(null));
+                typeof(DiffTextView), new PropertyMetadata(null));
 
         public static readonly DependencyProperty DiffViewOptionsProperty =
             DependencyProperty.Register("DiffViewOptions", typeof(TextEditorOptions),
-                typeof(DiffControl), new PropertyMetadata(new TextEditorOptions { IndentationSize = 4, ShowTabs = false, ConvertTabsToSpaces = true }));
+                typeof(DiffTextView), new PropertyMetadata(new TextEditorOptions { IndentationSize = 4, ShowTabs = false, ConvertTabsToSpaces = true }));
 
         #region GridColumn Sync
         /// <summary>
-        /// Implements the backing store of the <see cref="WidthColumnA"/> dependency property.
+        /// Implements the backing store of the <see cref="ColumnWidthA"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty WidthColumnAProperty =
-            DependencyProperty.Register("WidthColumnA", typeof(GridLength),
-                typeof(DiffControl), new PropertyMetadata(new GridLength(1, GridUnitType.Star)));
+        public static readonly DependencyProperty ColumnWidthAProperty =
+            DependencyProperty.Register("ColumnWidthA", typeof(GridLength),
+                typeof(DiffTextView),
+                // Note: Note sure why the difference to ColumnWidthB property is necessary
+                //       but the GridSplitter is initially frozen (cannot be dragged in themed App) if both values are 1.0
+                new PropertyMetadata(new GridLength(1.0 - 0.00000000001,
+                    GridUnitType.Star), OnColumnWidthAChanged));
 
         /// <summary>
-        /// Implements the backing store of the <see cref="WidthColumnB"/> dependency property.
+        /// Implements the backing store of the <see cref="ColumnWidthB"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty WidthColumnBProperty =
-            DependencyProperty.Register("WidthColumnB", typeof(GridLength),
-                typeof(DiffControl), new PropertyMetadata(new GridLength(1, GridUnitType.Star)));
+        public static readonly DependencyProperty ColumnWidthBProperty =
+            DependencyProperty.Register("ColumnWidthB", typeof(GridLength),
+                typeof(DiffTextView), new PropertyMetadata(new GridLength(1.0, GridUnitType.Star), OnColumnWidthBChanged));
         #endregion GridColumn Sync
 
         private DiffView _PART_LeftDiffView, _PART_RightDiffView;
         private ScrollViewer _leftScrollViewer, _rightScrollViewer;
+        private GridSplitter _PART_GridSplitter;
+        private ColumnDefinition _PART_ColumnA, _PART_ColumnB;
         #endregion fields
 
         #region ctors
         /// <summary>
         /// Static class constructor
         /// </summary>
-        static DiffControl()
+        static DiffTextView()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DiffControl),
-                new FrameworkPropertyMetadata(typeof(DiffControl)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DiffTextView),
+                new FrameworkPropertyMetadata(typeof(DiffTextView)));
         }
         #endregion ctors
+
+        /// <summary>
+        /// Implements an event that is invoked when the column view with columns A and B
+        /// (PART_GridA and PART_GridB separated by a GridSplitter) is being
+        /// resized in the way that the visible proportional width has been changed.
+        /// </summary>
+        public event EventHandler<ColumnWidthChangedEvent> ColumnWidthChanged;
 
         #region properties
         /// <summary>
@@ -156,16 +197,16 @@
         }
 
         #region GridColumn Sync
-        public GridLength WidthColumnA
+        public GridLength ColumnWidthA
         {
-            get { return (GridLength)GetValue(WidthColumnAProperty); }
-            set { SetValue(WidthColumnAProperty, value); }
+            get { return (GridLength)GetValue(ColumnWidthAProperty); }
+            set { SetValue(ColumnWidthAProperty, value); }
         }
 
-        public GridLength WidthColumnB
+        public GridLength ColumnWidthB
         {
-            get { return (GridLength)GetValue(WidthColumnBProperty); }
-            set { SetValue(WidthColumnBProperty, value); }
+            get { return (GridLength)GetValue(ColumnWidthBProperty); }
+            set { SetValue(ColumnWidthBProperty, value); }
         }
         #endregion
         #endregion GridColumn Sync
@@ -174,8 +215,26 @@
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+
+            _PART_ColumnA = GetTemplateChild(PART_ColumnA) as ColumnDefinition;
+            _PART_ColumnB = GetTemplateChild(PART_ColumnB) as ColumnDefinition;
+
+            _PART_GridSplitter = GetTemplateChild(PART_GridSplitter) as GridSplitter;
+
             this.Loaded += new RoutedEventHandler(this.OnLoaded);
         }
+
+        #region private static
+        private static void OnColumnWidthAChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as DiffTextView).OnColumnWidthAChanged(e);
+        }
+
+        private static void OnColumnWidthBChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as DiffTextView).OnColumnWidthBChanged(e);
+        }
+        #endregion private static
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -190,6 +249,12 @@
 
             if (_rightScrollViewer != null)
                 _rightScrollViewer.ScrollChanged += Scrollviewer_ScrollChanged;
+
+            if (_PART_GridSplitter != null)
+            {
+                _PART_GridSplitter.DragCompleted += _PART_GridSplitter_DragCompleted;
+                _PART_GridSplitter.DragDelta += _PART_GridSplitter_DragDelta;
+            }
         }
 
         /// <summary>
@@ -277,10 +342,54 @@
             return retour;
         }
 
+        private void OnColumnWidthAChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (_PART_ColumnA != null)
+            {
+                var newValue = (GridLength)e.NewValue;
+
+                if (Math.Abs(newValue.Value - _PART_ColumnA.Width.Value) > 1)
+                {
+                    _PART_ColumnA.Width = (GridLength)e.NewValue;
+                }
+            }
+        }
+
+        private void OnColumnWidthBChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (_PART_ColumnB != null)
+            {
+                var newValue = (GridLength)e.NewValue;
+
+                if (Math.Abs( newValue.Value - _PART_ColumnB.Width.Value) > 1)
+                {
+                    _PART_ColumnB.Width = (GridLength)e.NewValue;
+                }
+            }
+        }
+
+        private void _PART_GridSplitter_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            if (_PART_ColumnA != null && _PART_ColumnB != null)
+            {
+                this.ColumnWidthChanged?.Invoke(this, new ColumnWidthChangedEvent(_PART_ColumnA.Width,
+                                                                                  _PART_ColumnB.Width));
+            }
+        }
+
+        private void _PART_GridSplitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            if (_PART_ColumnA != null && _PART_ColumnB != null)
+            {
+                this.ColumnWidthChanged?.Invoke(this, new ColumnWidthChangedEvent(_PART_ColumnA.Width,
+                                                                                  _PART_ColumnB.Width));
+            }
+        }
+
         #region SetFocus Dependency Property
         private static void OnSetFocusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as DiffControl).OnSetFocusChanged(e);
+            (d as DiffTextView).OnSetFocusChanged(e);
         }
 
         private void OnSetFocusChanged(DependencyPropertyChangedEventArgs e)

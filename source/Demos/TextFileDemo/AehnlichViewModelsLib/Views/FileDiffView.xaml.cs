@@ -1,5 +1,6 @@
 ﻿namespace AehnlichViewModelsLib.Views
 {
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -16,6 +17,8 @@
         public static readonly DependencyProperty ViewLoadedCommandProperty =
             DependencyProperty.Register("ViewLoadedCommand", typeof(ICommand),
                 typeof(FileDiffView), new PropertyMetadata(null));
+
+        private object lockobj = new object();
         #endregion fields
 
         /// <summary>
@@ -56,7 +59,7 @@
             {
                 if (ViewLoadedCommand.CanExecute(null))
                 {
-                    // Check whether this attached behaviour is bound to a RoutedCommand
+                    // Check whether this is bound to a RoutedCommand
                     if (ViewLoadedCommand is RoutedCommand)
                     {
                         // Execute the routed command
@@ -70,6 +73,34 @@
                 }
             }
         }
+
+        #region Column Width A B Synchronization
+        private void MainSplitter_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            DiffCtrl.ColumnWidthA = this.TopColumnA.Width;
+            DiffCtrl.ColumnWidthB = this.TopColumnB.Width;
+        }
+
+        private void MainSplitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            DiffCtrl.ColumnWidthA = this.TopColumnA.Width;
+            DiffCtrl.ColumnWidthB = this.TopColumnB.Width;
+        }
+
+        /// <summary>
+        /// Eventhandler for the column changed event of the DiffTextView control.
+        /// 
+        /// The left and right column width of column A and B has changed in the control.
+        /// -> Synchronze new column sizes with those column sizes of the surrounding control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DiffText_ColumnWidthChanged(object sender, AehnlichViewLib.Events.ColumnWidthChangedEvent e)
+        {
+            this.TopColumnA.Width = e.ColumnWidthA;
+            this.TopColumnB.Width = e.ColumnWidthB;
+        }
+        #endregion Column Width A B Synchronization
         #endregion methods
     }
 }

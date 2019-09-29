@@ -468,15 +468,15 @@
 
                     <Grid Grid.Row="0" Grid.Column="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Name="ColumnA" Width="*" />
+                            <ColumnDefinition Name="TopColumnA" Width="*" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Name="ColumnB" Width="*" />
+                            <ColumnDefinition Name="TopColumnB" Width="*" />
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Row="0" Grid.Column="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="4*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*"  />
                             </Grid.ColumnDefinitions>
 
                             <sc:SuggestBox
@@ -515,7 +515,10 @@
                             HorizontalAlignment="Stretch"
                             Background="Transparent"
                             ToolTip="{Binding DiffCtrl.ToolTipText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                            ToolTipService.IsEnabled="True" />
+                            ToolTipService.IsEnabled="True"
+                            DragCompleted="MainSplitter_DragCompleted"
+                            DragDelta="MainSplitter_DragDelta"
+                            />
 
                         <Grid Grid.Row="0" Grid.Column="2">
                             <Grid.ColumnDefinitions>
@@ -598,10 +601,11 @@
                         </Grid>
                     </Grid>
 
-                    <ctrl:DiffControl
+                    <ctrl:DiffTextView
                         Name="DiffCtrl"
                         Grid.Row="1"
                         Margin="3,0,3,0"
+                        ColumnWidthChanged="DiffText_ColumnWidthChanged"
                         DiffViewOptions="{Binding DiffCtrl.DiffViewOptions, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                         LeftDiffView="{Binding DiffCtrl.ViewA}"
                         LeftFileName="{Binding FilePathA, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
@@ -610,8 +614,14 @@
                         SetFocus="{Binding FocusControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                         ViewPortChangedCommand="{Binding ViewPortChangedCommand}"
                         Visibility="{Binding DiffProgress.IsProgressbarVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressVisibilityPropConverter}}"
-                        WidthColumnA="{Binding ElementName=ColumnA, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        WidthColumnB="{Binding ElementName=ColumnB, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    />
+                    <!--
+                        - Using equal values will freeze the GridSplitter in the control when trying to initially drag the splitter
+                          in the themed app?
+                        
+                        ColumnWidthA="{Binding ElementName=TopColumnA, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        ColumnWidthB="{Binding ElementName=TopColumnB, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    -->
                 </Grid>
             </Grid>
 

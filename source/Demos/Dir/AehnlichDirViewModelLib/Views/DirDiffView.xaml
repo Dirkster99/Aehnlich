@@ -340,8 +340,9 @@
                 Width="6"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
-                DragCompleted="GridSplitter_DragCompleted"
-                DragDelta="MainSplitter_DragDelta" />
+                DragCompleted="MainSplitter_DragCompleted"
+                DragDelta="MainSplitter_DragDelta"
+                />
 
             <TextBox
                 Name="RightDirPath"

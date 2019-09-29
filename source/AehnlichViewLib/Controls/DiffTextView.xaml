@@ -1,0 +1,101 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="clr-namespace:AehnlichViewLib.Converters"
+    xmlns:local="clr-namespace:AehnlichViewLib.Controls">
+
+    <Style TargetType="{x:Type local:DiffTextView}">
+        <Setter Property="FontFamily" Value="Consolas" />
+        <Setter Property="FontSize" Value="12pt" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DiffTextView}">
+                    <ControlTemplate.Resources>
+                        <conv:NullToEnabledPropConverter x:Key="NullToEnabledPropConverter" />
+                        <conv:NullToVisibilityPropConverter x:Key="NullToVisibilityPropConverter" />
+                    </ControlTemplate.Resources>
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <!--ColumnDefinition Name="PART_ColumnA" Width="*" /-->
+                                <ColumnDefinition Width="{Binding Path=ColumnWidthA, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Name="PART_ColumnA"
+                                                  />
+
+                                <ColumnDefinition Width="Auto" />
+
+                                <!--ColumnDefinition Name="PART_ColumnB" Width="*" /-->
+                                <ColumnDefinition Width="{Binding Path=ColumnWidthB, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Name="PART_ColumnB"
+                                                  />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <GridSplitter
+                                Name="PART_GridSplitter"
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Width="6"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent" />
+
+                            <!--  Editor IsEnabled if Document is bound with not null to work around crash  -->
+                            <local:DiffView
+                                x:Name="PART_TextLeft"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="0,3"
+                                ActivationTimeStamp="{Binding LeftDiffView.ViewActivation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                Column="{Binding LeftDiffView.Column, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                Document="{Binding LeftDiffView.Document, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                IsEnabled="{Binding LeftDiffView.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}, Converter={StaticResource NullToEnabledPropConverter}}"
+                                IsModified="{Binding LeftDiffView.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                IsReadOnly="{Binding LeftDiffView.IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                ItemsSource="{Binding DiffCtrl.ViewA.DocLineDiffs}"
+                                Line="{Binding LeftDiffView.Line, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                LineDiffDataProvider="{Binding LeftDiffView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                Options="{TemplateBinding DiffViewOptions}"
+                                ShowLineNumbers="{Binding LeftDiffView.ShowLineNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                SyntaxHighlighting="{Binding LeftDiffView.HighlightingDefinition, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                TextBoxController="{Binding LeftDiffView.TxtControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                />
+
+                            <!--  Editor IsEnabled if Document is bound with not null to work around crash  -->
+                            <local:DiffView
+                                x:Name="PART_TextRight"
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Margin="0,3"
+                                ActivationTimeStamp="{Binding RightDiffView.ViewActivation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                Column="{Binding RightDiffView.Column, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                Document="{Binding RightDiffView.Document, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                IsEnabled="{Binding RightDiffView.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}, Converter={StaticResource NullToEnabledPropConverter}}"
+                                IsModified="{Binding RightDiffView.IsDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                IsReadOnly="{Binding RightDiffView.IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                ItemsSource="{Binding DiffCtrl.ViewB.DocLineDiffs}"
+                                Line="{Binding RightDiffView.Line, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                LineDiffDataProvider="{Binding RightDiffView, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                Options="{TemplateBinding DiffViewOptions}"
+                                ShowLineNumbers="{Binding RightDiffView.ShowLineNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                SyntaxHighlighting="{Binding RightDiffView.HighlightingDefinition, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                TextBoxController="{Binding RightDiffView.TxtControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+                                />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

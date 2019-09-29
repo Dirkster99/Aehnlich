@@ -19,7 +19,10 @@
     /// </summary>
     [TemplatePart(Name = PART_GridA, Type = typeof(DataGrid))]
     [TemplatePart(Name = PART_GridB, Type = typeof(DataGrid))]
-    public partial class DiffDirView : Control
+    [TemplatePart(Name = PART_ColumnA, Type = typeof(ColumnDefinition))]
+    [TemplatePart(Name = PART_ColumnB, Type = typeof(ColumnDefinition))]
+    [TemplatePart(Name = PART_GridSplitter, Type = typeof(GridSplitter))]
+    public partial class DiffDirView : Control, IGridSplitterSupport
     {
         #region fields
         /// <summary>
@@ -33,6 +36,30 @@
         /// the middle splitter object with the controles that are outside of this control.
         /// </summary>
         public const string PART_GridB = "PART_GridB";
+
+        #region Column IGridSplitterSupport
+        /// <summary>
+        /// Defines the name of the right required column. The size of this column can be
+        /// synchronized with content in the control's client application via
+        /// <see cref="IGridSplitterSupport"/>.
+        /// </summary>
+        public const string PART_ColumnA = "PART_ColumnA";
+
+        /// <summary>
+        /// Defines the name of the left required column. The size of this column can be
+        /// synchronized with content in the control's client application via
+        /// <see cref="IGridSplitterSupport"/>.
+        /// </summary>
+        public const string PART_ColumnB = "PART_ColumnB";
+
+        /// <summary>
+        /// Defines the name of the required middle gridsplitter.
+        /// The size of the left and right column of the grid splitter can be
+        /// synchronized with content in the control's client application via
+        /// <see cref="IGridSplitterSupport"/>.
+        /// </summary>
+        public const string PART_GridSplitter = "PART_GridSplitter";
+        #endregion Column IGridSplitterSupport
 
         /// <summary>
         /// Implements the backing store of the <see cref="ItemsSource"/> dependency property.
@@ -542,10 +569,10 @@
         {
             base.OnApplyTemplate();
 
-            _PART_ColumnA = GetTemplateChild("PART_ColumnA") as ColumnDefinition;
-            _PART_ColumnB = GetTemplateChild("PART_ColumnB") as ColumnDefinition;
+            _PART_ColumnA = GetTemplateChild(PART_ColumnA) as ColumnDefinition;
+            _PART_ColumnB = GetTemplateChild(PART_ColumnB) as ColumnDefinition;
 
-            _PART_GridSplitter = GetTemplateChild("PART_GridSplitter") as GridSplitter;
+            _PART_GridSplitter = GetTemplateChild(PART_GridSplitter) as GridSplitter;
 
             _PART_GridA = GetTemplateChild(PART_GridA) as DataGrid;
             _PART_GridB = GetTemplateChild(PART_GridB) as DataGrid;
