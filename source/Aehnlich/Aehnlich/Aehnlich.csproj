@@ -95,8 +95,8 @@
     <Reference Include="MWindowLib, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dirkster.MWindowLib.1.2.1\lib\net452\MWindowLib.dll</HintPath>
     </Reference>
-    <Reference Include="SuggestBoxLib, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.SuggestBoxLib.1.1.1.1\lib\net452\SuggestBoxLib.dll</HintPath>
+    <Reference Include="SuggestBoxLib, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.SuggestBoxLib.1.2.1\lib\net451\SuggestBoxLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -116,11 +116,11 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=4.5.12.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.AvalonDock.Themes.VS2013.3.5.12\lib\net4\Xceed.Wpf.AvalonDock.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.13.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.AvalonDock.3.5.13\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2013, Version=4.5.12.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.AvalonDock.Themes.VS2013.3.5.12\lib\net4\Xceed.Wpf.AvalonDock.Themes.VS2013.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2013, Version=3.5.13.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.AvalonDock.Themes.VS2013.3.5.13\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2013.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
