@@ -49,9 +49,22 @@
         /// <returns></returns>
         public string NormalizePath(string path)
         {
-            return Path.GetFullPath(new Uri(path).LocalPath)
-                       .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                       .ToUpperInvariant();
+            try
+            {
+                if (string.IsNullOrEmpty(path) == false)
+                {
+                    return Path.GetFullPath(new Uri(path).LocalPath)
+                               .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                               .ToUpperInvariant();
+                }
+                else
+                    return path;
+
+            }
+            catch
+            {
+                return path;
+            }
         }        
         
         /// <summary>
