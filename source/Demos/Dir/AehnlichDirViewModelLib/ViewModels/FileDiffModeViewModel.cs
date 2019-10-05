@@ -4,6 +4,15 @@
     using AehnlichLib.Enums;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Implements a viewmodel that manages a list of directory diff modes
+    /// (eg.: 'File Length', 'Last Change', 'File Length + Last Change', ... 'All Bytes')
+    /// and their strings for binding with ItemControls, such as, ComboBox etc.
+    /// 
+    /// The selected diff mode from this viewmodel determines the diff strategy/properties used
+    /// when each left file is compared with its right file in the directory diff to determine
+    /// whether two files existing on both sides are flagged different or not.
+    /// </summary>
     internal class FileDiffModeViewModel : Base.ViewModelBase, IFileDiffModeViewModel
     {
         #region fields
@@ -90,7 +99,7 @@
 
             diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes",
                 "Compare each file by their Byte-by-byte sequence only",
-                DiffDirFileMode.ByteLength_AllBytes));
+                DiffDirFileMode.AllBytes));
 
             return defaultItem;
         }
