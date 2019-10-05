@@ -173,8 +173,8 @@
             var compare = this.SelectedDirDiffItem as DirDiffDocViewViewModel;
             if (compare != null)
             {
-                Properties.Settings.Default.LeftDirPath = compare.DirDiffDoc.RightDirPath;
-                Properties.Settings.Default.RightDirPath = compare.DirDiffDoc.LeftDirPath;
+                Properties.Settings.Default.LeftDirPath = compare.DirDiffDoc.LeftDirPath;
+                Properties.Settings.Default.RightDirPath = compare.DirDiffDoc.RightDirPath;
             }
         }
 
