@@ -4,14 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:MWindow="clr-namespace:MWindowLib;assembly=MWindowLib"
     xmlns:behav="clr-namespace:AehnlichViewModelsLib.Behaviors;assembly=AehnlichViewModelsLib"
+    xmlns:icon_src="clr-namespace:AehnlichViewLib.Themes;assembly=AehnlichViewLib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reskeys="clr-namespace:MLib.Themes;assembly=MLib"
     xmlns:views="clr-namespace:Aehnlich.Views"
-    Title="MainWindow"
+    Title="Ähnlich"
+    Icon="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AehnlichKey}}"
+
     Width="525"
     Height="350"
-    ShowIcon="False"
+    
+    ShowIcon="True"
     mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>

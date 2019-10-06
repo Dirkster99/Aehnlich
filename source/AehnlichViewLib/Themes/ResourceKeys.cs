@@ -244,6 +244,8 @@
         public static readonly ComponentResourceKey SelectedFocusedCellBorderBrushKey = new ComponentResourceKey(typeof(ResourceKeys), "SelectedFocusedCellBorderBrushKey");
         #endregion Grid Theming
 
+        public static readonly ComponentResourceKey ICON_AehnlichKey = new ComponentResourceKey(typeof(ResourceKeys), "ICON_AehnlichKey");
+
         /***
                 public static readonly ComponentResourceKey ControlDisabledBackgroundKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlDisabledBackgroundKey");
                 public static readonly ComponentResourceKey ControlNormalBorderKey = new ComponentResourceKey(typeof(ResourceKeys), "ControlNormalBorderKey");

@@ -101,6 +101,6 @@
 
     <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
                   ResourceId=ICON_AehnlichKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/tilde.ico" />
+                  UriSource="/AehnlichViewLib;component/Icons/Dark/tilde.ico" />
 
 </ResourceDictionary>

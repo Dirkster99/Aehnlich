@@ -139,6 +139,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\DarkIcons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\LightIcons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -195,6 +199,8 @@
     <Resource Include="Icons\Light\Refresh_black_16x.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Icons\Dark\tilde.ico" />
+    <Content Include="Icons\Dark\tilde.svg" />
     <Resource Include="Icons\Light\minus.ico" />
     <Resource Include="Icons\Light\Close.ico" />
     <Resource Include="Icons\Light\arrow_down.ico" />

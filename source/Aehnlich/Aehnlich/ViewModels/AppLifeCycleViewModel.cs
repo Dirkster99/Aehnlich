@@ -37,10 +37,10 @@
             ,new Uri("/Xceed.Wpf.AvalonDock.Themes.VS2013;component/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/Aehnlich;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
-            ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/AehnlichViewLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/AehnlichViewLib;component/Themes/DataGridDarkBrushs.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/Aehnlich;component/BindToMLib/AehnlichViewLib_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/AehnlichViewLib;component/Themes/DarkIcons.xaml", UriKind.RelativeOrAbsolute)
 
             ,new Uri("/SuggestBoxLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/Aehnlich;component/BindToMLib/SuggestionLibDarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
@@ -56,10 +56,10 @@
             ,new Uri("/Xceed.Wpf.AvalonDock.Themes.VS2013;component/LightTheme.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/Aehnlich;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
-            ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/AehnlichViewLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/AehnlichViewLib;component/Themes/DataGridLightBrushs.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/Aehnlich;component/BindToMLib/AehnlichViewLib_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/AehnlichViewLib;component/Themes/LightIcons.xaml", UriKind.RelativeOrAbsolute)
 
             ,new Uri("/SuggestBoxLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/Aehnlich;component/BindToMLib/SuggestionLibDarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
@@ -201,27 +201,6 @@
             }
 
             appearance.SetDefaultTheme(themeInfos, "Light"); // configure a default WPF theme
-
-////            try
-////            {
-////
-////                // Add additional Dark resources to those theme resources added above
-////                appearance.AddThemeResources("Dark", new List<Uri>(DarkResources), settings.Themes);
-////            }
-////            catch
-////            {
-////                // Ignore issues in theme definition stage to ensure app starts up
-////            }
-////
-////            try
-////            {
-////                // Add additional Light resources to those theme resources added above
-////                appearance.AddThemeResources("Light", new List<Uri>(LightResources), settings.Themes);
-////            }
-////            catch
-////            {
-////                // Ignore issues in theme definition stage to ensure app starts up
-////            }
 
             try
             {

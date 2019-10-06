@@ -9,7 +9,7 @@
     Title="Ähnlich"
     Width="800"
     Height="450"
-    Icon="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_ChangedKey}}"
+    Icon="{DynamicResource {x:Static icon_src:ResourceKeys.ICON_AehnlichKey}}"
     mc:Ignorable="d">
 
     <views:FileDiffView Margin="3" />
