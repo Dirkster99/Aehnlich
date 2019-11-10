@@ -241,7 +241,9 @@ namespace AehnlichLib.Dir
 
                 if (iLevel > 0)
                 {
-                    string basePath = current.GetBasePath(diffRoot.RootPathA, diffRoot.RootPathB);
+                    string basePath = GetBasePath(diffRoot.RootPathA, current.InfoA,
+                                                  diffRoot.RootPathB, current.InfoB);
+
                     string parentPath = GetParentPath(basePath);
 
                     IDirectoryDiffEntry parentItem;
@@ -258,13 +260,13 @@ namespace AehnlichLib.Dir
                     else
                     {
                         // FIXME
-                        // continue;
+                        continue;
                         // There are conditions for this case but these needs to be specified and tested here
                         //
                         // parentPath should always been pushed before since we do Level Order Traversal
                         // So, it must be available here - something is horribly wrong if we ever got here
-                        throw new NotSupportedException(string.Format("ParentPath '{0}', BasePath '{1}'"
-                                                                    , parentPath, basePath));
+                        ////throw new NotSupportedException(string.Format("ParentPath '{0}', BasePath '{1}'"
+                        ////                                            , parentPath, basePath));
                     }
                 }
 
@@ -617,7 +619,7 @@ namespace AehnlichLib.Dir
                     }
                 }
 
-                string basePath = item.GetBasePath(root.RootPathA, root.RootPathB);
+                string basePath = GetBasePath(root.RootPathA, item.InfoA, root.RootPathB, item.InfoB);
                 IDirectoryDiffEntry newEntry = null;
 
                 // The item is in both directories
@@ -711,6 +713,31 @@ namespace AehnlichLib.Dir
             }
         }
         #endregion Aggregate Dir Contents - Post Order
+
+        private string GetBasePath(string basePathA, IFileSystemInfo InfoA,
+                                    string basePathB, IFileSystemInfo InfoB)
+        {
+            string nameA = (InfoA == null ? string.Empty : InfoA.FullName);
+            string nameB = (InfoB == null ? string.Empty : InfoB.FullName);
+            string basePath = string.Empty;
+
+            if (string.IsNullOrEmpty(nameA) == false)
+            {
+                if (basePathA[basePathA.Length - 1] == System.IO.Path.DirectorySeparatorChar)
+                    basePath = nameA.Substring(basePathA.Length);
+                else
+                    basePath = nameA.Substring(basePathA.Length + 1);
+            }
+            else
+            {
+                if (basePathB[basePathB.Length - 1] == System.IO.Path.DirectorySeparatorChar)
+                    basePath = nameB.Substring(basePathB.Length);
+                else
+                    basePath = nameB.Substring(basePathB.Length + 1);
+            }
+
+            return basePath;
+        }
         #endregion
     }
 }

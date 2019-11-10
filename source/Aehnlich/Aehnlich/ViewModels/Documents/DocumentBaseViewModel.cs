@@ -134,33 +134,48 @@
         /// <returns></returns>
         protected virtual string GetTitle(string leftFilePath, string rightFilePath)
         {
-            string leftDirName = string.Empty;
-            string rightDirName = string.Empty;
-
-            try
-            {
-                leftDirName = System.IO.Path.GetFileName(leftFilePath);
-            }
-            catch
-            {
-                // System.IO likes to throw things on wrong strings
-                // so we go without the name if things go wrong...
-            }
-
-            try
-            {
-                rightDirName = System.IO.Path.GetFileName(rightFilePath);
-            }
-            catch
-            {
-                // System.IO likes to throw things on wrong strings
-                // so we go without the name if things go wrong...
-            }
+            string leftDirName = GetDirName(leftFilePath);
+            string rightDirName = GetDirName(rightFilePath);
 
             if (string.Compare(leftDirName, rightDirName, true) == 0)
                 return leftDirName;
 
-            return leftDirName + ":" + rightDirName;
+            return leftDirName + " ~ " + rightDirName;
+        }
+
+        /// <summary>
+        /// Gets the name of a directory of a given path
+        /// path = 'c:\tmp\my\subdir' returns 'subdir'
+        /// 
+        /// or the path itself if there is no subdir to return:
+        /// path = 'c:\' returns 'c:\'
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        private string GetDirName(string filePath)
+        {
+            string dirName = string.Empty;
+
+            try
+            {
+                if (string.IsNullOrEmpty(filePath) == false)
+                {
+                    dirName = filePath.Trim(System.IO.Path.DirectorySeparatorChar);
+                    dirName = System.IO.Path.GetFileName(dirName);
+
+                    if (string.IsNullOrEmpty(dirName) == true)
+                        dirName = filePath;
+                }
+            }
+            catch
+            {
+                // System.IO likes to throw things on wrong strings
+                // so we go without the name if things go wrong...
+                dirName = filePath;
+            }
+
+            return dirName;
         }
 
         /// <summary>

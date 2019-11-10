@@ -53,29 +53,6 @@
                 }
             }
         }
-
-        /// <summary>
-        /// Gets a relative path between the given root path A and B and the sub-dir.
-        /// 
-        /// The relative path is equal for A and B if this directory occurs in A and B
-        /// in the same relative spot.
-        /// </summary>
-        /// <param name="sItemB"></param>
-        /// <param name="sItemA"></param>
-        /// <returns></returns>
-        internal string GetBasePath(string sItemA, string sItemB)
-        {
-            string nameA = (this.InfoA == null ? string.Empty : this.InfoA.FullName);
-            string nameB = (this.InfoB == null ? string.Empty : this.InfoB.FullName);
-            string basePath = string.Empty;
-
-            if (string.IsNullOrEmpty(nameA) == false)
-                basePath = nameA.Substring(sItemA.Length + 1);
-            else
-                basePath = nameB.Substring(sItemB.Length + 1);
-
-            return basePath;
-        }
         #endregion properties
     }
 }

@@ -33,11 +33,18 @@
             if (leftDir.Length < 2)
                 return null;
 
-            var leftDirInfo = new DirectoryInfo(leftDir);
+            try
+            {
+                var leftDirInfo = new DirectoryInfo(leftDir);
 
-            // Return normalized path notation :-)
-            if (leftDirInfo.Exists == true)
-                return NormalizePath(leftDirInfo.FullName);
+                // Return normalized path notation :-)
+                if (leftDirInfo.Exists == true)
+                    return NormalizePath(leftDirInfo.FullName);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
 
             return null;
         }
@@ -54,7 +61,7 @@
                 if (string.IsNullOrEmpty(path) == false)
                 {
                     return Path.GetFullPath(new Uri(path).LocalPath)
-                               .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+ //                              .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                                .ToUpperInvariant();
                 }
                 else
