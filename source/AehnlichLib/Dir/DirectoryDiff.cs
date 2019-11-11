@@ -714,8 +714,8 @@ namespace AehnlichLib.Dir
         }
         #endregion Aggregate Dir Contents - Post Order
 
-        private string GetBasePath(string basePathA, IFileSystemInfo InfoA,
-                                    string basePathB, IFileSystemInfo InfoB)
+        internal static string GetBasePath(string basePathA, IFileSystemInfo InfoA,
+                                          string basePathB, IFileSystemInfo InfoB)
         {
             string nameA = (InfoA == null ? string.Empty : InfoA.FullName);
             string nameB = (InfoB == null ? string.Empty : InfoB.FullName);
