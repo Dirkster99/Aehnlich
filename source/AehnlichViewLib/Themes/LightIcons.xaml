@@ -1,106 +1,59 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes">
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes">
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_OpenFileKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/OpenFile.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_OpenFileKey}" UriSource="/AehnlichViewLib;component/Icons/Light/OpenFile.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_CopyKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/Copy.ico" />
-    
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_FindKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/Search_16x.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_CopyKey}" UriSource="/AehnlichViewLib;component/Icons/Light/Copy.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_NextKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/Next_16x.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_FindKey}" UriSource="/AehnlichViewLib;component/Icons/Light/Search_16x.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_PreviousKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/Previous_16x.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_NextKey}" UriSource="/AehnlichViewLib;component/Icons/Light/Next_16x.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_RefreshKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/Refresh_black_16x.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_PreviousKey}" UriSource="/AehnlichViewLib;component/Icons/Light/Previous_16x.ico" />
 
-    <!-- Goto Icons-->
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_GotoTopKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/GotoTop.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_RefreshKey}" UriSource="/AehnlichViewLib;component/Icons/Light/Refresh_black_16x.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_GotoNextKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/GotoNext.ico" />
+	<!--  Goto Icons  -->
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_GotoTopKey}" UriSource="/AehnlichViewLib;component/Icons/Light/GotoTop.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_GotoPrevKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/GotoPrev.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_GotoNextKey}" UriSource="/AehnlichViewLib;component/Icons/Light/GotoNext.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_GotoBottomKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/GotoBottom.ico" />
-    <!-- Goto Icons-->
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_GotoPrevKey}" UriSource="/AehnlichViewLib;component/Icons/Light/GotoPrev.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_DeletedKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/minus.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_GotoBottomKey}" UriSource="/AehnlichViewLib;component/Icons/Light/GotoBottom.ico" />
+	<!--  Goto Icons  -->
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_AddedKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/plus.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_DeletedKey}" UriSource="/AehnlichViewLib;component/Icons/Light/minus.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_ChangedKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/tilde.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_AddedKey}" UriSource="/AehnlichViewLib;component/Icons/Light/plus.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_CloseKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/Close.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_ChangedKey}" UriSource="/AehnlichViewLib;component/Icons/Light/tilde.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_GotoLineKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/ThisLine.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_CloseKey}" UriSource="/AehnlichViewLib;component/Icons/Light/Close.ico" />
 
-    <!-- Arrow Icons -->
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_ArrowUpKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/arrow_up.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_GotoLineKey}" UriSource="/AehnlichViewLib;component/Icons/Light/ThisLine.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_ArrowDownKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/arrow_down.ico" />
+	<!--  Arrow Icons  -->
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_ArrowUpKey}" UriSource="/AehnlichViewLib;component/Icons/Light/arrow_up.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_ArrowLeftKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/arrow_left.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_ArrowDownKey}" UriSource="/AehnlichViewLib;component/Icons/Light/arrow_down.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_ArrowRightKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/arrow_right.ico" />
-    <!-- Arrow Icons -->
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_ArrowLeftKey}" UriSource="/AehnlichViewLib;component/Icons/Light/arrow_left.ico" />
 
-    <!-- Browse Folder Icons -->
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_FolderUpKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/FolderOpen_Up1_16x.ico" />
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_FolderDownKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/FolderOpen_Down1_16x.ico" />
-    <!-- Browse Folder Icons -->
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_ArrowRightKey}" UriSource="/AehnlichViewLib;component/Icons/Light/arrow_right.ico" />
+	<!--  Arrow Icons  -->
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_SettingsKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/Settings.ico" />
+	<!--  Browse Folder Icons  -->
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_FolderUpKey}" UriSource="/AehnlichViewLib;component/Icons/Light/FolderOpen_Up1_16x.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_FolderDownKey}" UriSource="/AehnlichViewLib;component/Icons/Light/FolderOpen_Down1_16x.ico" />
+	<!--  Browse Folder Icons  -->
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_HighlightingKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/desk-lamp-light.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_SettingsKey}" UriSource="/AehnlichViewLib;component/Icons/Light/Settings.ico" />
 
-    <BitmapImage  x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-                  ResourceId=ICON_AehnlichKey}"
-                  UriSource="/AehnlichViewLib;component/Icons/Light/tilde.ico" />
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_HighlightingKey}" UriSource="/AehnlichViewLib;component/Icons/Light/desk-lamp-light.ico" />
+
+	<BitmapImage x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys}, ResourceId=ICON_AehnlichKey}" UriSource="/AehnlichViewLib;component/Icons/Light/tilde.ico" />
 
 </ResourceDictionary>

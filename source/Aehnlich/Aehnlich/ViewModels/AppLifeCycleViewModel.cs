@@ -34,7 +34,7 @@
             ,new Uri("/MWindowLib;component/Themes/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/Aehnlich;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
-            ,new Uri("/Xceed.Wpf.AvalonDock.Themes.VS2013;component/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/AvalonDock.Themes.VS2013;component/DarkTheme.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/Aehnlich;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
             ,new Uri("/AehnlichViewLib;component/Themes/DarkBrushs.xaml", UriKind.RelativeOrAbsolute)
@@ -53,7 +53,7 @@
             ,new Uri("/MWindowLib;component/Themes/LightTheme.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/Aehnlich;component/BindToMLib/MWindowLib/DarkLightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
-            ,new Uri("/Xceed.Wpf.AvalonDock.Themes.VS2013;component/LightTheme.xaml", UriKind.RelativeOrAbsolute)
+            ,new Uri("/AvalonDock.Themes.VS2013;component/LightTheme.xaml", UriKind.RelativeOrAbsolute)
             ,new Uri("/Aehnlich;component/BindToMLib/AvalonDock_Dark_LightBrushs.xaml", UriKind.RelativeOrAbsolute)
 
             ,new Uri("/AehnlichViewLib;component/Themes/LightBrushs.xaml", UriKind.RelativeOrAbsolute)

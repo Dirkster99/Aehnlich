@@ -1,10 +1,8 @@
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Aehnlich;component/Views/AvalonDockView.xaml"/>
-        <ResourceDictionary Source="/Aehnlich;component/Views/Dir/DirDiffDocControl.xaml"/>
-    </ResourceDictionary.MergedDictionaries>
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/Aehnlich;component/Views/AvalonDockView.xaml" />
+		<ResourceDictionary Source="/Aehnlich;component/Views/Dir/DirDiffDocControl.xaml" />
+	</ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

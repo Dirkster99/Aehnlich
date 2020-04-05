@@ -1,420 +1,420 @@
 ﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behav="clr-namespace:AehnlichViewLib.Behaviors"
-    xmlns:conv="clr-namespace:AehnlichViewLib.Converters"
-    xmlns:editing="clr-namespace:ICSharpCode.AvalonEdit.Editing;assembly=ICSharpCode.AvalonEdit"
-    xmlns:local="clr-namespace:AehnlichViewLib.Controls"
-    xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes">
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:behav="clr-namespace:AehnlichViewLib.Behaviors"
+	xmlns:conv="clr-namespace:AehnlichViewLib.Converters"
+	xmlns:editing="clr-namespace:ICSharpCode.AvalonEdit.Editing;assembly=ICSharpCode.AvalonEdit"
+	xmlns:local="clr-namespace:AehnlichViewLib.Controls"
+	xmlns:reskeys="clr-namespace:AehnlichViewLib.Themes">
 
-    <Style TargetType="{x:Type local:DiffDirView}">
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="ColorBackgroundAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}" />
-        <Setter Property="ColorBackgroundDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}" />
-        <Setter Property="ColorBackgroundContext" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}" />
-        <Setter Property="ColorBackgroundImaginaryLineAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundImaginaryAddedBrushKey}}" />
-        <Setter Property="ColorBackgroundImaginaryLineDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundImaginaryDeletedBrushKey}}" />
+	<Style TargetType="{x:Type local:DiffDirView}">
+		<Setter Property="SnapsToDevicePixels" Value="True" />
+		<Setter Property="ColorBackgroundAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundAddedBrushKey}}" />
+		<Setter Property="ColorBackgroundDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundDeletedBrushKey}}" />
+		<Setter Property="ColorBackgroundContext" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundContextBrushKey}}" />
+		<Setter Property="ColorBackgroundImaginaryLineAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundImaginaryAddedBrushKey}}" />
+		<Setter Property="ColorBackgroundImaginaryLineDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorBackgroundImaginaryDeletedBrushKey}}" />
 
-        <Setter Property="ColorForegroundBlank" Value="{DynamicResource {x:Static reskeys:ResourceKeys.CellForegroundBrushKey}}" />
-        <Setter Property="ColorForegroundAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorForegroundAddedBrushKey}}" />
-        <Setter Property="ColorForegroundDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorForegroundDeletedBrushKey}}" />
-        <Setter Property="ColorForegroundContext" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorForegroundContextBrushKey}}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:DiffDirView}">
-                    <Grid>
-                        <Grid.Resources>
-                            <conv:BindingProxy x:Key="DocumentContextProxy" Data="{Binding DirDiffDoc}" />
+		<Setter Property="ColorForegroundBlank" Value="{DynamicResource {x:Static reskeys:ResourceKeys.CellForegroundBrushKey}}" />
+		<Setter Property="ColorForegroundAdded" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorForegroundAddedBrushKey}}" />
+		<Setter Property="ColorForegroundDeleted" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorForegroundDeletedBrushKey}}" />
+		<Setter Property="ColorForegroundContext" Value="{DynamicResource {x:Static reskeys:ResourceKeys.ColorForegroundContextBrushKey}}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:DiffDirView}">
+					<Grid>
+						<Grid.Resources>
+							<conv:BindingProxy x:Key="DocumentContextProxy" Data="{Binding DirDiffDoc}" />
 
-                            <conv:DiffToForegroundColorConverter x:Key="DiffToForegroundColorConverter" />
-                            <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter" />
-                            <conv:BoolToVisibilityPropConverter
-                                x:Key="BoolToVisibilityPropConverter"
-                                FalseValue="Hidden"
-                                TrueValue="Visible" />
+							<conv:DiffToForegroundColorConverter x:Key="DiffToForegroundColorConverter" />
+							<conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter" />
+							<conv:BoolToVisibilityPropConverter
+								x:Key="BoolToVisibilityPropConverter"
+								FalseValue="Hidden"
+								TrueValue="Visible" />
 
-                            <conv:DoubleBytesToStringReadableSizeConverter x:Key="DoubleBytesToStringReadableSizeConverter" />
-                            <conv:SentinelConverter x:Key="SentinelConverter" />
-                        </Grid.Resources>
+							<conv:DoubleBytesToStringReadableSizeConverter x:Key="DoubleBytesToStringReadableSizeConverter" />
+							<conv:SentinelConverter x:Key="SentinelConverter" />
+						</Grid.Resources>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Name="PART_ColumnA" Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Name="PART_ColumnB" Width="*" />
-                        </Grid.ColumnDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Name="PART_ColumnA" Width="*" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Name="PART_ColumnB" Width="*" />
+						</Grid.ColumnDefinitions>
 
-                        <DataGrid
-                            Name="PART_GridA"
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
-                            behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=PART_GridA, Path=SelectedItem}"
-                            AutoGenerateColumns="False"
-                            CellStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridCellStyleKey}}"
-                            ColumnHeaderStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridHeaderStyleKey}}"
-                            ColumnWidth="*"
-                            GridLinesVisibility="None"
-                            ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
-                            ItemTemplate="{TemplateBinding ItemTemplate}"
-                            ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                            ScrollViewer.CanContentScroll="True"
-                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            SelectedItem="{Binding SelectedItem_A, Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
-                            SelectionMode="Extended"
-                            SnapsToDevicePixels="True"
-                            Style="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridStyleKey}}"
-                            VirtualizingPanel.VirtualizationMode="Standard">
-                            <!--  Do not use VirtualizingPanel.VirtualizationMode="Recycling" since recycled row coloring will cause wrong coloring  -->
-                            <DataGrid.RowStyle>
-                                <Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}" ConverterParameter="fromA">
-                                                <Binding Path="IsItemInA" />
-                                                <Binding Path="IsItemInB" />
-                                                <Binding Path="IsItemDifferent" />
-                                                <Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
-                                            </MultiBinding>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="ContextMenu" Value="{Binding ContextMenuA, RelativeSource={RelativeSource AncestorType={x:Type local:DiffDirView}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                </Style>
-                            </DataGrid.RowStyle>
+						<DataGrid
+							Name="PART_GridA"
+							Grid.Row="0"
+							Grid.Column="0"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
+							behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=PART_GridA, Path=SelectedItem}"
+							AutoGenerateColumns="False"
+							CellStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridCellStyleKey}}"
+							ColumnHeaderStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridHeaderStyleKey}}"
+							ColumnWidth="*"
+							GridLinesVisibility="None"
+							ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
+							ItemTemplate="{TemplateBinding ItemTemplate}"
+							ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+							ScrollViewer.CanContentScroll="True"
+							ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+							ScrollViewer.VerticalScrollBarVisibility="Auto"
+							SelectedItem="{Binding SelectedItem_A, Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
+							SelectionMode="Extended"
+							SnapsToDevicePixels="True"
+							Style="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridStyleKey}}"
+							VirtualizingPanel.VirtualizationMode="Standard">
+							<!--  Do not use VirtualizingPanel.VirtualizationMode="Recycling" since recycled row coloring will cause wrong coloring  -->
+							<DataGrid.RowStyle>
+								<Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow">
+									<Setter Property="Background">
+										<Setter.Value>
+											<MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}" ConverterParameter="fromA">
+												<Binding Path="IsItemInA" />
+												<Binding Path="IsItemInB" />
+												<Binding Path="IsItemDifferent" />
+												<Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
+											</MultiBinding>
+										</Setter.Value>
+									</Setter>
+									<Setter Property="ContextMenu" Value="{Binding ContextMenuA, RelativeSource={RelativeSource AncestorType={x:Type local:DiffDirView}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+								</Style>
+							</DataGrid.RowStyle>
 
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="*" Header="Name">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Grid Visibility="{Binding IsItemInA, Converter={StaticResource BoolToVisibilityPropConverter}}">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
+							<DataGrid.Columns>
+								<DataGridTemplateColumn Width="*" Header="Name">
+									<DataGridTemplateColumn.CellTemplate>
+										<DataTemplate>
+											<Grid Visibility="{Binding IsItemInA, Converter={StaticResource BoolToVisibilityPropConverter}}">
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="Auto" />
+													<ColumnDefinition Width="*" />
+												</Grid.ColumnDefinitions>
 
-                                                <Image
-                                                    Margin="3,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center">
-                                                    <Image.Source>
-                                                        <MultiBinding Converter="{x:Static conv:AssociatedIconConverter.Default}">
-                                                            <MultiBinding.ConverterParameter>
-                                                                <conv:IconSize>Small</conv:IconSize>
-                                                            </MultiBinding.ConverterParameter>
-                                                            <Binding Path="ItemPathA" />
-                                                            <Binding Path="ItemName" />
-                                                        </MultiBinding>
-                                                    </Image.Source>
-                                                </Image>
+												<Image
+													Margin="3,0"
+													HorizontalAlignment="Left"
+													VerticalAlignment="Center">
+													<Image.Source>
+														<MultiBinding Converter="{x:Static conv:AssociatedIconConverter.Default}">
+															<MultiBinding.ConverterParameter>
+																<conv:IconSize>Small</conv:IconSize>
+															</MultiBinding.ConverterParameter>
+															<Binding Path="ItemPathA" />
+															<Binding Path="ItemName" />
+														</MultiBinding>
+													</Image.Source>
+												</Image>
 
-                                                <TextBlock
-                                                    Grid.Column="1"
-                                                    Text="{Binding ItemName}"
-                                                    TextOptions.TextFormattingMode="Display"
-                                                    ToolTipService.ShowOnDisabled="true">
-                                                    <TextBlock.Foreground>
-                                                        <MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromA">
-                                                            <Binding Path="IsItemInA" />
-                                                            <Binding Path="IsItemInB" />
-                                                            <Binding Path="IsItemDifferent" />
-                                                            <Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
-                                                        </MultiBinding>
-                                                    </TextBlock.Foreground>
-                                                    <TextBlock.ToolTip>
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="3" />
-                                                                <ColumnDefinition Width="*" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                            </Grid.RowDefinitions>
+												<TextBlock
+													Grid.Column="1"
+													Text="{Binding ItemName}"
+													TextOptions.TextFormattingMode="Display"
+													ToolTipService.ShowOnDisabled="true">
+													<TextBlock.Foreground>
+														<MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromA">
+															<Binding Path="IsItemInA" />
+															<Binding Path="IsItemInB" />
+															<Binding Path="IsItemDifferent" />
+															<Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
+														</MultiBinding>
+													</TextBlock.Foreground>
+													<TextBlock.ToolTip>
+														<Grid>
+															<Grid.ColumnDefinitions>
+																<ColumnDefinition Width="Auto" />
+																<ColumnDefinition Width="3" />
+																<ColumnDefinition Width="*" />
+															</Grid.ColumnDefinitions>
+															<Grid.RowDefinitions>
+																<RowDefinition Height="Auto" />
+																<RowDefinition Height="Auto" />
+																<RowDefinition Height="Auto" />
+																<RowDefinition Height="Auto" />
+															</Grid.RowDefinitions>
 
-                                                            <TextBlock
-                                                                Grid.Row="0"
-                                                                Grid.Column="0"
-                                                                HorizontalAlignment="Right"
-                                                                Text="Path:" />
-                                                            <TextBlock
-                                                                Grid.Row="0"
-                                                                Grid.Column="2"
-                                                                HorizontalAlignment="Left"
-                                                                Text="{Binding ItemPathA}" />
+															<TextBlock
+																Grid.Row="0"
+																Grid.Column="0"
+																HorizontalAlignment="Right"
+																Text="Path:" />
+															<TextBlock
+																Grid.Row="0"
+																Grid.Column="2"
+																HorizontalAlignment="Left"
+																Text="{Binding ItemPathA}" />
 
-                                                            <TextBlock
-                                                                Grid.Row="1"
-                                                                Grid.Column="0"
-                                                                HorizontalAlignment="Right"
-                                                                Text="Size:" />
-                                                            <TextBlock
-                                                                Grid.Row="1"
-                                                                Grid.Column="2"
-                                                                HorizontalAlignment="Left"
-                                                                Text="{Binding ItemLengthA}" />
+															<TextBlock
+																Grid.Row="1"
+																Grid.Column="0"
+																HorizontalAlignment="Right"
+																Text="Size:" />
+															<TextBlock
+																Grid.Row="1"
+																Grid.Column="2"
+																HorizontalAlignment="Left"
+																Text="{Binding ItemLengthA}" />
 
-                                                            <TextBlock
-                                                                Grid.Row="2"
-                                                                Grid.Column="0"
-                                                                HorizontalAlignment="Right"
-                                                                Text="Last Update:" />
-                                                            <TextBlock
-                                                                Grid.Row="2"
-                                                                Grid.Column="2"
-                                                                HorizontalAlignment="Left"
-                                                                Text="{Binding ItemLastUpdateA}" />
-                                                        </Grid>
-                                                    </TextBlock.ToolTip>
-                                                </TextBlock>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="Auto" Header="Size">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Margin="3,0,0,0"
-                                                HorizontalAlignment="Right"
-                                                Text="{Binding ItemLengthA, Converter={StaticResource DoubleBytesToStringReadableSizeConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                                TextOptions.TextFormattingMode="Display"
-                                                Visibility="{Binding IsItemInA, Converter={StaticResource BoolToVisibilityPropConverter}}">
-                                                <TextBlock.Foreground>
-                                                    <MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromA">
-                                                        <Binding Path="IsItemInA" />
-                                                        <Binding Path="IsItemInB" />
-                                                        <Binding Path="IsItemDifferent" />
-                                                        <Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
-                                                    </MultiBinding>
-                                                </TextBlock.Foreground>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="Auto" Header="Modified">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Margin="3,0,0,0"
-                                                HorizontalAlignment="Right"
-                                                Text="{Binding ItemLastUpdateA}"
-                                                TextOptions.TextFormattingMode="Display"
-                                                Visibility="{Binding IsItemInA, Converter={StaticResource BoolToVisibilityPropConverter}}">
-                                                <TextBlock.Foreground>
-                                                    <MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromA">
-                                                        <Binding Path="IsItemInA" />
-                                                        <Binding Path="IsItemInB" />
-                                                        <Binding Path="IsItemDifferent" />
-                                                        <Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
-                                                    </MultiBinding>
-                                                </TextBlock.Foreground>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
+															<TextBlock
+																Grid.Row="2"
+																Grid.Column="0"
+																HorizontalAlignment="Right"
+																Text="Last Update:" />
+															<TextBlock
+																Grid.Row="2"
+																Grid.Column="2"
+																HorizontalAlignment="Left"
+																Text="{Binding ItemLastUpdateA}" />
+														</Grid>
+													</TextBlock.ToolTip>
+												</TextBlock>
+											</Grid>
+										</DataTemplate>
+									</DataGridTemplateColumn.CellTemplate>
+								</DataGridTemplateColumn>
+								<DataGridTemplateColumn Width="Auto" Header="Size">
+									<DataGridTemplateColumn.CellTemplate>
+										<DataTemplate>
+											<TextBlock
+												Margin="3,0,0,0"
+												HorizontalAlignment="Right"
+												Text="{Binding ItemLengthA, Converter={StaticResource DoubleBytesToStringReadableSizeConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+												TextOptions.TextFormattingMode="Display"
+												Visibility="{Binding IsItemInA, Converter={StaticResource BoolToVisibilityPropConverter}}">
+												<TextBlock.Foreground>
+													<MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromA">
+														<Binding Path="IsItemInA" />
+														<Binding Path="IsItemInB" />
+														<Binding Path="IsItemDifferent" />
+														<Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
+													</MultiBinding>
+												</TextBlock.Foreground>
+											</TextBlock>
+										</DataTemplate>
+									</DataGridTemplateColumn.CellTemplate>
+								</DataGridTemplateColumn>
+								<DataGridTemplateColumn Width="Auto" Header="Modified">
+									<DataGridTemplateColumn.CellTemplate>
+										<DataTemplate>
+											<TextBlock
+												Margin="3,0,0,0"
+												HorizontalAlignment="Right"
+												Text="{Binding ItemLastUpdateA}"
+												TextOptions.TextFormattingMode="Display"
+												Visibility="{Binding IsItemInA, Converter={StaticResource BoolToVisibilityPropConverter}}">
+												<TextBlock.Foreground>
+													<MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromA">
+														<Binding Path="IsItemInA" />
+														<Binding Path="IsItemInB" />
+														<Binding Path="IsItemDifferent" />
+														<Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
+													</MultiBinding>
+												</TextBlock.Foreground>
+											</TextBlock>
+										</DataTemplate>
+									</DataGridTemplateColumn.CellTemplate>
+								</DataGridTemplateColumn>
+							</DataGrid.Columns>
 
-                        </DataGrid>
+						</DataGrid>
 
-                        <GridSplitter
-                            Name="PART_GridSplitter"
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Width="6"
-                            HorizontalAlignment="Stretch"
-                            Background="Transparent" />
+						<GridSplitter
+							Name="PART_GridSplitter"
+							Grid.Row="0"
+							Grid.Column="1"
+							Width="6"
+							HorizontalAlignment="Stretch"
+							Background="Transparent" />
 
-                        <DataGrid
-                            Name="PART_GridB"
-                            Grid.Row="0"
-                            Grid.Column="2"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
-                            behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=PART_GridB, Path=SelectedItem}"
-                            AutoGenerateColumns="False"
-                            CellStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridCellStyleKey}}"
-                            ColumnHeaderStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridHeaderStyleKey}}"
-                            ColumnWidth="*"
-                            GridLinesVisibility="None"
-                            ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                            ScrollViewer.CanContentScroll="True"
-                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            SelectedItem="{Binding SelectedItem_B, Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
-                            SelectionMode="Extended"
-                            SnapsToDevicePixels="True"
-                            Style="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridStyleKey}}"
-                            VirtualizingPanel.VirtualizationMode="Standard">
-                            <!--  Do not use VirtualizingPanel.VirtualizationMode="Recycling" since recycled row coloring will cause wrong coloring  -->
-                            <DataGrid.Resources>
-                                <conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter" />
-                                <conv:DiffToForegroundColorConverter x:Key="DiffToForegroundColorConverter" />
-                                <conv:BoolToVisibilityPropConverter
-                                    x:Key="BoolToVisibilityPropConverter"
-                                    FalseValue="Hidden"
-                                    TrueValue="Visible" />
-                            </DataGrid.Resources>
-                            <DataGrid.RowStyle>
-                                <Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}" ConverterParameter="fromB">
-                                                <Binding Path="IsItemInA" />
-                                                <Binding Path="IsItemInB" />
-                                                <Binding Path="IsItemDifferent" />
-                                                <Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
-                                            </MultiBinding>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="ContextMenu" Value="{Binding ContextMenuB, RelativeSource={RelativeSource AncestorType={x:Type local:DiffDirView}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                </Style>
-                            </DataGrid.RowStyle>
+						<DataGrid
+							Name="PART_GridB"
+							Grid.Row="0"
+							Grid.Column="2"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							behav:DoubleClickItemBehavior.Command="{Binding Data.BrowseItemCommand, Source={StaticResource DocumentContextProxy}}"
+							behav:DoubleClickItemBehavior.CommandParameter="{Binding ElementName=PART_GridB, Path=SelectedItem}"
+							AutoGenerateColumns="False"
+							CellStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridCellStyleKey}}"
+							ColumnHeaderStyle="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridHeaderStyleKey}}"
+							ColumnWidth="*"
+							GridLinesVisibility="None"
+							ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+							ScrollViewer.CanContentScroll="True"
+							ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+							ScrollViewer.VerticalScrollBarVisibility="Auto"
+							SelectedItem="{Binding SelectedItem_B, Converter={StaticResource SentinelConverter}, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
+							SelectionMode="Extended"
+							SnapsToDevicePixels="True"
+							Style="{DynamicResource {x:Static reskeys:ResourceKeys.DefaultDataGridStyleKey}}"
+							VirtualizingPanel.VirtualizationMode="Standard">
+							<!--  Do not use VirtualizingPanel.VirtualizationMode="Recycling" since recycled row coloring will cause wrong coloring  -->
+							<DataGrid.Resources>
+								<conv:DiffToBackgroundColorConverter x:Key="DiffToBackgroundColorConverter" />
+								<conv:DiffToForegroundColorConverter x:Key="DiffToForegroundColorConverter" />
+								<conv:BoolToVisibilityPropConverter
+									x:Key="BoolToVisibilityPropConverter"
+									FalseValue="Hidden"
+									TrueValue="Visible" />
+							</DataGrid.Resources>
+							<DataGrid.RowStyle>
+								<Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow">
+									<Setter Property="Background">
+										<Setter.Value>
+											<MultiBinding Converter="{StaticResource DiffToBackgroundColorConverter}" ConverterParameter="fromB">
+												<Binding Path="IsItemInA" />
+												<Binding Path="IsItemInB" />
+												<Binding Path="IsItemDifferent" />
+												<Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
+											</MultiBinding>
+										</Setter.Value>
+									</Setter>
+									<Setter Property="ContextMenu" Value="{Binding ContextMenuB, RelativeSource={RelativeSource AncestorType={x:Type local:DiffDirView}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+								</Style>
+							</DataGrid.RowStyle>
 
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="*" Header="Name">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Grid Visibility="{Binding IsItemInB, Converter={StaticResource BoolToVisibilityPropConverter}}">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
+							<DataGrid.Columns>
+								<DataGridTemplateColumn Width="*" Header="Name">
+									<DataGridTemplateColumn.CellTemplate>
+										<DataTemplate>
+											<Grid Visibility="{Binding IsItemInB, Converter={StaticResource BoolToVisibilityPropConverter}}">
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="Auto" />
+													<ColumnDefinition Width="*" />
+												</Grid.ColumnDefinitions>
 
-                                                <Image
-                                                    Margin="3,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center">
-                                                    <Image.Source>
-                                                        <MultiBinding Converter="{x:Static conv:AssociatedIconConverter.Default}">
-                                                            <MultiBinding.ConverterParameter>
-                                                                <conv:IconSize>Small</conv:IconSize>
-                                                            </MultiBinding.ConverterParameter>
-                                                            <Binding Path="ItemPathB" />
-                                                            <Binding Path="ItemName" />
-                                                        </MultiBinding>
-                                                    </Image.Source>
-                                                </Image>
+												<Image
+													Margin="3,0"
+													HorizontalAlignment="Left"
+													VerticalAlignment="Center">
+													<Image.Source>
+														<MultiBinding Converter="{x:Static conv:AssociatedIconConverter.Default}">
+															<MultiBinding.ConverterParameter>
+																<conv:IconSize>Small</conv:IconSize>
+															</MultiBinding.ConverterParameter>
+															<Binding Path="ItemPathB" />
+															<Binding Path="ItemName" />
+														</MultiBinding>
+													</Image.Source>
+												</Image>
 
-                                                <TextBlock
-                                                    Grid.Column="1"
-                                                    Text="{Binding ItemName}"
-                                                    TextOptions.TextFormattingMode="Display"
-                                                    ToolTipService.ShowOnDisabled="true">
-                                                    <TextBlock.Foreground>
-                                                        <MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromB">
-                                                            <Binding Path="IsItemInA" />
-                                                            <Binding Path="IsItemInB" />
-                                                            <Binding Path="IsItemDifferent" />
-                                                            <Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
-                                                        </MultiBinding>
-                                                    </TextBlock.Foreground>
-                                                    <TextBlock.ToolTip>
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="3" />
-                                                                <ColumnDefinition Width="*" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                            </Grid.RowDefinitions>
+												<TextBlock
+													Grid.Column="1"
+													Text="{Binding ItemName}"
+													TextOptions.TextFormattingMode="Display"
+													ToolTipService.ShowOnDisabled="true">
+													<TextBlock.Foreground>
+														<MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromB">
+															<Binding Path="IsItemInA" />
+															<Binding Path="IsItemInB" />
+															<Binding Path="IsItemDifferent" />
+															<Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
+														</MultiBinding>
+													</TextBlock.Foreground>
+													<TextBlock.ToolTip>
+														<Grid>
+															<Grid.ColumnDefinitions>
+																<ColumnDefinition Width="Auto" />
+																<ColumnDefinition Width="3" />
+																<ColumnDefinition Width="*" />
+															</Grid.ColumnDefinitions>
+															<Grid.RowDefinitions>
+																<RowDefinition Height="Auto" />
+																<RowDefinition Height="Auto" />
+																<RowDefinition Height="Auto" />
+															</Grid.RowDefinitions>
 
-                                                            <TextBlock
-                                                                Grid.Row="0"
-                                                                Grid.Column="0"
-                                                                HorizontalAlignment="Right"
-                                                                Text="Path:" />
-                                                            <TextBlock
-                                                                Grid.Row="0"
-                                                                Grid.Column="2"
-                                                                HorizontalAlignment="Left"
-                                                                Text="{Binding ItemPathB}" />
+															<TextBlock
+																Grid.Row="0"
+																Grid.Column="0"
+																HorizontalAlignment="Right"
+																Text="Path:" />
+															<TextBlock
+																Grid.Row="0"
+																Grid.Column="2"
+																HorizontalAlignment="Left"
+																Text="{Binding ItemPathB}" />
 
-                                                            <TextBlock
-                                                                Grid.Row="1"
-                                                                Grid.Column="0"
-                                                                HorizontalAlignment="Right"
-                                                                Text="Size:" />
-                                                            <TextBlock
-                                                                Grid.Row="1"
-                                                                Grid.Column="2"
-                                                                HorizontalAlignment="Left"
-                                                                Text="{Binding ItemLengthB}" />
+															<TextBlock
+																Grid.Row="1"
+																Grid.Column="0"
+																HorizontalAlignment="Right"
+																Text="Size:" />
+															<TextBlock
+																Grid.Row="1"
+																Grid.Column="2"
+																HorizontalAlignment="Left"
+																Text="{Binding ItemLengthB}" />
 
-                                                            <TextBlock
-                                                                Grid.Row="2"
-                                                                Grid.Column="0"
-                                                                HorizontalAlignment="Right"
-                                                                Text="Last Update:" />
-                                                            <TextBlock
-                                                                Grid.Row="2"
-                                                                Grid.Column="2"
-                                                                HorizontalAlignment="Left"
-                                                                Text="{Binding ItemLastUpdateB}" />
-                                                        </Grid>
-                                                    </TextBlock.ToolTip>
-                                                </TextBlock>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="Auto" Header="Size">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Margin="3,0,0,0"
-                                                HorizontalAlignment="Right"
-                                                Text="{Binding ItemLengthB, Converter={StaticResource DoubleBytesToStringReadableSizeConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                                TextOptions.TextFormattingMode="Display"
-                                                Visibility="{Binding IsItemInB, Converter={StaticResource BoolToVisibilityPropConverter}}">
-                                                <TextBlock.Foreground>
-                                                    <MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromA">
-                                                        <Binding Path="IsItemInA" />
-                                                        <Binding Path="IsItemInB" />
-                                                        <Binding Path="IsItemDifferent" />
-                                                        <Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
-                                                    </MultiBinding>
-                                                </TextBlock.Foreground>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="Auto" Header="Modified">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                Margin="3,0,0,0"
-                                                HorizontalAlignment="Right"
-                                                Text="{Binding ItemLastUpdateB}"
-                                                TextOptions.TextFormattingMode="Display"
-                                                Visibility="{Binding IsItemInB, Converter={StaticResource BoolToVisibilityPropConverter}}">
-                                                <TextBlock.Foreground>
-                                                    <MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromA">
-                                                        <Binding Path="IsItemInA" />
-                                                        <Binding Path="IsItemInB" />
-                                                        <Binding Path="IsItemDifferent" />
-                                                        <Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
-                                                    </MultiBinding>
-                                                </TextBlock.Foreground>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+															<TextBlock
+																Grid.Row="2"
+																Grid.Column="0"
+																HorizontalAlignment="Right"
+																Text="Last Update:" />
+															<TextBlock
+																Grid.Row="2"
+																Grid.Column="2"
+																HorizontalAlignment="Left"
+																Text="{Binding ItemLastUpdateB}" />
+														</Grid>
+													</TextBlock.ToolTip>
+												</TextBlock>
+											</Grid>
+										</DataTemplate>
+									</DataGridTemplateColumn.CellTemplate>
+								</DataGridTemplateColumn>
+								<DataGridTemplateColumn Width="Auto" Header="Size">
+									<DataGridTemplateColumn.CellTemplate>
+										<DataTemplate>
+											<TextBlock
+												Margin="3,0,0,0"
+												HorizontalAlignment="Right"
+												Text="{Binding ItemLengthB, Converter={StaticResource DoubleBytesToStringReadableSizeConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+												TextOptions.TextFormattingMode="Display"
+												Visibility="{Binding IsItemInB, Converter={StaticResource BoolToVisibilityPropConverter}}">
+												<TextBlock.Foreground>
+													<MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromA">
+														<Binding Path="IsItemInA" />
+														<Binding Path="IsItemInB" />
+														<Binding Path="IsItemDifferent" />
+														<Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
+													</MultiBinding>
+												</TextBlock.Foreground>
+											</TextBlock>
+										</DataTemplate>
+									</DataGridTemplateColumn.CellTemplate>
+								</DataGridTemplateColumn>
+								<DataGridTemplateColumn Width="Auto" Header="Modified">
+									<DataGridTemplateColumn.CellTemplate>
+										<DataTemplate>
+											<TextBlock
+												Margin="3,0,0,0"
+												HorizontalAlignment="Right"
+												Text="{Binding ItemLastUpdateB}"
+												TextOptions.TextFormattingMode="Display"
+												Visibility="{Binding IsItemInB, Converter={StaticResource BoolToVisibilityPropConverter}}">
+												<TextBlock.Foreground>
+													<MultiBinding Converter="{StaticResource DiffToForegroundColorConverter}" ConverterParameter="fromA">
+														<Binding Path="IsItemInA" />
+														<Binding Path="IsItemInB" />
+														<Binding Path="IsItemDifferent" />
+														<Binding Path="DiffColorDefinitions" RelativeSource="{RelativeSource AncestorType={x:Type local:DiffDirView}}" />
+													</MultiBinding>
+												</TextBlock.Foreground>
+											</TextBlock>
+										</DataTemplate>
+									</DataGridTemplateColumn.CellTemplate>
+								</DataGridTemplateColumn>
+							</DataGrid.Columns>
+						</DataGrid>
 
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
 </ResourceDictionary>

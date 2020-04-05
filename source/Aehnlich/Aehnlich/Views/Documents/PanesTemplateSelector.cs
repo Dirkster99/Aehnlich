@@ -3,7 +3,7 @@
     using Aehnlich.ViewModels.Documents;
     using System.Windows;
     using System.Windows.Controls;
-    using Xceed.Wpf.AvalonDock.Layout;
+    using AvalonDock.Layout;
 
     /// <summary>
     /// Provides a way to choose a System.Windows.DataTemplate based on the data object

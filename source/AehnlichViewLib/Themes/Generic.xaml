@@ -1,15 +1,15 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/AehnlichViewLib;component/Themes/LightIcons.xaml" />
-        <ResourceDictionary Source="/AehnlichViewLib;component/Themes/LightBrushs.xaml" />
-        <ResourceDictionary Source="/AehnlichViewLib;component/Themes/DataGridLightBrushs.xaml" />
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/AehnlichViewLib;component/Themes/LightIcons.xaml" />
+		<ResourceDictionary Source="/AehnlichViewLib;component/Themes/LightBrushs.xaml" />
+		<ResourceDictionary Source="/AehnlichViewLib;component/Themes/DataGridLightBrushs.xaml" />
 
-        <ResourceDictionary Source="/AehnlichViewLib;component/Controls/GridStyle.xaml" />
-        <ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffDirView.xaml" />
-        <ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffTextView.xaml" />
+		<ResourceDictionary Source="/AehnlichViewLib;component/Controls/GridStyle.xaml" />
+		<ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffDirView.xaml" />
+		<ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffTextView.xaml" />
 
-        <ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffView.xaml" />
-        <ResourceDictionary Source="/AehnlichViewLib;component/Controls/Overview/RangeItemsControl.xaml" />
-        <ResourceDictionary Source="/AehnlichViewLib;component/Controls/Overview/RangeScrollbar.xaml" />
-    </ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/AehnlichViewLib;component/Controls/DiffView.xaml" />
+		<ResourceDictionary Source="/AehnlichViewLib;component/Controls/Overview/RangeItemsControl.xaml" />
+		<ResourceDictionary Source="/AehnlichViewLib;component/Controls/Overview/RangeScrollbar.xaml" />
+	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
