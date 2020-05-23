@@ -78,6 +78,8 @@
     <Compile Include="Enums\EditType.cs" />
     <Compile Include="Enums\HashType.cs" />
     <Compile Include="Enums\DiffDirFileMode.cs" />
+    <Compile Include="Files\AsyncPump.cs" />
+    <Compile Include="Files\FileEx.cs" />
     <Compile Include="Interfaces\Dir\IDataSource.cs" />
     <Compile Include="Interfaces\Dir\IDataSourceFactory.cs" />
     <Compile Include="Interfaces\Dir\IDirectoryInfo.cs" />

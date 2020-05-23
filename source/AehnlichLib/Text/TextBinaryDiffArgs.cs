@@ -123,8 +123,25 @@
 		/// </summary>
 		public bool IsAuto { get { return this.CompareType == CompareType.Auto; } }
 
-
+		/// <summary>
+		/// Number of bytes to be displayed per line in binary view rendered as text output.
+		/// </summary>
 		public int BinaryFootprintLength { get; }
 		#endregion
+	}
+
+	public class DiffBinaryTextResults
+	{
+		/// <summary>
+		/// Output parameter from binary reader to hint correct display/diff of lines.
+		/// Leading number of characters to ignore for diff in each line.
+		/// This space is used in binary diff to display 8 digit line number and 4 digit space.
+		/// </summary>
+		public int LeadingCharactersToIgnore { get; set; }
+
+		/// <summary>
+		/// Gets whether this 
+		/// </summary>
+		public bool IsBinaryCompare => LeadingCharactersToIgnore > 0;
 	}
 }

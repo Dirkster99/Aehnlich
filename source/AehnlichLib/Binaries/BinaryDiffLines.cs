@@ -33,7 +33,12 @@ namespace AehnlichLib.Binaries
 		#endregion
 
 		#region Constructors
-
+		/// <summary>
+		/// Class constructor
+		/// </summary>
+		/// <param name="baseFile"></param>
+		/// <param name="list"></param>
+		/// <param name="bytesPerLine"Number of bytes to display per line.></param>
 		public BinaryDiffLines(Stream baseFile, AddCopyCollection list, int bytesPerLine)
 		{
 			this.bytesPerLine = bytesPerLine;

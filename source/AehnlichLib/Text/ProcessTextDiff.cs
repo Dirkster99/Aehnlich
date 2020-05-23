@@ -3,6 +3,7 @@
 	using AehnlichLib.Binaries;
 	using AehnlichLib.Dir;
 	using AehnlichLib.Enums;
+	using AehnlichLib.Files;
 	using AehnlichLib.Interfaces;
 	using AehnlichLib.Models;
 	using System;
@@ -58,24 +59,25 @@
 			try
 			{
 				IList<string> a, b;
-				int leadingCharactersToIgnore = 0;
+				var result = new DiffBinaryTextResults();
 
 				if (_Args.DiffType == DiffType.File)
 				{
 					var fileA = new FileCompInfo(_Args.A);
 					var fileB = new FileCompInfo(_Args.B);
 
-					GetFileLines(fileA, fileB, out a, out b, out leadingCharactersToIgnore, _Args, progress);
+					GetFileLines(fileA, fileB, out a, out b, _Args, result, progress);
 				}
 				else
 				{
 					GetTextLines(_Args.A, _Args.B, _Args, out a, out b, progress);
 				}
 
-				IsBinaryCompare = leadingCharactersToIgnore > 0;
-				IgnoreCase = IsBinaryCompare ? false : _Args.IgnoreCase;
+				IsBinaryCompare = result.LeadingCharactersToIgnore > 0;
+				IgnoreCase = result.IsBinaryCompare ? false : _Args.IgnoreCase;
 				IgnoreTextWhitespace = IsBinaryCompare ? false : _Args.IgnoreTextWhitespace;
-				TextDiff diff = new TextDiff(_Args.HashType, IgnoreCase, IgnoreTextWhitespace, leadingCharactersToIgnore, !_Args.ShowChangeAsDeleteInsert);
+				TextDiff diff = new TextDiff(_Args.HashType, IgnoreCase, IgnoreTextWhitespace,
+											 result.LeadingCharactersToIgnore, !_Args.ShowChangeAsDeleteInsert);
 
 				ListA = a;
 				ListB = b;
@@ -92,16 +94,24 @@
 		}
 
 		#region TextLineConverter
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="fileA"></param>
+		/// <param name="fileB"></param>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <param name="args"></param>
+		/// <param name="progress"></param>
 		private static void GetFileLines(FileCompInfo fileA,
 										 FileCompInfo fileB,
 										 out IList<string> a, out IList<string> b,
-										 out int leadingCharactersToIgnore,
 										 TextBinaryDiffArgs args,
+										 DiffBinaryTextResults result,
 										 IDiffProgress progress)
 		{
 			a = null;
 			b = null;
-			leadingCharactersToIgnore = 0;
 			CompareType compareType = args.CompareType;
 
 			// Nothing to compare if both files do not exist
@@ -115,7 +125,7 @@
 			if (compareType == CompareType.Binary ||
 				(args.IsAuto && fileA.Is == FileType.Binary || fileB.Is == FileType.Binary))
 			{
-				GetBinaryFileLines(fileA, fileB, args, progress, out a, out b, out leadingCharactersToIgnore);
+				GetBinaryFileLines(fileA, fileB, args, result, progress, out a, out b);
 				return;
 			}
 
@@ -137,26 +147,37 @@
 			if (fileA.Is != FileType.Xml || fileB.Is != FileType.Xml)
 			{
 				if (fileA.FileExists)
-					a = DiffUtility.GetFileTextLines(fileA.FileNamePath, progress);
+					a = AsyncPump.Run(() => FileEx.GetFileTextLinesAsync(fileA.FileNamePath));
 				else
 					a = new List<string>();
 
 				if (fileB.FileExists)
-					b = DiffUtility.GetFileTextLines(fileB.FileNamePath, progress);
+					b = AsyncPump.Run(() => FileEx.GetFileTextLinesAsync(fileB.FileNamePath));
 				else
 					b = new List<string>();
 			}
 		}
 
+		/// <summary>
+		/// Get Binary file contents rendered as text lines with line number marker at beginning of each line.
+		/// </summary>
+		/// <param name="fileA"></param>
+		/// <param name="fileB"></param>
+		/// <param name="args"></param>
+		/// <param name="progress"></param>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <param name="leadingCharactersToIgnore">Leading number of characters to ignore for diff in each line.
+		/// This space is used in binary diff to display 8 digit line number and 4 digit space.</param>
 		private static void GetBinaryFileLines(FileCompInfo fileA, FileCompInfo fileB,
-											   TextBinaryDiffArgs args,
-											   IDiffProgress progress,
-											   out IList<string> a, out IList<string> b,
-											   out int leadingCharactersToIgnore)
+												TextBinaryDiffArgs args,
+												DiffBinaryTextResults result,
+												IDiffProgress progress,
+												out IList<string> a, out IList<string> b)
 		{
 			a = new List<string>();
 			b = new List<string>();
-			leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
+			result.LeadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
 
 			// Neither left nor right file exist or cannot be accessed
 			if (fileA.FileExists == false && fileB.FileExists == false)
@@ -188,7 +209,7 @@
 				BinaryDiffLines lines = new BinaryDiffLines(fileStreamA, addCopy, args.BinaryFootprintLength);
 				a = lines.BaseLines;
 				b = lines.VersionLines;
-				leadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
+				result.LeadingCharactersToIgnore = BinaryDiffLines.PrefixLength;
 			}
 			finally
 			{
