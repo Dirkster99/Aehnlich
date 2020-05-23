@@ -1,13 +1,13 @@
 ﻿namespace AehnlichViewLib.Enums
 {
-    public enum Focus
-    {
-        None,
+	public enum Focus
+	{
+		None,
 
-        LeftFilePath,
-        RightFilePath,
+		LeftFilePath,
+		RightFilePath,
 
-        LeftView,
-        RightView
-    }
+		LeftView,
+		RightView
+	}
 }

@@ -1,13 +1,13 @@
 namespace AehnlichLib.Text
 {
-    using AehnlichLib.Enums;
-    using System.Collections.Generic;
-    using System.Text;
+	using AehnlichLib.Enums;
+	using System.Collections.Generic;
+	using System.Text;
 
-    /// <summary>
-    /// Used to get a hash code for a string.
-    /// </summary>
-    internal sealed class StringHasher
+	/// <summary>
+	/// Used to get a hash code for a string.
+	/// </summary>
+	internal sealed class StringHasher
 	{
 		#region Private Data Members
 
@@ -59,9 +59,9 @@ namespace AehnlichLib.Text
 		#endregion
 
 		#region Constructors
-	    /// <summary>
-	    /// Class constructor.
-	    /// </summary>
+		/// <summary>
+		/// Class constructor.
+		/// </summary>
 		/// <param name="hashType">The type of hashing algorithm to associate a given text string
 		/// with an int value.</param>
 		/// <param name="ignoreCase">Whether to ignore the letter case ('A' versus 'a')
@@ -74,7 +74,7 @@ namespace AehnlichLib.Text
 		/// <param name="leadingCharactersToIgnore">Whether to ignore the first n characters
 		/// when associating a string with a hash code.</param>
 		public StringHasher(HashType hashType,
-		                    bool ignoreCase,
+							bool ignoreCase,
 							bool ignoreWhiteSpace,
 							int leadingCharactersToIgnore)
 		{
@@ -92,10 +92,10 @@ namespace AehnlichLib.Text
 
 		#region Public Methods
 
-	    /// <summary>
-	    /// Gets a hash code (int value) that can be used to efficiently represent and compare strings
+		/// <summary>
+		/// Gets a hash code (int value) that can be used to efficiently represent and compare strings
 		/// against each other without having to use the original strings for the comparison algorithm.
-	    /// </summary>
+		/// </summary>
 		/// <param name="line">The text that should be converted into a hash code</param>
 		/// <returns>The hash code that will be used to represent the given text string.
 		/// The returned value depends on the actual option values (Ignore White Space, Hash Type etc)
@@ -141,10 +141,10 @@ namespace AehnlichLib.Text
 
 		#region Private Methods
 
-	    /// <summary>
-	    /// This uses the CRC32 algorithm.  For more info see:
-	    /// http://www.efg2.com/Lab/Mathematics/CRC.htm.
-	    /// </summary>
+		/// <summary>
+		/// This uses the CRC32 algorithm.  For more info see:
+		/// http://www.efg2.com/Lab/Mathematics/CRC.htm.
+		/// </summary>
 		/// <param name="line">The text that should be converted into a hash code</param>
 		/// <returns>The hash code that will be used to represent the given text string
 		/// according to the CRC32 algorithm.</returns>
@@ -165,10 +165,10 @@ namespace AehnlichLib.Text
 			}
 		}
 
-	    /// <summary>
-	    /// Gets a hash code for each unique text line in the collection of text lines.
-	    /// This will return the same hash code for multiple text lines occuring more than once.
-	    /// </summary>
+		/// <summary>
+		/// Gets a hash code for each unique text line in the collection of text lines.
+		/// This will return the same hash code for multiple text lines occuring more than once.
+		/// </summary>
 		/// <param name="line">The text that should be converted into a hash code</param>
 		/// <returns>The hash code that will be used to represent the given text string.
 		/// Hashing the same text multiple times results in the same hash value being returned.</returns>

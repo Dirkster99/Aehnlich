@@ -1,8 +1,8 @@
 namespace AehnlichLib.Binaries
 {
-    using AehnlichLib.Interfaces;
+	using AehnlichLib.Interfaces;
 
-    public sealed class Addition : IAddCopy
+	public sealed class Addition : IAddCopy
 	{
 		#region Private Data Members
 

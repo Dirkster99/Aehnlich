@@ -1,7 +1,7 @@
 namespace AehnlichLib.Binaries
 {
-    using AehnlichLib.Interfaces;
-    using System;
+	using AehnlichLib.Interfaces;
+	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.IO;
@@ -132,7 +132,7 @@ namespace AehnlichLib.Binaries
 		/// <param name="versionFile">The version file.</param>
 		/// <returns>An AddCopyCollection that can be used later to construct the version file from the base file.</returns>
 		public AddCopyCollection Execute(Stream baseFile, Stream versionFile,
-                                         IDiffProgress progress)
+										 IDiffProgress progress)
 		{
 			if (!baseFile.CanSeek || !versionFile.CanSeek)
 			{
@@ -157,11 +157,11 @@ namespace AehnlichLib.Binaries
 
 			while (verPos <= (versionFile.Length - this.footprintLength))
 			{
-                progress.Token.ThrowIfCancellationRequested();
+				progress.Token.ThrowIfCancellationRequested();
 
-                // The GetTableEntry procedure will add the entry if it isn't already there.
-                // This gives us a default behavior of favoring the first match.
-                verHash = this.Footprint(versionFile, verPos, verHash, ref lastVerHashPos);
+				// The GetTableEntry procedure will add the entry if it isn't already there.
+				// This gives us a default behavior of favoring the first match.
+				verHash = this.Footprint(versionFile, verPos, verHash, ref lastVerHashPos);
 				TableEntry verEntry = GetTableEntry(table, verHash, versionFile, verPos);
 
 				TableEntry baseEntry = null;
@@ -270,12 +270,12 @@ namespace AehnlichLib.Binaries
 			TableEntry result = table[index];
 			if (result == null)
 			{
-                result = new TableEntry
-                {
-                    File = file,
-                    Offset = pos
-                };
-                table[index] = result;
+				result = new TableEntry
+				{
+					File = file,
+					Offset = pos
+				};
+				table[index] = result;
 			}
 
 			return result;

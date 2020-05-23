@@ -1,289 +1,289 @@
 ﻿namespace AehnlichViewModelsLib.ViewModels.LineInfo
 {
-    using AehnlichLib.Binaries;
-    using AehnlichLib.Enums;
-    using AehnlichLib.Text;
-    using AehnlichViewModelsLib.Enums;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
+	using AehnlichLib.Binaries;
+	using AehnlichLib.Enums;
+	using AehnlichLib.Text;
+	using AehnlichViewModelsLib.Enums;
+	using System;
+	using System.Collections.Generic;
+	using System.Diagnostics;
+	using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Implements a viewmodel that defines one line diff, its type of diff, and text content.
-    /// </summary>
-    [DebuggerDisplay("Number = {Number}, EditType = {EditType}, Text = {Text}, FromA = {FromA}")]
-    public sealed class DiffViewLine
-    {
-        #region Public Fields
-        ////public static readonly DiffViewLine Empty = new DiffViewLine();
+	/// <summary>
+	/// Implements a viewmodel that defines one line diff, its type of diff, and text content.
+	/// </summary>
+	[DebuggerDisplay("Number = {Number}, EditType = {EditType}, Text = {Text}, FromA = {FromA}")]
+	public sealed class DiffViewLine
+	{
+		#region Public Fields
+		////public static readonly DiffViewLine Empty = new DiffViewLine();
 
-        #endregion
+		#endregion
 
-        #region Private Data Members
-        /// <summary>
-        /// Cache the edit script between this line and its counterpart in order to ensure
-        /// optimal performance when displaying line diff information.
-        /// </summary>
-////        private EditScript _changeEditScript;
-        private readonly int? number;
-        private readonly string text;
-        private readonly EditType _editType;
+		#region Private Data Members
+		/// <summary>
+		/// Cache the edit script between this line and its counterpart in order to ensure
+		/// optimal performance when displaying line diff information.
+		/// </summary>
+		////        private EditScript _changeEditScript;
+		private readonly int? number;
+		private readonly string text;
+		private readonly EditType _editType;
 
-        #endregion
+		#endregion
 
-        #region Constructors
-        /// <summary>
-        /// Class constructor.
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="number"></param>
-        /// <param name="editType"></param>
-        /// <param name="fromA">Set to true if this data represents the reference view
-        /// (left view also known as ViewA) otherwise false.</param>
-        public DiffViewLine(string text, int? number, EditType editType, bool fromA)
-        {
-            this.text = text;
-            this.number = number;
-            this._editType = editType;
-            this.FromA = fromA;
-        }
+		#region Constructors
+		/// <summary>
+		/// Class constructor.
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="number"></param>
+		/// <param name="editType"></param>
+		/// <param name="fromA">Set to true if this data represents the reference view
+		/// (left view also known as ViewA) otherwise false.</param>
+		public DiffViewLine(string text, int? number, EditType editType, bool fromA)
+		{
+			this.text = text;
+			this.number = number;
+			this._editType = editType;
+			this.FromA = fromA;
+		}
 
-        /// <summary>
-        /// Hidden standard class constructor.
-        /// </summary>
-        private DiffViewLine()
-        {
-            this.text = string.Empty;
-        }
-        #endregion
+		/// <summary>
+		/// Hidden standard class constructor.
+		/// </summary>
+		private DiffViewLine()
+		{
+			this.text = string.Empty;
+		}
+		#endregion
 
-        #region Public Properties
-        /// <summary>
-        /// Gets the equivalent line from the left view to the right view
-        /// and vice versa.
-        /// </summary>
-        public DiffViewLine Counterpart { get; internal set; }
+		#region Public Properties
+		/// <summary>
+		/// Gets the equivalent line from the left view to the right view
+		/// and vice versa.
+		/// </summary>
+		public DiffViewLine Counterpart { get; internal set; }
 
-        /// <summary>
-        /// Gets whether the equivalent line of this line is different
-        /// (requires an edit operation - delete, insert, change
-        /// - to match both compared texts) or not.
-        /// </summary>
-        [SuppressMessage("", "SA1101", Justification = "The EditType reference is to the type not to this.EditType.")]
-        public bool Edited { get { return _editType != EditType.None; } }
+		/// <summary>
+		/// Gets whether the equivalent line of this line is different
+		/// (requires an edit operation - delete, insert, change
+		/// - to match both compared texts) or not.
+		/// </summary>
+		[SuppressMessage("", "SA1101", Justification = "The EditType reference is to the type not to this.EditType.")]
+		public bool Edited { get { return _editType != EditType.None; } }
 
-        /// <summary>
-        /// Gets the type of edit operation (delete, insert, change, none)
-        /// to signal how this line compares to its equivalent line linked
-        /// in the <see cref="Counterpart"/> property.
-        /// </summary>
-        public EditType EditType { get { return _editType; } }
+		/// <summary>
+		/// Gets the type of edit operation (delete, insert, change, none)
+		/// to signal how this line compares to its equivalent line linked
+		/// in the <see cref="Counterpart"/> property.
+		/// </summary>
+		public EditType EditType { get { return _editType; } }
 
-        /// <summary>
-        /// Gets whether this line represents the reference view
-        /// (left view also known as ViewA), otherwise false.
-        /// </summary>
-        public bool FromA { get; }
+		/// <summary>
+		/// Gets whether this line represents the reference view
+		/// (left view also known as ViewA), otherwise false.
+		/// </summary>
+		public bool FromA { get; }
 
-        /// <summary>
-        /// Get the line number that should be displayed for this line of text.
-        /// 
-        /// This line number is not the real line number i = 1...n from the original text
-        /// but a line number that accomodates for imaginary lines that are inserted to
-        /// sync the left and right view in a comparison.
-        /// 
-        /// Therefore, not all lines have an imaginary line number (this property is nullable).
-        /// </summary>
-        public int? Number { get { return this.number; } }
+		/// <summary>
+		/// Get the line number that should be displayed for this line of text.
+		/// 
+		/// This line number is not the real line number i = 1...n from the original text
+		/// but a line number that accomodates for imaginary lines that are inserted to
+		/// sync the left and right view in a comparison.
+		/// 
+		/// Therefore, not all lines have an imaginary line number (this property is nullable).
+		/// </summary>
+		public int? Number { get { return this.number; } }
 
-        /// <summary>
-        /// Gets the original text that was used when comparing this line to its
-        /// <see cref="Counterpart"/> line.
-        /// </summary>
-        public string Text { get { return this.text; } }
-        #endregion
+		/// <summary>
+		/// Gets the original text that was used when comparing this line to its
+		/// <see cref="Counterpart"/> line.
+		/// </summary>
+		public string Text { get { return this.text; } }
+		#endregion
 
-        #region Public Methods
-        /// <summary>
-        /// Gets th edit script of this line in comparison to its <see cref="Counterpart"/>.
-        /// The change edit script can then be used to color each letter position in the line
-        /// to indicate how one line can completely match the other using character based
-        /// change operations (insert, delete, change, none).
-        /// 
-        /// The method should only be invoked on demand (when a line is actually
-        /// displayed) - we should wait with pulling it until we have to have it for rendering.
-        /// 
-        /// This object will NOT cache the edit script so the caller should implement an external
-        /// caching algorithm to avoid multiple computations of the same answer.
-        /// 
-        /// Getting all intra-line diffs at once makes the whole process into an O(n^2) operation
-        /// instead of just an O(n) operation for line-by-line diffs.  So we try to defer the
-        /// extra work until the user requests to see the changed line.  It's still
-        /// the same amount of work if the user views every line, but it makes the
-        /// user interface more responsive to split it up like this.
-        /// </summary>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public EditScript GetChangeEditScript(ChangeDiffOptions options)
-        {
-            EditScript _changeEditScript = null;
+		#region Public Methods
+		/// <summary>
+		/// Gets th edit script of this line in comparison to its <see cref="Counterpart"/>.
+		/// The change edit script can then be used to color each letter position in the line
+		/// to indicate how one line can completely match the other using character based
+		/// change operations (insert, delete, change, none).
+		/// 
+		/// The method should only be invoked on demand (when a line is actually
+		/// displayed) - we should wait with pulling it until we have to have it for rendering.
+		/// 
+		/// This object will NOT cache the edit script so the caller should implement an external
+		/// caching algorithm to avoid multiple computations of the same answer.
+		/// 
+		/// Getting all intra-line diffs at once makes the whole process into an O(n^2) operation
+		/// instead of just an O(n) operation for line-by-line diffs.  So we try to defer the
+		/// extra work until the user requests to see the changed line.  It's still
+		/// the same amount of work if the user views every line, but it makes the
+		/// user interface more responsive to split it up like this.
+		/// </summary>
+		/// <param name="options"></param>
+		/// <returns></returns>
+		public EditScript GetChangeEditScript(ChangeDiffOptions options)
+		{
+			EditScript _changeEditScript = null;
 
-            if (//_changeEditScript == null &&
-                _editType == EditType.Change && this.Counterpart != null)
-            {
-                if (this.FromA)
-                {
-                    int trimCountA, trimCountB;
-                    MyersDiff<char> diff = new MyersDiff<char>(
-                        GetCharactersToDiff(this.text, options, out trimCountA),
-                        GetCharactersToDiff(this.Counterpart.text, options, out trimCountB),
-                        false); // We don't want Change edits; just Deletes and Inserts.
-                    
-                    _changeEditScript = diff.Execute(null);
+			if (//_changeEditScript == null &&
+				_editType == EditType.Change && this.Counterpart != null)
+			{
+				if (this.FromA)
+				{
+					int trimCountA, trimCountB;
+					MyersDiff<char> diff = new MyersDiff<char>(
+						GetCharactersToDiff(this.text, options, out trimCountA),
+						GetCharactersToDiff(this.Counterpart.text, options, out trimCountB),
+						false); // We don't want Change edits; just Deletes and Inserts.
 
-                    // If we trimmed/ignored leading whitespace, we have to offset each Edit to account for that.
-                    foreach (Edit edit in _changeEditScript)
-                    {
-                        edit.Offset(trimCountA, trimCountB);
-                    }
-                }
-                else if (this.Counterpart.FromA && this.Counterpart.Counterpart == this)
-                {
-                    // Defer to the A line because its edit script changes A into B.
-                    _changeEditScript = this.Counterpart.GetChangeEditScript(options);
-                }
-            }
+					_changeEditScript = diff.Execute(null);
 
-            return _changeEditScript;
-        }
+					// If we trimmed/ignored leading whitespace, we have to offset each Edit to account for that.
+					foreach (Edit edit in _changeEditScript)
+					{
+						edit.Offset(trimCountA, trimCountB);
+					}
+				}
+				else if (this.Counterpart.FromA && this.Counterpart.Counterpart == this)
+				{
+					// Defer to the A line because its edit script changes A into B.
+					_changeEditScript = this.Counterpart.GetChangeEditScript(options);
+				}
+			}
 
-        #endregion
+			return _changeEditScript;
+		}
 
-        #region Private Methods
+		#endregion
 
-        private static CharList GetCharactersToDiff(string lineText, ChangeDiffOptions options, out int leadingTrimCount)
-        {
-            leadingTrimCount = 0;
+		#region Private Methods
 
-            // Check binary prefix first because the prefix length is a fixed number of characters.
-            if (options.HasFlag(ChangeDiffOptions.IgnoreBinaryPrefix) && lineText.Length >= BinaryDiffLines.PrefixLength)
-            {
-                lineText = lineText.Substring(BinaryDiffLines.PrefixLength);
-                leadingTrimCount += BinaryDiffLines.PrefixLength;
-            }
+		private static CharList GetCharactersToDiff(string lineText, ChangeDiffOptions options, out int leadingTrimCount)
+		{
+			leadingTrimCount = 0;
 
-            // Check whitespace next because this will shorten the string.
-            if (options.HasFlag(ChangeDiffOptions.IgnoreWhitespace))
-            {
-                string trimmedLine = lineText.Trim();
-                if (string.IsNullOrEmpty(trimmedLine))
-                {
-                    leadingTrimCount += lineText.Length;
-                }
-                else
-                {
-                    leadingTrimCount += lineText.IndexOf(trimmedLine[0]);
-                }
+			// Check binary prefix first because the prefix length is a fixed number of characters.
+			if (options.HasFlag(ChangeDiffOptions.IgnoreBinaryPrefix) && lineText.Length >= BinaryDiffLines.PrefixLength)
+			{
+				lineText = lineText.Substring(BinaryDiffLines.PrefixLength);
+				leadingTrimCount += BinaryDiffLines.PrefixLength;
+			}
 
-                lineText = trimmedLine;
-            }
+			// Check whitespace next because this will shorten the string.
+			if (options.HasFlag(ChangeDiffOptions.IgnoreWhitespace))
+			{
+				string trimmedLine = lineText.Trim();
+				if (string.IsNullOrEmpty(trimmedLine))
+				{
+					leadingTrimCount += lineText.Length;
+				}
+				else
+				{
+					leadingTrimCount += lineText.IndexOf(trimmedLine[0]);
+				}
 
-            // Check case last because the line is now as short as it's going to get.
-            if (options.HasFlag(ChangeDiffOptions.IgnoreCase))
-            {
-                lineText = lineText.ToUpper();
-            }
+				lineText = trimmedLine;
+			}
 
-            // Use CharList so we don't have to make separate char[] for the string.
-            return new CharList(lineText);
-        }
+			// Check case last because the line is now as short as it's going to get.
+			if (options.HasFlag(ChangeDiffOptions.IgnoreCase))
+			{
+				lineText = lineText.ToUpper();
+			}
 
-        #endregion
+			// Use CharList so we don't have to make separate char[] for the string.
+			return new CharList(lineText);
+		}
 
-        #region Private Types
+		#endregion
 
-        private sealed class CharList : IList<char>
-        {
-            #region Private Data Members
+		#region Private Types
 
-            private readonly string text;
+		private sealed class CharList : IList<char>
+		{
+			#region Private Data Members
 
-            #endregion
+			private readonly string text;
 
-            #region Constructors
+			#endregion
 
-            public CharList(string text)
-            {
-                this.text = text ?? string.Empty;
-            }
+			#region Constructors
 
-            #endregion
+			public CharList(string text)
+			{
+				this.text = text ?? string.Empty;
+			}
 
-            #region Public Properties
+			#endregion
 
-            public int Count => this.text.Length;
+			#region Public Properties
 
-            public bool IsReadOnly => true;
+			public int Count => this.text.Length;
 
-            public char this[int index]
-            {
-                get
-                {
-                    return this.text[index];
-                }
+			public bool IsReadOnly => true;
 
-                set
-                {
-                    throw new NotSupportedException();
-                }
-            }
+			public char this[int index]
+			{
+				get
+				{
+					return this.text[index];
+				}
 
-            #endregion
+				set
+				{
+					throw new NotSupportedException();
+				}
+			}
 
-            #region Public Methods
+			#endregion
 
-            public void Add(char item)
-            {
-                throw new NotSupportedException();
-            }
+			#region Public Methods
 
-            public void Clear()
-            {
-                throw new NotSupportedException();
-            }
+			public void Add(char item)
+			{
+				throw new NotSupportedException();
+			}
 
-            public bool Contains(char item) => this.text.IndexOf(item) >= 0;
+			public void Clear()
+			{
+				throw new NotSupportedException();
+			}
 
-            public void CopyTo(char[] array, int arrayIndex)
-            {
-                this.text.CopyTo(0, array, arrayIndex, this.text.Length);
-            }
+			public bool Contains(char item) => this.text.IndexOf(item) >= 0;
 
-            public IEnumerator<char> GetEnumerator() => this.text.GetEnumerator();
+			public void CopyTo(char[] array, int arrayIndex)
+			{
+				this.text.CopyTo(0, array, arrayIndex, this.text.Length);
+			}
 
-            public int IndexOf(char item) => this.text.IndexOf(item);
+			public IEnumerator<char> GetEnumerator() => this.text.GetEnumerator();
 
-            public void Insert(int index, char item)
-            {
-                throw new NotSupportedException();
-            }
+			public int IndexOf(char item) => this.text.IndexOf(item);
 
-            public bool Remove(char item)
-            {
-                throw new NotSupportedException();
-            }
+			public void Insert(int index, char item)
+			{
+				throw new NotSupportedException();
+			}
 
-            public void RemoveAt(int index)
-            {
-                throw new NotSupportedException();
-            }
+			public bool Remove(char item)
+			{
+				throw new NotSupportedException();
+			}
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => this.GetEnumerator();
+			public void RemoveAt(int index)
+			{
+				throw new NotSupportedException();
+			}
 
-            #endregion
-        }
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => this.GetEnumerator();
 
-        #endregion
-    }
+			#endregion
+		}
+
+		#endregion
+	}
 }

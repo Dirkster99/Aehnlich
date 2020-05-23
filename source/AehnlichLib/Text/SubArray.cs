@@ -1,13 +1,13 @@
 namespace AehnlichLib.Text
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
+	using System;
+	using System.Collections.Generic;
+	using System.Text;
 
-    /// <summary>
-    /// Allows 1..M access for a selected portion of an int array.
-    /// </summary>
-    internal sealed class SubArray<T> where T : IComparable<T>
+	/// <summary>
+	/// Allows 1..M access for a selected portion of an int array.
+	/// </summary>
+	internal sealed class SubArray<T> where T : IComparable<T>
 	{
 		#region Private Data Members
 

@@ -1,10 +1,10 @@
 namespace AehnlichLib.Dir
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using AehnlichLib.Interfaces;
+	using AehnlichLib.Interfaces;
+	using System.Collections.Generic;
+	using System.Collections.ObjectModel;
 
-    public sealed class DirectoryDiffEntryCollection : ReadOnlyCollection<IDirectoryDiffEntry>
+	public sealed class DirectoryDiffEntryCollection : ReadOnlyCollection<IDirectoryDiffEntry>
 	{
 		#region Constructors
 

@@ -1,7 +1,7 @@
 namespace AehnlichLib.Binaries
 {
-    using AehnlichLib.Interfaces;
-    using System;
+	using AehnlichLib.Interfaces;
+	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
 	using System.IO;

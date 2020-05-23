@@ -1,8 +1,8 @@
 namespace AehnlichLib.Binaries
 {
-    using AehnlichLib.Interfaces;
+	using AehnlichLib.Interfaces;
 
-    public sealed class Copy : IAddCopy
+	public sealed class Copy : IAddCopy
 	{
 		#region Constructors
 

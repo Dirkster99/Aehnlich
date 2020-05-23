@@ -1,16 +1,16 @@
 namespace AehnlichLib.Interfaces.Dir
 {
-    public interface IFileInfo : IFileSystemInfo
-    {
-        #region properties
-        /// <summary>
-        /// Gets the size, in bytes, of the current file.
-        /// </summary>
-        long Length { get; }
-        #endregion properties
+	public interface IFileInfo : IFileSystemInfo
+	{
+		#region properties
+		/// <summary>
+		/// Gets the size, in bytes, of the current file.
+		/// </summary>
+		long Length { get; }
+		#endregion properties
 
-        #region methods
+		#region methods
 
-        #endregion methods
-    }
+		#endregion methods
+	}
 }

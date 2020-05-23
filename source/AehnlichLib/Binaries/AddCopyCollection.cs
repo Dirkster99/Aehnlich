@@ -1,12 +1,12 @@
 namespace AehnlichLib.Binaries
 {
-    using AehnlichLib.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.IO;
+	using AehnlichLib.Interfaces;
+	using System;
+	using System.Collections.Generic;
+	using System.Collections.ObjectModel;
+	using System.IO;
 
-    public sealed class AddCopyCollection : ReadOnlyCollection<IAddCopy>
+	public sealed class AddCopyCollection : ReadOnlyCollection<IAddCopy>
 	{
 		#region Constructors
 

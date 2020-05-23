@@ -1,217 +1,217 @@
 namespace AehnlichLib.Dir
 {
-    using System;
-    using AehnlichLib.Enums;
-    using AehnlichLib.Interfaces;
+	using AehnlichLib.Enums;
+	using AehnlichLib.Interfaces;
+	using System;
 
-    internal sealed class DirectoryDiffEntry : IDirectoryDiffEntry
-    {
-        #region Private Data Members
+	internal sealed class DirectoryDiffEntry : IDirectoryDiffEntry
+	{
+		#region Private Data Members
 
-        private bool _different;
-        private readonly bool _inA;
-        private readonly bool _inB;
-        private readonly bool _isFile;
-        private string _error;
-        private DirectoryDiffEntryCollection subentries;
+		private bool _different;
+		private readonly bool _inA;
+		private readonly bool _inB;
+		private readonly bool _isFile;
+		private string _error;
+		private DirectoryDiffEntryCollection subentries;
 
-        #endregion
+		#endregion
 
-        #region Constructors
-        /// <summary>
-        /// Class constructor (with additional length parameters that are mostly useful for files).
-        /// </summary>
-        /// <param name="basePath"></param>
-        /// <param name="name"></param>
-        /// <param name="isFile"></param>
-        /// <param name="inA"></param>
-        /// <param name="inB"></param>
-        /// <param name="lastUpdateA"></param>
-        /// <param name="lastUpdateB"></param>
-        /// <param name="lengthA"></param>
-        /// <param name="lengthB"></param>
-        internal DirectoryDiffEntry(string basePath,
-                                    string name,
-                                    bool isFile,
-                                    bool inA, bool inB,
-                                    DateTime lastUpdateA, DateTime lastUpdateB,
-                                    double lengthA, double lengthB)
-            : this(basePath, name, isFile, inA, inB, lastUpdateA, lastUpdateB)
-        {
-            this.LengthA = lengthA;
-            this.LengthB = lengthB;
-        }
+		#region Constructors
+		/// <summary>
+		/// Class constructor (with additional length parameters that are mostly useful for files).
+		/// </summary>
+		/// <param name="basePath"></param>
+		/// <param name="name"></param>
+		/// <param name="isFile"></param>
+		/// <param name="inA"></param>
+		/// <param name="inB"></param>
+		/// <param name="lastUpdateA"></param>
+		/// <param name="lastUpdateB"></param>
+		/// <param name="lengthA"></param>
+		/// <param name="lengthB"></param>
+		internal DirectoryDiffEntry(string basePath,
+									string name,
+									bool isFile,
+									bool inA, bool inB,
+									DateTime lastUpdateA, DateTime lastUpdateB,
+									double lengthA, double lengthB)
+			: this(basePath, name, isFile, inA, inB, lastUpdateA, lastUpdateB)
+		{
+			this.LengthA = lengthA;
+			this.LengthB = lengthB;
+		}
 
-        /// <summary>
-        /// Class constructor
-        /// </summary>
-        /// <param name="basePath"></param>
-        /// <param name="name"></param>
-        /// <param name="isFile"></param>
-        /// <param name="inA"></param>
-        /// <param name="inB"></param>
-        /// <param name="lastUpdateA"></param>
-        /// <param name="lastUpdateB"></param>
-        internal DirectoryDiffEntry(string basePath,
-                                    string name,
-                                    bool isFile,
-                                    bool inA, bool inB,
-                                    DateTime lastUpdateA, DateTime lastUpdateB)
-            : this()
-        {
-            this.BasePath = basePath;
-            this.Name = name;
-            _isFile = isFile;
-            _inA = inA;
-            _inB = inB;
+		/// <summary>
+		/// Class constructor
+		/// </summary>
+		/// <param name="basePath"></param>
+		/// <param name="name"></param>
+		/// <param name="isFile"></param>
+		/// <param name="inA"></param>
+		/// <param name="inB"></param>
+		/// <param name="lastUpdateA"></param>
+		/// <param name="lastUpdateB"></param>
+		internal DirectoryDiffEntry(string basePath,
+									string name,
+									bool isFile,
+									bool inA, bool inB,
+									DateTime lastUpdateA, DateTime lastUpdateB)
+			: this()
+		{
+			this.BasePath = basePath;
+			this.Name = name;
+			_isFile = isFile;
+			_inA = inA;
+			_inB = inB;
 
-            // Mark node as different if this entry either refers to A only or B only
-            _different = (inA == true && inB == false || inA == false && inB == true);
+			// Mark node as different if this entry either refers to A only or B only
+			_different = (inA == true && inB == false || inA == false && inB == true);
 
-            // Edit context with an Enumeration
-            if (inA == true && inB == false)
-                EditContext = EditType.Insert;
-            else
-            {
-                if (inA == false && inB == true)
-                    EditContext = EditType.Delete;
-                else
-                {
-                    if (inA == true && inB == true && Different == false)
-                        EditContext = EditType.Change;
-                }
-            }
+			// Edit context with an Enumeration
+			if (inA == true && inB == false)
+				EditContext = EditType.Insert;
+			else
+			{
+				if (inA == false && inB == true)
+					EditContext = EditType.Delete;
+				else
+				{
+					if (inA == true && inB == true && Different == false)
+						EditContext = EditType.Change;
+				}
+			}
 
-            this.LastUpdateA = lastUpdateA;
-            this.LastUpdateB = lastUpdateB;
-        }
+			this.LastUpdateA = lastUpdateA;
+			this.LastUpdateB = lastUpdateB;
+		}
 
-        /// <summary>
-        /// Class constructor
-        /// </summary>
-        internal DirectoryDiffEntry()
-        {
-            this.Name = string.Empty;
-            this.BasePath = string.Empty;
-            _isFile = true;
-            _inA = true;
-            _inB = true;
-            _different = false;
-            EditContext = EditType.None;
-        }
-        #endregion
+		/// <summary>
+		/// Class constructor
+		/// </summary>
+		internal DirectoryDiffEntry()
+		{
+			this.Name = string.Empty;
+			this.BasePath = string.Empty;
+			_isFile = true;
+			_inA = true;
+			_inB = true;
+			_different = false;
+			EditContext = EditType.None;
+		}
+		#endregion
 
-        #region Public Properties
+		#region Public Properties
 
-        public bool Different
-        {
-            get { return this._different; }
+		public bool Different
+		{
+			get { return this._different; }
 
-            set { this._different = value; }
-        }
+			set { this._different = value; }
+		}
 
-        public string Error
-        {
-            get { return this._error; }
+		public string Error
+		{
+			get { return this._error; }
 
-            set { this._error = value; }
-        }
+			set { this._error = value; }
+		}
 
-        public bool InA { get { return this._inA; } }
+		public bool InA { get { return this._inA; } }
 
-        public bool InB { get { return this._inB; } }
+		public bool InB { get { return this._inB; } }
 
-        public EditType EditContext { get; }
+		public EditType EditContext { get; }
 
-        public bool IsFile { get { return this._isFile; } }
+		public bool IsFile { get { return this._isFile; } }
 
-        public string BasePath { get; }
+		public string BasePath { get; }
 
-        public string Name { get; }
+		public string Name { get; }
 
-        /// <summary>
-        /// Gets the last time this item has been changed through a write access.
-        /// </summary>
-        public DateTime LastUpdateA { get; }
+		/// <summary>
+		/// Gets the last time this item has been changed through a write access.
+		/// </summary>
+		public DateTime LastUpdateA { get; }
 
-        /// <summary>
-        /// Gets the last time this item has been changed through a write access.
-        /// </summary>
-        public DateTime LastUpdateB { get; }
+		/// <summary>
+		/// Gets the last time this item has been changed through a write access.
+		/// </summary>
+		public DateTime LastUpdateB { get; }
 
-        /// <summary>
-        /// Gets the size, in bytes, of the current file system item.
-        /// </summary>
-        public double LengthA { get; set; }
+		/// <summary>
+		/// Gets the size, in bytes, of the current file system item.
+		/// </summary>
+		public double LengthA { get; set; }
 
-        /// <summary>
-        /// Gets the size, in bytes, of the current file system item.
-        /// </summary>
-        public double LengthB { get; set; }
+		/// <summary>
+		/// Gets the size, in bytes, of the current file system item.
+		/// </summary>
+		public double LengthB { get; set; }
 
-        public DirectoryDiffEntryCollection Subentries
-        {
-            get
-            {
-                if (this.subentries == null && !this._isFile)
-                {
-                    this.subentries = new DirectoryDiffEntryCollection();
-                }
+		public DirectoryDiffEntryCollection Subentries
+		{
+			get
+			{
+				if (this.subentries == null && !this._isFile)
+				{
+					this.subentries = new DirectoryDiffEntryCollection();
+				}
 
-                return this.subentries;
-            }
-        }
+				return this.subentries;
+			}
+		}
 
-        #endregion properties
+		#endregion properties
 
-        #region methods
-        public void AddSubEntry(IDirectoryDiffEntry entry)
-        {
-            if (this.subentries == null)
-                this.subentries = new DirectoryDiffEntryCollection();
+		#region methods
+		public void AddSubEntry(IDirectoryDiffEntry entry)
+		{
+			if (this.subentries == null)
+				this.subentries = new DirectoryDiffEntryCollection();
 
-            this.subentries.Add(entry);
-        }
+			this.subentries.Add(entry);
+		}
 
-        public int CountSubDirectories()
-        {
-            return (Subentries == null ? 0 : Subentries.Count);
-        }
+		public int CountSubDirectories()
+		{
+			return (Subentries == null ? 0 : Subentries.Count);
+		}
 
-        public bool SetDiffBasedOnChildren(bool ignoreDirectoryComparison)
-        {
-            // Is this a directory and do we want to ignore directory diffs?
-            if (IsFile == false && ignoreDirectoryComparison == true)
-            {
-                Different = false;
-                return Different;
-            }
+		public bool SetDiffBasedOnChildren(bool ignoreDirectoryComparison)
+		{
+			// Is this a directory and do we want to ignore directory diffs?
+			if (IsFile == false && ignoreDirectoryComparison == true)
+			{
+				Different = false;
+				return Different;
+			}
 
-            // Items are already different so we need no further processing since difference is already determined
-            if (Different == true)
-                return Different;
+			// Items are already different so we need no further processing since difference is already determined
+			if (Different == true)
+				return Different;
 
-            if ((InA == true && InB == false) || (InA == false && InB == true))
-            {
-                Different = true;
-                return Different;
-            }
+			if ((InA == true && InB == false) || (InA == false && InB == true))
+			{
+				Different = true;
+				return Different;
+			}
 
-            // This entry is different if one of its children is different
-            if (Different == false && ignoreDirectoryComparison == false && Subentries != null)
-            {
-                for (int i = 0; i < Subentries.Count; i++)
-                {
-                    if (Subentries[i].Different == true)
-                    {
-                        Different = true;
-                        break;
-                    }
-                }
-            }
+			// This entry is different if one of its children is different
+			if (Different == false && ignoreDirectoryComparison == false && Subentries != null)
+			{
+				for (int i = 0; i < Subentries.Count; i++)
+				{
+					if (Subentries[i].Different == true)
+					{
+						Different = true;
+						break;
+					}
+				}
+			}
 
-            return Different;
-        }
-        #endregion methods
-    }
+			return Different;
+		}
+		#endregion methods
+	}
 }

@@ -1,73 +1,73 @@
 ﻿namespace AehnlichViewLib.Converters
 {
-    using System;
-    using System.Globalization;
-    using System.Windows;
-    using System.Windows.Data;
+	using System;
+	using System.Globalization;
+	using System.Windows;
+	using System.Windows.Data;
 
-    /// <summary>
-    /// Converts an object null or non-null value into a configurable
-    /// value of type <seealso cref="Visibility"/>.
-    /// </summary>
-    [ValueConversion(typeof(object), typeof(Visibility))]
-    public sealed class NullToVisibilityPropConverter : IValueConverter
-    {
-        #region constructor
-        /// <summary>
-        /// Class constructor
-        /// </summary>
-        public NullToVisibilityPropConverter()
-        {
-            // set defaults
-            NullValue = Visibility.Collapsed;
-            NonNullValue = Visibility.Visible;
-        }
-        #endregion constructor
+	/// <summary>
+	/// Converts an object null or non-null value into a configurable
+	/// value of type <seealso cref="Visibility"/>.
+	/// </summary>
+	[ValueConversion(typeof(object), typeof(Visibility))]
+	public sealed class NullToVisibilityPropConverter : IValueConverter
+	{
+		#region constructor
+		/// <summary>
+		/// Class constructor
+		/// </summary>
+		public NullToVisibilityPropConverter()
+		{
+			// set defaults
+			NullValue = Visibility.Collapsed;
+			NonNullValue = Visibility.Visible;
+		}
+		#endregion constructor
 
-        #region properties
-        /// <summary>
-        /// Gets/sets the <see cref="Visibility"/> value that is associated
-        /// (converted into) with the boolean true value.
-        /// </summary>
-        public Visibility NullValue { get; set; }
+		#region properties
+		/// <summary>
+		/// Gets/sets the <see cref="Visibility"/> value that is associated
+		/// (converted into) with the boolean true value.
+		/// </summary>
+		public Visibility NullValue { get; set; }
 
-        /// <summary>
-        /// Gets/sets the <see cref="Visibility"/> value that is associated
-        /// (converted into) with the boolean false value.
-        /// </summary>
-        public Visibility NonNullValue { get; set; }
-        #endregion properties
+		/// <summary>
+		/// Gets/sets the <see cref="Visibility"/> value that is associated
+		/// (converted into) with the boolean false value.
+		/// </summary>
+		public Visibility NonNullValue { get; set; }
+		#endregion properties
 
-        #region methods
-        /// <summary>
-        /// Convertzs a bool value into <see cref="Visibility"/> as configured in the
-        /// <see cref="NullValue"/> and <see cref="NonNullValue"/> properties.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value == null)
-                return NullValue;
+		#region methods
+		/// <summary>
+		/// Convertzs a bool value into <see cref="Visibility"/> as configured in the
+		/// <see cref="NullValue"/> and <see cref="NonNullValue"/> properties.
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="targetType"></param>
+		/// <param name="parameter"></param>
+		/// <param name="culture"></param>
+		/// <returns></returns>
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value == null)
+				return NullValue;
 
-            return NonNullValue;
-        }
+			return NonNullValue;
+		}
 
-        /// <summary>
-        /// Not implemented
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-        #endregion methods
-    }
+		/// <summary>
+		/// Not implemented
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="targetType"></param>
+		/// <param name="parameter"></param>
+		/// <param name="culture"></param>
+		/// <returns></returns>
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion methods
+	}
 }

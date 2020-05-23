@@ -2,7 +2,7 @@
 
 namespace Settings.UserProfile
 {
-    internal class LocalizabilityAttribute : Attribute
-    {
-    }
+	internal class LocalizabilityAttribute : Attribute
+	{
+	}
 }

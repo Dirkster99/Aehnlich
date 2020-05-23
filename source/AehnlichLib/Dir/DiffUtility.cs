@@ -1,17 +1,17 @@
 namespace AehnlichLib.Dir
 {
-    using AehnlichLib.Interfaces;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-    using System.Xml;
+	using AehnlichLib.Interfaces;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Text;
+	using System.Xml;
 
-    /// <summary>
-    /// Provides helper routines for working with files.
-    /// </summary>
-    public static class DiffUtility
+	/// <summary>
+	/// Provides helper routines for working with files.
+	/// </summary>
+	public static class DiffUtility
 	{
-        #region Public Members
+		#region Public Members
 		public static IList<string> GetFileTextLines(string fileName, IDiffProgress progress)
 		{
 			using (StreamReader reader = new StreamReader(fileName, Encoding.Default, true))
@@ -21,7 +21,7 @@ namespace AehnlichLib.Dir
 		}
 
 		public static IList<string> GetStringTextLines(string text,
-                                                       IDiffProgress progress)
+													   IDiffProgress progress)
 		{
 			using (StringReader reader = new StringReader(text))
 			{
@@ -30,13 +30,13 @@ namespace AehnlichLib.Dir
 		}
 
 		public static IList<string> GetTextLines(TextReader reader,
-                                                 IDiffProgress progress)
+												 IDiffProgress progress)
 		{
 			IList<string> result = new List<string>();
 
 			while (reader.Peek() > -1)
 			{
-                progress.Token.ThrowIfCancellationRequested();
+				progress.Token.ThrowIfCancellationRequested();
 
 				string line = reader.ReadLine();
 				result.Add(line);
@@ -46,8 +46,8 @@ namespace AehnlichLib.Dir
 		}
 
 		public static IList<string> GetXmlTextLines(string fileName,
-                                                    bool ignoreInsignificantWhiteSpace,
-                                                    IDiffProgress progress)
+													bool ignoreInsignificantWhiteSpace,
+													IDiffProgress progress)
 		{
 			using (StreamReader reader = new StreamReader(fileName, Encoding.Default, true))
 			{
@@ -57,16 +57,16 @@ namespace AehnlichLib.Dir
 
 		public static IList<string> GetXmlTextLines(XmlReader reader, IDiffProgress progress)
 		{
-            XmlWriterSettings settings = new XmlWriterSettings
-            {
-                CheckCharacters = false,
-                CloseOutput = true,
-                Indent = true,
-                IndentChars = "\t",
-                NewLineOnAttributes = true
-            };
+			XmlWriterSettings settings = new XmlWriterSettings
+			{
+				CheckCharacters = false,
+				CloseOutput = true,
+				Indent = true,
+				IndentChars = "\t",
+				NewLineOnAttributes = true
+			};
 
-            StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 			using (XmlWriter writer = XmlWriter.Create(sb, settings))
 			{
 				writer.WriteNode(reader, false);
@@ -77,8 +77,8 @@ namespace AehnlichLib.Dir
 		}
 
 		public static IList<string> GetXmlTextLinesFromXml(string xml,
-                                                           bool ignoreInsignificantWhiteSpace,
-                                                           IDiffProgress progress)
+														   bool ignoreInsignificantWhiteSpace,
+														   IDiffProgress progress)
 		{
 			using (StringReader reader = new StringReader(xml))
 			{
@@ -136,21 +136,21 @@ namespace AehnlichLib.Dir
 		#region Private Methods
 
 		private static IList<string> GetXmlTextLines(TextReader textReader,
-                                                     bool ignoreInsignificantWhitespace,
-                                                     IDiffProgress progress)
+													 bool ignoreInsignificantWhitespace,
+													 IDiffProgress progress)
 		{
-            XmlReaderSettings settings = new XmlReaderSettings
-            {
-                CheckCharacters = false,
-                CloseInput = true,
-                DtdProcessing = DtdProcessing.Ignore,
-                IgnoreWhitespace = ignoreInsignificantWhitespace,
-                ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.None,
-                ValidationType = ValidationType.None,
-                XmlResolver = null
-            };
+			XmlReaderSettings settings = new XmlReaderSettings
+			{
+				CheckCharacters = false,
+				CloseInput = true,
+				DtdProcessing = DtdProcessing.Ignore,
+				IgnoreWhitespace = ignoreInsignificantWhitespace,
+				ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.None,
+				ValidationType = ValidationType.None,
+				XmlResolver = null
+			};
 
-            using (XmlReader xmlReader = XmlReader.Create(textReader, settings))
+			using (XmlReader xmlReader = XmlReader.Create(textReader, settings))
 			{
 				IList<string> result = GetXmlTextLines(xmlReader, progress);
 				return result;
