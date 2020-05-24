@@ -1,6 +1,7 @@
 ﻿namespace AehnlichLib.Models
 {
 	using AehnlichLib.Enums;
+	using AehnlichLib.Files;
 	using System.Collections.Generic;
 
 	/// <summary>
@@ -152,17 +153,17 @@
 		/// <summary>
 		/// Class constructor
 		/// </summary>
-		/// <param name="isBinaryCompar">Whether the data stored in this object should be interpreted as binary or not.</param>
+		/// <param name="isComparedAs">Whether the data stored in this object should be interpreted as binary or not.</param>
 		/// <param name="lista"></param>
 		/// <param name="listb"></param>
 		/// <param name="leadingCharactersToIgnore"></param>
-		public DiffBinaryTextResults(bool isBinaryCompar, IList<string> lista, IList<string> listb
+		public DiffBinaryTextResults(CompareType isComparedAs, FileContentInfo a, FileContentInfo b
 									, int leadingCharactersToIgnore)
 			: this()
 		{
-			IsBinaryCompare = isBinaryCompar;
-			this.ListA = lista;
-			this.ListB = listb;
+			IsComparedAs = isComparedAs;
+			this.A = a;
+			this.B = b;
 			LeadingCharactersToIgnore = leadingCharactersToIgnore;
 		}
 
@@ -172,12 +173,12 @@
 		/// <param name="isBinaryCompar"></param>
 		/// <param name="lista"></param>
 		/// <param name="listb"></param>
-		public DiffBinaryTextResults(bool isBinaryCompar, IList<string> lista, IList<string> listb)
+		public DiffBinaryTextResults(CompareType isComparedAs, FileContentInfo a, FileContentInfo b)
 			: this()
 		{
-			this.IsBinaryCompare = isBinaryCompar;
-			this.ListA = lista;
-			this.ListB = listb;
+			IsComparedAs = isComparedAs;
+			this.A = a;
+			this.B = b;
 		}
 
 		/// <summary>
@@ -185,8 +186,8 @@
 		/// </summary>
 		protected DiffBinaryTextResults()
 		{
-			ListA = null;
-			ListB = null;
+			A = null;
+			B = null;
 		}
 		#endregion ctors
 
@@ -197,17 +198,17 @@
 		/// </summary>
 		public int LeadingCharactersToIgnore { get; }
 
-		/// <summary>Gets whether the returned data should be interpreted as binary or not.</summary>
-		public bool IsBinaryCompare { get; }
+		/// <summary>Gets whether the returned data was interpreted as binary, text, or XML.</summary>
+		public CompareType IsComparedAs { get; set; }
 
-		public bool IgnoreCase => IsBinaryCompare? false : true;
+		public bool IgnoreCase => (IsComparedAs == CompareType.Binary) ? false : true;
 
-		public bool IgnoreTextWhitespace => IsBinaryCompare? false : true;
+		public bool IgnoreTextWhitespace => (IsComparedAs == CompareType.Binary) ? false : true;
 
 		/// <summary>Gets a list of lines (text or binary rendered as text) for the left side of the comparison.</summary>
-		public IList<string> ListA { get; }
+		public FileContentInfo A { get; }
 
 		/// <summary>Gets a list of lines (text or binary rendered as text) for the right side of the comparison.</summary>
-		public IList<string> ListB { get; }
+		public FileContentInfo B { get; }
 	}
 }

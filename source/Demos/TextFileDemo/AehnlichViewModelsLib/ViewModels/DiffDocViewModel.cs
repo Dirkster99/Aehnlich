@@ -53,6 +53,7 @@
 		private int _CountInserts, _CountDeletes, _CountChanges;
 		private TextEditorOptions _DiffViewOptions;
 		private RelayCommand<object> _HighlightingDefintionOffCommand;
+		private CompareType _IsComparedAs;
 		#endregion fields
 
 		#region ctors
@@ -74,6 +75,8 @@
 
 			_ViewA.CaretPositionChanged += OnViewACaretPositionChanged;
 			_ViewB.CaretPositionChanged += OnViewBCaretPositionChanged;
+
+			_IsComparedAs = CompareType.Auto;
 		}
 		#endregion ctors
 
@@ -169,6 +172,25 @@
 				}
 			}
 		}
+
+		/// <summary>Gets whether the returned data was interpreted as binary, text, or XML.</summary>
+		public CompareType IsComparedAs
+		{
+			get
+			{
+				return _IsComparedAs;
+			}
+
+			private set
+			{
+				if (_IsComparedAs != value)
+				{
+					_IsComparedAs = value;
+					NotifyPropertyChanged(nameof(IsComparedAs));
+				}
+			}
+		}
+
 		#endregion Synchronized Caret Position
 
 		/// <summary>
@@ -649,7 +671,7 @@
 			}
 
 			SetData(r.ListA, r.ListB, r.Script, args,
-					r.IgnoreCase, r.IgnoreTextWhitespace, r.IsBinaryCompare);
+					r.IgnoreCase, r.IgnoreTextWhitespace, r.IsComparedAs == CompareType.Binary, r.IsComparedAs);
 
 			// Update the stats
 			this.NumberOfLines = (uint)r.ListA.Count;
@@ -800,12 +822,14 @@
 		/// <param name="changeDiffIgnoreCase"></param>
 		/// <param name="changeDiffIgnoreWhiteSpace"></param>
 		/// <param name="changeDiffTreatAsBinaryLines"></param>
+		/// <param name="isComparedAs"></param>
 		private void SetData(IList<string> listA, IList<string> listB,
 							 EditScript script,
 							 TextBinaryDiffArgs args,
 							 bool changeDiffIgnoreCase,
 							 bool changeDiffIgnoreWhiteSpace,
-							 bool changeDiffTreatAsBinaryLines)
+							 bool changeDiffTreatAsBinaryLines,
+							 CompareType isComparedAs)
 		{
 			_Args = args;
 
@@ -838,6 +862,9 @@
 			_ViewB.SetData(args.B, factory.LinesB, factory.TextB, args.SpacesPerTab);
 
 			NotifyPropertyChanged(() => this.IsDiffDataAvailable);
+
+			this.IsComparedAs = isComparedAs;
+			Debug.Assert(IsComparedAs != CompareType.Auto, "This should always be specific (eg: Xml, Bunary, or Text)");
 
 			Debug.Assert(this._ViewA.LineCount == this._ViewB.LineCount, "Both DiffView's LineCounts must be the same");
 

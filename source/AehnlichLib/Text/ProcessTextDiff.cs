@@ -52,8 +52,8 @@
 		/// <summary>Gets a list of lines (text or binary rendered as text) for the right side of the comparison.</summary>
 		public IList<string> ListB { get; private set; }
 
-		/// <summary>Gets whether the returned data should be interpreted as binary or not.</summary>
-		public bool IsBinaryCompare { get; private set; }
+		/// <summary>Gets whether the returned data was interpreted as binary, text, or XML.</summary>
+		public CompareType IsComparedAs { get; private set; }
 
 		public bool IgnoreCase { get; private set; }
 
@@ -78,18 +78,28 @@
 				}
 				else
 				{
-					// DiffType Text
+					// DiffType in-memory text content
 					result = GetTextLines(_Args.A, _Args.B, _Args, progress);
 				}
 
-				IsBinaryCompare = result.IsBinaryCompare;
+				// Assumption: Binary cannot be edit and RAW data cannot be stored in string
+				//             Therefore, binary lines are rendered only once directly from file
+				if (result.IsComparedAs == CompareType.Text || result.IsComparedAs == CompareType.Xml)
+				{
+					// Render Text or XML lines from in-memory text content
+					result = GetTextLines(result, _Args, progress);
+				}
+
+				ListA = result.A.Lines;
+				ListB = result.B.Lines;
+
+				IsComparedAs = result.IsComparedAs;
 				IgnoreCase = result.IgnoreCase;
 				IgnoreTextWhitespace = result.IgnoreTextWhitespace;
+
 				TextDiff diff = new TextDiff(_Args.HashType, IgnoreCase, IgnoreTextWhitespace,
 											 result.LeadingCharactersToIgnore, !_Args.ShowChangeAsDeleteInsert);
 
-				ListA = result.ListA;
-				ListB = result.ListB;
 				Script = diff.Execute(ListA, ListB, progress);
 
 				progress.ResultData = this;
@@ -119,43 +129,25 @@
 		{
 			// Nothing to compare if both files do not exist
 			if (fileA.FileExists == false && fileB.FileExists == false)
-				return new DiffBinaryTextResults(false, new List<string>(), new List<string>());
+				return new DiffBinaryTextResults(CompareType.Text, new FileContentInfo(), new FileContentInfo());
 
 			if (args.CompareType == CompareType.Binary ||
 				(args.IsAuto && fileA.Is == FileType.Binary || fileB.Is == FileType.Binary))
 				return GetBinaryFileLines(fileA, fileB, args, progress);
 
-			IList<string> a = null, b = null;
+			FileContentInfo af = null, bf = null;
 
-			if (args.CompareType == CompareType.Xml || args.IsAuto)
-			{
-				a = fileA.TryGetXmlLines(DiffUtility.GetXmlTextLines, !args.IsAuto, args, progress);
+			if (fileA.FileExists)
+				af = AsyncPump.Run(() => FileEx.GetFileTextAsync(fileA.FileNamePath));
+			else
+				af = new FileContentInfo();
 
-				// If A failed to parse with Auto, then there's no reason to try B.
-				if (fileA.Is == FileType.Xml)
-					b = fileB.TryGetXmlLines(DiffUtility.GetXmlTextLines, !args.IsAuto, args, progress);
+			if (fileB.FileExists)
+				bf = AsyncPump.Run(() => FileEx.GetFileTextAsync(fileB.FileNamePath));
+			else
+				bf = new FileContentInfo();
 
-				// If we get here and the compare type was XML, then both
-				// inputs parsed correctly, and both lists should be non-null.
-				// If we get here and the compare type was Auto, then one
-				// or both lists may be null, so we'll fallthrough to the text
-				// handling logic.
-			}
-
-			if (fileA.Is != FileType.Xml || fileB.Is != FileType.Xml)
-			{
-				if (fileA.FileExists)
-					a = AsyncPump.Run(() => FileEx.GetFileTextLinesAsync(fileA.FileNamePath));
-				else
-					a = new List<string>();
-
-				if (fileB.FileExists)
-					b = AsyncPump.Run(() => FileEx.GetFileTextLinesAsync(fileB.FileNamePath));
-				else
-					b = new List<string>();
-			}
-
-			return new DiffBinaryTextResults(false, a, b);
+			return new DiffBinaryTextResults(CompareType.Text, af, bf);
 		}
 
 		/// <summary>
@@ -175,7 +167,7 @@
 		{
 			// Neither left nor right file exist or cannot be accessed
 			if (fileA.FileExists == false && fileB.FileExists == false)
-				return new DiffBinaryTextResults(true, new List<string>(), new List<string>());
+				return new DiffBinaryTextResults(CompareType.Binary, new FileContentInfo(), new FileContentInfo());
 
 			Stream fileStreamA = null, fileStreamB = null;
 			IList<string> a = null, b = null;
@@ -214,10 +206,51 @@
 					fileStreamB.Dispose();
 			}
 
-			return new DiffBinaryTextResults(true, a, b, BinaryDiffLines.PrefixLength);
+			FileContentInfo af = new FileContentInfo(true, a);
+			FileContentInfo bf = new FileContentInfo(true, b);
+
+			return new DiffBinaryTextResults(CompareType.Binary, af, bf, BinaryDiffLines.PrefixLength);
 		}
 
 		private DiffBinaryTextResults GetTextLines(string textA, string textB
+												, TextBinaryDiffArgs args
+												, IDiffProgress progress)
+		{
+			FileContentInfo af = null, bf = null;
+
+			bool isAuto = args.CompareType == CompareType.Auto;
+
+			if (args.CompareType == CompareType.Xml || isAuto)
+			{
+				af = TryGetXmlText(DiffUtility.GetXmlTextFromXml, "the left side text", textA, !isAuto, args, progress);
+
+				// If A failed to parse with Auto, then there's no reason to try B.
+				if (af != null)
+				{
+					bf = TryGetXmlText(DiffUtility.GetXmlTextFromXml, "the right side text", textB, !isAuto, args, progress);
+				}
+
+				// If we get here and the compare type was XML, then both
+				// inputs parsed correctly, and both lists should be non-null.
+				// If we get here and the compare type was Auto, then one
+				// or both lists may be null, so we'll fallthrough to the text
+				// handling logic.
+			}
+
+			if (af == null || bf == null)
+			{
+				af = new FileContentInfo();
+				bf = new FileContentInfo();
+
+				af.Lines = DiffUtility.GetStringTextLines(textA, progress);
+				bf.Lines = DiffUtility.GetStringTextLines(textB, progress);
+			}
+
+			DiffBinaryTextResults result = new DiffBinaryTextResults(CompareType.Text, af, bf);
+			return result;
+		}
+
+		private DiffBinaryTextResults GetTextLines(DiffBinaryTextResults src
 												, TextBinaryDiffArgs args
 												, IDiffProgress progress)
 		{
@@ -227,12 +260,12 @@
 
 			if (args.CompareType == CompareType.Xml || isAuto)
 			{
-				a = TryGetXmlLines(DiffUtility.GetXmlTextLinesFromXml, "the left side text", textA, !isAuto, args, progress);
+				a = TryGetXmlText(DiffUtility.GetXmlTextLinesFromXml, "the left side text", src.A.TextContent, !isAuto, args, progress);
 
 				// If A failed to parse with Auto, then there's no reason to try B.
 				if (a != null)
 				{
-					b = TryGetXmlLines(DiffUtility.GetXmlTextLinesFromXml, "the right side text", textB, !isAuto, args, progress);
+					b = TryGetXmlText(DiffUtility.GetXmlTextLinesFromXml, "the right side text", src.B.TextContent, !isAuto, args, progress);
 				}
 
 				// If we get here and the compare type was XML, then both
@@ -244,23 +277,27 @@
 
 			if (a == null || b == null)
 			{
-				a = DiffUtility.GetStringTextLines(textA, progress);
-				b = DiffUtility.GetStringTextLines(textB, progress);
+				a = DiffUtility.GetStringTextLines(src.A.TextContent, progress);
+				b = DiffUtility.GetStringTextLines(src.B.TextContent, progress);
 			}
+			else
+				src.IsComparedAs = CompareType.Xml;
 
-			DiffBinaryTextResults result = new DiffBinaryTextResults(false, a, b);
-			return result;
+			src.A.Lines = a;
+			src.B.Lines = b;
+
+			return src;
 		}
 
-		private static IList<string> TryGetXmlLines(
-			Func<string, bool, IDiffProgress, IList<string>> converter,
+		private T TryGetXmlText<T>(
+			Func<string, bool, IDiffProgress, T> converter,
 			string name,
 			string input,
 			bool throwOnError,
 			TextBinaryDiffArgs args,
 			IDiffProgress progress)
 		{
-			IList<string> result = null;
+			T result = default(T);
 			try
 			{
 				result = converter(input, args.IgnoreXmlWhitespace, progress);

@@ -1,5 +1,6 @@
 namespace AehnlichLib.Dir
 {
+	using AehnlichLib.Files;
 	using AehnlichLib.Interfaces;
 	using System.Collections.Generic;
 	using System.IO;
@@ -34,12 +35,19 @@ namespace AehnlichLib.Dir
 		{
 			IList<string> result = new List<string>();
 
-			while (reader.Peek() > -1)
+			try
 			{
-				progress.Token.ThrowIfCancellationRequested();
+				while (reader.Peek() > -1)
+				{
+					progress.Token.ThrowIfCancellationRequested();
 
-				string line = reader.ReadLine();
-				result.Add(line);
+					string line = reader.ReadLine();
+					result.Add(line);
+				}
+			}
+			catch
+			{
+				// Not catching this but returning at default empty list
 			}
 
 			return result;
@@ -53,6 +61,46 @@ namespace AehnlichLib.Dir
 			{
 				return GetXmlTextLines(reader, ignoreInsignificantWhiteSpace, progress);
 			}
+		}
+
+		/// <summary>
+		/// Reads the text content of a file and determines its Encoding.
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <param name="ignoreInsignificantWhiteSpace"></param>
+		/// <param name="progress"></param>
+		/// <returns></returns>
+		public static FileContentInfo GetXmlText(string fileName,
+												bool ignoreInsignificantWhiteSpace,
+												IDiffProgress progress)
+		{
+			var contentInfo = new FileContentInfo();
+
+//// This should be created from in-memory text to save IO and support editing
+////			using (StreamReader reader = new StreamReader(fileName, Encoding.Default, true))
+////			{
+////				contentInfo.Lines = GetXmlTextLines(reader, ignoreInsignificantWhiteSpace, progress);
+////			}
+
+			// Read the RAW text content
+			const int DefaultBufferSize = 4096;
+			const FileOptions DefaultOptions = FileOptions.Asynchronous | FileOptions.SequentialScan;
+
+			using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultBufferSize, DefaultOptions))
+			{
+				var bom = new byte[4];               // Decode bom (if any) and continue to read text content
+				stream.Read(bom, 0, 4);
+				stream.Seek(0, SeekOrigin.Begin);
+
+				contentInfo.TextEncoding = FileEx.GetEncoding(bom);
+
+				using (StreamReader reader = new StreamReader(stream, contentInfo.TextEncoding))
+				{
+					contentInfo.TextContent = reader.ReadToEnd();
+				}
+			}
+
+			return contentInfo;
 		}
 
 		public static IList<string> GetXmlTextLines(XmlReader reader, IDiffProgress progress)
@@ -84,6 +132,22 @@ namespace AehnlichLib.Dir
 			{
 				return GetXmlTextLines(reader, ignoreInsignificantWhiteSpace, progress);
 			}
+		}
+
+		public static FileContentInfo GetXmlTextFromXml(string xml,
+														bool ignoreInsignificantWhiteSpace,
+														IDiffProgress progress)
+		{
+			var result = new FileContentInfo();
+
+			result.TextContent = xml;
+
+			using (StringReader reader = new StringReader(xml))
+			{
+				result.Lines = GetXmlTextLines(reader, ignoreInsignificantWhiteSpace, progress);
+			}
+
+			return result;
 		}
 
 		public static bool IsBinaryFile(string fileName)

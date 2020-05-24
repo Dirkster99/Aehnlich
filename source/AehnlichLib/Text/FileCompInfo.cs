@@ -1,5 +1,6 @@
 ﻿namespace AehnlichLib.Text
 {
+	using AehnlichLib.Files;
 	using AehnlichLib.Interfaces;
 	using AehnlichLib.Models;
 	using System;
@@ -134,13 +135,13 @@
 			return false;
 		}
 
-		public IList<string> TryGetXmlLines(
-			Func<string, bool, IDiffProgress, IList<string>> converter,
+		public T TryGetXmlText<T>(
+			Func<string, bool, IDiffProgress, T> converter,
 			bool throwOnError,
 			TextBinaryDiffArgs args,
 			IDiffProgress progress)
 		{
-			IList<string> result = null;
+			T result = default(T);
 			try
 			{
 				if (FileExists)
