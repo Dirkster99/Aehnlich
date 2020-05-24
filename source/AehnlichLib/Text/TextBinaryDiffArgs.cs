@@ -153,9 +153,31 @@
 		/// Class constructor
 		/// </summary>
 		/// <param name="isBinaryCompar">Whether the data stored in this object should be interpreted as binary or not.</param>
-		public DiffBinaryTextResults(bool isBinaryCompar)
+		/// <param name="lista"></param>
+		/// <param name="listb"></param>
+		/// <param name="leadingCharactersToIgnore"></param>
+		public DiffBinaryTextResults(bool isBinaryCompar, IList<string> lista, IList<string> listb
+									, int leadingCharactersToIgnore)
+			: this()
 		{
 			IsBinaryCompare = isBinaryCompar;
+			this.ListA = lista;
+			this.ListB = listb;
+			LeadingCharactersToIgnore = leadingCharactersToIgnore;
+		}
+
+		/// <summary>
+		/// Class constructor
+		/// </summary>
+		/// <param name="isBinaryCompar"></param>
+		/// <param name="lista"></param>
+		/// <param name="listb"></param>
+		public DiffBinaryTextResults(bool isBinaryCompar, IList<string> lista, IList<string> listb)
+			: this()
+		{
+			this.IsBinaryCompare = isBinaryCompar;
+			this.ListA = lista;
+			this.ListB = listb;
 		}
 
 		/// <summary>
@@ -163,8 +185,8 @@
 		/// </summary>
 		protected DiffBinaryTextResults()
 		{
-			a = null; //new List<string>();
-			b = null; //new List<string>();
+			ListA = null;
+			ListB = null;
 		}
 		#endregion ctors
 
@@ -173,26 +195,19 @@
 		/// Leading number of characters to ignore for diff in each line.
 		/// This space is used in binary diff to display 8 digit line number and 4 digit space.
 		/// </summary>
-		public int LeadingCharactersToIgnore { get; set; }
+		public int LeadingCharactersToIgnore { get; }
 
-		/// <summary>
-		/// Gets whether the returned data should be interpreted as binary or not.
-		/// </summary>
+		/// <summary>Gets whether the returned data should be interpreted as binary or not.</summary>
 		public bool IsBinaryCompare { get; }
 
 		public bool IgnoreCase => IsBinaryCompare? false : true;
 
 		public bool IgnoreTextWhitespace => IsBinaryCompare? false : true;
 
+		/// <summary>Gets a list of lines (text or binary rendered as text) for the left side of the comparison.</summary>
+		public IList<string> ListA { get; }
 
-		/// <summary>
-		/// Gets a list of lines (text or binary rendered as text) for the left side of the comparison.
-		/// </summary>
-		public IList<string> a { get; set; }
-
-		/// <summary>
-		/// Gets a list of lines (text or binary rendered as text) for the right side of the comparison.
-		/// </summary>
-		public IList<string> b { get; set; }
+		/// <summary>Gets a list of lines (text or binary rendered as text) for the right side of the comparison.</summary>
+		public IList<string> ListB { get; }
 	}
 }

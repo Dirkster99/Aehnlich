@@ -492,7 +492,10 @@
 
 				_DiffProgress.ResetProgressValues(_cancelTokenSource.Token);
 				Task.Factory.StartNew<IDiffProgress>(
-					(pr) => processDiff.ProcessDiff(_DiffProgress),
+					(pr) =>
+					{
+						return processDiff.ProcessDiff(_DiffProgress);
+					},
 					TaskCreationOptions.LongRunning,
 					_cancelTokenSource.Token)
 				.ContinueWith((r) =>
