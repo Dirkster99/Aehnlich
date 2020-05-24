@@ -214,14 +214,13 @@ namespace AehnlichViewModelsLib.ViewModels.Dialogs
 		#region methods
 		internal TextBinaryDiffArgs GetTextBinaryDiffSetup(string A, string B)
 		{
-			var setup = new TextBinaryDiffArgs(A, B, DiffType.File);
+			var setup = new TextBinaryDiffArgs(A, B, DiffType.File, (int)this.SpacesPerTabValue);
 
 			setup.CompareType = this.OptionCompareType;
 			setup.IgnoreCase = this.IgnoreCase;
 			setup.IgnoreTextWhitespace = this.IgnoreTextWhitespace;
 			setup.IgnoreXmlWhitespace = this.IgnoreXmlWhitespace;
 			setup.ShowChangeAsDeleteInsert = this.ShowChangeAsDeleteInsert;
-			setup.SpacesPerTab = (int)this.SpacesPerTabValue;
 
 			return setup;
 		}
