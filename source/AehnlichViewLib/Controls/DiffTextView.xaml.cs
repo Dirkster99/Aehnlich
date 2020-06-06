@@ -92,6 +92,9 @@
 			DependencyProperty.Register("ViewPortChangedCommand", typeof(ICommand),
 				typeof(DiffTextView), new PropertyMetadata(null));
 
+		/// <summary>
+		/// Implements the backing store of the <see cref="DiffViewOptions"/> dependency property.
+		/// </summary>
 		public static readonly DependencyProperty DiffViewOptionsProperty =
 			DependencyProperty.Register("DiffViewOptions", typeof(TextEditorOptions),
 				typeof(DiffTextView), new PropertyMetadata(new TextEditorOptions { IndentationSize = 4, ShowTabs = false, ConvertTabsToSpaces = true }));
@@ -161,18 +164,27 @@
 			set { SetValue(RightDiffViewProperty, value); }
 		}
 
+		/// <summary>
+		/// Gets/sets the AvalonEdit display options to control how text is shown in the side-by-side comparison view.
+		/// </summary>
 		public TextEditorOptions DiffViewOptions
 		{
 			get { return (TextEditorOptions)GetValue(DiffViewOptionsProperty); }
 			set { SetValue(DiffViewOptionsProperty, value); }
 		}
 
+		/// <summary>
+		/// Gets/sets the the name of the left file in the side-by-side comparison view.
+		/// </summary>
 		public string LeftFileName
 		{
 			get { return (string)GetValue(LeftFileNameProperty); }
 			set { SetValue(LeftFileNameProperty, value); }
 		}
 
+		/// <summary>
+		/// Gets/sets the the name of the right file in the side-by-side comparison view.
+		/// </summary>
 		public string RightFileName
 		{
 			get { return (string)GetValue(RightFileNameProperty); }
