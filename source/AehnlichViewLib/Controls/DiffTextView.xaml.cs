@@ -69,7 +69,7 @@
 		/// </summary>
 		public static readonly DependencyProperty SetFocusProperty =
 			DependencyProperty.Register("SetFocus", typeof(Focus),
-				typeof(DiffTextView), new PropertyMetadata(Enums.Focus.LeftFilePath, OnSetFocusChanged));
+				typeof(DiffTextView), new PropertyMetadata(Enums.Focus.LeftView, OnSetFocusChanged));
 
 		/// <summary>
 		/// Implements the backing store of the <see cref="LeftFileName"/> dependency property.
@@ -117,6 +117,13 @@
 		public static readonly DependencyProperty ColumnWidthBProperty =
 			DependencyProperty.Register("ColumnWidthB", typeof(GridLength),
 				typeof(DiffTextView), new PropertyMetadata(new GridLength(1.0, GridUnitType.Star), OnColumnWidthBChanged));
+
+		/// <summary>
+		/// Implements the backing store of the <see cref="CanSyncDisplay"/> dependency property.
+		/// </summary>
+		public static readonly DependencyProperty CanSyncDisplayProperty =
+			DependencyProperty.Register("CanSyncDisplay", typeof(bool),
+				typeof(DiffTextView), new PropertyMetadata(true));
 		#endregion GridColumn Sync
 
 		private DiffView _PART_LeftDiffView, _PART_RightDiffView;
@@ -202,6 +209,9 @@
 			set { SetValue(ViewPortChangedCommandProperty, value); }
 		}
 
+		/// <summary>
+		/// Gets/sets a UI element to set the focus to.
+		/// </summary>
 		public Focus SetFocus
 		{
 			get { return (Focus)GetValue(SetFocusProperty); }
@@ -209,19 +219,35 @@
 		}
 
 		#region GridColumn Sync
+		/// <summary>
+		/// Gets/sets the width of column A in a view with columns A and B being separated by a GridSplitter.
+		/// </summary>
 		public GridLength ColumnWidthA
 		{
 			get { return (GridLength)GetValue(ColumnWidthAProperty); }
 			set { SetValue(ColumnWidthAProperty, value); }
 		}
 
+		/// <summary>
+		/// Gets/sets the width of column B in a view with columns A and B being separated by a GridSplitter.
+		/// </summary>
 		public GridLength ColumnWidthB
 		{
 			get { return (GridLength)GetValue(ColumnWidthBProperty); }
 			set { SetValue(ColumnWidthBProperty, value); }
 		}
-		#endregion
+
+		/// <summary>
+		/// Gets/sets whether the current line display in column A is syncronized with the
+		/// current line display in column B or not.
+		/// </summary>
+		public bool CanSyncDisplay
+		{
+			get { return (bool)GetValue(CanSyncDisplayProperty); }
+			set { SetValue(CanSyncDisplayProperty, value); }
+		}
 		#endregion GridColumn Sync
+		#endregion
 
 		#region methods
 		public override void OnApplyTemplate()
@@ -278,6 +304,9 @@
 		/// <param name="e"></param>
 		private void Scrollviewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
 		{
+			if (CanSyncDisplay == false)
+				return;
+
 			ScrollViewer scrollToSync = null;
 			DiffView sourceToSync = null;
 

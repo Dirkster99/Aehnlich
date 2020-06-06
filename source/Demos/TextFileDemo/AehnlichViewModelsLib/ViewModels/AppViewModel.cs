@@ -46,6 +46,7 @@
 		private Focus _FocusControl;
 		private bool _disposed;
 		private CancellationTokenSource _cancelTokenSource;
+		private bool _CanSyncDisplay;
 		private readonly DiffProgressViewModel _DiffProgress;
 		private readonly SuggestSourceViewModel _FilePathA, _FilePathB;
 		#endregion fields
@@ -66,6 +67,9 @@
 		/// </summary>
 		public AppViewModel()
 		{
+			_FocusControl = Focus.LeftView;
+			_CanSyncDisplay = true;
+
 			_cancelTokenSource = new CancellationTokenSource();
 			_DiffProgress = new DiffProgressViewModel();
 
@@ -78,8 +82,6 @@
 
 			_GotoLineController = new GotoLineControllerViewModel(DiffCtrl.GotoTextLine, ToogleInlineDialog);
 			_OptionsController = new OptionsControllerViewModel(ToogleInlineDialog);
-
-			_FocusControl = Focus.LeftFilePath;
 		}
 		#endregion ctors
 
@@ -157,7 +159,7 @@
 
 		/// <summary>
 		/// Gets a focus element indicator to indicate a ui element to focus
-		/// (this is used to focus the lift diff view by default when loading new files)
+		/// (this is used to focus the left diff view by default when loading new files)
 		/// </summary>
 		public Focus FocusControl
 		{
@@ -232,6 +234,23 @@
 				}
 
 				return _ViewPortChangedCommand;
+			}
+		}
+
+		/// <summary>
+		/// Gets whether the current line display in column A is syncronized with the
+		/// current line display in column B or not.
+		/// </summary>
+		public bool CanSyncDisplay
+		{
+			get { return _CanSyncDisplay; }
+			private set
+			{
+				if (_CanSyncDisplay != value)
+				{
+					_CanSyncDisplay = value;
+					NotifyPropertyChanged(() => CanSyncDisplay);
+				}
 			}
 		}
 

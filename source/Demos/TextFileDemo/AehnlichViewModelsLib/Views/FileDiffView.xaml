@@ -611,6 +611,7 @@
 						Name="DiffCtrl"
 						Grid.Row="1"
 						Margin="3,0,3,0"
+						CanSyncDisplay="{Binding CanSyncDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 						ColumnWidthChanged="DiffText_ColumnWidthChanged"
 						DiffViewOptions="{Binding DiffCtrl.DiffViewOptions, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 						LeftDiffView="{Binding DiffCtrl.ViewA}"

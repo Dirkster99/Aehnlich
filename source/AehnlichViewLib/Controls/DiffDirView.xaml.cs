@@ -542,7 +542,7 @@
 
 		#region Column A B GridSplitter Synchronization
 		/// <summary>
-		/// Gets the width of column A in a view with columns A and B being separated by a GridSplitter.
+		/// Gets/sets the width of column A in a view with columns A and B being separated by a GridSplitter.
 		/// </summary>
 		public GridLength ColumnWidthA
 		{
@@ -551,7 +551,7 @@
 		}
 
 		/// <summary>
-		/// Gets the width of column B in a view with columns A and B being separated by a GridSplitter.
+		/// Gets/sets the width of column B in a view with columns A and B being separated by a GridSplitter.
 		/// </summary>
 		public GridLength ColumnWidthB
 		{

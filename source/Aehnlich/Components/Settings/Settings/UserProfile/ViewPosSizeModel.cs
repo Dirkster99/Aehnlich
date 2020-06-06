@@ -89,7 +89,7 @@
 		{
 			get
 			{
-				return new ViewSize(50, 50, 800, 550);
+				return new ViewSize(50, 50, 1200, 750);
 			}
 		}
 
