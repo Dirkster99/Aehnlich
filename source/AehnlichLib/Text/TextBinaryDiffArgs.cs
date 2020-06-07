@@ -2,7 +2,6 @@
 {
 	using AehnlichLib.Enums;
 	using AehnlichLib.Files;
-	using System.Collections.Generic;
 
 	/// <summary>
 	/// Class defines core properties that can be defined as arguments when diffing text or binary files
@@ -24,13 +23,14 @@
 		/// to interprete values in <paramref name="itemA"/> and <paramref name="itemB"/> either as file
 		/// based input or direct string based input.</param>
 		/// <param name="spacesPerTab">number of spaces that should be applied to a TAB character.</param>
-		public TextBinaryDiffArgs(string itemA, string itemB, DiffType diffType, int spacesPerTab)
+		public TextBinaryDiffArgs(string itemA, string itemB, DiffType diffType, int spacesPerTab, bool reloadFromFile)
 			: this()
 		{
 			this.A = itemA;
 			this.B = itemB;
 			this.DiffType = diffType;
 			this.SpacesPerTab = spacesPerTab;
+			this.ReloadFromFile = reloadFromFile;
 		}
 
 		/// <summary>
@@ -98,6 +98,8 @@
 		/// Gets the number of spaces that should be applied to a TAB character.
 		/// </summary>
 		public int SpacesPerTab { get; }
+
+		public bool ReloadFromFile { get; }
 
 		/// <summary>
 		/// Gets/sets wether the text should by compared text case-sensitive

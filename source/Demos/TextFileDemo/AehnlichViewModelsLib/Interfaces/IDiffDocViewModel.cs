@@ -1,6 +1,7 @@
 ﻿namespace AehnlichViewModelsLib.Interfaces
 {
 	using AehnlichLib.Enums;
+	using AehnlichViewLib.Enums;
 	using AehnlichViewModelsLib.ViewModels;
 	using HL.Interfaces;
 	using ICSharpCode.AvalonEdit;
@@ -210,18 +211,24 @@
 						  IDiffSideViewModel viewB,
 						  bool positionCursor);
 
-		/// <summary>
-		/// Sets the text editor display options that control the left and right text diff view.
-		/// Both diff views are bound to one options object to ensure consistent displays.
-		/// </summary>
+		/// <summary>Sets the text editor display options that control the left and right text diff view.
+		/// Both diff views are bound to one options object to ensure consistent displays.</summary>
 		void SetDiffViewOptions(TextEditorOptions options);
 
-		/// <summary>
-		/// Invoke this method to apply a change of theme to the content of the document
+		/// <summary>Apply a change of theme to the content of the document
 		/// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
-		///      WITH current text document loaded.)
-		/// </summary>
+		///      WITH current text document loaded.)</summary>
 		void OnAppThemeChanged(IThemedHighlightingManager hlManager);
+
+		/// <summary>Switch the display mode (comparing. editing) for view A.</summary>
+		/// <param name="newMode"></param>
+		/// <returns>The actual display mode applied.</returns>
+		DisplayMode SwitchViewModeA(DisplayMode newMode);
+
+		/// <summary>Switch the display mode (comparing. editing) for view B.</summary>
+		/// <param name="newMode"></param>
+		/// <returns>The actual display mode applied.</returns>
+		DisplayMode SwitchViewModeB(DisplayMode newMode);
 		#endregion methods
 	}
 }

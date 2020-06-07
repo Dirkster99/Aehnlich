@@ -1,6 +1,7 @@
 ﻿namespace AehnlichViewLib.Interfaces
 {
 	using AehnlichViewLib.Controls.AvalonEditEx;
+	using AehnlichViewLib.Enums;
 	using ICSharpCode.AvalonEdit.Document;
 	using ICSharpCode.AvalonEdit.Highlighting;
 	using System;
@@ -16,13 +17,15 @@
 		/// Gets/sets the <see cref="TextDocument"/> viewmodel of the attached AvalonEdit
 		/// text editor control.
 		/// </summary>
-		TextDocument Document { get; set; }
+		TextDocument Document { get; }
 
 		/// <summary>
 		/// Gets/sets the textbox controller that is used to drive the view
 		/// from within the viewmodel (with event based commands like goto line x,y).
 		/// </summary>
 		TextBoxController TxtControl { get; }
+
+		DisplayMode CurrentViewMode { get; }
 
 		/// <summary>
 		/// AvalonEdit exposes a Highlighting property that controls whether keywords,

@@ -484,6 +484,7 @@
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="4*" />
 								<ColumnDefinition Width="*" />
+								<ColumnDefinition Width="*" />
 							</Grid.ColumnDefinitions>
 
 							<sc:SuggestBox
@@ -512,6 +513,14 @@
 								Name="highlightingComboBox"
 								SelectionChanged="HighlightingComboBox_SelectionChanged"
 							-->
+
+							<ComboBox
+								Grid.Column="2"
+								MinWidth="50"
+								Margin="0,0,3,3"
+								behav:SelectionChangedCommand.ChangedCommand="{Binding ViewModeAChangeCommand}"
+								ItemsSource="{Binding ViewModesA}"
+								SelectedItem="{Binding ViewModeASelected, UpdateSourceTrigger=PropertyChanged}" />
 						</Grid>
 
 
@@ -529,6 +538,7 @@
 						<Grid Grid.Row="0" Grid.Column="2">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="4*" />
+								<ColumnDefinition Width="*" />
 								<ColumnDefinition Width="*" />
 							</Grid.ColumnDefinitions>
 
@@ -553,10 +563,14 @@
 								behav:SelectionChangedCommand.ChangedCommand="{Binding DiffCtrl.ViewB.HighlightingChangeCommand}"
 								ItemsSource="{Binding Source={x:Static HL:ThemedHighlightingManager.Instance}, Path=HighlightingDefinitions}"
 								SelectedItem="{Binding DiffCtrl.ViewB.HighlightingDefinition, UpdateSourceTrigger=PropertyChanged}" />
-							<!--
-								Name="highlightingComboBox"
-								SelectionChanged="HighlightingComboBox_SelectionChanged"
-							-->
+
+							<ComboBox
+								Grid.Column="2"
+								MinWidth="50"
+								Margin="0,0,3,3"
+								behav:SelectionChangedCommand.ChangedCommand="{Binding ViewModeBChangeCommand}"
+								ItemsSource="{Binding ViewModesB}"
+								SelectedItem="{Binding ViewModeBSelected, UpdateSourceTrigger=PropertyChanged}" />
 						</Grid>
 					</Grid>
 
@@ -611,7 +625,7 @@
 						Name="DiffCtrl"
 						Grid.Row="1"
 						Margin="3,0,3,0"
-						CanSyncDisplay="{Binding CanSyncDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+						CanSyncDisplay="{Binding DiffCtrl.CanSyncDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 						ColumnWidthChanged="DiffText_ColumnWidthChanged"
 						DiffViewOptions="{Binding DiffCtrl.DiffViewOptions, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 						LeftDiffView="{Binding DiffCtrl.ViewA}"

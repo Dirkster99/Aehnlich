@@ -6,6 +6,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Windows;
+	using System.Windows.Input;
 
 	public partial class DiffView : TextEditor
 	{
@@ -55,6 +56,9 @@
 			if (fileDoc == null)
 				return;
 			////throw new ArgumentNullException("Object of type FileDocument is not available!");
+
+			if (e.OldValue == e.NewValue)
+				return;
 
 			// Remove event handler from old if OldValue is available
 			if (e.OldValue is ITextBoxController)
@@ -149,6 +153,7 @@
 				throw new ArgumentException("sender");
 
 			element.Focus();
+			Keyboard.Focus(element);
 			element.ScrollToLine(line);
 		}
 

@@ -3,6 +3,7 @@
 	using AehnlichLib.Enums;
 	using AehnlichLib.Models;
 	using AehnlichLib.Text;
+	using AehnlichViewLib.Enums;
 	using AehnlichViewModelsLib.Enums;
 	using AehnlichViewModelsLib.Events;
 	using AehnlichViewModelsLib.Interfaces;
@@ -54,12 +55,11 @@
 		private TextEditorOptions _DiffViewOptions;
 		private RelayCommand<object> _HighlightingDefintionOffCommand;
 		private CompareType _IsComparedAs;
+		private bool _CanSyncDisplay;
 		#endregion fields
 
 		#region ctors
-		/// <summary>
-		/// class constructor
-		/// </summary>
+		/// <summary>class constructor</summary>
 		public DiffDocViewModel()
 		{
 			_DiffViewOptions = new TextEditorOptions()
@@ -77,6 +77,7 @@
 			_ViewB.CaretPositionChanged += OnViewBCaretPositionChanged;
 
 			_IsComparedAs = CompareType.Auto;
+			_CanSyncDisplay = true;
 		}
 		#endregion ctors
 
@@ -642,6 +643,23 @@
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets whether the current line display in column A is syncronized with the
+		/// current line display in column B or not.
+		/// </summary>
+		public bool CanSyncDisplay
+		{
+			get { return _CanSyncDisplay; }
+			private set
+			{
+				if (_CanSyncDisplay != value)
+				{
+					_CanSyncDisplay = value;
+					NotifyPropertyChanged(() => CanSyncDisplay);
+				}
+			}
+		}
 		#endregion properties
 
 		#region methods
@@ -670,8 +688,7 @@
 				this.StatusText = "Text Comparison";
 			}
 
-			SetData(r.ListA, r.ListB, r.Script, args,
-					r.IgnoreCase, r.IgnoreTextWhitespace, r.IsComparedAs == CompareType.Binary, r.IsComparedAs);
+			SetData(args, r);
 
 			// Update the stats
 			this.NumberOfLines = (uint)r.ListA.Count;
@@ -747,6 +764,9 @@
 				int realLineA = vmViewA.FindThisTextLine((int)thisLine);
 				var modelLineA = vmViewA.GotoTextLine(realLineA);
 
+				if (modelLineA == null)
+					return;
+
 				if (modelLineA.Counterpart.Number.HasValue)
 				{
 					int counterPartLine = Math.Min((int)modelLineA.Counterpart.Number + 1, ViewB.DocLineDiffs.Count);
@@ -769,9 +789,9 @@
 		/// <param name="viewB"></param>
 		/// <param name="positionCursor"></param>
 		public void ScrollToLine(IDiffViewPosition gotoPos,
-								   IDiffSideViewModel viewA,
-								   IDiffSideViewModel viewB,
-								   bool positionCursor)
+								IDiffSideViewModel viewA,
+								IDiffSideViewModel viewB,
+								bool positionCursor)
 		{
 			if (viewA != null)
 			{
@@ -810,42 +830,63 @@
 				_ViewB.OnAppThemeChanged(hlManager);
 		}
 
+		/// <summary>Switch the display mode (comparing. editing) for view A.</summary>
+		/// <param name="newMode"></param>
+		/// <returns>The actual display mode applied.</returns>
+		public DisplayMode SwitchViewModeA(DisplayMode newMode)
+		{
+			if (newMode  == DisplayMode.Editing || newMode != _ViewA.CurrentViewMode)
+				CanSyncDisplay = false;
+
+			var retMode = _ViewA.SwitchViewMode(newMode);
+
+			if (retMode == DisplayMode.Comparing && retMode == _ViewA.CurrentViewMode)
+				CanSyncDisplay = true;
+
+			return retMode;
+		}
+
+		/// <summary>Switch the display mode (comparing. editing) for view B.</summary>
+		/// <param name="newMode"></param>
+		/// <returns>The actual display mode applied.</returns>
+		public DisplayMode SwitchViewModeB(DisplayMode newMode)
+		{
+			if (newMode == DisplayMode.Editing || newMode != _ViewB.CurrentViewMode)
+				CanSyncDisplay = false;
+
+			var retMode = _ViewB.SwitchViewMode(newMode);
+
+			if (retMode == DisplayMode.Comparing && retMode == _ViewB.CurrentViewMode)
+				CanSyncDisplay = true;
+
+			return retMode;
+		}
+
 		/// <summary>
 		/// Sets up the left and right diff viewmodels which contain line by line information
 		/// with reference to textual contents and whether it should be handled as insertion,
 		/// deletion, change, or no change when comparing left side (ViewA) with right side (ViewB).
 		/// </summary>
-		/// <param name="listA"></param>
-		/// <param name="listB"></param>
-		/// <param name="script"></param>
 		/// <param name="args"></param>
-		/// <param name="changeDiffIgnoreCase"></param>
-		/// <param name="changeDiffIgnoreWhiteSpace"></param>
-		/// <param name="changeDiffTreatAsBinaryLines"></param>
-		/// <param name="isComparedAs"></param>
-		private void SetData(IList<string> listA, IList<string> listB,
-							 EditScript script,
-							 TextBinaryDiffArgs args,
-							 bool changeDiffIgnoreCase,
-							 bool changeDiffIgnoreWhiteSpace,
-							 bool changeDiffTreatAsBinaryLines,
-							 CompareType isComparedAs)
+		/// <param name="r"></param>
+		private void SetData(TextBinaryDiffArgs args,
+							 ProcessTextDiff r)
 		{
 			_Args = args;
 
 			ChangeDiffOptions changeDiffOptions = ChangeDiffOptions.None;
-			if (changeDiffTreatAsBinaryLines)
+			if (r.IsComparedAs == CompareType.Binary)
 			{
 				changeDiffOptions |= ChangeDiffOptions.IgnoreBinaryPrefix;
 			}
 			else
 			{
-				if (changeDiffIgnoreCase)
+				if (r.IgnoreCase)
 				{
 					changeDiffOptions |= ChangeDiffOptions.IgnoreCase;
 				}
 
-				if (changeDiffIgnoreWhiteSpace)
+				if (r.IgnoreTextWhitespace)
 				{
 					changeDiffOptions |= ChangeDiffOptions.IgnoreWhitespace;
 				}
@@ -856,20 +897,23 @@
 			_ViewLineDiff.ChangeDiffOptions = changeDiffOptions;
 
 			var factory = new LinesFactory();
-			factory.SetData(listA, listB, script);
+			factory.SetData(r.ListA, r.ListB, r.Script);
 
-			_ViewA.SetData(args.A, factory.LinesA, factory.TextA, args.SpacesPerTab);
-			_ViewB.SetData(args.B, factory.LinesB, factory.TextB, args.SpacesPerTab);
+			_ViewA.SetData(args.A, factory.LinesA, factory.TextA
+						, r.TextEncodingA, r.TextContentA, args.SpacesPerTab);
+
+			_ViewB.SetData(args.B, factory.LinesB, factory.TextB
+						, r.TextEncodingB, r.TextContentB, args.SpacesPerTab);
 
 			NotifyPropertyChanged(() => this.IsDiffDataAvailable);
 
-			this.IsComparedAs = isComparedAs;
+			this.IsComparedAs = r.IsComparedAs;
 			Debug.Assert(IsComparedAs != CompareType.Auto, "This should always be specific (eg: Xml, Bunary, or Text)");
 
 			Debug.Assert(this._ViewA.LineCount == this._ViewB.LineCount, "Both DiffView's LineCounts must be the same");
 
 			// Sets the similarity value (0% - 100%) between 2 things shown in toolbar
-			this.Similarity_Text = string.Format("{0:P}", script.Similarity);
+			this.Similarity_Text = string.Format("{0:P}", r.Script.Similarity);
 
 			// Show left and right file name labels over each ViewA and ViewB
 			bool showNames = !string.IsNullOrEmpty(args.A) || !string.IsNullOrEmpty(args.B);
@@ -917,6 +961,9 @@
 		/// <param name="e"></param>
 		private void OnViewACaretPositionChanged(object sender, CaretPositionChangedEvent e)
 		{
+			if (CanSyncDisplay == false)
+				return;
+
 			switch (e.ChangeType)
 			{
 				case CaretChangeType.ColumnAndLine:
@@ -947,6 +994,9 @@
 		/// <param name="e"></param>
 		private void OnViewBCaretPositionChanged(object sender, CaretPositionChangedEvent e)
 		{
+			if (CanSyncDisplay == false)
+				return;
+
 			switch (e.ChangeType)
 			{
 				case CaretChangeType.ColumnAndLine:

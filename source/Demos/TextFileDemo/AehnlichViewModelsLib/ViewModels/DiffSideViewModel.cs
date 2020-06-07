@@ -1,6 +1,7 @@
 ﻿namespace AehnlichViewModelsLib.ViewModels
 {
 	using AehnlichViewLib.Controls.AvalonEditEx;
+	using AehnlichViewLib.Enums;
 	using AehnlichViewLib.Events;
 	using AehnlichViewLib.Interfaces;
 	using AehnlichViewModelsLib.Enums;
@@ -13,14 +14,19 @@
 	using ICSharpCode.AvalonEdit.Highlighting;
 	using System;
 	using System.Collections.Generic;
+	using System.Collections.ObjectModel;
 	using System.Collections.Specialized;
 	using System.Diagnostics;
+	using System.IO;
+	using System.Linq;
+	using System.Text;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows;
 	using System.Windows.Data;
 	using System.Windows.Input;
 	using System.Windows.Media;
+	using System.Windows.Threading;
 
 	/// <summary>
 	/// Implements the viewmodel that controls one side of a text diff view with two sides
@@ -31,17 +37,11 @@
 	{
 		#region fields
 		private ChangeDiffOptions _ChangeDiffOptions;
-		private TextDocument _document = null;
-		private TextBoxController _TxtControl;
-
 		private readonly DiffViewPosition _position;
-		private int _Column;
-		private int _Line;
+
 		private int _spacesPerTab = 4;
 
 		private DateTime _ViewActivation;
-		private bool _isDirty = false;
-		private string _FileName;
 		private OneTaskLimitedScheduler _oneTaskScheduler;
 
 		#region DiffLines
@@ -61,6 +61,9 @@
 		private IHighlightingDefinition _HighlightingDefinition;
 		private ICommand _HighlightingChangeCommand;
 		private bool _IsHighlightingDefinitionOff;
+		private DisplayMode _CurrentViewMode;
+		private readonly ObservableCollection<DiffSideTextViewModel> _DocumentViews;
+		private DiffSideTextViewModel _CurrentDocumentView;
 		#endregion DiffLines
 		#endregion fields
 
@@ -76,13 +79,14 @@
 			_DocLineDiffs = new ObservableRangeCollection<IDiffLineViewModel>();
 			BindingOperations.EnableCollectionSynchronization(_DocLineDiffs, _DocLineDiffsLock);
 
-			_Line = 0;
-			_Column = 0;
-
-			_TxtControl = new TextBoxController();
 			_ViewActivation = DateTime.MinValue;
 
 			_oneTaskScheduler = new OneTaskLimitedScheduler();
+
+			CurrentViewMode = DisplayMode.Comparing;
+			_DocumentViews = new ObservableCollection<DiffSideTextViewModel>();
+
+			SetDocumentViews(string.Empty, string.Empty, Encoding.Default, string.Empty);
 		}
 		#endregion ctors
 
@@ -102,20 +106,64 @@
 		#endregion Events
 
 		#region properties
+		public DisplayMode CurrentViewMode
+		{
+			get => _CurrentViewMode;
+			protected set
+			{
+				if (_CurrentViewMode != value)
+				{
+					_CurrentViewMode = value;
+					NotifyPropertyChanged(nameof(CurrentViewMode));
+				}
+			}
+		}
+
+		public IEnumerable<DiffSideTextViewModel> DocumentViews
+		{
+			get
+			{
+				return _DocumentViews;
+			}
+		}
+
+		public DiffSideTextViewModel CurrentDocumentView
+		{
+			get
+			{
+				return _CurrentDocumentView;
+			}
+
+			protected set
+			{
+				if (_CurrentDocumentView != value)
+				{
+					_CurrentDocumentView = value;
+					NotifyPropertyChanged(nameof(CurrentDocumentView));
+
+					NotifyPropertyChanged(nameof(Document));   // Notify CurrentDocumentView dependent proxy property changes
+					NotifyPropertyChanged(nameof(FileName));
+					NotifyPropertyChanged(nameof(IsReadOnly));
+					NotifyPropertyChanged(nameof(IsDirty));
+					NotifyPropertyChanged(nameof(TxtControl));
+					NotifyPropertyChanged(nameof(Line));
+					NotifyPropertyChanged(nameof(Column));
+				}
+			}
+		}
+
 		/// <summary>
 		/// Gets/sets the <see cref="TextDocument"/> viewmodel of the attached AvalonEdit
 		/// text editor control.
 		/// </summary>
 		public TextDocument Document
 		{
-			get { return this._document; }
-			set
+			get
 			{
-				if (this._document != value)
-				{
-					this._document = value;
-					NotifyPropertyChanged(() => Document);
-				}
+				if (_CurrentDocumentView == null)
+					return null;
+
+				return _CurrentDocumentView.Document;
 			}
 		}
 
@@ -125,15 +173,12 @@
 		/// </summary>
 		public TextBoxController TxtControl
 		{
-			get { return _TxtControl; }
-
-			private set
+			get
 			{
-				if (_TxtControl != value)
-				{
-					_TxtControl = value;
-					NotifyPropertyChanged(() => TxtControl);
-				}
+				if (_CurrentDocumentView == null)
+					return null;
+
+				return _CurrentDocumentView.TxtControl;
 			}
 		}
 
@@ -156,7 +201,7 @@
 				if (_HighlightingDefinition != value)
 				{
 					_HighlightingDefinition = value;
-					NotifyPropertyChanged(() => HighlightingDefinition);
+					NotifyPropertyChanged(nameof(HighlightingDefinition));
 				}
 			}
 		}
@@ -205,7 +250,7 @@
 				if (_IsHighlightingDefinitionOff != value)
 				{
 					_IsHighlightingDefinitionOff = value;
-					NotifyPropertyChanged(() => IsHighlightingDefinitionOff);
+					NotifyPropertyChanged(nameof(IsHighlightingDefinitionOff));
 				}
 			}
 		}
@@ -227,54 +272,62 @@
 				if (_ViewActivation != value)
 				{
 					_ViewActivation = value;
-					NotifyPropertyChanged(() => ViewActivation);
+					NotifyPropertyChanged(nameof(ViewActivation));
 				}
 			}
 		}
 
 		#region Caret Position
-		/// <summary>
-		/// Gets/sets the column of a display position.
-		/// </summary>
+		/// <summary>Gets/sets the column of the text cursor position.</summary>
 		public int Column
 		{
 			get
 			{
-				return _Column;
+				if (_CurrentDocumentView == null)
+					return 0;
+
+				return _CurrentDocumentView.Column;
 			}
 
 			set
 			{
-				if (_Column != value)
+				if (_CurrentDocumentView == null)
+					throw new NotSupportedException(nameof(Column) + " cannot be set without " + nameof(CurrentDocumentView));
+
+				if (_CurrentDocumentView.Column != value)
 				{
-					_Column = value;
-					NotifyPropertyChanged(() => Column);
+					_CurrentDocumentView.Column = value;
+					NotifyPropertyChanged(nameof(Column));
 
 					CaretPositionChanged?.Invoke(this,
-						new CaretPositionChangedEvent(_Line, _Column, CaretChangeType.Column));
+						new CaretPositionChangedEvent(_CurrentDocumentView.Line, _CurrentDocumentView.Column, CaretChangeType.Column));
 				}
 			}
 		}
 
-		/// <summary>
-		/// Gets/sets the line of a display position.
-		/// </summary>
+		/// <summary>Gets/sets the line of the text cursor position.</summary>
 		public int Line
 		{
 			get
 			{
-				return _Line;
+				if (_CurrentDocumentView == null)
+					return 0;
+
+				return _CurrentDocumentView.Line;
 			}
 
 			set
 			{
-				if (_Line != value)
+				if (_CurrentDocumentView == null)
+					throw new NotSupportedException(nameof(Line) + " cannot be set without " + nameof(CurrentDocumentView));
+
+				if (_CurrentDocumentView.Line != value)
 				{
-					_Line = value;
-					NotifyPropertyChanged(() => Line);
+					_CurrentDocumentView.Line = value;
+					NotifyPropertyChanged(nameof(Line));
 
 					CaretPositionChanged?.Invoke(this,
-						new CaretPositionChangedEvent(_Line, _Column, CaretChangeType.Line));
+						new CaretPositionChangedEvent(_CurrentDocumentView.Line, _CurrentDocumentView.Column, CaretChangeType.Line));
 				}
 			}
 		}
@@ -286,13 +339,23 @@
 		/// </summary>
 		public bool IsDirty
 		{
-			get { return _isDirty; }
+			get
+			{
+				if (CurrentDocumentView == null)
+					return false;
+
+				return CurrentDocumentView.IsDirty;
+			}
+
 			set
 			{
-				if (_isDirty != value)
+				if (CurrentDocumentView == null)
+					throw new NotSupportedException(nameof(IsDirty) + " cannot be set without " + nameof(CurrentDocumentView));
+
+				if (CurrentDocumentView.IsDirty != value)
 				{
-					_isDirty = value;
-					NotifyPropertyChanged(() => IsDirty);
+					CurrentDocumentView.IsDirty = value;
+					NotifyPropertyChanged(nameof(IsDirty));
 				}
 			}
 		}
@@ -310,7 +373,16 @@
 		/// <summary>
 		/// Gets whether the text displayed in the diff should be editable or not.
 		/// </summary>
-		public bool IsReadOnly { get { return true; } }
+		public bool IsReadOnly
+		{
+			get
+			{
+				if (CurrentDocumentView == null)
+					return true;
+
+				return CurrentDocumentView.IsReadOnly;
+			}
+		}
 
 		/// <summary>
 		/// Gets Text/binary specific diff options (eg. ignore white space) which are applied
@@ -328,7 +400,7 @@
 				if (_ChangeDiffOptions != value)
 				{
 					_ChangeDiffOptions = value;
-					NotifyPropertyChanged(() => ChangeDiffOptions);
+					NotifyPropertyChanged(nameof(ChangeDiffOptions));
 				}
 			}
 		}
@@ -338,14 +410,12 @@
 		/// </summary>
 		public string FileName
 		{
-			get { return _FileName; }
-			protected set
+			get
 			{
-				if (_FileName != value)
-				{
-					_FileName = value;
-					NotifyPropertyChanged(() => FileName);
-				}
+				if (CurrentDocumentView == null)
+					return string.Empty;
+
+				return CurrentDocumentView.FileName;
 			}
 		}
 
@@ -596,6 +666,22 @@
 			TxtControl.ScrollToLine(n);               // we are supposed to be at
 		}
 
+		internal DisplayMode SwitchViewMode(DisplayMode newMode)
+		{
+			if (newMode == CurrentViewMode)
+				return CurrentViewMode;
+
+			var newDocViewModel = DocumentViews.FirstOrDefault(i => i.ViewMode == newMode);
+
+			int line = CurrentDocumentView.Line;
+			CurrentDocumentView = newDocViewModel;
+			CurrentViewMode = newMode;
+
+			GotoTextLine(line);
+
+			return CurrentViewMode;
+		}
+
 		/// <summary>
 		/// Implements a user option to switches the highlighting in text documents off.
 		/// </summary>
@@ -612,13 +698,16 @@
 		/// </summary>
 		/// <param name="filename"></param>
 		/// <param name="lines"></param>
-		/// <param name="text"></param>
+		/// <param name="text">Text content to be displayed in conjunction with lines
+		/// (this content should be adjusted (eg. with extra lines) to be synced with <paramref name="lines"/> parameter).</param>
 		/// <param name="spacesPerTab"></param>
-		internal void SetData(string filename,
-							  IDiffLines lines, string text, int spacesPerTab)
+		/// <param name="originalTextEncoding">The encoding of the original text</param>
+		/// <param name="originalTextContent">The original text as it was available in the file</param>
+		internal void SetData(string filename
+								, IDiffLines lines, string text
+								, Encoding originalTextEncoding, string originalTextContent
+								, int spacesPerTab)
 		{
-			this.FileName = filename;
-
 			try
 			{
 				string ext = System.IO.Path.GetExtension(filename);
@@ -638,10 +727,10 @@
 				HighlightingDefinition = null;
 			}
 
-			_position.SetPosition(0, 0);
-			_spacesPerTab = spacesPerTab;
-			Line = 0;
-			Column = 0;
+			_position.SetPosition(1, 1);
+			_spacesPerTab = spacesPerTab;  // TODO: Make sure this is bound to view control
+			Line = 1;
+			Column = 1;
 
 			if (lines != null)
 			{
@@ -660,9 +749,7 @@
 				_DocLineDiffs.Clear();
 			}
 
-			Document = new TextDocument(text);
-
-			NotifyPropertyChanged(() => Document);
+			SetDocumentViews(text, filename, originalTextEncoding, originalTextContent);
 		}
 
 		/// <summary>
@@ -677,7 +764,7 @@
 							  IDiffLineViewModel lineTwoVM,
 							  int spacesPerTab)
 		{
-			_spacesPerTab = spacesPerTab;
+			_spacesPerTab = spacesPerTab;      // TODO: Make sure this is bound to view control
 			var documentLineDiffs = new List<IDiffLineViewModel>();
 
 			string text = string.Empty;
@@ -704,10 +791,9 @@
 			_DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
 
 			// Update text document
-			Document = new TextDocument(text);
+			SetDocumentViews(text, string.Empty, Encoding.Default, string.Empty);
 
 			NotifyPropertyChanged(() => DocLineDiffs);
-			NotifyPropertyChanged(() => Document);
 		}
 
 		/// <summary>
@@ -725,12 +811,19 @@
 
 		internal IDiffLineViewModel GotoTextLine(int thisLine)
 		{
+			// This needs to be between 1 and LineCount lines
+			if (thisLine < 1 || thisLine > Document.LineCount)
+				thisLine = Document.LineCount;
+
 			DocumentLine line = Document.GetLineByNumber(thisLine);
 
 			TxtControl.SelectText(line.Offset, 0);  // Select text with length 0 and scroll to where
 			TxtControl.ScrollToLine(thisLine);     // we are supposed to be at
 
-			return _DocLineDiffs[thisLine - 1];
+			if (CurrentViewMode == DisplayMode.Comparing)
+				return _DocLineDiffs[thisLine - 1];
+
+			return null;
 		}
 
 		internal int FindThisTextLine(int thisLine)
@@ -898,6 +991,29 @@
 			////base.Dispose(disposing);
 		}
 		#endregion IDisposable
+
+		private void SetDocumentViews(string text, string fileName
+									, Encoding originalTextEncoding, string originalText)
+		{
+			CurrentViewMode = DisplayMode.Comparing;
+
+			// Initialize collection of different document views
+			var newDocument = new DiffSideTextViewModel(DisplayMode.Comparing, text, originalTextEncoding, originalText)
+			{
+				FileName = fileName
+			};
+
+			// Initialize collection of different document views
+			var newDocumentEditor = new DiffSideTextViewModel(DisplayMode.Editing, text, originalTextEncoding, originalText)
+			{
+				FileName = fileName
+			};
+
+			_DocumentViews.Clear();
+			_DocumentViews.Add(newDocument);
+			_DocumentViews.Add(newDocumentEditor);
+			CurrentDocumentView = newDocument;
+		}
 		#endregion methods
 	}
 }

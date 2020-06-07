@@ -75,6 +75,7 @@
     <Compile Include="ViewModels\Base\ModelBase.cs" />
     <Compile Include="ViewModels\Dialogs\DialogtTemplateSelector.cs" />
     <Compile Include="ViewModels\Dialogs\OptionsControllerViewModel.cs" />
+    <Compile Include="ViewModels\DiffSideTextViewModel.cs" />
     <Compile Include="Views\FileDiffView.xaml.cs">
       <DependentUpon>FileDiffView.xaml</DependentUpon>
     </Compile>

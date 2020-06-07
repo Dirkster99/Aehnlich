@@ -142,6 +142,17 @@
 				typeof(DiffView), new PropertyMetadata(2.0d));
 		#endregion EditorCurrentLine Highlighting Colors
 
+		public DisplayMode ViewMode
+		{
+			get { return (DisplayMode)GetValue(ViewModeProperty); }
+			set { SetValue(ViewModeProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for ViewMode.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty ViewModeProperty =
+			DependencyProperty.Register("ViewMode", typeof(DisplayMode)
+				, typeof(DiffView), new PropertyMetadata(DisplayMode.Comparing));
+
 		private INotifyCollectionChanged _observeableDiffContext;
 		private DiffLineBackgroundRenderer _DiffBackgroundRenderer;
 		private IVisualLineTransformer _Colorizer;

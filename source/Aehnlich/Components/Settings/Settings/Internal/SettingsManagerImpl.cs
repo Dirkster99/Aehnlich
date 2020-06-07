@@ -7,6 +7,7 @@
 	using SettingsModel.Interfaces;
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics;
 	using System.IO;
 	using System.Xml;
 	using System.Xml.Serialization;
@@ -20,7 +21,6 @@
 	internal class SettingsManagerImpl : ISettingsManager
 	{
 		#region fields
-		protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private readonly IOptionsPanel mSettingsDataPanel = null;
 
 		private IProfile mSessionData = null;
@@ -224,7 +224,7 @@
 					}
 					catch (Exception e)
 					{
-						logger.Error(e);
+						Debug.WriteLine("Failed to read program options from persistence: {0}.", e);
 					}
 					finally
 					{
@@ -238,7 +238,7 @@
 			}
 			catch (Exception exp)
 			{
-				logger.Error(exp);
+				Debug.WriteLine("Failed to read program options from persistence: {0}.", exp);
 			}
 			finally
 			{

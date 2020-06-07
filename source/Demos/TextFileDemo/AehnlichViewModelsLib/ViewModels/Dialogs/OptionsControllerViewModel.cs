@@ -212,9 +212,11 @@ namespace AehnlichViewModelsLib.ViewModels.Dialogs
 		#endregion properties
 
 		#region methods
-		internal TextBinaryDiffArgs GetTextBinaryDiffSetup(string A, string B)
+		internal TextBinaryDiffArgs GetTextBinaryDiffSetup(string A, string B, bool reloadFromFile)
 		{
-			var setup = new TextBinaryDiffArgs(A, B, DiffType.File, (int)this.SpacesPerTabValue);
+			var setup = new TextBinaryDiffArgs(A, B
+				, (reloadFromFile ? DiffType.File : DiffType.Text)
+				, (int)this.SpacesPerTabValue, reloadFromFile);
 
 			setup.CompareType = this.OptionCompareType;
 			setup.IgnoreCase = this.IgnoreCase;

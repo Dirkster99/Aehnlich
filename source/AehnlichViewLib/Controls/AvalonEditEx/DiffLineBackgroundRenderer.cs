@@ -1,7 +1,7 @@
 ﻿namespace AehnlichViewLib.Controls.AvalonEditEx
 {
 	using AehnlichViewLib.Enums;
-	using AehnlichViewModelsLib.Models;
+	using AehnlichViewLib.Models;
 	using ICSharpCode.AvalonEdit.Rendering;
 	using Interfaces;
 	using System.Collections.Generic;
@@ -60,6 +60,10 @@
 		public void Draw(TextView textView, DrawingContext drawingContext)
 		{
 			if (_DiffView == null)
+				return;
+
+			// Draw background line diffs only if this is currently in comparing mode
+			if (_DiffView.ViewMode != DisplayMode.Comparing)
 				return;
 
 			var srcLineDiffs = _DiffView.ItemsSource as IReadOnlyList<IDiffLineInfo>;

@@ -65,6 +65,7 @@
     <Compile Include="Controls\DiffDirView.xaml.cs">
       <DependentUpon>DiffDirView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums\ViewMode.cs" />
     <Compile Include="Interfaces\IGridSplitterSupport.cs" />
     <Compile Include="Controls\Overview\DoublesToVisibilityConverter.cs" />
     <Compile Include="Controls\Overview\RangeAlignment.cs" />

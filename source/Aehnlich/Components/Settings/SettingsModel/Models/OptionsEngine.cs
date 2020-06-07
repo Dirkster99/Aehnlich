@@ -13,8 +13,6 @@
 	internal class OptionsEngine : Interfaces.IEngine
 	{
 		#region fields
-		protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private readonly Dictionary<string, OptionGroup> mOptionGroups = new Dictionary<string, OptionGroup>();
 
 		private bool mIsDirty;

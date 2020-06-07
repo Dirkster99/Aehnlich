@@ -3,9 +3,9 @@
 	using AehnlichLib.Enums;
 	using AehnlichLib.Text;
 	using AehnlichViewLib.Enums;
+	using AehnlichViewLib.Models;
 	using AehnlichViewModelsLib.Enums;
 	using AehnlichViewModelsLib.Interfaces;
-	using AehnlichViewModelsLib.Models;
 	using AehnlichViewModelsLib.ViewModels.LineInfo;
 	using ICSharpCode.AvalonEdit.Document;
 	using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewModelsLib.Models
+﻿namespace AehnlichViewLib.Models
 {
 	using ICSharpCode.AvalonEdit.Document;
 	using System.Diagnostics;

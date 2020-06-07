@@ -11,7 +11,6 @@
 	using System.IO;
 	using System.Reflection;
 	using System.Text;
-	using System.Threading.Tasks;
 	using System.Xml;
 
 	public class ProcessTextDiff
@@ -35,6 +34,9 @@
 		/// </summary>
 		protected ProcessTextDiff()
 		{
+			TextContentA = TextContentB = null;
+			TextEncodingA = Encoding.Default;
+			TextEncodingB = Encoding.Default;
 		}
 		#endregion ctors
 
@@ -48,9 +50,20 @@
 		/// <summary>Gets a list of lines (text or binary rendered as text) for the left side of the comparison.</summary>
 		public IList<string> ListA { get; private set; }
 
+		/// <summary>Gets the original text for the left side of the comparison.</summary>
+		public string TextContentA { get; private set; }
+
+		/// <summary>Gets the original text encoding for the left side of the comparison.</summary>
+		public Encoding TextEncodingA { get; private set; }
 
 		/// <summary>Gets a list of lines (text or binary rendered as text) for the right side of the comparison.</summary>
 		public IList<string> ListB { get; private set; }
+
+		/// <summary>Gets the original text for the right side of the comparison.</summary>
+		public string TextContentB { get; private set; }
+
+		/// <summary>Gets the original text encoding for the right side of the comparison.</summary>
+		public Encoding TextEncodingB { get; private set; }
 
 		/// <summary>Gets whether the returned data was interpreted as binary, text, or XML.</summary>
 		public CompareType IsComparedAs { get; private set; }
@@ -63,8 +76,6 @@
 		#region methods
 		public IDiffProgress ProcessDiff(IDiffProgress progress)
 		{
-			progress.ShowIndeterminatedProgress();
-
 			try
 			{
 				DiffBinaryTextResults result = null;
@@ -79,15 +90,22 @@
 				else
 				{
 					// DiffType in-memory text content
-					result = GetTextLines(_Args.A, _Args.B, _Args, progress);
+					result = GetTextLines(TextContentA, TextContentB, _Args, progress);
 				}
 
-				// Assumption: Binary cannot be edit and RAW data cannot be stored in string
-				//             Therefore, binary lines are rendered only once directly from file
 				if (result.IsComparedAs == CompareType.Text || result.IsComparedAs == CompareType.Xml)
 				{
 					// Render Text or XML lines from in-memory text content
-					result = GetTextLines(result, _Args, progress);
+					if (_Args.DiffType == DiffType.File)
+						result = GetTextLines(result, _Args, progress);
+
+					// Assumption: Binary cannot be edit and RAW data cannot be stored in string
+					//             Therefore, binary lines are rendered only once directly from file
+					TextContentA = result.A.TextContent;
+					TextEncodingA = result.A.TextEncoding;
+
+					TextContentB = result.B.TextContent;
+					TextEncodingB = result.B.TextEncoding;
 				}
 
 				ListA = result.A.Lines;
@@ -108,7 +126,6 @@
 			}
 			finally
 			{
-				progress.ProgressDisplayOff();
 			}
 		}
 
@@ -246,6 +263,8 @@
 				bf.Lines = DiffUtility.GetStringTextLines(textB, progress);
 			}
 
+			af.TextContent = textA;
+			bf.TextContent = textB;
 			DiffBinaryTextResults result = new DiffBinaryTextResults(CompareType.Text, af, bf);
 			return result;
 		}
@@ -315,6 +334,16 @@
 			}
 
 			return result;
+		}
+
+		public void SetupForTextComparison(string origTextA, Encoding origEncodingA
+										, string origTextB, Encoding origEncodingB)
+		{
+			this.TextContentA = origTextA;
+			this.TextEncodingA = origEncodingA;
+
+			this.TextContentB = origTextB;
+			this.TextEncodingB = origEncodingB;
 		}
 		#endregion TextLineConverter
 		#endregion methods

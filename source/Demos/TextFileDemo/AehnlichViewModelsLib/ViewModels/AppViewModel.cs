@@ -12,6 +12,9 @@
 	using AehnlichViewModelsLib.ViewModels.Suggest;
 	using HL.Interfaces;
 	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows.Input;
@@ -43,12 +46,16 @@
 		private InlineDialogMode _InlineDialog;
 
 		private DiffViewPort _LastViewPort;
-		private Focus _FocusControl;
 		private bool _disposed;
 		private CancellationTokenSource _cancelTokenSource;
-		private bool _CanSyncDisplay;
 		private readonly DiffProgressViewModel _DiffProgress;
 		private readonly SuggestSourceViewModel _FilePathA, _FilePathB;
+
+		private Focus _FocusControl;
+		private DisplayMode _ViewModeBSelected;
+		private ICommand _ViewModeBChangeCommand;
+		private ICommand _ViewModeAChangeCommand;
+		private DisplayMode _ViewModeASelected;
 		#endregion fields
 
 		#region ctors
@@ -68,7 +75,12 @@
 		public AppViewModel()
 		{
 			_FocusControl = Focus.LeftView;
-			_CanSyncDisplay = true;
+
+			ViewModesA = new List<DisplayMode>(new DisplayMode[] { DisplayMode.Comparing, DisplayMode.Editing });
+			_ViewModeASelected = ViewModesA.First();
+
+			ViewModesB = new List<DisplayMode>(new DisplayMode[] { DisplayMode.Comparing, DisplayMode.Editing });
+			_ViewModeBSelected = ViewModesB.First();
 
 			_cancelTokenSource = new CancellationTokenSource();
 			_DiffProgress = new DiffProgressViewModel();
@@ -78,7 +90,6 @@
 
 			_InlineDialog = InlineDialogMode.None;
 			_DiffCtrl = new DiffDocViewModel();
-
 
 			_GotoLineController = new GotoLineControllerViewModel(DiffCtrl.GotoTextLine, ToogleInlineDialog);
 			_OptionsController = new OptionsControllerViewModel(ToogleInlineDialog);
@@ -98,15 +109,11 @@
 				{
 					_CompareFilesCommand = new RelayCommand<object>((p) =>
 					{
-
 						string filePathA, filePathB;
 						if (CompareTextFilesCommand_CanExecute(p, out filePathA, out filePathB) == false)
 							return;
 
-						if (_cancelTokenSource.IsCancellationRequested == true)
-							return;
-
-						CompareTextFilesCommand_Executed(filePathA, filePathB);
+						CompareTextFilesCommand_Executed(filePathA, filePathB, true, null, null);
 					},
 					(p) =>
 					{
@@ -238,23 +245,6 @@
 		}
 
 		/// <summary>
-		/// Gets whether the current line display in column A is syncronized with the
-		/// current line display in column B or not.
-		/// </summary>
-		public bool CanSyncDisplay
-		{
-			get { return _CanSyncDisplay; }
-			private set
-			{
-				if (_CanSyncDisplay != value)
-				{
-					_CanSyncDisplay = value;
-					NotifyPropertyChanged(() => CanSyncDisplay);
-				}
-			}
-		}
-
-		/// <summary>
 		/// Gets a command that opens the currently active file in Windows.
 		/// </summary>
 		public ICommand OpenFileFromActiveViewCommand
@@ -322,7 +312,12 @@
 						IDiffSideViewModel activeView = DiffCtrl.GetActiveView(out nonActView);
 
 						if (activeView != null)
+						{
+							if (activeView.TxtControl == null)
+								return false;
+
 							return (string.IsNullOrEmpty(activeView.TxtControl.GetSelectedText()) == false);
+						}
 
 						return false;
 					});
@@ -497,19 +492,171 @@
 				return _DiffProgress;
 			}
 		}
+
+		#region ViewModes A
+		public IEnumerable<DisplayMode> ViewModesA { get; }
+
+		public DisplayMode ViewModeASelected
+		{
+			get { return _ViewModeASelected; }
+			set
+			{
+				if (_ViewModeASelected != value)
+				{
+					_ViewModeASelected = value;
+					NotifyPropertyChanged(() => ViewModeBSelected);
+				}
+			}
+		}
+
+		public ICommand ViewModeAChangeCommand
+		{
+			get
+			{
+				if (_ViewModeAChangeCommand == null)
+				{
+					_ViewModeAChangeCommand = new RelayCommand<object>((p) =>
+					{
+						var parames = p as object[];
+
+						if (parames == null)
+							return;
+
+						if (parames.Length != 1)
+							return;
+
+						if (parames[0] is DisplayMode == false)
+							return;
+
+						var newMode = (DisplayMode)parames[0];
+
+						// save old viewmode data
+						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
+						var lastViewB = DiffCtrl.ViewB.CurrentDocumentView;
+						var retMode = DiffCtrl.SwitchViewModeA(newMode);
+
+						// Do a recompare based on in-memory stored/edited texts
+						string filePathA, filePathB;
+						object[] comParams = new object[] { this.FilePathA, this.FilePathB };
+						if (CompareTextFilesCommand_CanExecute(comParams, out filePathA, out filePathB) == true)
+						{
+							if (retMode == DisplayMode.Comparing && retMode == ViewModeBSelected && retMode != lastViewA.ViewMode)
+							{
+								if (lastViewA.ViewMode == DisplayMode.Editing && lastViewB.ViewMode == DisplayMode.Comparing)
+								{
+									lastViewA.OriginalText = lastViewA.Document.Text;
+									CompareTextFilesCommand_Executed(filePathA, filePathB, false, lastViewA, lastViewB);
+								}
+							}
+						}
+
+						ViewModeASelected = retMode;
+
+					}, (p) =>
+					{
+						return DiffCtrl.IsDiffDataAvailable;
+					});
+				}
+
+				return _ViewModeAChangeCommand;
+			}
+		}
+		#endregion ViewModes A
+
+		#region ViewModes B
+		public IEnumerable<DisplayMode> ViewModesB { get; }
+
+		public DisplayMode ViewModeBSelected
+		{
+			get { return _ViewModeBSelected; }
+			set
+			{
+				if (_ViewModeBSelected != value)
+				{
+					_ViewModeBSelected = value;
+					NotifyPropertyChanged(() => ViewModeBSelected);
+				}
+			}
+		}
+
+		public ICommand ViewModeBChangeCommand
+		{
+			get
+			{
+				if (_ViewModeBChangeCommand == null)
+				{
+					_ViewModeBChangeCommand = new RelayCommand<object>((p) =>
+					{
+						var parames = p as object[];
+
+						if (parames == null)
+							return;
+
+						if (parames.Length != 1)
+							return;
+
+						if (parames[0] is DisplayMode == false)
+							return;
+
+						var newMode = (DisplayMode)parames[0];
+
+						// save old viewmode data
+						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
+						var lastViewB = DiffCtrl.ViewB.CurrentDocumentView;
+						var retMode = DiffCtrl.SwitchViewModeB(newMode);
+
+						// Do a recompare based on in-memory stored/edited texts
+						string filePathA, filePathB;
+						object[] comParams = new object[] { this.FilePathA, this.FilePathB };
+						if (CompareTextFilesCommand_CanExecute(comParams, out filePathA, out filePathB) == true)
+						{
+							if (retMode == DisplayMode.Comparing && retMode == ViewModeASelected && retMode != lastViewB.ViewMode)
+							{
+								lastViewB.OriginalText = lastViewB.Document.Text;
+								CompareTextFilesCommand_Executed(filePathA, filePathB, false, lastViewA, lastViewB);
+							}
+						}
+
+						ViewModeBSelected = retMode;
+
+					}, (p) =>
+					{
+						return DiffCtrl.IsDiffDataAvailable;
+					});
+				}
+
+				return _ViewModeBChangeCommand;
+			}
+		}
+		#endregion ViewModes B
+
 		#endregion properties
 
 		#region methods
 		#region Compare Command
-		private void CompareTextFilesCommand_Executed(string filePathA, string filePathB)
+		private void CompareTextFilesCommand_Executed(string filePathA, string filePathB
+													, bool reloadFromFile
+													, DiffSideTextViewModel textEditViewA, DiffSideTextViewModel textEditViewB)
 		{
 			try
 			{
 				DiffCtrl.SetDiffViewOptions(_OptionsController.DiffDisplayOptions);
-				var args = _OptionsController.GetTextBinaryDiffSetup(filePathA, filePathB);
+				var args = _OptionsController.GetTextBinaryDiffSetup(filePathA, filePathB, reloadFromFile);
 				var processDiff = new ProcessTextDiff(args);
 
+				if (args.ReloadFromFile == false)
+				{
+					string origTextA = textEditViewA.OriginalText;
+					Encoding origEncodingA = this.DiffCtrl.ViewA.CurrentDocumentView.TextEncoding;
+
+					string origTextB = textEditViewB.OriginalText;
+					Encoding origEncodingB = this.DiffCtrl.ViewB.CurrentDocumentView.TextEncoding;
+
+					processDiff.SetupForTextComparison(origTextA, origEncodingA, origTextB, origEncodingB);
+				}
+
 				_DiffProgress.ResetProgressValues(_cancelTokenSource.Token);
+				DiffProgress.ShowIndeterminatedProgress();
 				Task.Factory.StartNew<IDiffProgress>(
 					(pr) =>
 					{
@@ -519,53 +666,60 @@
 					_cancelTokenSource.Token)
 				.ContinueWith((r) =>
 				{
-					bool onError = false;
-					bool taskCancelled = false;
-
-					if (_cancelTokenSource != null)
+					try
 					{
-						// Re-create cancellation token if this task was cancelled
-						// to support cancelable tasks in the future
-						if (_cancelTokenSource.IsCancellationRequested)
+						bool onError = false;
+						bool taskCancelled = false;
+
+						if (_cancelTokenSource != null)
 						{
-							taskCancelled = true;
-							_cancelTokenSource.Dispose();
-							_cancelTokenSource = new CancellationTokenSource();
+							// Re-create cancellation token if this task was cancelled
+							// to support cancelable tasks in the future
+							if (_cancelTokenSource.IsCancellationRequested)
+							{
+								taskCancelled = true;
+								_cancelTokenSource.Dispose();
+								_cancelTokenSource = new CancellationTokenSource();
+							}
 						}
-					}
 
-					if (taskCancelled == false)
-					{
-						if (r.Result == null)
-							onError = true;
+						if (taskCancelled == false)
+						{
+							if (r.Result == null)
+								onError = true;
+							else
+							{
+								if (r.Result.ResultData == null)
+									onError = true;
+							}
+						}
+
+						if (onError == false && taskCancelled == false)
+						{
+							var diffResults = r.Result.ResultData as ProcessTextDiff;
+
+							_DiffCtrl.ShowDifferences(args, diffResults);
+
+							////FocusControl = Focus.None;
+							////FocusControl = Focus.LeftView;
+							_GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
+
+							// Position view on first difference if thats available
+							if (_DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
+							{
+								_DiffCtrl.GoToFirstDifferenceCommand.Execute(null);
+							}
+
+							NotifyPropertyChanged(() => DiffCtrl);
+						}
 						else
 						{
-							if (r.Result.ResultData == null)
-								onError = true;
+							// Display Error
 						}
 					}
-
-					if (onError == false && taskCancelled == false)
+					finally
 					{
-						var diffResults = r.Result.ResultData as ProcessTextDiff;
-
-						_DiffCtrl.ShowDifferences(args, diffResults);
-
-						////FocusControl = Focus.None;
-						////FocusControl = Focus.LeftView;
-						_GotoLineController.MaxLineValue = _DiffCtrl.NumberOfLines;
-
-						// Position view on first difference if thats available
-						if (_DiffCtrl.GoToFirstDifferenceCommand.CanExecute(null))
-						{
-							_DiffCtrl.GoToFirstDifferenceCommand.Execute(null);
-						}
-
-						NotifyPropertyChanged(() => DiffCtrl);
-					}
-					else
-					{
-						// Display Error
+						DiffProgress.ProgressDisplayOff();
 					}
 				}, TaskScheduler.FromCurrentSynchronizationContext());
 			}
@@ -579,6 +733,9 @@
 		{
 			a = null;
 			b = null;
+
+			if (_cancelTokenSource.IsCancellationRequested == true)
+				return false;
 
 			if (DiffProgress.IsProgressbarVisible == true)
 				return false;

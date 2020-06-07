@@ -62,7 +62,9 @@
 								Options="{TemplateBinding DiffViewOptions}"
 								ShowLineNumbers="{Binding LeftDiffView.ShowLineNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
 								SyntaxHighlighting="{Binding LeftDiffView.HighlightingDefinition, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
-								TextBoxController="{Binding LeftDiffView.TxtControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}" />
+								TextBoxController="{Binding LeftDiffView.TxtControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+								ViewMode="{Binding LeftDiffView.CurrentViewMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+								Visibility="{TemplateBinding Visibility}" />
 
 							<!--  Editor IsEnabled if Document is bound with not null to work around crash  -->
 							<local:DiffView
@@ -84,7 +86,9 @@
 								Options="{TemplateBinding DiffViewOptions}"
 								ShowLineNumbers="{Binding RightDiffView.ShowLineNumbers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
 								SyntaxHighlighting="{Binding RightDiffView.HighlightingDefinition, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
-								TextBoxController="{Binding RightDiffView.TxtControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}" />
+								TextBoxController="{Binding RightDiffView.TxtControl, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+								ViewMode="{Binding RightDiffView.CurrentViewMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:DiffTextView}}}"
+								Visibility="{TemplateBinding Visibility}" />
 						</Grid>
 					</Border>
 				</ControlTemplate>
