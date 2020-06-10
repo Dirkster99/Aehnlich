@@ -1,4 +1,4 @@
-﻿namespace AehnlichViewModelsLib.ViewModels
+namespace AehnlichViewModelsLib.ViewModels
 {
 	using AehnlichViewLib.Controls.AvalonEditEx;
 	using AehnlichViewLib.Enums;
@@ -666,12 +666,20 @@
 			TxtControl.ScrollToLine(n);               // we are supposed to be at
 		}
 
-		internal DisplayMode SwitchViewMode(DisplayMode newMode)
+		internal DisplayMode SwitchViewMode(DisplayMode newMode, bool copyEditor2Comparing)
 		{
 			if (newMode == CurrentViewMode)
 				return CurrentViewMode;
 
 			var newDocViewModel = DocumentViews.FirstOrDefault(i => i.ViewMode == newMode);
+
+			// Switching from Editing to Comparing without recomparing with other side (because its still editing)
+			// So, copy current text to comparing view (without actually doing the comparison, yet, because other view is still editing)
+			if (newMode == DisplayMode.Comparing && CurrentDocumentView.ViewMode == DisplayMode.Editing)
+			{
+				newDocViewModel.Document.Text = CurrentDocumentView.Document.Text;
+				newDocViewModel.OriginalText = CurrentDocumentView.Document.Text;
+			}
 
 			int line = CurrentDocumentView.Line;
 			CurrentDocumentView = newDocViewModel;
@@ -1004,7 +1012,7 @@
 			};
 
 			// Initialize collection of different document views
-			var newDocumentEditor = new DiffSideTextViewModel(DisplayMode.Editing, text, originalTextEncoding, originalText)
+			var newDocumentEditor = new DiffSideTextViewModel(DisplayMode.Editing, originalText, originalTextEncoding, originalText)
 			{
 				FileName = fileName
 			};

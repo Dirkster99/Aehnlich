@@ -49,12 +49,14 @@
 
 		/// <summary>Gets a list of lines (text or binary rendered as text) for the left side of the comparison.</summary>
 		public IList<string> ListA { get; private set; }
+		public string TextOriginalA { get; private set; }
 
 		/// <summary>Gets the original text for the left side of the comparison.</summary>
 		public string TextContentA { get; private set; }
 
 		/// <summary>Gets the original text encoding for the left side of the comparison.</summary>
 		public Encoding TextEncodingA { get; private set; }
+		public string TextOriginalB { get; private set; }
 
 		/// <summary>Gets a list of lines (text or binary rendered as text) for the right side of the comparison.</summary>
 		public IList<string> ListB { get; private set; }
@@ -101,11 +103,14 @@
 
 					// Assumption: Binary cannot be edit and RAW data cannot be stored in string
 					//             Therefore, binary lines are rendered only once directly from file
+					TextOriginalA = result.A.TextContent;
 					TextContentA = result.A.TextContent;
 					TextEncodingA = result.A.TextEncoding;
 
+					TextOriginalB = result.B.TextContent;
 					TextContentB = result.B.TextContent;
 					TextEncodingB = result.B.TextEncoding;
+
 				}
 
 				ListA = result.A.Lines;
@@ -336,14 +341,15 @@
 			return result;
 		}
 
-		public void SetupForTextComparison(string origTextA, Encoding origEncodingA
-										, string origTextB, Encoding origEncodingB)
+		public void SetupForTextComparison(FileContentInfo fileA, FileContentInfo fileB)
 		{
-			this.TextContentA = origTextA;
-			this.TextEncodingA = origEncodingA;
+			this.TextOriginalA = fileA.TextContent;
+			this.TextContentA = fileA.TextContent;
+			this.TextEncodingA = fileA.TextEncoding;
 
-			this.TextContentB = origTextB;
-			this.TextEncodingB = origEncodingB;
+			this.TextOriginalB = fileA.TextContent;
+			this.TextContentB = fileB.TextContent;
+			this.TextEncodingB = fileB.TextEncoding;
 		}
 		#endregion TextLineConverter
 		#endregion methods

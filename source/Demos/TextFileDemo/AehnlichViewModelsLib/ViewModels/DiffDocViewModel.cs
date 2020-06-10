@@ -832,13 +832,15 @@
 
 		/// <summary>Switch the display mode (comparing. editing) for view A.</summary>
 		/// <param name="newMode"></param>
+		/// <param name="copyEditor2Comparing">Copy current editor content into comparing viewer
+		/// if we switch from editing to comparing while the other side is still editing</param>
 		/// <returns>The actual display mode applied.</returns>
-		public DisplayMode SwitchViewModeA(DisplayMode newMode)
+		public DisplayMode SwitchViewModeA(DisplayMode newMode, bool copyEditor2Comparing)
 		{
 			if (newMode  == DisplayMode.Editing || newMode != _ViewA.CurrentViewMode)
 				CanSyncDisplay = false;
 
-			var retMode = _ViewA.SwitchViewMode(newMode);
+			var retMode = _ViewA.SwitchViewMode(newMode, copyEditor2Comparing);
 
 			if (retMode == DisplayMode.Comparing && retMode == _ViewA.CurrentViewMode)
 				CanSyncDisplay = true;
@@ -848,13 +850,15 @@
 
 		/// <summary>Switch the display mode (comparing. editing) for view B.</summary>
 		/// <param name="newMode"></param>
+		/// <param name="copyEditor2Comparing">Copy current editor content into comparing viewer
+		/// if we switch from editing to comparing while the other side is still editing</param>
 		/// <returns>The actual display mode applied.</returns>
-		public DisplayMode SwitchViewModeB(DisplayMode newMode)
+		public DisplayMode SwitchViewModeB(DisplayMode newMode, bool copyEditor2Comparing)
 		{
 			if (newMode == DisplayMode.Editing || newMode != _ViewB.CurrentViewMode)
 				CanSyncDisplay = false;
 
-			var retMode = _ViewB.SwitchViewMode(newMode);
+			var retMode = _ViewB.SwitchViewMode(newMode, copyEditor2Comparing);
 
 			if (retMode == DisplayMode.Comparing && retMode == _ViewB.CurrentViewMode)
 				CanSyncDisplay = true;
@@ -900,10 +904,10 @@
 			factory.SetData(r.ListA, r.ListB, r.Script);
 
 			_ViewA.SetData(args.A, factory.LinesA, factory.TextA
-						, r.TextEncodingA, r.TextContentA, args.SpacesPerTab);
+						, r.TextEncodingA, r.TextOriginalA, args.SpacesPerTab);
 
 			_ViewB.SetData(args.B, factory.LinesB, factory.TextB
-						, r.TextEncodingB, r.TextContentB, args.SpacesPerTab);
+						, r.TextEncodingB, r.TextOriginalB, args.SpacesPerTab);
 
 			NotifyPropertyChanged(() => this.IsDiffDataAvailable);
 

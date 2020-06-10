@@ -222,13 +222,17 @@
 
 		/// <summary>Switch the display mode (comparing. editing) for view A.</summary>
 		/// <param name="newMode"></param>
+		/// <param name="copyEditor2Comparing">Copy current editor content into comparing viewer
+		/// if we switch from editing to comparing while the other side is still editing</param>
 		/// <returns>The actual display mode applied.</returns>
-		DisplayMode SwitchViewModeA(DisplayMode newMode);
+		DisplayMode SwitchViewModeA(DisplayMode newMode, bool copyEditor2Comparing);
 
 		/// <summary>Switch the display mode (comparing. editing) for view B.</summary>
 		/// <param name="newMode"></param>
+		/// <param name="copyEditor2Comparing">Copy current editor content into comparing viewer
+		/// if we switch from editing to comparing while the other side is still editing</param>
 		/// <returns>The actual display mode applied.</returns>
-		DisplayMode SwitchViewModeB(DisplayMode newMode);
+		DisplayMode SwitchViewModeB(DisplayMode newMode, bool copyEditor2Comparing);
 		#endregion methods
 	}
 }

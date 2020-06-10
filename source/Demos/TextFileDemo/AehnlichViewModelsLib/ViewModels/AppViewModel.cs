@@ -1,5 +1,6 @@
 ﻿namespace AehnlichViewModelsLib.ViewModels
 {
+	using AehnlichLib.Files;
 	using AehnlichLib.Interfaces;
 	using AehnlichLib.Text;
 	using AehnlichViewLib.Enums;
@@ -533,7 +534,12 @@
 						// save old viewmode data
 						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
 						var lastViewB = DiffCtrl.ViewB.CurrentDocumentView;
-						var retMode = DiffCtrl.SwitchViewModeA(newMode);
+						FileContentInfo fileA = GetTextResult(lastViewA);
+						FileContentInfo fileB = GetTextResult(lastViewB);
+
+						// Copy text content from editing to comparing to ensure correct comparison when they other mode changes
+						bool copyEditor2Comparing = (lastViewB.ViewMode == DisplayMode.Editing && lastViewA.ViewMode == DisplayMode.Editing);
+						var retMode = DiffCtrl.SwitchViewModeA(newMode, copyEditor2Comparing);
 
 						// Do a recompare based on in-memory stored/edited texts
 						string filePathA, filePathB;
@@ -544,8 +550,7 @@
 							{
 								if (lastViewA.ViewMode == DisplayMode.Editing && lastViewB.ViewMode == DisplayMode.Comparing)
 								{
-									lastViewA.OriginalText = lastViewA.Document.Text;
-									CompareTextFilesCommand_Executed(filePathA, filePathB, false, lastViewA, lastViewB);
+									CompareTextFilesCommand_Executed(filePathA, filePathB, false, fileA, fileB);
 								}
 							}
 						}
@@ -603,7 +608,13 @@
 						// save old viewmode data
 						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
 						var lastViewB = DiffCtrl.ViewB.CurrentDocumentView;
-						var retMode = DiffCtrl.SwitchViewModeB(newMode);
+						FileContentInfo fileA = GetTextResult(lastViewA);
+						FileContentInfo fileB = GetTextResult(lastViewB);
+
+						// Copy text content from editing to comparing to ensure correct comparison when they other mode changes
+						bool copyEditor2Comparing = (lastViewB.ViewMode == DisplayMode.Editing && lastViewA.ViewMode == DisplayMode.Editing);
+
+						var retMode = DiffCtrl.SwitchViewModeB(newMode, copyEditor2Comparing);
 
 						// Do a recompare based on in-memory stored/edited texts
 						string filePathA, filePathB;
@@ -612,8 +623,10 @@
 						{
 							if (retMode == DisplayMode.Comparing && retMode == ViewModeASelected && retMode != lastViewB.ViewMode)
 							{
-								lastViewB.OriginalText = lastViewB.Document.Text;
-								CompareTextFilesCommand_Executed(filePathA, filePathB, false, lastViewA, lastViewB);
+								if (lastViewB.ViewMode == DisplayMode.Editing && lastViewA.ViewMode == DisplayMode.Comparing)
+								{
+									CompareTextFilesCommand_Executed(filePathA, filePathB, false, fileA, fileB);
+								}
 							}
 						}
 
@@ -630,13 +643,34 @@
 		}
 		#endregion ViewModes B
 
+		private FileContentInfo GetTextResult(DiffSideTextViewModel currentDocumentView)
+		{
+			var result = new FileContentInfo();
+			result.TextEncoding = currentDocumentView.TextEncoding;
+
+			switch (currentDocumentView.ViewMode)
+			{
+				case DisplayMode.Comparing:
+					result.TextContent = currentDocumentView.OriginalText;
+					break;
+
+				case DisplayMode.Editing:
+					result.TextContent = currentDocumentView.Document.Text;
+					break;
+				default:
+					throw new NotSupportedException(currentDocumentView.ViewMode.ToString());
+			}
+
+			return result;
+		}
+
 		#endregion properties
 
 		#region methods
 		#region Compare Command
 		private void CompareTextFilesCommand_Executed(string filePathA, string filePathB
 													, bool reloadFromFile
-													, DiffSideTextViewModel textEditViewA, DiffSideTextViewModel textEditViewB)
+													, FileContentInfo fileA, FileContentInfo fileB)
 		{
 			try
 			{
@@ -645,15 +679,7 @@
 				var processDiff = new ProcessTextDiff(args);
 
 				if (args.ReloadFromFile == false)
-				{
-					string origTextA = textEditViewA.OriginalText;
-					Encoding origEncodingA = this.DiffCtrl.ViewA.CurrentDocumentView.TextEncoding;
-
-					string origTextB = textEditViewB.OriginalText;
-					Encoding origEncodingB = this.DiffCtrl.ViewB.CurrentDocumentView.TextEncoding;
-
-					processDiff.SetupForTextComparison(origTextA, origEncodingA, origTextB, origEncodingB);
-				}
+					processDiff.SetupForTextComparison(fileA, fileB);
 
 				_DiffProgress.ResetProgressValues(_cancelTokenSource.Token);
 				DiffProgress.ShowIndeterminatedProgress();
