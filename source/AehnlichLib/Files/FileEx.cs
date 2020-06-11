@@ -1,5 +1,6 @@
 ﻿namespace AehnlichLib.Files
 {
+	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Text;
@@ -7,13 +8,39 @@
 
 	public class FileContentInfo
 	{
+		#region constructors
+		/// <summary>Class constructor</summary>
+		/// <param name="isBinary"></param>
+		/// <param name="lines"></param>
+		/// <param name="filePath"></param>
+		public FileContentInfo(bool isBinary, IList<string> lines, string filePath)
+			: this(isBinary, lines)
+		{
+			FilePath = filePath;
+		}
+
+		/// <summary>Class constructor</summary>
+		/// <param name="isBinary"></param>
+		/// <param name="lines"></param>
 		public FileContentInfo(bool isBinary, IList<string> lines)
 			: this()
 		{
 			TextContent = null;
 			Lines = lines;
 		}
+		/// <summary>Class constructor</summary>
+		/// <param name="filePath"></param>
+		public FileContentInfo(string filePath)
+			: this()
+		{
+			// Just use a different constructor if a valid path was not required.
+////			if (string.IsNullOrEmpty(filePath))
+////				throw new NotSupportedException("This constructor should not be used without valid path.");
 
+			FilePath = filePath;
+		}
+
+		/// <summary>Class constructor</summary>
 		public FileContentInfo()
 		{
 			IsBinary = false;
@@ -21,14 +48,26 @@
 			TextContent = string.Empty;
 			Lines = new List<string>();
 		}
+		#endregion constructors
 
+		#region properties
+		/// <summary>Gets the detected encoding of the text file content</summary>
 		public Encoding TextEncoding { get; set; }
 
+		/// <summary>Gets the text file content</summary>
 		public string TextContent { get; set; }
 
 		public IList<string> Lines { get; set; }
 
+		/// <summary>Gets the full path to file A</summary>
+		public string FilePath { get; }
+
+		/// <summary>Gets the full path to file B</summary>
+		public string FilePathB { get; }
+
+		/// <summary>Get whether the content should be treated as binary or not.</summary>
 		public bool IsBinary { get; }
+		#endregion properties
 	}
 
 	/// <summary>

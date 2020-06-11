@@ -15,7 +15,6 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Text;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows.Input;
@@ -165,10 +164,8 @@
 		}
 		#endregion Compare Command
 
-		/// <summary>
-		/// Gets a focus element indicator to indicate a ui element to focus
-		/// (this is used to focus the left diff view by default when loading new files)
-		/// </summary>
+		/// <summary>Gets a focus element indicator to indicate a ui element to focus
+		/// (this is used to focus the left diff view by default when loading new files)</summary>
 		public Focus FocusControl
 		{
 			get { return _FocusControl; }
@@ -245,9 +242,7 @@
 			}
 		}
 
-		/// <summary>
-		/// Gets a command that opens the currently active file in Windows.
-		/// </summary>
+		/// <summary>Gets a command that opens the currently active file in Windows.</summary>
 		public ICommand OpenFileFromActiveViewCommand
 		{
 			get
@@ -291,9 +286,7 @@
 			}
 		}
 
-		/// <summary>
-		/// Gets a command that copies the currently selected text into the Windows Clipboard.
-		/// </summary>
+		/// <summary>Gets a command that copies the currently selected text into the Windows Clipboard.</summary>
 		public ICommand CopyTextSelectionFromActiveViewCommand
 		{
 			get
@@ -328,10 +321,8 @@
 			}
 		}
 
-		/// <summary>
-		/// Gets the number of text lines currently visible in the text view
-		/// of the left view A and the right view B.
-		/// </summary>
+		/// <summary>Gets the number of text lines currently visible in the text view
+		/// of the left view A and the right view B.</summary>
 		public int NumberOfTextLinesInViewPort
 		{
 			get { return _NumberOfTextLinesInViewPort; }
@@ -367,18 +358,14 @@
 			}
 		}
 
-		/// <summary>
-		/// Gets the document viewmodel that manages left and right viewmodel
-		/// which drive the synchronized diff text view.
-		/// </summary>
+		/// <summary>Gets the document viewmodel that manages left and right viewmodel
+		/// which drive the synchronized diff text view.</summary>
 		public IDiffDocViewModel DiffCtrl
 		{
 			get { return _DiffCtrl; }
 		}
 
-		/// <summary>
-		/// Gets the path of file A in the comparison.
-		/// </summary>
+		/// <summary>Gets the path of file A in the comparison.</summary>
 		public ISuggestSourceViewModel FilePathA
 		{
 			get
@@ -387,9 +374,7 @@
 			}
 		}
 
-		/// <summary>
-		/// Gets the path of file B in the comparison.
-		/// </summary>
+		/// <summary>Gets the path of file B in the comparison.</summary>
 		public ISuggestSourceViewModel FilePathB
 		{
 			get
@@ -422,9 +407,7 @@
 			}
 		}
 
-		/// <summary>
-		/// Gets a command to toggle the dialog view into an inline dialog view.
-		/// </summary>
+		/// <summary>Gets a command to toggle the dialog view into an inline dialog view.</summary>
 		public ICommand InlineDialogCommand
 		{
 			get
@@ -449,9 +432,7 @@
 			}
 		}
 
-		/// <summary>
-		/// Gets/sets the current inline dialog mode.
-		/// </summary>
+		/// <summary>Gets/sets the current inline dialog mode.</summary>
 		public InlineDialogMode InlineDialog
 		{
 			get { return _InlineDialog; }
@@ -465,6 +446,8 @@
 			}
 		}
 
+		/// <summary>Gets view model that drives the dialog view
+		/// (Goto Line inline dialog or options inline dialog).</summary>
 		public object SelectedDialogItem
 		{
 			get
@@ -533,29 +516,19 @@
 
 						// save old viewmode data
 						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
+
+////						if (newMode == lastViewA.ViewMode) // indicating no change here -> nothing to process
+////							return;
+
 						var lastViewB = DiffCtrl.ViewB.CurrentDocumentView;
 						FileContentInfo fileA = GetTextResult(lastViewA);
 						FileContentInfo fileB = GetTextResult(lastViewB);
 
 						// Copy text content from editing to comparing to ensure correct comparison when they other mode changes
 						bool copyEditor2Comparing = (lastViewB.ViewMode == DisplayMode.Editing && lastViewA.ViewMode == DisplayMode.Editing);
-						var retMode = DiffCtrl.SwitchViewModeA(newMode, copyEditor2Comparing);
 
-						// Do a recompare based on in-memory stored/edited texts
-						string filePathA, filePathB;
-						object[] comParams = new object[] { this.FilePathA, this.FilePathB };
-						if (CompareTextFilesCommand_CanExecute(comParams, out filePathA, out filePathB) == true)
-						{
-							if (retMode == DisplayMode.Comparing && retMode == ViewModeBSelected && retMode != lastViewA.ViewMode)
-							{
-								if (lastViewA.ViewMode == DisplayMode.Editing && lastViewB.ViewMode == DisplayMode.Comparing)
-								{
-									CompareTextFilesCommand_Executed(filePathA, filePathB, false, fileA, fileB);
-								}
-							}
-						}
-
-						ViewModeASelected = retMode;
+						ViewModeASelected = ViewModeChangeCommand_Executed(true, newMode, lastViewA, lastViewB
+						                                                  , fileA, fileB, copyEditor2Comparing);
 
 					}, (p) =>
 					{
@@ -606,31 +579,19 @@
 						var newMode = (DisplayMode)parames[0];
 
 						// save old viewmode data
-						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
 						var lastViewB = DiffCtrl.ViewB.CurrentDocumentView;
+
+////						if (newMode == lastViewB.ViewMode) // indicating no change here -> nothing to process
+////							return;
+
+						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
 						FileContentInfo fileA = GetTextResult(lastViewA);
 						FileContentInfo fileB = GetTextResult(lastViewB);
 
 						// Copy text content from editing to comparing to ensure correct comparison when they other mode changes
 						bool copyEditor2Comparing = (lastViewB.ViewMode == DisplayMode.Editing && lastViewA.ViewMode == DisplayMode.Editing);
-
-						var retMode = DiffCtrl.SwitchViewModeB(newMode, copyEditor2Comparing);
-
-						// Do a recompare based on in-memory stored/edited texts
-						string filePathA, filePathB;
-						object[] comParams = new object[] { this.FilePathA, this.FilePathB };
-						if (CompareTextFilesCommand_CanExecute(comParams, out filePathA, out filePathB) == true)
-						{
-							if (retMode == DisplayMode.Comparing && retMode == ViewModeASelected && retMode != lastViewB.ViewMode)
-							{
-								if (lastViewB.ViewMode == DisplayMode.Editing && lastViewA.ViewMode == DisplayMode.Comparing)
-								{
-									CompareTextFilesCommand_Executed(filePathA, filePathB, false, fileA, fileB);
-								}
-							}
-						}
-
-						ViewModeBSelected = retMode;
+						ViewModeBSelected = ViewModeChangeCommand_Executed(false, newMode, lastViewB, lastViewA
+																		, fileA, fileB, copyEditor2Comparing);
 
 					}, (p) =>
 					{
@@ -642,28 +603,6 @@
 			}
 		}
 		#endregion ViewModes B
-
-		private FileContentInfo GetTextResult(DiffSideTextViewModel currentDocumentView)
-		{
-			var result = new FileContentInfo();
-			result.TextEncoding = currentDocumentView.TextEncoding;
-
-			switch (currentDocumentView.ViewMode)
-			{
-				case DisplayMode.Comparing:
-					result.TextContent = currentDocumentView.OriginalText;
-					break;
-
-				case DisplayMode.Editing:
-					result.TextContent = currentDocumentView.Document.Text;
-					break;
-				default:
-					throw new NotSupportedException(currentDocumentView.ViewMode.ToString());
-			}
-
-			return result;
-		}
-
 		#endregion properties
 
 		#region methods
@@ -924,6 +863,65 @@
 			return true;
 		}
 		#endregion OverviewValueChanged
+
+		/// <summary>Changes the view mode for <paramref name="lastView"/> and initializes a new comparison if
+		/// modes of <paramref name="lastView"/> and <paramref name="lastViewOther"/> reach the
+		/// corresponding <see cref="DisplayMode.Comparing"/> state.</summary>
+		/// <param name="viewToSwitch">True: Comparing/editing mode for view A is switched,
+		/// False: Comparing/editing mode for view B is switched.</param>
+		/// <param name="newMode"></param>
+		/// <param name="lastView"></param>
+		/// <param name="lastViewOther"></param>
+		/// <param name="fileA"></param>
+		/// <param name="fileB"></param>
+		/// <param name="copyEditor2Comparing">Copy current editor content into comparing viewer
+		/// if we switch from editing to comparing while the other side is still editing</param>
+		/// <returns></returns>
+		private DisplayMode ViewModeChangeCommand_Executed(bool viewToSwitch, DisplayMode newMode
+														  , DiffSideTextViewModel lastView, DiffSideTextViewModel lastViewOther
+														  , FileContentInfo fileA, FileContentInfo fileB
+														  , bool copyEditor2Comparing)
+		{
+			var retMode = DiffCtrl.SwitchViewMode(viewToSwitch, newMode, copyEditor2Comparing);
+
+			// Do a recompare based on in-memory stored/edited texts
+			string filePathA, filePathB;
+			object[] comParams = new object[] { this.FilePathA, this.FilePathB };
+			if (CompareTextFilesCommand_CanExecute(comParams, out filePathA, out filePathB) == true)
+			{
+				if (retMode == DisplayMode.Comparing && retMode == lastViewOther.ViewMode && retMode != lastView.ViewMode &&
+					lastView.ViewMode == DisplayMode.Editing && lastViewOther.ViewMode == DisplayMode.Comparing)
+				{
+					CompareTextFilesCommand_Executed(filePathA, filePathB, false, fileA, fileB);
+				}
+			}
+
+			return retMode;
+		}
+
+		/// <summary>Gets the text file content (FilePath, Text, Encoding) for a view and returns it.</summary>
+		/// <param name="currentDocumentView">The view to extract the text file content from.</param>
+		/// <returns>File content of the view.</returns>
+		private FileContentInfo GetTextResult(DiffSideTextViewModel currentDocumentView)
+		{
+			var result = new FileContentInfo(currentDocumentView.FileName);
+			result.TextEncoding = currentDocumentView.TextEncoding;
+
+			switch (currentDocumentView.ViewMode)
+			{
+				case DisplayMode.Comparing:
+					result.TextContent = currentDocumentView.OriginalText;
+					break;
+
+				case DisplayMode.Editing:
+					result.TextContent = currentDocumentView.Document.Text;
+					break;
+				default:
+					throw new NotSupportedException(currentDocumentView.ViewMode.ToString());
+			}
+
+			return result;
+		}
 		#endregion methods
 	}
 }

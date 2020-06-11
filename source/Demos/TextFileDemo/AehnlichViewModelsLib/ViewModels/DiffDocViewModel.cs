@@ -832,10 +832,25 @@
 
 		/// <summary>Switch the display mode (comparing. editing) for view A.</summary>
 		/// <param name="newMode"></param>
+		/// <param name="viewToSwitch">True: Comparing/editing mode for view A is switched,
+		/// False: Comparing/editing mode for view B is switched.</param>
 		/// <param name="copyEditor2Comparing">Copy current editor content into comparing viewer
 		/// if we switch from editing to comparing while the other side is still editing</param>
 		/// <returns>The actual display mode applied.</returns>
-		public DisplayMode SwitchViewModeA(DisplayMode newMode, bool copyEditor2Comparing)
+		public DisplayMode SwitchViewMode(bool viewToSwitch, DisplayMode newMode, bool copyEditor2Comparing)
+		{
+			if (viewToSwitch)
+				return SwitchViewModeA(newMode, copyEditor2Comparing);
+			else
+				return SwitchViewModeB(newMode, copyEditor2Comparing);
+		}
+
+		/// <summary>Switch the display mode (comparing. editing) for view A.</summary>
+		/// <param name="newMode"></param>
+		/// <param name="copyEditor2Comparing">Copy current editor content into comparing viewer
+		/// if we switch from editing to comparing while the other side is still editing</param>
+		/// <returns>The actual display mode applied.</returns>
+		private DisplayMode SwitchViewModeA(DisplayMode newMode, bool copyEditor2Comparing)
 		{
 			if (newMode  == DisplayMode.Editing || newMode != _ViewA.CurrentViewMode)
 				CanSyncDisplay = false;
@@ -853,7 +868,7 @@
 		/// <param name="copyEditor2Comparing">Copy current editor content into comparing viewer
 		/// if we switch from editing to comparing while the other side is still editing</param>
 		/// <returns>The actual display mode applied.</returns>
-		public DisplayMode SwitchViewModeB(DisplayMode newMode, bool copyEditor2Comparing)
+		private DisplayMode SwitchViewModeB(DisplayMode newMode, bool copyEditor2Comparing)
 		{
 			if (newMode == DisplayMode.Editing || newMode != _ViewB.CurrentViewMode)
 				CanSyncDisplay = false;

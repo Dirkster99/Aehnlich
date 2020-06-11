@@ -828,7 +828,7 @@ namespace AehnlichViewModelsLib.ViewModels
 			TxtControl.SelectText(line.Offset, 0);  // Select text with length 0 and scroll to where
 			TxtControl.ScrollToLine(thisLine);     // we are supposed to be at
 
-			if (CurrentViewMode == DisplayMode.Comparing)
+			if (CurrentViewMode == DisplayMode.Comparing && _DocLineDiffs.Count > (thisLine-1))
 				return _DocLineDiffs[thisLine - 1];
 
 			return null;
