@@ -34,8 +34,8 @@
 			: this()
 		{
 			// Just use a different constructor if a valid path was not required.
-////			if (string.IsNullOrEmpty(filePath))
-////				throw new NotSupportedException("This constructor should not be used without valid path.");
+			if (string.IsNullOrEmpty(filePath))
+				throw new NotSupportedException("This constructor should not be used without valid path.");
 
 			FilePath = filePath;
 		}

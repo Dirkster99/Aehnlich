@@ -879,7 +879,7 @@
 		/// if we switch from editing to comparing while the other side is still editing</param>
 		/// <returns></returns>
 		private DisplayMode ViewModeChangeCommand_Executed(bool viewToSwitch, DisplayMode newMode
-														  , DiffSideTextViewModel lastView, DiffSideTextViewModel lastViewOther
+														  , IDiffSideTextViewModel lastView, IDiffSideTextViewModel lastViewOther
 														  , FileContentInfo fileA, FileContentInfo fileB
 														  , bool copyEditor2Comparing)
 		{
@@ -903,8 +903,9 @@
 
 		/// <summary>Gets the text file content (FilePath, Text, Encoding) for a view and returns it.</summary>
 		/// <param name="currentDocumentView">The view to extract the text file content from.</param>
+		/// <param name="filePath"></param>
 		/// <returns>File content of the view.</returns>
-		private FileContentInfo GetTextResult(DiffSideTextViewModel currentDocumentView, string filePath)
+		private FileContentInfo GetTextResult(IDiffSideTextViewModel currentDocumentView, string filePath)
 		{
 			var result = new FileContentInfo(filePath);
 			result.TextEncoding = currentDocumentView.TextEncoding;

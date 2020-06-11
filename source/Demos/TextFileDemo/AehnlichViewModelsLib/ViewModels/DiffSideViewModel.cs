@@ -17,7 +17,6 @@ namespace AehnlichViewModelsLib.ViewModels
 	using System.Collections.ObjectModel;
 	using System.Collections.Specialized;
 	using System.Diagnostics;
-	using System.IO;
 	using System.Linq;
 	using System.Text;
 	using System.Threading;
@@ -26,7 +25,6 @@ namespace AehnlichViewModelsLib.ViewModels
 	using System.Windows.Data;
 	using System.Windows.Input;
 	using System.Windows.Media;
-	using System.Windows.Threading;
 
 	/// <summary>
 	/// Implements the viewmodel that controls one side of a text diff view with two sides
@@ -127,7 +125,7 @@ namespace AehnlichViewModelsLib.ViewModels
 			}
 		}
 
-		public DiffSideTextViewModel CurrentDocumentView
+		public IDiffSideTextViewModel CurrentDocumentView
 		{
 			get
 			{
@@ -138,7 +136,7 @@ namespace AehnlichViewModelsLib.ViewModels
 			{
 				if (_CurrentDocumentView != value)
 				{
-					_CurrentDocumentView = value;
+					_CurrentDocumentView = (DiffSideTextViewModel)value;
 					NotifyPropertyChanged(nameof(CurrentDocumentView));
 
 					NotifyPropertyChanged(nameof(Document));   // Notify CurrentDocumentView dependent proxy property changes

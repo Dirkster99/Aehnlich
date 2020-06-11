@@ -1,17 +1,17 @@
-﻿using AehnlichViewLib.Controls.AvalonEditEx;
-using AehnlichViewLib.Enums;
-using ICSharpCode.AvalonEdit.Document;
-using System;
-using System.Text;
-
-namespace AehnlichViewModelsLib.ViewModels
+﻿namespace AehnlichViewModelsLib.ViewModels
 {
+	using AehnlichViewLib.Controls.AvalonEditEx;
+	using AehnlichViewLib.Enums;
+	using ICSharpCode.AvalonEdit.Document;
+	using System;
+	using System.Text;
+
 	/// <summary>
 	/// Implements a text viewmodel for AvalonEdit that supports requirements for
 	/// 1) Comparing text (with background diff highlighting) or
-	/// 2) Editing text (without background diff highlighting).
+	/// 2) Editing text (without background diff highlighting) (see <see cref="ViewMode"/> for more details).
 	/// </summary>
-	public class DiffSideTextViewModel : Base.ViewModelBase
+	internal class DiffSideTextViewModel : Base.ViewModelBase, IDiffSideTextViewModel
 	{
 		#region fields
 		private TextDocument _document = null;
@@ -74,10 +74,7 @@ namespace AehnlichViewModelsLib.ViewModels
 		#endregion ctors
 
 		#region properties
-		/// <summary>
-		/// Gets/sets the <see cref="TextDocument"/> viewmodel of the attached AvalonEdit
-		/// text editor control.
-		/// </summary>
+		/// <summary>Gets/sets the <see cref="TextDocument"/> viewmodel of the attached AvalonEdit text editor control.</summary>
 		public TextDocument Document
 		{
 			get => _document;
@@ -94,10 +91,8 @@ namespace AehnlichViewModelsLib.ViewModels
 		/// <summary>Gets the encoding of the text hosted in this viewmodel</summary>
 		public Encoding TextEncoding { get; }
 
-		/// <summary>
-		/// Gets/sets whether the currently shown text in the textedior has been changed
-		/// without saving or not.
-		/// </summary>
+		/// <summary>Gets/sets whether the currently shown text in the textedior has been changed
+		/// without saving or not.</summary>
 		public bool IsDirty
 		{
 			get => _isDirty;
@@ -111,9 +106,7 @@ namespace AehnlichViewModelsLib.ViewModels
 			}
 		}
 
-		/// <summary>
-		/// Gets whether the text displayed in the diff should be editable or not.
-		/// </summary>
+		/// <summary>Gets whether the text displayed in the diff should be editable or not.</summary>
 		public bool IsReadOnly
 		{
 			get => _IsReadOnly;
@@ -162,10 +155,8 @@ namespace AehnlichViewModelsLib.ViewModels
 		/// <summary>Gets the original text (not necessarily changed by editor).</summary>
 		public string OriginalText { get; internal set; }
 
-		/// <summary>
-		/// Gets/sets the textbox controller that is used to drive the view
-		/// from within the viewmodel (with event based commands like goto line x,y).
-		/// </summary>
+		/// <summary>Gets/sets the textbox controller that is used to drive the view
+		/// from within the viewmodel (with event based commands like goto line x,y).</summary>
 		public TextBoxController TxtControl
 		{
 			get { return _TxtControl; }

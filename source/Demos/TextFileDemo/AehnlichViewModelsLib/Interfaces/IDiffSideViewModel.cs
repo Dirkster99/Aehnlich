@@ -23,7 +23,7 @@
 
 		#region Properties
 		/// <summary>Gets the document viewmodel thats associated with the current (compare, edit) viewmode.</summary>
-		DiffSideTextViewModel CurrentDocumentView { get; }
+		IDiffSideTextViewModel CurrentDocumentView { get; }
 
 		/// <summary>
 		/// Gets Text/binary specific diff options (eg. ignore white space) which are applied
