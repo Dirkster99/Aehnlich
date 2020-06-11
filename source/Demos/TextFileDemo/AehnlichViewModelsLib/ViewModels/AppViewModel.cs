@@ -14,6 +14,7 @@
 	using HL.Interfaces;
 	using System;
 	using System.Collections.Generic;
+	using System.IO;
 	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
@@ -517,12 +518,12 @@
 						// save old viewmode data
 						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
 
-////						if (newMode == lastViewA.ViewMode) // indicating no change here -> nothing to process
-////							return;
+						if (newMode == lastViewA.ViewMode) // indicating no change here -> nothing to process
+							return;
 
 						var lastViewB = DiffCtrl.ViewB.CurrentDocumentView;
-						FileContentInfo fileA = GetTextResult(lastViewA);
-						FileContentInfo fileB = GetTextResult(lastViewB);
+						FileContentInfo fileA = GetTextResult(lastViewA, this.FilePathA.FilePath);
+						FileContentInfo fileB = GetTextResult(lastViewB, this.FilePathB.FilePath);
 
 						// Copy text content from editing to comparing to ensure correct comparison when they other mode changes
 						bool copyEditor2Comparing = (lastViewB.ViewMode == DisplayMode.Editing && lastViewA.ViewMode == DisplayMode.Editing);
@@ -581,12 +582,12 @@
 						// save old viewmode data
 						var lastViewB = DiffCtrl.ViewB.CurrentDocumentView;
 
-////						if (newMode == lastViewB.ViewMode) // indicating no change here -> nothing to process
-////							return;
+						if (newMode == lastViewB.ViewMode) // indicating no change here -> nothing to process
+							return;
 
 						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
-						FileContentInfo fileA = GetTextResult(lastViewA);
-						FileContentInfo fileB = GetTextResult(lastViewB);
+						FileContentInfo fileA = GetTextResult(lastViewA, this.FilePathA.FilePath);
+						FileContentInfo fileB = GetTextResult(lastViewB, this.FilePathB.FilePath);
 
 						// Copy text content from editing to comparing to ensure correct comparison when they other mode changes
 						bool copyEditor2Comparing = (lastViewB.ViewMode == DisplayMode.Editing && lastViewA.ViewMode == DisplayMode.Editing);
@@ -887,10 +888,11 @@
 			// Do a recompare based on in-memory stored/edited texts
 			string filePathA, filePathB;
 			object[] comParams = new object[] { this.FilePathA, this.FilePathB };
-			if (CompareTextFilesCommand_CanExecute(comParams, out filePathA, out filePathB) == true)
+
+			if (retMode == DisplayMode.Comparing && retMode == lastViewOther.ViewMode && retMode != lastView.ViewMode &&
+				lastView.ViewMode == DisplayMode.Editing && lastViewOther.ViewMode == DisplayMode.Comparing)
 			{
-				if (retMode == DisplayMode.Comparing && retMode == lastViewOther.ViewMode && retMode != lastView.ViewMode &&
-					lastView.ViewMode == DisplayMode.Editing && lastViewOther.ViewMode == DisplayMode.Comparing)
+				if (CompareTextFilesCommand_CanExecute(comParams, out filePathA, out filePathB) == true)
 				{
 					CompareTextFilesCommand_Executed(filePathA, filePathB, false, fileA, fileB);
 				}
@@ -902,9 +904,9 @@
 		/// <summary>Gets the text file content (FilePath, Text, Encoding) for a view and returns it.</summary>
 		/// <param name="currentDocumentView">The view to extract the text file content from.</param>
 		/// <returns>File content of the view.</returns>
-		private FileContentInfo GetTextResult(DiffSideTextViewModel currentDocumentView)
+		private FileContentInfo GetTextResult(DiffSideTextViewModel currentDocumentView, string filePath)
 		{
-			var result = new FileContentInfo(currentDocumentView.FileName);
+			var result = new FileContentInfo(filePath);
 			result.TextEncoding = currentDocumentView.TextEncoding;
 
 			switch (currentDocumentView.ViewMode)
