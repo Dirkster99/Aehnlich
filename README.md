@@ -4,7 +4,7 @@
 # Ähnlich
 
 <table>
-  <tr><td>
+  <tr><td width="300" border="0">
     <a href="http://www.youtube.com/watch?feature=player_embedded&v=8RcPBuN7gqI" target="_blank">
     <img src="http://img.youtube.com/vi/8RcPBuN7gqI/0.jpg" alt="App Demo Screen Cast Video" width="240" height="180" border="10" /></a>
   </td>
