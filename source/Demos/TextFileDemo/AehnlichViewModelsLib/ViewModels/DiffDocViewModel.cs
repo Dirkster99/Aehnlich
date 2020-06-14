@@ -12,7 +12,6 @@
 	using HL.Interfaces;
 	using ICSharpCode.AvalonEdit;
 	using System;
-	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.IO;
 	using System.Windows.Input;
@@ -919,10 +918,10 @@
 			factory.SetData(r.ListA, r.ListB, r.Script);
 
 			_ViewA.SetData(args.A, factory.LinesA, factory.TextA
-						, r.TextEncodingA, r.TextOriginalA, args.SpacesPerTab);
+						, r.TextEncodingA, r.TextOriginalA, r.TextIsDirtyA, args.SpacesPerTab);
 
 			_ViewB.SetData(args.B, factory.LinesB, factory.TextB
-						, r.TextEncodingB, r.TextOriginalB, args.SpacesPerTab);
+						, r.TextEncodingB, r.TextOriginalB, r.TextIsDirtyB, args.SpacesPerTab);
 
 			NotifyPropertyChanged(() => this.IsDiffDataAvailable);
 

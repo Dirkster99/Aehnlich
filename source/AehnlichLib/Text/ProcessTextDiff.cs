@@ -56,6 +56,10 @@
 
 		/// <summary>Gets the original text encoding for the left side of the comparison.</summary>
 		public Encoding TextEncodingA { get; private set; }
+
+		/// <summary>Gets/sets whether Text A has been changed without saving to disk or not.</summary>
+		public bool TextIsDirtyA { get; private set; }
+
 		public string TextOriginalB { get; private set; }
 
 		/// <summary>Gets a list of lines (text or binary rendered as text) for the right side of the comparison.</summary>
@@ -66,6 +70,9 @@
 
 		/// <summary>Gets the original text encoding for the right side of the comparison.</summary>
 		public Encoding TextEncodingB { get; private set; }
+
+		/// <summary>Gets/sets whether Text B has been changed without saving to disk or not.</summary>
+		public bool TextIsDirtyB { get; private set; }
 
 		/// <summary>Gets whether the returned data was interpreted as binary, text, or XML.</summary>
 		public CompareType IsComparedAs { get; private set; }
@@ -346,10 +353,12 @@
 			this.TextOriginalA = fileA.TextContent;
 			this.TextContentA = fileA.TextContent;
 			this.TextEncodingA = fileA.TextEncoding;
+			this.TextIsDirtyA = fileA.IsDirty;
 
 			this.TextOriginalB = fileA.TextContent;
 			this.TextContentB = fileB.TextContent;
 			this.TextEncodingB = fileB.TextEncoding;
+			this.TextIsDirtyB = fileB.IsDirty;
 		}
 		#endregion TextLineConverter
 		#endregion methods

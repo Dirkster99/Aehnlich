@@ -14,7 +14,6 @@
 	using HL.Interfaces;
 	using System;
 	using System.Collections.Generic;
-	using System.IO;
 	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
@@ -909,6 +908,7 @@
 		{
 			var result = new FileContentInfo(filePath);
 			result.TextEncoding = currentDocumentView.TextEncoding;
+			result.IsDirty = currentDocumentView.IsDirty;
 
 			switch (currentDocumentView.ViewMode)
 			{

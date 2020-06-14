@@ -84,22 +84,16 @@ namespace AehnlichViewModelsLib.ViewModels
 			CurrentViewMode = DisplayMode.Comparing;
 			_DocumentViews = new ObservableCollection<DiffSideTextViewModel>();
 
-			SetDocumentViews(string.Empty, string.Empty, Encoding.Default, string.Empty);
+			SetDocumentViews(string.Empty, string.Empty, Encoding.Default, string.Empty, false);
 		}
 		#endregion ctors
 
 		#region Events
-		/// <summary>
-		/// Event is raised when the cursor position in the attached view is changed.
-		/// </summary>
+		/// <summary>Event is raised when the cursor position in the attached view has changed.</summary>
 		public event EventHandler<CaretPositionChangedEvent> CaretPositionChanged;
 
-		/// <summary>
-		/// Event is raised when newly requested line diff edit script segments
-		/// have been computed and are available for hightlighting.
-		/// 
-		/// <seealso cref="ILineDiffProvider"/>
-		/// </summary>
+		/// <summary>Event is raised when newly requested line diff edit script segments
+		/// have been computed and are available for hightlighting. <seealso cref="ILineDiffProvider"/></summary>
 		public event EventHandler<DiffLineInfoChangedEvent> DiffLineInfoChanged;
 		#endregion Events
 
@@ -709,9 +703,11 @@ namespace AehnlichViewModelsLib.ViewModels
 		/// <param name="spacesPerTab"></param>
 		/// <param name="originalTextEncoding">The encoding of the original text</param>
 		/// <param name="originalTextContent">The original text as it was available in the file</param>
+		/// <param name="isDirty">Wether text represents changed unsaved content or not.</param>
 		internal void SetData(string filename
 								, IDiffLines lines, string text
 								, Encoding originalTextEncoding, string originalTextContent
+								, bool isDirty
 								, int spacesPerTab)
 		{
 			try
@@ -755,7 +751,7 @@ namespace AehnlichViewModelsLib.ViewModels
 				_DocLineDiffs.Clear();
 			}
 
-			SetDocumentViews(text, filename, originalTextEncoding, originalTextContent);
+			SetDocumentViews(text, filename, originalTextEncoding, originalTextContent, isDirty);
 		}
 
 		/// <summary>
@@ -797,7 +793,7 @@ namespace AehnlichViewModelsLib.ViewModels
 			_DocLineDiffs.AddRange(documentLineDiffs, NotifyCollectionChangedAction.Reset);
 
 			// Update text document
-			SetDocumentViews(text, string.Empty, Encoding.Default, string.Empty);
+			SetDocumentViews(text, string.Empty, Encoding.Default, string.Empty, false);
 
 			NotifyPropertyChanged(() => DocLineDiffs);
 		}
@@ -999,20 +995,22 @@ namespace AehnlichViewModelsLib.ViewModels
 		#endregion IDisposable
 
 		private void SetDocumentViews(string text, string fileName
-									, Encoding originalTextEncoding, string originalText)
+									, Encoding originalTextEncoding, string originalText, bool isDirty)
 		{
 			CurrentViewMode = DisplayMode.Comparing;
 
 			// Initialize collection of different document views
 			var newDocument = new DiffSideTextViewModel(DisplayMode.Comparing, text, originalTextEncoding, originalText)
 			{
-				FileName = fileName
+				FileName = fileName,
+				IsDirty = isDirty
 			};
 
 			// Initialize collection of different document views
 			var newDocumentEditor = new DiffSideTextViewModel(DisplayMode.Editing, originalText, originalTextEncoding, originalText)
 			{
-				FileName = fileName
+				FileName = fileName,
+				IsDirty = isDirty
 			};
 
 			_DocumentViews.Clear();

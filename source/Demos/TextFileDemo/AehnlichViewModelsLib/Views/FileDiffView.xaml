@@ -483,6 +483,7 @@
 						<Grid Grid.Row="0" Grid.Column="0">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="4*" />
+								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition Width="*" />
 								<ColumnDefinition Width="*" />
 							</Grid.ColumnDefinitions>
@@ -490,7 +491,7 @@
 							<sc:SuggestBox
 								x:Name="PART_LeftFileNameTextBox"
 								Grid.Column="0"
-								Margin="3,0,3,3"
+								Margin="3,0,0,0"
 								behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
 								Hint="Enter a file system path"
 								IsEnabled="{Binding DiffProgress.IsProgressbarVisible, Converter={StaticResource BooleanInvertConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
@@ -502,8 +503,15 @@
 								ToolTipService.IsEnabled="True"
 								ValidText="{Binding FilePathA.IsTextValid, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 
-							<ComboBox
+							<TextBlock
 								Grid.Column="1"
+								Margin="0,0,6,0"
+								Text="*"
+								ToolTip="There are edits without saving"
+								Visibility="{Binding Path=DiffCtrl.ViewA.IsDirty, Converter={StaticResource BoolToVisibilityPropConverter}}" />
+
+							<ComboBox
+								Grid.Column="2"
 								MinWidth="50"
 								Margin="0,0,0,3"
 								behav:SelectionChangedCommand.ChangedCommand="{Binding DiffCtrl.ViewA.HighlightingChangeCommand}"
@@ -515,9 +523,9 @@
 							-->
 
 							<ComboBox
-								Grid.Column="2"
+								Grid.Column="3"
 								MinWidth="50"
-								Margin="0,0,3,3"
+								Margin="0,0,0,3"
 								behav:SelectionChangedCommand.ChangedCommand="{Binding ViewModeAChangeCommand}"
 								ItemsSource="{Binding ViewModesA}"
 								SelectedItem="{Binding ViewModeASelected, UpdateSourceTrigger=PropertyChanged}" />
@@ -538,13 +546,14 @@
 						<Grid Grid.Row="0" Grid.Column="2">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="4*" />
+								<ColumnDefinition Width="Auto" />
 								<ColumnDefinition Width="*" />
 								<ColumnDefinition Width="*" />
 							</Grid.ColumnDefinitions>
 
 							<sc:SuggestBox
 								x:Name="PART_RightFileNameTextBox"
-								Margin="0,0,3,3"
+								Margin="3,0,0,0"
 								behav:NewLocationRequestBehavior.Command="{Binding CompareFilesCommand}"
 								Hint="Enter a file system path"
 								IsEnabled="{Binding DiffProgress.IsProgressbarVisible, Converter={StaticResource BooleanInvertConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
@@ -556,18 +565,25 @@
 								ToolTipService.IsEnabled="True"
 								ValidText="{Binding FilePathB.IsTextValid, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 
-							<ComboBox
+							<TextBlock
 								Grid.Column="1"
+								Margin="0,0,6,0"
+								Text="*"
+								ToolTip="There are edits without saving"
+								Visibility="{Binding Path=DiffCtrl.ViewB.IsDirty, Converter={StaticResource BoolToVisibilityPropConverter}}" />
+
+							<ComboBox
+								Grid.Column="2"
 								MinWidth="50"
-								Margin="0,0,3,3"
+								Margin="0,0,0,3"
 								behav:SelectionChangedCommand.ChangedCommand="{Binding DiffCtrl.ViewB.HighlightingChangeCommand}"
 								ItemsSource="{Binding Source={x:Static HL:ThemedHighlightingManager.Instance}, Path=HighlightingDefinitions}"
 								SelectedItem="{Binding DiffCtrl.ViewB.HighlightingDefinition, UpdateSourceTrigger=PropertyChanged}" />
 
 							<ComboBox
-								Grid.Column="2"
+								Grid.Column="3"
 								MinWidth="50"
-								Margin="0,0,3,3"
+								Margin="0,0,0,3"
 								behav:SelectionChangedCommand.ChangedCommand="{Binding ViewModeBChangeCommand}"
 								ItemsSource="{Binding ViewModesB}"
 								SelectedItem="{Binding ViewModeBSelected, UpdateSourceTrigger=PropertyChanged}" />
