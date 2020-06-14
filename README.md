@@ -8,7 +8,7 @@
     <a href="http://www.youtube.com/watch?feature=player_embedded&v=8RcPBuN7gqI" target="_blank">
     <img src="http://img.youtube.com/vi/8RcPBuN7gqI/0.jpg" alt="App Demo Screen Cast Video" width="240" height="180" border="10" /></a>
   </td>
-  <td>The name Ähnlich is German for Similar. It is the name of a WPF Diff/Merge utility based on the [WinForms](https://github.com/menees/Diff.Net) implementation by [Bill Menees](http://menees.com/). This project is [CharityWare](http://charityware.info/), which means you are asked to donate at least $5 US to a charity of your choice if you are using this software. [See also this note](https://github.com/Dirkster99/Aehnlich/blob/master/source/AehnlichLib/Docs/Readme.txt) to better understand what this means.
+  <td>The name Ähnlich is German for Similar. It is the name of a WPF Diff/Merge utility based on the <a href="https://github.com/menees/Diff.Net">WinForms</a> implementation by <a href="http://menees.com/">Bill Menees</a>. This project is <a href="http://charityware.info/">CharityWare</a>, which means you are asked to donate at least $5 US to a charity of your choice if you are using this software. <a href="https://github.com/Dirkster99/Aehnlich/blob/master/source/AehnlichLib/Docs/Readme.txt">See also this note</a> to better understand what this means.
 </td>
 </tr>
 </table>
