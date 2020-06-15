@@ -36,14 +36,6 @@
 		IHighlightingDefinition HighlightingDefinition { get; }
 
 		/// <summary>
-		/// Gets a source of items that can be used to populate marker elements
-		/// on the overview bar. This should ideally be an ObservableCollection{T} or
-		/// at least an <see cref="IList{T}"/> where T is a <see cref="DiffContext"/>
-		/// for a particular line in the merged text views.
-		/// </summary>
-		//        IEnumerable ItemsSource { get; }
-
-		/// <summary>
 		/// Gets/sets whether the currently shown text in the textedior has been changed
 		/// without saving or not.
 		/// </summary>
@@ -81,11 +73,5 @@
 		/// has been activated (GotFocus).
 		/// </summary>
 		DateTime ViewActivation { get; set; }
-
-		/// <summary>
-		/// Gets/sets the linediff data provider which implements an <see cref="ILineDiffProvider"/>
-		/// interface to compute textual line diffs on demand (when lines are scrolled into view).
-		/// </summary>
-		///ILineDiffProvider LineDiffDataProvider { get; }
 	}
 }

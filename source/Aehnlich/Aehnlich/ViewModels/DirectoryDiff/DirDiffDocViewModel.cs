@@ -219,7 +219,7 @@
 
 						setupPage.NormalizePaths();
 
-						Title = GetTitle(setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath);
+						Title = GetTitle(setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath, false);
 						ToolTip = GetTooltip(setupPage.LeftDirectoryPath, setupPage.RightDirectoryPath); ;
 
 						// Subscripe document manager to diff file open event

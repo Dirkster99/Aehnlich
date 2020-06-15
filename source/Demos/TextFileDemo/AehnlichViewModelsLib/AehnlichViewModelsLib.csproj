@@ -71,7 +71,10 @@
     <Compile Include="Converters\BoolToVisibilityPropConverter.cs" />
     <Compile Include="Converters\MultiParToParConverter.cs" />
     <Compile Include="Enums\ChangeDiffOptions.cs" />
+    <Compile Include="Enums\ViewSource.cs" />
     <Compile Include="Events\CaretPositionChangedEvent.cs" />
+    <Compile Include="Events\DocumentPropertyChangedEvent.cs" />
+    <Compile Include="Interfaces\IDiffSideViewModelParent.cs" />
     <Compile Include="ViewModels\Base\ModelBase.cs" />
     <Compile Include="ViewModels\Dialogs\DialogtTemplateSelector.cs" />
     <Compile Include="ViewModels\Dialogs\OptionsControllerViewModel.cs" />
@@ -131,6 +134,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

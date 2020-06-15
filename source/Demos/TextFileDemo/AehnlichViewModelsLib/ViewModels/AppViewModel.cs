@@ -6,6 +6,7 @@
 	using AehnlichViewLib.Enums;
 	using AehnlichViewLib.Models;
 	using AehnlichViewModelsLib.Enums;
+	using AehnlichViewModelsLib.Events;
 	using AehnlichViewModelsLib.Interfaces;
 	using AehnlichViewModelsLib.Models;
 	using AehnlichViewModelsLib.ViewModels.Base;
@@ -15,11 +16,12 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Runtime.CompilerServices;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows.Input;
 
-	internal class AppViewModel : Base.ViewModelBase, IAppViewModel
+	internal class AppViewModel : Base.ViewModelBase, IAppViewModel, IDiffSideViewModelParent
 	{
 		#region fields
 		private ICommand _CompareFilesCommand;
@@ -89,12 +91,17 @@
 			_FilePathB = new SuggestSourceViewModel();
 
 			_InlineDialog = InlineDialogMode.None;
-			_DiffCtrl = new DiffDocViewModel();
+			_DiffCtrl = new DiffDocViewModel(this);
 
 			_GotoLineController = new GotoLineControllerViewModel(DiffCtrl.GotoTextLine, ToogleInlineDialog);
 			_OptionsController = new OptionsControllerViewModel(ToogleInlineDialog);
 		}
 		#endregion ctors
+
+		#region events
+		/// <summary>Event is raised when a supported document property has changed.</summary>
+		public event EventHandler<DocumentPropertyChangedEvent> DocumentPropertyChanged;
+		#endregion events
 
 		#region properties
 		#region Compare Command
@@ -517,7 +524,7 @@
 						// save old viewmode data
 						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
 
-						if (newMode == lastViewA.ViewMode) // indicating no change here -> nothing to process
+						if (lastViewA == null || newMode == lastViewA.ViewMode) // indicating no change here -> nothing to process
 							return;
 
 						var lastViewB = DiffCtrl.ViewB.CurrentDocumentView;
@@ -528,7 +535,7 @@
 						bool copyEditor2Comparing = (lastViewB.ViewMode == DisplayMode.Editing && lastViewA.ViewMode == DisplayMode.Editing);
 
 						ViewModeASelected = ViewModeChangeCommand_Executed(true, newMode, lastViewA, lastViewB
-						                                                  , fileA, fileB, copyEditor2Comparing);
+																		  , fileA, fileB, copyEditor2Comparing);
 
 					}, (p) =>
 					{
@@ -581,7 +588,7 @@
 						// save old viewmode data
 						var lastViewB = DiffCtrl.ViewB.CurrentDocumentView;
 
-						if (newMode == lastViewB.ViewMode) // indicating no change here -> nothing to process
+						if (lastViewB == null || newMode == lastViewB.ViewMode) // indicating no change here -> nothing to process
 							return;
 
 						var lastViewA = DiffCtrl.ViewA.CurrentDocumentView;
@@ -754,6 +761,31 @@
 			if (DiffCtrl != null)
 				DiffCtrl.OnAppThemeChanged(hlManager);
 		}
+
+		#region IDiffSideViewModelParent
+		/// <summary>The parent viewmodel supports this callback method to inform the parent that the IsDirty property has changed its value.</summary>
+		/// <param name="source"></param>
+		/// <param name="oldValue"></param>
+		/// <param name="newValue"></param>
+		public void IsDirtyChangedCallback(ViewSource source, bool oldValue, bool newValue)
+		{
+			string filename = string.Empty;
+
+			switch (source)
+			{
+				case ViewSource.Left:
+					filename = DiffCtrl.ViewA.FileName;
+					break;
+				case ViewSource.Right:
+					filename = DiffCtrl.ViewB.FileName;
+					break;
+				default:
+					throw new NotImplementedException(source.ToString());
+			}
+
+			DocumentPropertyChanged?.Invoke(this, new DocumentPropertyChangedEvent(source, newValue, filename, DocumentPropertyChangeType.IsDirty));
+		}
+		#endregion IDiffSideViewModelParent
 
 		private InlineDialogMode ToogleInlineDialog(InlineDialogMode forThisDialog)
 		{

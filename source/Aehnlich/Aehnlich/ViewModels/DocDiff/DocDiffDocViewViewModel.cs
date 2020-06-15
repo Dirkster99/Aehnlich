@@ -1,7 +1,9 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
 	using Aehnlich.Interfaces;
+	using AehnlichViewModelsLib.Enums;
 	using HL.Interfaces;
+	using System;
 	using System.Windows.Input;
 
 	internal interface TextDocDifference
@@ -41,9 +43,11 @@
 			_DocumentManager = docManager;
 			this.ContentId = GetContentId(leftFilePath, rightFilePath);
 
-			Title = GetTitle(leftFilePath, rightFilePath);
+			Title = GetTitle(leftFilePath, rightFilePath, false);
 			ToolTip = GetTooltip(leftFilePath, rightFilePath);
 			DocDiffDoc = AehnlichViewModelsLib.ViewModels.Factory.ConstructAppViewModel(leftFilePath, rightFilePath);
+
+			DocDiffDoc.DocumentPropertyChanged += DocDiffDoc_DocumentPropertyChanged;
 		}
 
 		/// <summary>
@@ -57,10 +61,7 @@
 		#endregion ctors
 
 		#region properties
-		/// <summary>
-		/// Exposes the application viewmodel that contains all elements for displaying
-		/// the text document diff view.
-		/// </summary>
+		/// <summary>Application viewmodel that contains all elements for displaying text document diff view.</summary>
 		public AehnlichViewModelsLib.ViewModels.IAppViewModel DocDiffDoc { get; }
 
 		/// <summary>
@@ -96,9 +97,7 @@
 			}
 		}
 
-		/// <summary>
-		/// Gets a command that is invoked when the user clicks the document tab close button.
-		/// </summary>
+		/// <summary>Gets a command that is invoked when the user clicks the document tab close button.</summary>
 		public override ICommand CloseCommand
 		{
 			get
@@ -144,18 +143,6 @@
 		public override void SaveSettings() { }
 
 		/// <summary>
-		/// Gets the content id for a (text) diff document based on the left and right paths
-		/// of the diff document viewmodel.
-		/// </summary>
-		/// <param name="leftFilePath"></param>
-		/// <param name="rightFilePath"></param>
-		/// <returns></returns>
-		internal static string GetContentId(string leftFilePath, string rightFilePath)
-		{
-			return string.Format("DocDiff{0}_{1}", leftFilePath, rightFilePath);
-		}
-
-		/// <summary>
 		/// Invoke this method to apply a change of theme to the content of the document
 		/// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
 		///      WITH current text document loaded.)
@@ -169,9 +156,47 @@
 		}
 
 		/// <summary>
-		/// (Re-)Loads all data items necessary to display the diff information for
-		/// left view A and right view B.
+		/// Gets the content id for a (text) diff document based on the left and right paths
+		/// of the diff document viewmodel.
 		/// </summary>
+		/// <param name="leftFilePath"></param>
+		/// <param name="rightFilePath"></param>
+		/// <returns></returns>
+		internal static string GetContentId(string leftFilePath, string rightFilePath)
+		{
+			return string.Format("DocDiff{0}_{1}", leftFilePath, rightFilePath);
+		}
+
+		private void DocDiffDoc_DocumentPropertyChanged(object sender,
+		                                                AehnlichViewModelsLib.Events.DocumentPropertyChangedEvent e)
+		{
+			string leftFilePath, rightFilePath;
+			bool leftIsDirty, rightIsDirty;
+
+			switch (e.Source)
+			{
+				case ViewSource.Left:
+					leftFilePath = e.FilePath;
+					leftIsDirty = e.IsDirty;
+					rightFilePath = DocDiffDoc.DiffCtrl.ViewB.FileName;
+					rightIsDirty = DocDiffDoc.DiffCtrl.ViewB.IsDirty;
+					break;
+
+				case ViewSource.Right:
+					leftFilePath = DocDiffDoc.DiffCtrl.ViewA.FileName;
+					leftIsDirty = DocDiffDoc.DiffCtrl.ViewA.IsDirty;
+					rightFilePath = e.FilePath;
+					rightIsDirty = e.IsDirty;
+					break;
+				default:
+					throw new NotImplementedException(e.Source.ToString());
+			}
+
+			// Update dirty '*' hint or FileName in document Title
+			Title = GetTitle(leftFilePath, rightFilePath, leftIsDirty | rightIsDirty);
+		}
+
+		/// <summary>(Re-)Loads all data items necessary to display the diff information for left view A and right view B.</summary>
 		private void ExecuteCompare()
 		{
 			object[] param = new object[2] { this.DocDiffDoc.FilePathA, this.DocDiffDoc.FilePathB };

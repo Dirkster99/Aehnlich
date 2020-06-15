@@ -3,6 +3,7 @@
 	using AehnlichLib.Interfaces;
 	using AehnlichViewLib.Enums;
 	using AehnlichViewModelsLib.Enums;
+	using AehnlichViewModelsLib.Events;
 	using AehnlichViewModelsLib.Interfaces;
 	using AehnlichViewModelsLib.ViewModels.Suggest;
 	using HL.Interfaces;
@@ -15,58 +16,44 @@
 	/// </summary>
 	public interface IAppViewModel : IDisposable, INotifyPropertyChanged
 	{
-		/// <summary>
-		/// Gets the document viewmodel that manages left and right viewmodel
-		/// which drive the synchronized diff text view.
-		/// </summary>
+
+		#region events
+		/// <summary>Event is raised when a supported document property has changed.</summary>
+		event EventHandler<DocumentPropertyChangedEvent> DocumentPropertyChanged;
+		#endregion events
+
+		#region properties
+		/// <summary>Gets the document viewmodel that manages left and right viewmodel driving the synchronized diff text view.</summary>
 		IDiffDocViewModel DiffCtrl { get; }
 
-		/// <summary>
-		/// Gets the path of file A in the comparison.
-		/// </summary>
+		/// <summary>Gets the path of file A in the comparison.</summary>
 		ISuggestSourceViewModel FilePathA { get; }
 
-		/// <summary>
-		/// Gets the path of file B in the comparison.
-		/// </summary>
+		/// <summary>Gets the path of file B in the comparison.</summary>
 		ISuggestSourceViewModel FilePathB { get; }
 
-		/// <summary>
-		/// Gets a focus element indicator to indicate a ui element to focus
-		/// (this is used to focus the lift diff view by default when loading new files)
-		/// </summary>
+		/// <summary>Gets a focus element indicator to indicate a ui element to focus
+		/// (this is used to focus the lift diff view by default when loading new files)</summary>
 		Focus FocusControl { get; }
 
 		#region DialogSelection
-		/// <summary>
-		/// Gets view model that drives the dialog view
-		/// (Goto Line inline dialog or options inline dialog).
-		/// </summary>
+		/// <summary>Gets view model that drives the dialog view (Goto Line inline dialog or options inline dialog).</summary>
 		object SelectedDialogItem { get; }
 
-		/// <summary>
-		/// Gets/sets the current inline dialog mode.
-		/// </summary>
+		/// <summary>Gets/sets the current inline dialog mode.</summary>
 		InlineDialogMode InlineDialog { get; set; }
 
-		/// <summary>
-		/// Gets a command to toggle the dialog view into an inline dialog view.
-		/// </summary>
+		/// <summary>Gets a command to toggle the dialog view into an inline dialog view.</summary>
 		ICommand InlineDialogCommand { get; }
 		#endregion DialogSelection
 
-		/// <summary>
-		/// Gets the number of text lines currently visible in the text view
-		/// of the left view A and the right view B.
-		/// </summary>
+		/// <summary>Gets the number of text lines currently visible in the text view of the left view A and the right view B.</summary>
 		int NumberOfTextLinesInViewPort { get; }
 
-		/// <summary>
-		/// Gets/sets the current overview value shown in a seperate overview diff control.
+		/// <summary>Gets/sets the current overview value shown in a seperate overview diff control.
 		/// This control is similar to a scrollbar - it can be used to scroll to a certain
 		/// postion - but its thumb and color background also indicates the current cursor
-		/// line within a birds eye view.
-		/// </summary>
+		/// line within a birds eye view.</summary>
 		double OverViewValue { get; set; }
 
 		#region Commands
@@ -113,5 +100,6 @@
 		/// </summary>
 		void OnAppThemeChanged(IThemedHighlightingManager hlManager);
 		#endregion Commands
+		#endregion properties
 	}
 }

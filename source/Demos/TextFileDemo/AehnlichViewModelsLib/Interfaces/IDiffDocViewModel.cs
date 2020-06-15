@@ -10,10 +10,9 @@
 	using System.Windows.Input;
 
 	/// <summary>
-	/// Implements a viewmodel that services both views viewA and viewB (left and right).
+	/// Implements a viewmodel that services both views ViewA and ViewB (left and right).
 	///
-	/// Defines the properties and methods of a viewmodel document that displays diff
-	/// information using a synchronized
+	/// Defines the properties and methods of a viewmodel document that displays diff information using a synchronized
 	/// - <see cref="ViewA"/> (left view) and
 	/// - <see cref="ViewB"/> (left view)
 	/// 
@@ -28,20 +27,14 @@
 		/// </summary>
 		TextEditorOptions DiffViewOptions { get; }
 
-		/// <summary>
-		/// Gets the viemodel that represents the left side of the diff view.
-		/// </summary>
+		/// <summary>Gets the viemodel that represents the left side of the diff view.</summary>
 		IDiffSideViewModel ViewA { get; }
 
-		/// <summary>
-		/// Gets the viemodel that represents the right side of the diff view.
-		/// </summary>
+		/// <summary>Gets the viemodel that represents the right side of the diff view.</summary>
 		IDiffSideViewModel ViewB { get; }
 
-		/// <summary>
-		/// Gets whether both viewmodels ViewA or ViewB hold more than
-		/// no line to compare (enabling comparison functions makes no sense if this is false).
-		/// </summary>
+		/// <summary>Gets whether both viewmodels ViewA or ViewB hold more than no line to compare
+		/// (enabling comparison functions makes no sense if this is false).</summary>
 		bool IsDiffDataAvailable { get; }
 
 		#region Synchronized Caret Position
@@ -65,20 +58,13 @@
 		string Similarity_Text { get; }
 
 		#region Left and Right File Name Labels
-		/// <summary>
-		/// Gets whether left and right file name labels over each ViewA and ViewB
-		/// are visible or not.
-		/// </summary>
+		/// <summary>Gets whether left and right file name labels over each ViewA and ViewB are visible or not.</summary>
 		bool edtLeft_Right_Visible { get; }
 
-		/// <summary>
-		/// Gets the left text label (file name) displayed over the left diff view (ViewA).
-		/// </summary>
+		/// <summary>Gets the left text label (file name) displayed over the left diff view (ViewA).</summary>
 		string edtLeft_Text { get; }
 
-		/// <summary>
-		/// Gets the right text label (file name) displayed over the right diff view (ViewA).
-		/// </summary>
+		/// <summary>Gets the right text label (file name) displayed over the right diff view (ViewA).</summary>
 		string edtRight_Text { get; }
 		#endregion Left and Right File Name Labels
 
@@ -119,9 +105,7 @@
 		ICommand GoToLastDifferenceCommand { get; }
 		#endregion Goto Diff Commands
 
-		/// <summary>
-		/// Gets a command to switch the highlighting in both text documents (left and right side) OFF.
-		/// </summary>
+		/// <summary>Gets a command to switch the highlighting in both text documents (left and right side) OFF.</summary>
 		ICommand HighlightingDefintionOffCommand { get; }
 
 		/// <summary>

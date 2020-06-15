@@ -6,13 +6,14 @@
 	using AehnlichViewModelsLib.ViewModels;
 	using System;
 	using System.Collections.Generic;
+	using System.ComponentModel;
 
 	/// <summary>
 	/// Defines the viewmodel that controls one side of a text diff view with two sides
 	/// (left view A and right view B) where both views are synchronized towards the displayed
 	/// line numbers and content being highlighted to visual differences (add, remove, change, no chaneg).
 	/// </summary>
-	public interface IDiffSideViewModel : ILineDiffProvider, IDiffView, IDisposable
+	public interface IDiffSideViewModel : ILineDiffProvider, IDiffView, IDisposable, INotifyPropertyChanged
 	{
 		#region Events
 		/// <summary>

@@ -26,7 +26,7 @@
 	/// 
 	/// with additional highlighting information.
 	/// </summary>
-	internal class DiffDocViewModel : Base.ViewModelBase, IDiffDocViewModel
+	internal class DiffDocViewModel : Base.ViewModelBase, IDiffDocViewModel, IDiffSideViewModelParent
 	{
 		#region fields
 		private TextBinaryDiffArgs _Args;
@@ -55,9 +55,19 @@
 		private RelayCommand<object> _HighlightingDefintionOffCommand;
 		private CompareType _IsComparedAs;
 		private bool _CanSyncDisplay;
+
+		private IDiffSideViewModelParent _diffSideViewModelParent;
 		#endregion fields
 
 		#region ctors
+		/// <summary>class constructor</summary>
+		/// <param name="diffSideViewModelParent"></param>
+		public DiffDocViewModel(IDiffSideViewModelParent diffSideViewModelParent)
+			: this()
+		{
+			this._diffSideViewModelParent = diffSideViewModelParent;
+		}
+
 		/// <summary>class constructor</summary>
 		public DiffDocViewModel()
 		{
@@ -68,8 +78,8 @@
 				IndentationSize = 4
 			};
 
-			_ViewA = new DiffSideViewModel();
-			_ViewB = new DiffSideViewModel();
+			_ViewA = new DiffSideViewModel(ViewSource.Left, this);
+			_ViewB = new DiffSideViewModel(ViewSource.Right, this);
 			_ViewLineDiff = new DiffSideViewModel();
 
 			_ViewA.CaretPositionChanged += OnViewACaretPositionChanged;
@@ -844,6 +854,19 @@
 				return SwitchViewModeB(newMode, copyEditor2Comparing);
 		}
 
+
+		#region IDiffSideViewModelParent
+		/// <summary>The parent viewmodel supports this callback method to inform the parent that the IsDirty property has changed its value.</summary>
+		/// <param name="source"></param>
+		/// <param name="oldValue"></param>
+		/// <param name="newValue"></param>
+		public void IsDirtyChangedCallback(ViewSource source, bool oldValue, bool newValue)
+		{
+			if (_diffSideViewModelParent != null)
+				_diffSideViewModelParent.IsDirtyChangedCallback(source, oldValue, newValue);
+		}
+		#endregion IDiffSideViewModelParent
+
 		/// <summary>Switch the display mode (comparing. editing) for view A.</summary>
 		/// <param name="newMode"></param>
 		/// <param name="copyEditor2Comparing">Copy current editor content into comparing viewer
@@ -851,7 +874,7 @@
 		/// <returns>The actual display mode applied.</returns>
 		private DisplayMode SwitchViewModeA(DisplayMode newMode, bool copyEditor2Comparing)
 		{
-			if (newMode  == DisplayMode.Editing || newMode != _ViewA.CurrentViewMode)
+			if (newMode == DisplayMode.Editing || newMode != _ViewA.CurrentViewMode)
 				CanSyncDisplay = false;
 
 			var retMode = _ViewA.SwitchViewMode(newMode, copyEditor2Comparing);

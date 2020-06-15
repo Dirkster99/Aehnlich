@@ -61,9 +61,7 @@
 			}
 		}
 
-		/// <summary>
-		/// This property decides whether the document needs to be saved or not.
-		/// </summary>
+		/// <summary>This property decides whether the document needs to be saved or not.</summary>
 		public bool IsDirty
 		{
 			get { return _IsDirty; }
@@ -77,46 +75,12 @@
 			}
 		}
 
-		/// <summary>
-		/// Gets a command that is invoked when the user clicks the document tab close button.
-		/// </summary>
+		/// <summary>Gets a command that is invoked when the user clicks the document tab close button.</summary>
 		abstract public ICommand CloseCommand { get; }
-		////        {
-		////            get
-		////            {
-		////                if (_CloseCommand == null)
-		////                {
-		////                    _CloseCommand = new Base.RelayCommand<object>((p) =>
-		////                    {
-		////                        throw new System.NotImplementedException();
-		////                    },
-		////                    (p) => { return false; });
-		////                }
-		////
-		////                return _CloseCommand;
-		////            }
-		////        }
 
-		/// <summary>
-		/// Gets a command that is invoked when a document is saved. Returning null here should disable
-		/// controls that bind to this command, which is just what we need for the Start Page.
-		/// </summary>
+		/// <summary>Gets a command that is invoked when a document is saved. Returning null here should disable
+		/// controls that bind to this command, which is just what we need for the Start Page.</summary>
 		abstract public ICommand SaveCommand { get; }
-		////        {
-		////            get
-		////            {
-		////                if (_SaveCommand == null)
-		////                {
-		////                    _SaveCommand = new Base.RelayCommand<object>((p) =>
-		////                    {
-		////                        throw new System.NotImplementedException();
-		////                    },
-		////                    (p) => { return false; });
-		////                }
-		////
-		////                return _SaveCommand;
-		////            }
-		////        }
 		#endregion properties
 
 		#region methods
@@ -131,16 +95,17 @@
 		/// </summary>
 		/// <param name="leftPath"></param>
 		/// <param name="rightPath"></param>
+		/// <param name="isDirty"></param>
 		/// <returns></returns>
-		protected virtual string GetTitle(string leftFilePath, string rightFilePath)
+		protected virtual string GetTitle(string leftFilePath, string rightFilePath, bool isDirty)
 		{
 			string leftDirName = GetDirName(leftFilePath);
 			string rightDirName = GetDirName(rightFilePath);
 
 			if (string.Compare(leftDirName, rightDirName, true) == 0)
-				return leftDirName;
+				return leftDirName + (isDirty ? "*" : string.Empty);
 
-			return leftDirName + " ~ " + rightDirName;
+			return leftDirName + " ~ " + rightDirName + (isDirty ? "*" : string.Empty);
 		}
 
 		/// <summary>

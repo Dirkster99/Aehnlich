@@ -63,12 +63,23 @@ namespace AehnlichViewModelsLib.ViewModels
 		private readonly ObservableCollection<DiffSideTextViewModel> _DocumentViews;
 		private DiffSideTextViewModel _CurrentDocumentView;
 		#endregion DiffLines
+
+		private ViewSource _thisDataSource;
+		private IDiffSideViewModelParent _diffSideViewModelParent;
 		#endregion fields
 
 		#region ctors
-		/// <summary>
-		/// Class constructor
-		/// </summary>
+		/// <summary>Class constructor</summary>
+		/// <param name="source"></param>
+		/// <param name="diffSideViewModelParent"></param>
+		public DiffSideViewModel(ViewSource source, IDiffSideViewModelParent diffSideViewModelParent)
+			: this()
+		{
+			this._thisDataSource = source;
+			this._diffSideViewModelParent = diffSideViewModelParent;
+		}
+
+		/// <summary>Class constructor</summary>
 		public DiffSideViewModel()
 		{
 			_position = new DiffViewPosition(0, 0);
@@ -198,9 +209,7 @@ namespace AehnlichViewModelsLib.ViewModels
 			}
 		}
 
-		/// <summary>
-		/// Gets a command that changes the currently selected syntax highlighting in the editor.
-		/// </summary>
+		/// <summary>Gets a command that changes the currently selected syntax highlighting in the editor.</summary>
 		public ICommand HighlightingChangeCommand
 		{
 			get
@@ -230,9 +239,7 @@ namespace AehnlichViewModelsLib.ViewModels
 			}
 		}
 
-		/// <summary>
-		/// Gets a value to indicate whether text highlighting should currently be shown or not.
-		/// </summary>
+		/// <summary>Gets a value to indicate whether text highlighting should currently be shown or not.</summary>
 		public bool IsHighlightingDefinitionOff
 		{
 			get { return _IsHighlightingDefinitionOff; }
@@ -248,10 +255,7 @@ namespace AehnlichViewModelsLib.ViewModels
 		}
 		#endregion Highlighting Definition
 
-		/// <summary>
-		/// Gets/set the time stamp of the last time when the attached view
-		/// has been activated (GotFocus).
-		/// </summary>
+		/// <summary>Gets/set the time stamp of the last time when the attached view has been activated (GotFocus).</summary>
 		public DateTime ViewActivation
 		{
 			get
@@ -325,10 +329,7 @@ namespace AehnlichViewModelsLib.ViewModels
 		}
 		#endregion Caret Position
 
-		/// <summary>
-		/// Gets/sets whether the currently shown text in the textedior has been changed
-		/// without saving or not.
-		/// </summary>
+		/// <summary>Gets/sets whether the currently shown text in the textedior has been changed without saving or not.</summary>
 		public bool IsDirty
 		{
 			get
@@ -346,8 +347,13 @@ namespace AehnlichViewModelsLib.ViewModels
 
 				if (CurrentDocumentView.IsDirty != value)
 				{
+					bool oldValue = CurrentDocumentView.IsDirty;
 					CurrentDocumentView.IsDirty = value;
 					NotifyPropertyChanged(nameof(IsDirty));
+
+					// Update parent about this change
+					if (_diffSideViewModelParent != null)
+						_diffSideViewModelParent.IsDirtyChangedCallback(_thisDataSource, oldValue, value);
 				}
 			}
 		}
@@ -427,7 +433,7 @@ namespace AehnlichViewModelsLib.ViewModels
 		/// <summary>
 		/// Gets the number of line items available in the <see cref="DocLineDiffs"/> property.
 		/// </summary>
-		public int LineCount { get { return DocLineDiffs.Count; } }
+		public int LineCount { get { return (DocLineDiffs == null ? 0 : DocLineDiffs.Count); } }
 
 		/// <summary>
 		/// Gets the line where a diff identified by an index i starts.
@@ -822,7 +828,7 @@ namespace AehnlichViewModelsLib.ViewModels
 			TxtControl.SelectText(line.Offset, 0);  // Select text with length 0 and scroll to where
 			TxtControl.ScrollToLine(thisLine);     // we are supposed to be at
 
-			if (CurrentViewMode == DisplayMode.Comparing && _DocLineDiffs.Count > (thisLine-1))
+			if (CurrentViewMode == DisplayMode.Comparing && _DocLineDiffs.Count > (thisLine - 1))
 				return _DocLineDiffs[thisLine - 1];
 
 			return null;
@@ -855,11 +861,9 @@ namespace AehnlichViewModelsLib.ViewModels
 			return idx;
 		}
 
-		/// <summary>
-		/// Invoke this method to apply a change of theme to the content of the document
+		/// <summary>Invoke this method to apply a change of theme to the content of the document
 		/// (eg: Adjust the highlighting colors when changing from "Dark" to "Light"
-		///      WITH current text document loaded.)
-		/// </summary>
+		///      WITH current text document loaded.)</summary>
 		internal void OnAppThemeChanged(IThemedHighlightingManager hlManager)
 		{
 			if (hlManager == null)
