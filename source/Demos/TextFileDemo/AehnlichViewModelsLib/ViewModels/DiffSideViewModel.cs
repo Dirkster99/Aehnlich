@@ -358,19 +358,13 @@ namespace AehnlichViewModelsLib.ViewModels
 			}
 		}
 
-		/// <summary>
-		/// Gets whether the diff view control is enabled or not.
-		/// </summary>
+		/// <summary>Gets whether the diff view control is enabled or not.</summary>
 		public bool IsEnabled { get { return true; } }
 
-		/// <summary>
-		/// Gets whether line numbers should be shown in the diff view control or not.
-		/// </summary>
+		/// <summary>Gets whether line numbers should be shown in the diff view control or not.</summary>
 		public bool ShowLineNumbers { get { return true; } }
 
-		/// <summary>
-		/// Gets whether the text displayed in the diff should be editable or not.
-		/// </summary>
+		/// <summary>Gets whether the text displayed in the diff should be editable or not.</summary>
 		public bool IsReadOnly
 		{
 			get
@@ -382,10 +376,8 @@ namespace AehnlichViewModelsLib.ViewModels
 			}
 		}
 
-		/// <summary>
-		/// Gets Text/binary specific diff options (eg. ignore white space) which are applied
-		/// to compute the text differences shown in the view.
-		/// </summary>
+		/// <summary>Gets Text/binary specific diff options (eg. ignore white space) which are applied
+		/// to compute the text differences shown in the view.</summary>
 		public ChangeDiffOptions ChangeDiffOptions
 		{
 			get
@@ -403,9 +395,7 @@ namespace AehnlichViewModelsLib.ViewModels
 			}
 		}
 
-		/// <summary>
-		/// Gets the name of the file from which the content in this viewmodel was red.
-		/// </summary>
+		/// <summary>Gets the name of the file from which the content in this viewmodel was red.</summary>
 		public string FileName
 		{
 			get
@@ -414,6 +404,29 @@ namespace AehnlichViewModelsLib.ViewModels
 					return string.Empty;
 
 				return CurrentDocumentView.FileName;
+			}
+		}
+
+		/// <summary>Gets the encoding of the text hosted in this viewmodel</summary>
+		public Encoding TextEncoding
+		{
+			get
+			{
+				if (CurrentDocumentView == null)
+					return Encoding.Default;
+
+				return CurrentDocumentView.TextEncoding;
+			}
+		}
+
+		/// <summary>Gets a long encoding description of the text hosted in this viewmodel</summary>
+		public string FileEncodingDescription
+		{
+			get
+			{
+				return
+					string.Format("{0}, Header: {1} Body: {2}",
+					TextEncoding.EncodingName, TextEncoding.HeaderName, TextEncoding.BodyName);
 			}
 		}
 
@@ -430,9 +443,7 @@ namespace AehnlichViewModelsLib.ViewModels
 			}
 		}
 
-		/// <summary>
-		/// Gets the number of line items available in the <see cref="DocLineDiffs"/> property.
-		/// </summary>
+		/// <summary>Gets the number of line items available in the <see cref="DocLineDiffs"/> property.</summary>
 		public int LineCount { get { return (DocLineDiffs == null ? 0 : DocLineDiffs.Count); } }
 
 		/// <summary>
@@ -648,10 +659,8 @@ namespace AehnlichViewModelsLib.ViewModels
 		}
 		#endregion FirstDiff NextDiff PrevDiff LastDiff
 
-		/// <summary>
-		/// Scrolls the attached view to line <paramref name="n"/>
-		/// where n should in the range of [1 ... max lines].
-		/// </summary>
+		/// <summary>Scrolls the attached view to line <paramref name="n"/>
+		/// where n should in the range of [1 ... max lines].</summary>
 		/// <param name="n"></param>
 		/// <param name="positionCursor"></param>
 		public void ScrollToLine(int n, bool positionCursor)

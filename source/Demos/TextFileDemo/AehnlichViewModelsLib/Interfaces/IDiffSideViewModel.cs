@@ -7,6 +7,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
+	using System.Text;
 
 	/// <summary>
 	/// Defines the viewmodel that controls one side of a text diff view with two sides
@@ -32,10 +33,14 @@
 		/// </summary>
 		ChangeDiffOptions ChangeDiffOptions { get; }
 
-		/// <summary>
-		/// Gets the name of the file from which the content in this viewmodel was red.
-		/// </summary>
+		/// <summary>Gets the name of the file from which the content in this viewmodel was red.</summary>
 		string FileName { get; }
+
+		/// <summary>Gets the encoding of the text hosted in this viewmodel</summary>
+		Encoding TextEncoding { get; }
+
+		/// <summary>Gets a long encoding description of the text hosted in this viewmodel</summary>
+		string FileEncodingDescription { get; }
 
 		#region DiffLines
 		/// <summary>
