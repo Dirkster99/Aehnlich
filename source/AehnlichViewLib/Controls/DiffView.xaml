@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:aeditCmd="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
 	xmlns:editing="clr-namespace:ICSharpCode.AvalonEdit.Editing;assembly=ICSharpCode.AvalonEdit"
 	xmlns:local="clr-namespace:AehnlichViewLib.Controls"
 	xmlns:rendering="clr-namespace:ICSharpCode.AvalonEdit.Rendering;assembly=ICSharpCode.AvalonEdit"
@@ -180,6 +181,92 @@
 						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="ContextMenu">
+			<Setter.Value>
+				<ContextMenu>
+
+					<MenuItem Command="Cut" Header="Cut">
+						<MenuItem.Icon>
+							<Image
+								Height="16"
+								SnapsToDevicePixels="True"
+								Source="{DynamicResource Image_Cut}" />
+						</MenuItem.Icon>
+					</MenuItem>
+
+					<MenuItem Command="Copy" Header="Copy">
+						<MenuItem.Icon>
+							<Image
+								Height="16"
+								SnapsToDevicePixels="True"
+								Source="{DynamicResource Image_Copy}" />
+						</MenuItem.Icon>
+					</MenuItem>
+
+					<MenuItem Command="Paste" Header="Paste">
+						<MenuItem.Icon>
+							<Image
+								Height="16"
+								SnapsToDevicePixels="True"
+								Source="{DynamicResource Image_Paste}" />
+						</MenuItem.Icon>
+					</MenuItem>
+
+					<MenuItem Command="Delete" Header="Delete">
+						<MenuItem.Icon>
+							<Image
+								Height="16"
+								SnapsToDevicePixels="True"
+								Source="{DynamicResource Image_Delete}" />
+						</MenuItem.Icon>
+					</MenuItem>
+
+					<Separator />
+
+					<MenuItem Command="Undo" Header="Undo">
+						<MenuItem.Icon>
+							<Image
+								Height="16"
+								SnapsToDevicePixels="True"
+								Source="{DynamicResource Image_Undo}" />
+						</MenuItem.Icon>
+					</MenuItem>
+
+					<MenuItem Command="Redo" Header="Redo">
+						<MenuItem.Icon>
+							<Image
+								Height="16"
+								SnapsToDevicePixels="True"
+								Source="{DynamicResource Image_Redo}" />
+						</MenuItem.Icon>
+					</MenuItem>
+
+					<Separator />
+
+					<MenuItem
+						Command="{x:Static aeditCmd:AvalonEditCommands.DeleteLine}"
+						Header="Delete Line"
+						ToolTip="Delete the current text line" />
+
+					<MenuItem Header="White Spaces">
+						<MenuItem Command="{x:Static aeditCmd:AvalonEditCommands.RemoveLeadingWhitespace}" Header="Remove Leading White Spaces" />
+						<MenuItem Command="{x:Static aeditCmd:AvalonEditCommands.RemoveTrailingWhitespace}" Header="Remove Trailing White Spaces" />
+						<MenuItem Command="{x:Static aeditCmd:AvalonEditCommands.ConvertTabsToSpaces}" Header="Convert Tabs To Spaces" />
+						<MenuItem Command="{x:Static aeditCmd:AvalonEditCommands.ConvertSpacesToTabs}" Header="Convert Spaces To Tabs" />
+						<MenuItem Command="{x:Static aeditCmd:AvalonEditCommands.ConvertLeadingTabsToSpaces}" Header="Convert Leading Tabs To Spaces" />
+						<MenuItem Command="{x:Static aeditCmd:AvalonEditCommands.ConvertLeadingSpacesToTabs}" Header="Convert Leading Spaces To Tabs" />
+					</MenuItem>
+
+					<MenuItem Header="Text Case">
+						<MenuItem Command="{x:Static aeditCmd:AvalonEditCommands.ConvertToUppercase}" Header="Convert Text To Upper Case" />
+						<MenuItem Command="{x:Static aeditCmd:AvalonEditCommands.ConvertToLowercase}" Header="Convert Text To Lower Case" />
+						<MenuItem Command="{x:Static aeditCmd:AvalonEditCommands.ConvertToTitleCase}" Header="Convert Text To Title Case" />
+						<MenuItem Command="{x:Static aeditCmd:AvalonEditCommands.InvertCase}" Header="Invert Text Case" />
+					</MenuItem>
+
+				</ContextMenu>
 			</Setter.Value>
 		</Setter>
 	</Style>
