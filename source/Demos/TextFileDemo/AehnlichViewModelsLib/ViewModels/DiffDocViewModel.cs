@@ -941,10 +941,10 @@
 			factory.SetData(r.ListA, r.ListB, r.Script);
 
 			_ViewA.SetData(args.A, factory.LinesA, factory.TextA
-						, r.TextEncodingA, r.TextOriginalA, r.TextIsDirtyA, args.SpacesPerTab);
+						, r.TextEncodingA, r.TextOriginalA, r.TextIsDirtyA, args.SpacesPerTab, r.IsComparedAs);
 
 			_ViewB.SetData(args.B, factory.LinesB, factory.TextB
-						, r.TextEncodingB, r.TextOriginalB, r.TextIsDirtyB, args.SpacesPerTab);
+						, r.TextEncodingB, r.TextOriginalB, r.TextIsDirtyB, args.SpacesPerTab, r.IsComparedAs);
 
 			NotifyPropertyChanged(() => this.IsDiffDataAvailable);
 

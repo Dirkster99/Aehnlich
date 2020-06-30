@@ -276,9 +276,7 @@
       <Name>Settings</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Behaviors\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="tilde_LightDark.ico" />
   </ItemGroup>

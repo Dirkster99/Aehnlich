@@ -1,5 +1,6 @@
 namespace AehnlichViewModelsLib.ViewModels
 {
+	using AehnlichLib.Enums;
 	using AehnlichViewLib.Controls.AvalonEditEx;
 	using AehnlichViewLib.Enums;
 	using AehnlichViewLib.Events;
@@ -719,29 +720,36 @@ namespace AehnlichViewModelsLib.ViewModels
 		/// <param name="originalTextEncoding">The encoding of the original text</param>
 		/// <param name="originalTextContent">The original text as it was available in the file</param>
 		/// <param name="isDirty">Wether text represents changed unsaved content or not.</param>
+		/// <param name="IsComparedAs"></param>
 		internal void SetData(string filename
 								, IDiffLines lines, string text
 								, Encoding originalTextEncoding, string originalTextContent
 								, bool isDirty
-								, int spacesPerTab)
+								, int spacesPerTab
+								, CompareType IsComparedAs)
 		{
-			try
-			{
-				string ext = System.IO.Path.GetExtension(filename);
-
-				var hlManager = GetService<IThemedHighlightingManager>();
-
-				// Use fallback to actual service implementation if injector is not used here...
-				if (hlManager == null)
-					hlManager = HL.Manager.ThemedHighlightingManager.Instance;
-
-				if (IsHighlightingDefinitionOff == false)
-					HighlightingDefinition = hlManager.GetDefinitionByExtension(ext);
-			}
-			catch
-			{
-				// We go without highlighting in case System.IO throws an exception here
+			if (IsComparedAs == CompareType.Binary)  // No highlighting definition for binary display
 				HighlightingDefinition = null;
+			else
+			{
+				try
+				{
+					string ext = System.IO.Path.GetExtension(filename);
+
+					var hlManager = GetService<IThemedHighlightingManager>();
+
+					// Use fallback to actual service implementation if injector is not used here...
+					if (hlManager == null)
+						hlManager = HL.Manager.ThemedHighlightingManager.Instance;
+
+					if (IsHighlightingDefinitionOff == false)
+						HighlightingDefinition = hlManager.GetDefinitionByExtension(ext);
+				}
+				catch
+				{
+					// We go without highlighting in case System.IO throws an exception here
+					HighlightingDefinition = null;
+				}
 			}
 
 			_position.SetPosition(1, 1);
@@ -766,7 +774,10 @@ namespace AehnlichViewModelsLib.ViewModels
 				_DocLineDiffs.Clear();
 			}
 
-			SetDocumentViews(text, filename, originalTextEncoding, originalTextContent, isDirty);
+			if (IsComparedAs == CompareType.Binary)  // No original text for binary display (not editable)
+				SetDocumentViews(text, filename, originalTextEncoding, text, isDirty);
+			else
+				SetDocumentViews(text, filename, originalTextEncoding, originalTextContent, isDirty);
 		}
 
 		/// <summary>

@@ -23,6 +23,8 @@
 	<Grid>
 		<Grid.Resources>
 			<conv1:InlineDilaogToVisibilityPropConverter x:Key="InlineDilaogToVisibilityPropConverter" />
+			<conv1:CompareTypeToBoolConverter x:Key="CompareTypeToBoolConverter" />
+			<conv1:CompareTypeToVisibilityConverter x:Key="CompareTypeToVisibilityConverter" />
 		</Grid.Resources>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
@@ -484,8 +486,8 @@
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="4*" />
 								<ColumnDefinition Width="Auto" />
-								<ColumnDefinition Width="*" />
-								<ColumnDefinition Width="*" />
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
 							</Grid.ColumnDefinitions>
 
 							<sc:SuggestBox
@@ -524,8 +526,10 @@
 								Margin="0,0,0,3"
 								VerticalAlignment="Stretch"
 								behav:SelectionChangedCommand.ChangedCommand="{Binding DiffCtrl.ViewA.HighlightingChangeCommand}"
+								IsEnabled="{Binding DiffCtrl.IsComparedAs, Converter={StaticResource CompareTypeToBoolConverter}}"
 								ItemsSource="{Binding Source={x:Static HL:ThemedHighlightingManager.Instance}, Path=HighlightingDefinitions}"
-								SelectedItem="{Binding DiffCtrl.ViewA.HighlightingDefinition, UpdateSourceTrigger=PropertyChanged}" />
+								SelectedItem="{Binding DiffCtrl.ViewA.HighlightingDefinition, UpdateSourceTrigger=PropertyChanged}"
+								Visibility="{Binding DiffCtrl.IsComparedAs, Converter={StaticResource CompareTypeToVisibilityConverter}}" />
 							<!--
 								Name="highlightingComboBox"
 								SelectionChanged="HighlightingComboBox_SelectionChanged"
@@ -535,9 +539,12 @@
 								Grid.Column="3"
 								MinWidth="50"
 								Margin="0,0,0,3"
+								VerticalAlignment="Stretch"
 								behav:SelectionChangedCommand.ChangedCommand="{Binding ViewModeAChangeCommand}"
+								IsEnabled="{Binding DiffCtrl.IsComparedAs, Converter={StaticResource CompareTypeToBoolConverter}}"
 								ItemsSource="{Binding ViewModesA}"
-								SelectedItem="{Binding ViewModeASelected, UpdateSourceTrigger=PropertyChanged}" />
+								SelectedItem="{Binding ViewModeASelected, UpdateSourceTrigger=PropertyChanged}"
+								Visibility="{Binding DiffCtrl.IsComparedAs, Converter={StaticResource CompareTypeToVisibilityConverter}}" />
 						</Grid>
 
 
@@ -556,8 +563,8 @@
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="4*" />
 								<ColumnDefinition Width="Auto" />
-								<ColumnDefinition Width="*" />
-								<ColumnDefinition Width="*" />
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
 							</Grid.ColumnDefinitions>
 
 							<sc:SuggestBox
@@ -595,16 +602,21 @@
 								Margin="0,0,0,3"
 								VerticalAlignment="Stretch"
 								behav:SelectionChangedCommand.ChangedCommand="{Binding DiffCtrl.ViewB.HighlightingChangeCommand}"
+								IsEnabled="{Binding DiffCtrl.IsComparedAs, Converter={StaticResource CompareTypeToBoolConverter}}"
 								ItemsSource="{Binding Source={x:Static HL:ThemedHighlightingManager.Instance}, Path=HighlightingDefinitions}"
-								SelectedItem="{Binding DiffCtrl.ViewB.HighlightingDefinition, UpdateSourceTrigger=PropertyChanged}" />
+								SelectedItem="{Binding DiffCtrl.ViewB.HighlightingDefinition, UpdateSourceTrigger=PropertyChanged}"
+								Visibility="{Binding DiffCtrl.IsComparedAs, Converter={StaticResource CompareTypeToVisibilityConverter}}" />
 
 							<ComboBox
 								Grid.Column="3"
 								MinWidth="50"
 								Margin="0,0,0,3"
+								VerticalAlignment="Stretch"
 								behav:SelectionChangedCommand.ChangedCommand="{Binding ViewModeBChangeCommand}"
+								IsEnabled="{Binding DiffCtrl.IsComparedAs, Converter={StaticResource CompareTypeToBoolConverter}}"
 								ItemsSource="{Binding ViewModesB}"
-								SelectedItem="{Binding ViewModeBSelected, UpdateSourceTrigger=PropertyChanged}" />
+								SelectedItem="{Binding ViewModeBSelected, UpdateSourceTrigger=PropertyChanged}"
+								Visibility="{Binding DiffCtrl.IsComparedAs, Converter={StaticResource CompareTypeToVisibilityConverter}}" />
 						</Grid>
 					</Grid>
 
