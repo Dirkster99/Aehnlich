@@ -57,19 +57,23 @@
 		private bool _CanSyncDisplay;
 
 		private IDiffSideViewModelParent _diffSideViewModelParent;
+		private CompareType _ShouldBeComparedAs;
 		#endregion fields
 
 		#region ctors
 		/// <summary>class constructor</summary>
 		/// <param name="diffSideViewModelParent"></param>
-		public DiffDocViewModel(IDiffSideViewModelParent diffSideViewModelParent)
+		/// <param name="compareAs"></param>
+		public DiffDocViewModel(IDiffSideViewModelParent diffSideViewModelParent,
+								CompareType compareAs)
 			: this()
 		{
 			this._diffSideViewModelParent = diffSideViewModelParent;
+			_ShouldBeComparedAs = compareAs;
 		}
 
-		/// <summary>class constructor</summary>
-		public DiffDocViewModel()
+		/// <summary>hidden class constructor</summary>
+		protected DiffDocViewModel()
 		{
 			_DiffViewOptions = new TextEditorOptions()
 			{
@@ -85,7 +89,7 @@
 			_ViewA.CaretPositionChanged += OnViewACaretPositionChanged;
 			_ViewB.CaretPositionChanged += OnViewBCaretPositionChanged;
 
-			_IsComparedAs = CompareType.Auto;
+			_IsComparedAs = _ShouldBeComparedAs = CompareType.Auto;
 			_CanSyncDisplay = true;
 		}
 		#endregion ctors
@@ -182,15 +186,12 @@
 				}
 			}
 		}
+		#endregion Synchronized Caret Position
 
 		/// <summary>Gets whether the returned data was interpreted as binary, text, or XML.</summary>
 		public CompareType IsComparedAs
 		{
-			get
-			{
-				return _IsComparedAs;
-			}
-
+			get => _IsComparedAs;
 			private set
 			{
 				if (_IsComparedAs != value)
@@ -201,7 +202,8 @@
 			}
 		}
 
-		#endregion Synchronized Caret Position
+		/// <summary>Gets whether the data should be compared in a specific way (binary, text, or XML) or using the Auto option.</summary>
+		public CompareType ShouldBeComparedAs => _ShouldBeComparedAs;
 
 		/// <summary>
 		/// Gets the similarity value (0% - 100%) between 2 as formated text things

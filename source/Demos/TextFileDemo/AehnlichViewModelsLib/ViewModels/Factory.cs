@@ -1,4 +1,6 @@
-﻿namespace AehnlichViewModelsLib.ViewModels
+﻿using AehnlichLib.Enums;
+
+namespace AehnlichViewModelsLib.ViewModels
 {
 	/// <summary>
 	/// Implements a factory that constructs, initiates and returns internal objects.
@@ -10,10 +12,24 @@
 		/// </summary>
 		/// <param name="fileA"></param>
 		/// <param name="fileB"></param>
+		/// <param name="compareAs"></param>
+		/// <returns></returns>
+		public static IAppViewModel ConstructAppViewModel(string fileA, string fileB,
+														CompareType compareAs)
+		{
+			return new AppViewModel(fileA, fileB, compareAs);
+		}
+
+		/// <summary>
+		/// Gets an initialized application viewmodel.
+		/// </summary>
+		/// <param name="fileA"></param>
+		/// <param name="fileB"></param>
 		/// <returns></returns>
 		public static IAppViewModel ConstructAppViewModel(string fileA, string fileB)
 		{
-			return new AppViewModel(fileA, fileB);
+			return new AppViewModel(fileA, fileB, CompareType.Auto);
 		}
+
 	}
 }

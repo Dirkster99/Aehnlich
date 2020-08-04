@@ -1,6 +1,7 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
 	using Aehnlich.Interfaces;
+	using AehnlichLib.Enums;
 	using AehnlichViewModelsLib.Enums;
 	using HL.Interfaces;
 	using System;
@@ -35,9 +36,11 @@
 		/// <param name="docManager"></param>
 		/// <param name="leftDirPath"></param>
 		/// <param name="rightDirPath"></param>
+		/// <param name="compareAs"></param>
 		public DocDiffDocViewViewModel(IDocumentManagerViewModel docManager,
 									   string leftFilePath,
-									   string rightFilePath)
+									   string rightFilePath,
+									   CompareType compareAs)
 			: this()
 		{
 			_DocumentManager = docManager;
@@ -45,7 +48,7 @@
 
 			Title = GetTitle(leftFilePath, rightFilePath, false);
 			ToolTip = GetTooltip(leftFilePath, rightFilePath);
-			DocDiffDoc = AehnlichViewModelsLib.ViewModels.Factory.ConstructAppViewModel(leftFilePath, rightFilePath);
+			DocDiffDoc = AehnlichViewModelsLib.ViewModels.Factory.ConstructAppViewModel(leftFilePath, rightFilePath, compareAs);
 
 			DocDiffDoc.DocumentPropertyChanged += DocDiffDoc_DocumentPropertyChanged;
 		}

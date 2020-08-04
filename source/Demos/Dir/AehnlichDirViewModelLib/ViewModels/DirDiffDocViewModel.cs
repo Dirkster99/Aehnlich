@@ -6,6 +6,7 @@
 	using AehnlichDirViewModelLib.Models;
 	using AehnlichDirViewModelLib.ViewModels.Base;
 	using AehnlichLib.Dir;
+	using AehnlichLib.Enums;
 	using AehnlichLib.Interfaces;
 	using System;
 	using System.Collections.Generic;
@@ -33,6 +34,7 @@
 		private DiffViewModeEnum _CurrentViewMode = DiffViewModeEnum.DirectoriesAndFiles;
 
 		private ICommand _BrowseItemCommand;
+		private ICommand _CompareFilesCommand;
 		private ICommand _BrowseUpCommand;
 		private ICommand _OpenContainingFolderCommand;
 		private ICommand _OpenInWindowsCommand;
@@ -349,6 +351,90 @@
 				return _BrowseItemCommand;
 			}
 		}
+
+		/// <summary>
+		/// Gets a command to browse the current directory diff view by one level down
+		/// (if there is a current view and a remaining level down is available).
+		/// </summary>
+		public ICommand CompareFilesCommand
+		{
+			get
+			{
+				if (_CompareFilesCommand == null)
+				{
+					_CompareFilesCommand = new RelayCommand<object>((p) =>
+					{
+						IDirEntryViewModel param = null;
+						CompareType compareAs = CompareType.Auto;
+						bool hasParams = ConvertParameter(p, out param, out compareAs);
+
+						if (hasParams == false)
+						{
+							bool? fromA;
+							param = GetSelectedItem(out fromA);
+
+							if (param == null)
+								return;
+						}
+
+						if (param.IsFile == false)
+							return;
+
+						// Send an event to Open a (text) file diff view for this
+						// If there is a listner doing the open part and view ...
+						this.CompareFilesRequest?.Invoke(this, new OpenFileDiffEventArgs(param, compareAs));
+						return;
+
+					}, ((p) =>
+					{
+						IDirEntryViewModel param = null;
+						CompareType compareAs = CompareType.Auto;
+						bool hasParams = ConvertParameter(p, out param, out compareAs);
+
+						if (hasParams == false)
+						{
+							bool? fromA;
+							param = GetSelectedItem(out fromA);
+
+							if (param == null)
+								return false;
+						}
+
+						if (param.IsFile == false)
+							return false;
+
+						return true;
+					}));
+				}
+
+				return _CompareFilesCommand;
+			}
+		}
+
+		private static bool ConvertParameter(object p, out IDirEntryViewModel param, out CompareType compareAs)
+		{
+			param = null;
+			compareAs = CompareType.Auto;
+
+			if (p == null)
+				return false;
+
+			var paras = p as object[];
+			if (paras == null)
+				return false;
+
+			if (paras.Length != 2)
+				return false;
+
+			if (paras[0] is IDirEntryViewModel == false || paras[1] is CompareType == false)
+				return false;
+
+			param = paras[0] as IDirEntryViewModel;
+			compareAs = (CompareType)paras[1];
+
+			return true;
+		}
+
 
 		/// <summary>
 		/// Gets a command to browse the current directory diff view by one level

@@ -1,6 +1,7 @@
 ﻿namespace AehnlichDirViewModelLib.Events
 {
 	using AehnlichDirViewModelLib.Interfaces;
+	using AehnlichLib.Enums;
 	using System;
 
 	/// <summary>
@@ -10,6 +11,17 @@
 	public class OpenFileDiffEventArgs : EventArgs
 	{
 		#region ctors
+		/// <summary>
+		/// Class constructor
+		/// </summary>
+		/// <param name="pathItem"></param>
+		/// <param name="compareAs"></param>
+		public OpenFileDiffEventArgs(IDirEntryViewModel pathItem, CompareType compareAs)
+			: this(pathItem)
+		{
+			CompareAs = compareAs;
+		}
+
 		/// <summary>
 		/// Class constructor
 		/// </summary>
@@ -31,6 +43,7 @@
 		/// </summary>
 		protected OpenFileDiffEventArgs()
 		{
+			CompareAs = CompareType.Auto;
 		}
 		#endregion ctors
 
@@ -65,6 +78,11 @@
 		/// Gets whether this entry represent a file (true), or not (directory or drive).
 		/// </summary>
 		public bool IsFile { get; }
+
+		/// <summary>
+		/// Determines the mode of comparison when files are compared (default is Auto).
+		/// </summary>
+		public CompareType CompareAs { get; }
 		#endregion properties
 	}
 }

@@ -51,6 +51,12 @@
 		int SynchronizedLine { get; set; }
 		#endregion Synchronized Caret Position
 
+		/// <summary>Gets whether the returned data was interpreted as binary, text, or XML.</summary>
+		CompareType IsComparedAs { get; }
+
+		/// <summary>Gets whether the data should be compared in a specific way (binary, text, or XML) or using the Auto option.</summary>
+		CompareType ShouldBeComparedAs { get; }
+
 		/// <summary>
 		/// Gets the similarity value (0% - 100%) between 2 as formated text things
 		/// to be shown as tooltip in toolbar.

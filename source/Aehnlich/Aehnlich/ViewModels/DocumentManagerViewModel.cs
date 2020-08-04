@@ -116,7 +116,7 @@
 
 			if (oldDoc == null)  // Add new document and activate it
 			{
-				var newDoc = new DocDiffDocViewViewModel(this, e.ItemPathA, e.ItemPathB);
+				var newDoc = new DocDiffDocViewViewModel(this, e.ItemPathA, e.ItemPathB, e.CompareAs);
 
 				// CompareFilesCommand is executed via ViewLoadedCommand()
 				AddDocument(newDoc, true);

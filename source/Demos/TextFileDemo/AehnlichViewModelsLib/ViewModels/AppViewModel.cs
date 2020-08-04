@@ -1,5 +1,6 @@
 ﻿namespace AehnlichViewModelsLib.ViewModels
 {
+	using AehnlichLib.Enums;
 	using AehnlichLib.Files;
 	using AehnlichLib.Interfaces;
 	using AehnlichLib.Text;
@@ -16,7 +17,6 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Runtime.CompilerServices;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows.Input;
@@ -64,11 +64,17 @@
 		/// <summary>
 		/// Parameterized class constructor
 		/// </summary>
-		public AppViewModel(string fileA, string fileB)
+		/// <param name="fileA"></param>
+		/// <param name="fileB"></param>
+		/// <param name="compareAs"></param>
+		public AppViewModel(string fileA, string fileB,
+						   CompareType compareAs)
 			: this()
 		{
 			_FilePathA.FilePath = fileA;
 			_FilePathB.FilePath = fileB;
+
+			_DiffCtrl = new DiffDocViewModel(this, compareAs);
 		}
 
 		/// <summary>
@@ -91,7 +97,7 @@
 			_FilePathB = new SuggestSourceViewModel();
 
 			_InlineDialog = InlineDialogMode.None;
-			_DiffCtrl = new DiffDocViewModel(this);
+			_DiffCtrl = new DiffDocViewModel(this, CompareType.Auto);
 
 			_GotoLineController = new GotoLineControllerViewModel(DiffCtrl.GotoTextLine, ToogleInlineDialog);
 			_OptionsController = new OptionsControllerViewModel(ToogleInlineDialog);
@@ -622,6 +628,10 @@
 			{
 				DiffCtrl.SetDiffViewOptions(_OptionsController.DiffDisplayOptions);
 				var args = _OptionsController.GetTextBinaryDiffSetup(filePathA, filePathB, reloadFromFile);
+				
+				// Overwrite this on a document specific base (this may indicate Auto or specifc Binary, Xml, Text etc...)
+				args.CompareType = DiffCtrl.ShouldBeComparedAs;
+
 				var processDiff = new ProcessTextDiff(args);
 
 				if (args.ReloadFromFile == false)
