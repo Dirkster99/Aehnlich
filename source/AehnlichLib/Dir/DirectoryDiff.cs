@@ -3,7 +3,7 @@ namespace AehnlichLib.Dir
 	using AehnlichLib.Dir.Merge;
 	using AehnlichLib.Enums;
 	using AehnlichLib.Interfaces;
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
@@ -112,7 +112,7 @@ namespace AehnlichLib.Dir
 				progress.ResultData = diffRoot;
 				progress.ShowIndeterminatedProgress();
 
-				if (directoryA.Exists == false || directoryB.Exists == false)
+				if (directoryA.DirectoryExists == false || directoryB.DirectoryExists == false)
 					return null;
 
 				// directory diff match
@@ -181,7 +181,7 @@ namespace AehnlichLib.Dir
 													 directoryB.FullName,
 													 _Recursive, _Filter, _DiffMode, source);
 
-				if (directoryA.Exists == false || directoryB.Exists == false)
+				if (directoryA.DirectoryExists == false || directoryB.DirectoryExists == false)
 					return null;
 
 				// directory diff match
@@ -467,7 +467,7 @@ namespace AehnlichLib.Dir
 						{
 							sDirA = root.Source.Combine(root.RootPathA, node.BasePath);
 							dirA = root.Source.CreateDirectory(sDirA);
-							dirA_Exists = dirA.Exists;
+							dirA_Exists = dirA.DirectoryExists;
 						}
 					}
 					catch // This may throw on non-existing, authorization issues
@@ -481,7 +481,7 @@ namespace AehnlichLib.Dir
 						{
 							sDirB = root.Source.Combine(root.RootPathB, node.BasePath);
 							dirB = root.Source.CreateDirectory(sDirB);
-							dirB_Exists = dirB.Exists;
+							dirB_Exists = dirB.DirectoryExists;
 						}
 					}
 					catch // This may throw on non-existing, authorization issues
@@ -654,7 +654,7 @@ namespace AehnlichLib.Dir
 						{
 							try
 							{
-								if (root.Source.AreFilesDifferent(item.InfoA.FullName, item.InfoB.FullName) == true)
+								if (root.Source.AreBinaryFilesDifferent(item.InfoA.FullName, item.InfoB.FullName) == true)
 									different = true;
 							}
 							catch (System.IO.IOException ex)

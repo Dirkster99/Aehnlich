@@ -6,6 +6,7 @@
 	using AehnlichLib.Files;
 	using AehnlichLib.Interfaces;
 	using AehnlichLib.Models;
+	using FsDataLib.Interfaces.Dir;
 	using System;
 	using System.Collections.Generic;
 	using System.IO;
@@ -83,7 +84,11 @@
 		#endregion properties
 
 		#region methods
-		public IDiffProgress ProcessDiff(IDiffProgress progress)
+		/// <summary>Compare to files or string contents and return result via progress object.</summary>
+		/// <param name="progress"></param>
+		/// <param name="dataSource"></param>
+		/// <returns></returns>
+		public IDiffProgress ProcessDiff(IDiffProgress progress, IDataSource dataSource)
 		{
 			try
 			{
@@ -91,8 +96,8 @@
 
 				if (_Args.DiffType == DiffType.File)
 				{
-					var fileA = new FileCompInfo(_Args.A);
-					var fileB = new FileCompInfo(_Args.B);
+					var fileA = dataSource.CreateFile(_Args.A);
+					var fileB = dataSource.CreateFile(_Args.B);
 
 					result = GetFileLines(fileA, fileB, _Args, progress);
 				}
@@ -151,8 +156,8 @@
 		/// <param name="b"></param>
 		/// <param name="args"></param>
 		/// <param name="progress"></param>
-		private DiffBinaryTextResults GetFileLines(FileCompInfo fileA
-												,FileCompInfo fileB
+		private DiffBinaryTextResults GetFileLines(IFileInfo fileA
+												, IFileInfo fileB
 												,TextBinaryDiffArgs args
 												,IDiffProgress progress)
 		{
@@ -167,12 +172,12 @@
 			FileContentInfo af = null, bf = null;
 
 			if (fileA.FileExists)
-				af = AsyncPump.Run(() => FileEx.GetFileTextAsync(fileA.FileNamePath));
+				af = AsyncPump.Run(() => FileEx.GetFileTextAsync(fileA.FullName));
 			else
 				af = new FileContentInfo();
 
 			if (fileB.FileExists)
-				bf = AsyncPump.Run(() => FileEx.GetFileTextAsync(fileB.FileNamePath));
+				bf = AsyncPump.Run(() => FileEx.GetFileTextAsync(fileB.FullName));
 			else
 				bf = new FileContentInfo();
 
@@ -190,7 +195,7 @@
 		/// <param name="b"></param>
 		/// <param name="leadingCharactersToIgnore">Leading number of characters to ignore for diff in each line.
 		/// This space is used in binary diff to display 8 digit line number and 4 digit space.</param>
-		private DiffBinaryTextResults GetBinaryFileLines(FileCompInfo fileA, FileCompInfo fileB
+		private DiffBinaryTextResults GetBinaryFileLines(IFileInfo fileA, IFileInfo fileB
 														,TextBinaryDiffArgs args
 														,IDiffProgress progress)
 		{
@@ -205,13 +210,13 @@
 			{
 				// Open the file or an internal empty stream to compare against
 				if (fileA.FileExists)
-					fileStreamA = File.OpenRead(fileA.FileNamePath);
+					fileStreamA = File.OpenRead(fileA.FullName);
 				else
 					fileStreamA = Assembly.GetExecutingAssembly().GetManifestResourceStream("AehnlichLib.Binaries.Resources.NonExistingFile.bin");
 
 				// Open the file or an internal empty stream to compare against
 				if (fileB.FileExists)
-					fileStreamB = File.OpenRead(fileB.FileNamePath);
+					fileStreamB = File.OpenRead(fileB.FullName);
 				else
 					fileStreamB = Assembly.GetExecutingAssembly().GetManifestResourceStream("AehnlichLib.Binaries.Resources.NonExistingFile.bin");
 

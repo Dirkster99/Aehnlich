@@ -12,7 +12,7 @@
 	{
 		#region constructors
 		/// <summary>Class constructor</summary>
-		/// <param name="isBinary"></param>
+		/// <param name="isBinary">Whether result should be rendered as binary comparison with a bytewise view of the file content.</param>
 		/// <param name="lines"></param>
 		/// <param name="filePath"></param>
 		public FileContentInfo(bool isBinary, IList<string> lines, string filePath)

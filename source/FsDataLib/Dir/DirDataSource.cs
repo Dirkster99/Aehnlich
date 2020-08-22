@@ -1,6 +1,6 @@
 ﻿namespace FsDataLib.Dir
 {
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using System;
 	using System.Diagnostics;
 	using System.IO;
@@ -61,7 +61,7 @@
 				if (string.IsNullOrEmpty(path) == false)
 				{
 					return Path.GetFullPath(new Uri(path).LocalPath)
-							   //                              .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+							   //.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
 							   .ToUpperInvariant();
 				}
 				else
@@ -120,9 +120,9 @@
 		/// <param name="info1"></param>
 		/// <param name="info2"></param>
 		/// <returns></returns>
-		public bool AreFilesDifferent(string fileName1, string fileName2)
+		public bool AreBinaryFilesDifferent(string fileName1, string fileName2)
 		{
-			return AreFilesDifferent(new FileInfoImpl(fileName1), new FileInfoImpl(fileName2));
+			return AreBinaryFilesDifferent(new FileInfoImpl(fileName1), new FileInfoImpl(fileName2));
 		}
 
 		/// <summary>
@@ -132,7 +132,7 @@
 		/// <param name="ifo1"></param>
 		/// <param name="ifo2"></param>
 		/// <returns></returns>
-		public bool AreFilesDifferent(IFileInfo ifo1, IFileInfo ifo2)
+		public bool AreBinaryFilesDifferent(IFileInfo ifo1, IFileInfo ifo2)
 		{
 			// Before we open the files, compare the sizes.  If they are different,
 			// then the files are certainly different.
@@ -154,6 +154,9 @@
 				{
 					byte1 = stream1.ReadByte();
 					byte2 = stream2.ReadByte();
+
+					Debug.Assert(byte1 <= 255, "Byte1 size is larger than 8 bit.");
+					Debug.Assert(byte2 <= 255, "Byte2 size is larger than 8 bit.");
 
 					if (byte1 != byte2)
 					{

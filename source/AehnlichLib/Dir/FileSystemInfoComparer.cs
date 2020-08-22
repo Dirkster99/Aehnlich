@@ -1,6 +1,6 @@
 namespace AehnlichLib.Dir
 {
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using System.Collections.Generic;
 
 	/// <summary>

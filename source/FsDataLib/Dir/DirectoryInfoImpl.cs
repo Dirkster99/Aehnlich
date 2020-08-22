@@ -1,6 +1,6 @@
 namespace FsDataLib.Dir
 {
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using System.Collections.Generic;
 
 	internal class DirectoryInfoImpl : FileSystemInfoImpl, IDirectoryInfo
@@ -21,6 +21,16 @@ namespace FsDataLib.Dir
 		{
 		}
 		#endregion ctors
+
+		/// <summary>Gets a value indicating whether this DIRECTORY exists.</summary>
+		/// <returns>true if the directory exists; otherwise, false.</returns>
+		public bool DirectoryExists
+		{
+			get
+			{
+				return new System.IO.DirectoryInfo(_path).Exists;
+			}
+		}
 
 		#region methods
 		/// <summary>

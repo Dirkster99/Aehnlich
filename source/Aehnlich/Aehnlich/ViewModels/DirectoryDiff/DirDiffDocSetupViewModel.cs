@@ -2,7 +2,7 @@
 {
 	using AehnlichDirViewModelLib.Interfaces;
 	using AehnlichLib.Dir;
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using System.Collections.Generic;
 	using System.Windows.Input;
 

@@ -2,7 +2,7 @@ namespace AehnlichLib.Dir
 {
 	using AehnlichLib.Enums;
 	using AehnlichLib.Interfaces;
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 
 	/// <summary>
 	/// Implements an object root of an object data graph that models directories

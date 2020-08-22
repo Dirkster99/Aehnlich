@@ -1,6 +1,6 @@
 ﻿namespace FsDataLib.Dir
 {
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 
 	/// <summary>
 	/// Provides factory routines to create data source objects

@@ -6,7 +6,7 @@
 	using AehnlichLib.Dir;
 	using AehnlichLib.Enums;
 	using AehnlichLib.Interfaces;
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
@@ -33,7 +33,7 @@
 		private readonly DiffProgressViewModel _DiffProgress;
 		private readonly DirDiffDocViewModel _DirDiffDoc;
 		private readonly IFileDiffModeViewModel _FileDiffMode;
-		private readonly IDataSource _PathDataProvider;
+		private readonly IDataSource _DataSource;
 		#endregion fields
 
 		#region ctors
@@ -49,7 +49,7 @@
 			_Args = args;
 
 			// Get a data object provider for browsing directories and files
-			_PathDataProvider = dataSourceFactory.CreateDataSource();
+			_DataSource = dataSourceFactory.CreateDataSource();
 
 			// Update redundant copy of file diff mode viewmodel selection in this viewmodel
 			// This enables the user to change this property within the document view
@@ -129,8 +129,8 @@
 						else
 							return;
 
-						leftDir = _PathDataProvider.GetPathIfDirExists(leftDir);
-						rightDir = _PathDataProvider.GetPathIfDirExists(rightDir);
+						leftDir = _DataSource.GetPathIfDirExists(leftDir);
+						rightDir = _DataSource.GetPathIfDirExists(rightDir);
 
 						if (string.IsNullOrEmpty(leftDir) == true ||
 							string.IsNullOrEmpty(rightDir) == true)
@@ -363,7 +363,7 @@
 				_DiffProgress.ResetProgressValues(_cancelTokenSource.Token);
 
 				Task.Factory.StartNew<IDiffProgress>(
-						(p) => diff.Execute(args.LeftDir, args.RightDir, _DiffProgress, _PathDataProvider)
+						(p) => diff.Execute(args.LeftDir, args.RightDir, _DiffProgress, _DataSource)
 					  , TaskCreationOptions.LongRunning, _cancelTokenSource.Token)
 				.ContinueWith((r) =>
 				{
@@ -414,8 +414,8 @@
 		{
 			try
 			{
-				leftDir = _PathDataProvider.GetPathIfDirExists(leftDir);
-				rightDir = _PathDataProvider.GetPathIfDirExists(rightDir);
+				leftDir = _DataSource.GetPathIfDirExists(leftDir);
+				rightDir = _DataSource.GetPathIfDirExists(rightDir);
 
 				if (string.IsNullOrEmpty(leftDir) == true || string.IsNullOrEmpty(rightDir) == true)
 					return false;

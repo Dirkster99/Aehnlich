@@ -13,6 +13,7 @@
 	using AehnlichViewModelsLib.ViewModels.Base;
 	using AehnlichViewModelsLib.ViewModels.Dialogs;
 	using AehnlichViewModelsLib.ViewModels.Suggest;
+	using FsDataLib.Interfaces.Dir;
 	using HL.Interfaces;
 	using System;
 	using System.Collections.Generic;
@@ -52,6 +53,7 @@
 		private CancellationTokenSource _cancelTokenSource;
 		private readonly DiffProgressViewModel _DiffProgress;
 		private readonly SuggestSourceViewModel _FilePathA, _FilePathB;
+		private readonly IDataSource _DataSource;
 
 		private Focus _FocusControl;
 		private DisplayMode _ViewModeBSelected;
@@ -101,6 +103,8 @@
 
 			_GotoLineController = new GotoLineControllerViewModel(DiffCtrl.GotoTextLine, ToogleInlineDialog);
 			_OptionsController = new OptionsControllerViewModel(ToogleInlineDialog);
+
+			_DataSource = new FsDataLib.Dir.DirDataSourceFactory().CreateDataSource();
 		}
 		#endregion ctors
 
@@ -642,7 +646,7 @@
 				Task.Factory.StartNew<IDiffProgress>(
 					(pr) =>
 					{
-						return processDiff.ProcessDiff(_DiffProgress);
+						return processDiff.ProcessDiff(_DiffProgress, _DataSource);
 					},
 					TaskCreationOptions.LongRunning,
 					_cancelTokenSource.Token)

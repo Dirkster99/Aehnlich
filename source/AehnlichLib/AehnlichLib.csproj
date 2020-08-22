@@ -81,11 +81,6 @@
     <Compile Include="Files\AsyncPump.cs" />
     <Compile Include="Files\FileContentInfo.cs" />
     <Compile Include="Files\FileEx.cs" />
-    <Compile Include="Interfaces\Dir\IDataSource.cs" />
-    <Compile Include="Interfaces\Dir\IDataSourceFactory.cs" />
-    <Compile Include="Interfaces\Dir\IDirectoryInfo.cs" />
-    <Compile Include="Interfaces\Dir\IFileInfo.cs" />
-    <Compile Include="Interfaces\Dir\IFileSystemInfo.cs" />
     <Compile Include="Interfaces\IAddCopy.cs" />
     <Compile Include="Interfaces\IDirectoryDiffEntry.cs" />
     <Compile Include="Interfaces\IDirectoryDiffRoot.cs" />
@@ -94,7 +89,6 @@
     <Compile Include="Text\DiagonalVector.cs" />
     <Compile Include="Text\Edit.cs" />
     <Compile Include="Text\EditScript.cs" />
-    <Compile Include="Text\FileCompInfo.cs" />
     <Compile Include="Text\MyersDiff.cs" />
     <Compile Include="Text\ProcessTextDiff.cs" />
     <Compile Include="Text\TextBinaryDiffArgs.cs" />
@@ -110,6 +104,11 @@
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\FsDataLib\FsDataLib.csproj">
+      <Project>{6c8f39a8-965b-4f96-b0dc-5c731519ac65}</Project>
+      <Name>FsDataLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

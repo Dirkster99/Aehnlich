@@ -1,7 +1,11 @@
-namespace AehnlichLib.Interfaces.Dir
+namespace FsDataLib.Interfaces.Dir
 {
 	public interface IDirectoryInfo : IFileSystemInfo
 	{
+		/// <summary>Gets a value indicating whether this DIRECTORY exists.</summary>
+		/// <returns>true if the directory exists; otherwise, false.</returns>
+		bool DirectoryExists { get; }
+
 		#region methods
 		/// <summary>
 		/// Returns the subdirectories of the current directory.

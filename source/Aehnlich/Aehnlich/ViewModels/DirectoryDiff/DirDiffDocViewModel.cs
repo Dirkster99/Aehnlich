@@ -1,7 +1,7 @@
 ﻿namespace Aehnlich.ViewModels.Documents
 {
 	using Aehnlich.Interfaces;
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using System;
 	using System.Windows.Input;
 

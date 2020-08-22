@@ -46,13 +46,12 @@
     <Compile Include="Dir\DirectoryInfoImpl.cs" />
     <Compile Include="Dir\FileInfoImpl.cs" />
     <Compile Include="Dir\FileSystemInfoImpl.cs" />
+    <Compile Include="Interfaces\Dir\IDataSource.cs" />
+    <Compile Include="Interfaces\Dir\IDataSourceFactory.cs" />
+    <Compile Include="Interfaces\Dir\IDirectoryInfo.cs" />
+    <Compile Include="Interfaces\Dir\IFileInfo.cs" />
+    <Compile Include="Interfaces\Dir\IFileSystemInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AehnlichLib\AehnlichLib.csproj">
-      <Project>{c0d1e820-eb48-4b79-bcd6-c2de7cc367f2}</Project>
-      <Name>AehnlichLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

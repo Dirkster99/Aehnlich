@@ -150,51 +150,6 @@ namespace AehnlichLib.Dir
 			return result;
 		}
 
-		public static bool IsBinaryFile(string fileName)
-		{
-			using (FileStream stream = File.OpenRead(fileName))
-			{
-				return IsBinaryFile(stream);
-			}
-		}
-
-		public static bool IsBinaryFile(Stream stream)
-		{
-			stream.Seek(0, SeekOrigin.Begin);
-
-			// First see if the file begins with any known Unicode byte order marks.
-			// If so, then it is a text file.  Use a StreamReader instance to do the
-			// auto-detection logic.
-			//
-			// NOTE: I'm not disposing of the StreamReader because that closes the
-			// associated Stream.  The caller opened the file stream, so they should
-			// be the one to close it.
-			StreamReader reader = new StreamReader(stream, Encoding.Default, true, 1024, true);
-			reader.Read(); // We have to force a Read for it to auto-detect.
-			if (reader.CurrentEncoding != Encoding.Default)
-			{
-				return false;
-			}
-
-			reader.DiscardBufferedData();
-			reader = null;
-
-			// Since the type was Default encoding, that means there were no byte-order
-			// marks to indicate its type.  So we have to scan.  If we find a NULL
-			// character in the stream, that means it's a binary file.
-			stream.Seek(0, SeekOrigin.Begin);
-			int i;
-			while ((i = stream.ReadByte()) > -1)
-			{
-				if (i == 0)
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
 		#endregion
 
 		#region Private Methods

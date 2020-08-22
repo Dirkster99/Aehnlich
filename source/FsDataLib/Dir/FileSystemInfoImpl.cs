@@ -1,8 +1,10 @@
 namespace FsDataLib.Dir
 {
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using System;
 
+	/// <summary>Serves as a base class for common properties and methods of classes that
+	/// model files and directories.</summary>
 	internal class FileSystemInfoImpl : IFileSystemInfo
 	{
 		#region fields
@@ -56,18 +58,6 @@ namespace FsDataLib.Dir
 			get
 			{
 				return System.IO.Path.GetFileName(_path);
-			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether the directory exists.
-		/// </summary>
-		/// <returns>true if the directory exists; otherwise, false.</returns>
-		public bool Exists
-		{
-			get
-			{
-				return new System.IO.DirectoryInfo(_path).Exists;
 			}
 		}
 

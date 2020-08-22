@@ -1,8 +1,9 @@
 namespace AehnlichLib_UnitTests.Mock_IFileSystemInfo
 {
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using System;
 
+	/// <summary>Implement a mock-up class for usage with UNIT TESTING.</summary>
 	internal class FileSystemInfoImpl : IFileSystemInfo
 	{
 		#region fields
@@ -34,7 +35,9 @@ namespace AehnlichLib_UnitTests.Mock_IFileSystemInfo
 
 		public string Name => throw new NotImplementedException();
 
-		public bool Exists => throw new NotImplementedException();
+		public bool DirectoryExists => throw new NotImplementedException();
+
+		public bool FileExists => throw new NotImplementedException();
 
 		public DateTime LastWriteTime => throw new NotImplementedException();
 		#endregion properties

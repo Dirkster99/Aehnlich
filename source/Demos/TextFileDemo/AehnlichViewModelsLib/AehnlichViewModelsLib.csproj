@@ -132,6 +132,10 @@
       <Project>{252126d1-e1d9-49c3-910b-fcf2266265ef}</Project>
       <Name>ServiceLocator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\FsDataLib\FsDataLib.csproj">
+      <Project>{6c8f39a8-965b-4f96-b0dc-5c731519ac65}</Project>
+      <Name>FsDataLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

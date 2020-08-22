@@ -5,6 +5,7 @@
 	using Aehnlich.ViewModels.Documents;
 	using AehnlichDirViewModelLib.Events;
 	using FsDataLib.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using HL.Interfaces;
 	using System;
 	using System.Collections.Generic;
@@ -15,6 +16,7 @@
 	{
 		#region fields
 		private readonly ObservableRangeCollection<IDocumentBaseViewModel> _Documents;
+		private readonly IDataSource _DataSource;
 		private IDocumentBaseViewModel _ActiveDocument;
 		private bool _Disposed;
 		#endregion fields
@@ -26,6 +28,8 @@
 		public DocumentManagerViewModel()
 		{
 			_Documents = new ObservableRangeCollection<IDocumentBaseViewModel>();
+			_DataSource = new DirDataSourceFactory().CreateDataSource();
+
 		}
 		#endregion ctors
 
@@ -153,14 +157,11 @@
 				string leftDir = Properties.Settings.Default.LeftDirPath;
 				string rightDir = Properties.Settings.Default.RightDirPath;
 
-				var dataSourceFactory = new DirDataSourceFactory();
-				var dataSource = dataSourceFactory.CreateDataSource();
-
-				leftDir = dataSource.NormalizePath(leftDir);
-				rightDir = dataSource.NormalizePath(rightDir);
+				leftDir = _DataSource.NormalizePath(leftDir);
+				rightDir = _DataSource.NormalizePath(rightDir);
 
 				// Or create a new directory setup page if their is currently none to use
-				newDoc = new DirDiffDocViewModel(this, leftDir, rightDir, dataSource);
+				newDoc = new DirDiffDocViewModel(this, leftDir, rightDir, _DataSource);
 				AddDocument(newDoc, true);
 			}
 			else

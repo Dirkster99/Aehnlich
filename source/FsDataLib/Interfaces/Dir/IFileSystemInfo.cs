@@ -1,4 +1,4 @@
-namespace AehnlichLib.Interfaces.Dir
+namespace FsDataLib.Interfaces.Dir
 {
 	public interface IFileSystemInfo
 	{
@@ -25,12 +25,6 @@ namespace AehnlichLib.Interfaces.Dir
 		/// in the hierarchy, or the name of a file, including the file name extension.
 		/// </returns>
 		string Name { get; }
-
-		/// <summary>
-		/// Gets a value indicating whether the directory exists.
-		/// </summary>
-		/// <returns>true if the directory exists; otherwise, false.</returns>
-		bool Exists { get; }
 
 		/// <summary>
 		/// Gets the time when the current file or directory was last written to.

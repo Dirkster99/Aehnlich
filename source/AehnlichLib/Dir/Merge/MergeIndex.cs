@@ -1,6 +1,6 @@
 ﻿namespace AehnlichLib.Dir.Merge
 {
-	using AehnlichLib.Interfaces.Dir;
+	using FsDataLib.Interfaces.Dir;
 	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics;
