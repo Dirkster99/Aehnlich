@@ -5,7 +5,7 @@ namespace AehnlichLib.Dir
 
 	/// <summary>
 	/// Implements an internal class with static comparers for files and directories
-	/// to determine whehter files or directories are equal or not (based on their case-insensitive name).
+	/// to determine whether files or directories are equal or not (based on their case-insensitive name).
 	/// </summary>
 	internal class FileSystemInfoComparer : IComparer<IFileSystemInfo>, IComparer<IFileInfo>, IComparer<IDirectoryInfo>
 	{

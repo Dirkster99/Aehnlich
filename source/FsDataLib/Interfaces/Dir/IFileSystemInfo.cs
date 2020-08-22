@@ -1,5 +1,6 @@
 namespace FsDataLib.Interfaces.Dir
 {
+	/// <summary>Defines common methods/properties of an object representing a file or directory.</summary>
 	public interface IFileSystemInfo
 	{
 		/// <summary>

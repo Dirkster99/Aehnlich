@@ -1,4 +1,4 @@
-namespace AehnlichLib.Enums
+namespace FsDataLib.Enums
 {
 	/// <summary>
 	/// Determines the mode of matching that is implemented to determine whether two files
@@ -35,7 +35,8 @@ namespace AehnlichLib.Enums
 		/// Two files in the same relative location A (left dir tree) and B (right dir tree)
 		/// are considered equal if:
 		/// 0) their file name is the same and
-		/// 1) their byte by byte sequence is equal. 
+		/// 1) their byte length is equal and
+		/// 2) their byte by byte sequence is equal. 
 		/// </summary>
 		AllBytes = 4,
 
@@ -48,14 +49,32 @@ namespace AehnlichLib.Enums
 		/// </summary>
 		ByteLength_LastUpdate = (ByteLength | LastUpdate),
 
+//// This is technically a duplicate with AllBytes
+////		/// <summary>
+////		/// Two files in the same relative location A (left dir tree) and B (right dir tree)
+////		/// are considered equal if:
+////		/// 0) their file name is the same and
+////		/// 1) their byte length is equal and
+////		/// 2) their byte by byte sequence is equal.
+////		/// </summary>
+////		ByteLength_AllBytes = (ByteLength | AllBytes),
+
+		/// <summary>Text file matching treads Cr, Lf and LfCr bytes as equal sequences.</summary>
+		IgnoreLf = 0x08,
+
 		/// <summary>
 		/// Two files in the same relative location A (left dir tree) and B (right dir tree)
 		/// are considered equal if:
 		/// 0) their file name is the same and
-		/// 1) their byte length is equal and
-		/// 2) their byte by byte sequence is equal.
+		/// 1) The file is binary (image, sound, video):
+		///    1.1) their byte length is equal and
+		///    1.2) their byte by byte sequence is equal.
+		///
+		/// 1) The file is text (C# source, mark down, txt):
+		///    1.1) their byte by byte sequence is equal
+		///         matching Cr, Lf and LfCr bytes as equal sequences
 		/// </summary>
-		ByteLength_AllBytes = (ByteLength | AllBytes),
+		ByteLength_AllBytes_IgnoreLf = (AllBytes | IgnoreLf),
 
 		/// <summary>
 		/// Two files in the same relative location A (left dir tree) and B (right dir tree)

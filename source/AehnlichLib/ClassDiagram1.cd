@@ -51,10 +51,10 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DiffLib.Dir.DiffUtility">
+  <Class Name="AehnlichLib.Dir.DiffUtility">
     <Position X="19.25" Y="0.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAQAAAAACAAAAEAAAAAAAAADAAEAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAQgAAAAAAAAAEAAAAAAAAADEAEAAAAAAAAAAAAA=</HashCode>
       <FileName>Dir\DiffUtility.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -78,14 +78,14 @@
       <FileName>Dir\DirectoryDiffEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiffLib.Dir.DirectoryDiffEntryCollection">
+  <Class Name="AehnlichLib.Dir.DirectoryDiffEntryCollection">
     <Position X="14.75" Y="4.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Dir\DirectoryDiffEntryCollection.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiffLib.Dir.DirectoryDiffFileFilter">
+  <Class Name="AehnlichLib.Dir.DirectoryDiffFileFilter">
     <Position X="22.5" Y="0.5" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -95,7 +95,7 @@
       <FileName>Dir\DirectoryDiffFileFilter.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiffLib.Dir.FileSystemInfoComparer" BaseTypeListCollapsed="true">
+  <Class Name="AehnlichLib.Dir.FileSystemInfoComparer" BaseTypeListCollapsed="true">
     <Position X="17.5" Y="4.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAABABAAAAAAAAAAAAAAABACAAAAQA=</HashCode>
@@ -103,8 +103,8 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DiffLib.Text.DiagonalVector">
-    <Position X="0.5" Y="5.5" Width="2.25" />
+  <Class Name="AehnlichLib.Text.DiagonalVector">
+    <Position X="0.75" Y="5.75" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -113,7 +113,7 @@
       <FileName>Text\DiagonalVector.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiffLib.Text.Edit">
+  <Class Name="AehnlichLib.Text.Edit">
     <Position X="6.5" Y="0.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -123,8 +123,8 @@
       <FileName>Text\Edit.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiffLib.Text.EditScript">
-    <Position X="8.25" Y="0.5" Width="1.5" />
+  <Class Name="AehnlichLib.Text.EditScript">
+    <Position X="8.25" Y="0.5" Width="1.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -133,17 +133,18 @@
       <FileName>Text\EditScript.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiffLib.Text.MyersDiff&lt;T&gt;">
+  <Class Name="AehnlichLib.Text.MyersDiff&lt;T&gt;">
     <Position X="2.25" Y="0.5" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
-      <Struct Name="DiffLib.Text.MyersDiff&lt;T&gt;.Point" Collapsed="true">
+      <Struct Name="AehnlichLib.Text.MyersDiff&lt;T&gt;.Point" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Text\MyersDiff.cs</NewMemberFileName>
         </TypeIdentifier>
+        <Lollipop Position="0.2" />
       </Struct>
     </NestedTypes>
     <TypeIdentifier>
@@ -151,15 +152,15 @@
       <FileName>Text\MyersDiff.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiffLib.Text.StringHasher">
-    <Position X="3" Y="5.5" Width="2.5" />
+  <Class Name="AehnlichLib.Text.StringHasher">
+    <Position X="3.25" Y="5.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>IAAAAAIACAAAAAAEAAAEAAAAAAAAAIAAIAAAAAAAAMA=</HashCode>
       <FileName>Text\StringHasher.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiffLib.Text.SubArray&lt;T&gt;">
-    <Position X="5.75" Y="5.5" Width="2.25" />
+  <Class Name="AehnlichLib.Text.SubArray&lt;T&gt;">
+    <Position X="6" Y="5.75" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -168,7 +169,7 @@
       <FileName>Text\SubArray.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiffLib.Text.TextDiff">
+  <Class Name="AehnlichLib.Text.TextDiff">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -178,21 +179,21 @@
       <FileName>Text\TextDiff.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="DiffLib.Interfaces.IAddCopy">
+  <Interface Name="AehnlichLib.Interfaces.IAddCopy">
     <Position X="34.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Interfaces\IAddCopy.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Enum Name="DiffLib.Enums.EditType">
+  <Enum Name="AehnlichLib.Enums.EditType">
     <Position X="4.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAAABAAAAAAAAAAAAAAAEAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Enums\EditType.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="DiffLib.Enums.HashType">
+  <Enum Name="AehnlichLib.Enums.HashType">
     <Position X="4.75" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAABAA=</HashCode>

@@ -1,7 +1,7 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
 	using AehnlichDirViewModelLib.Interfaces;
-	using AehnlichLib.Enums;
+	using FsDataLib.Enums;
 
 	/// <summary>
 	/// Implements a viewmodel for a directory comparison mode that is used

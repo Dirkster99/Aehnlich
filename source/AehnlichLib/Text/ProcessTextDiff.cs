@@ -6,6 +6,7 @@
 	using AehnlichLib.Files;
 	using AehnlichLib.Interfaces;
 	using AehnlichLib.Models;
+	using FsDataLib.Enums;
 	using FsDataLib.Interfaces.Dir;
 	using System;
 	using System.Collections.Generic;
@@ -148,7 +149,7 @@
 
 		#region TextLineConverter
 		/// <summary>
-		/// 
+		/// Compares two files using binary or text comparison methods.
 		/// </summary>
 		/// <param name="fileA"></param>
 		/// <param name="fileB"></param>

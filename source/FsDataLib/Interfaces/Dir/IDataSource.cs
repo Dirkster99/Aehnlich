@@ -1,4 +1,6 @@
-﻿namespace FsDataLib.Interfaces.Dir
+﻿using FsDataLib.Enums;
+
+namespace FsDataLib.Interfaces.Dir
 {
 	/// <summary>
 	/// Provides routines and objects for working with data objects that refers to directories and files.
@@ -57,7 +59,7 @@
 		/// <param name="info1"></param>
 		/// <param name="info2"></param>
 		/// <returns></returns>
-		bool AreBinaryFilesDifferent(string fileName1, string fileName2);
+		bool AreBinaryFilesDifferent(string fileName1, string fileName2, DiffDirFileMode diffMode);
 
 		/// <summary>
 		/// Returns false if both files are equal and true if they differ
@@ -66,7 +68,7 @@
 		/// <param name="info1"></param>
 		/// <param name="info2"></param>
 		/// <returns></returns>
-		bool AreBinaryFilesDifferent(IFileInfo info1, IFileInfo info2);
+		bool AreBinaryFilesDifferent(IFileInfo info1, IFileInfo info2, DiffDirFileMode diffMode);
 		#endregion Members
 	}
 }

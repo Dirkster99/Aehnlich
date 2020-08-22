@@ -46,12 +46,17 @@
     <Compile Include="Dir\DirectoryInfoImpl.cs" />
     <Compile Include="Dir\FileInfoImpl.cs" />
     <Compile Include="Dir\FileSystemInfoImpl.cs" />
+    <Compile Include="Enums\DiffDirFileMode.cs" />
+    <Compile Include="Enums\FileType.cs" />
     <Compile Include="Interfaces\Dir\IDataSource.cs" />
     <Compile Include="Interfaces\Dir\IDataSourceFactory.cs" />
     <Compile Include="Interfaces\Dir\IDirectoryInfo.cs" />
     <Compile Include="Interfaces\Dir\IFileInfo.cs" />
     <Compile Include="Interfaces\Dir\IFileSystemInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

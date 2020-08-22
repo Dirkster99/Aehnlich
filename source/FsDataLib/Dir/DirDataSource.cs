@@ -1,5 +1,6 @@
 ﻿namespace FsDataLib.Dir
 {
+	using FsDataLib.Enums;
 	using FsDataLib.Interfaces.Dir;
 	using System;
 	using System.Diagnostics;
@@ -8,7 +9,7 @@
 	/// <summary>
 	/// Provides routines and objects for working with data objects that refers to directories and files.
 	/// </summary>
-	internal class DirDataSource : IDataSource
+	internal sealed class DirDataSource : IDataSource
 	{
 		#region ctors
 		/// <summary>
@@ -19,7 +20,7 @@
 		}
 		#endregion ctors
 
-		#region Members
+		#region methods
 		/// <summary>
 		/// Gets a normalized path to a directory if it exists or null.
 		/// </summary>
@@ -114,26 +115,37 @@
 		}
 
 		/// <summary>
-		/// Returns false if both files are equal and true if they differ
-		/// (based on a byte size comparison or byte by byte comparison).
+		/// Compares two file on a byte-by-byte sequence strategy.
+		/// Either based on a:
+		/// 1) byte size comparison and byte-by-byte comparison or
+		/// 2) byte-by-byte comparison ignoring different line feed styles on text files.
 		/// </summary>
 		/// <param name="info1"></param>
 		/// <param name="info2"></param>
-		/// <returns></returns>
-		public bool AreBinaryFilesDifferent(string fileName1, string fileName2)
+		/// <param name="diffMode"></param>
+		/// <returns>false if both files are equal and true if they differ</returns>
+		public bool AreBinaryFilesDifferent(string fileName1, string fileName2, DiffDirFileMode diffMode)
 		{
-			return AreBinaryFilesDifferent(new FileInfoImpl(fileName1), new FileInfoImpl(fileName2));
+			return AreBinaryFilesDifferent(new FileInfoImpl(fileName1), new FileInfoImpl(fileName2), diffMode);
 		}
 
 		/// <summary>
-		/// Returns false if both files are equal and true if they differ
-		/// (based on a byte size comparison or byte by byte comparison).
+		/// Compares two file with a byte-by-byte sequence strategy.
+		/// Either based on a:
+		/// 1) byte size comparison and byte-by-byte comparison or
+		/// 2) byte-by-byte comparison ignoring different line feed styles on text files.
 		/// </summary>
 		/// <param name="ifo1"></param>
 		/// <param name="ifo2"></param>
-		/// <returns></returns>
-		public bool AreBinaryFilesDifferent(IFileInfo ifo1, IFileInfo ifo2)
+		/// <param name="diffMode"></param>
+		/// <returns>false if both files are equal and true if they differ</returns>
+		public bool AreBinaryFilesDifferent(IFileInfo ifo1, IFileInfo ifo2, DiffDirFileMode diffMode)
 		{
+			if (ifo1.Is == FileType.Text && ifo1.Is == FileType.Text && (diffMode & DiffDirFileMode.IgnoreLf) != 0)
+			{
+				return AreTextFilesIgnoringLF_Different(ifo1, ifo2);
+			}
+
 			// Before we open the files, compare the sizes.  If they are different,
 			// then the files are certainly different.
 			if (ifo1.Length != ifo2.Length)
@@ -169,6 +181,60 @@
 				return false;
 			}
 		}
-		#endregion Members
+
+		/// <summary>
+		/// Compares two text files with a byte-by-byte sequence strategy.
+		/// Based on a: byte-by-byte comparison ignoring different line feed styles on text files.
+		/// </summary>
+		/// <param name="ifo1"></param>
+		/// <param name="ifo2"></param>
+		/// <returns></returns>
+		internal bool AreTextFilesIgnoringLF_Different(IFileInfo ifo1, IFileInfo ifo2)
+		{
+			var info1 = new FileInfo(ifo1.FullName);
+			var info2 = new FileInfo(ifo2.FullName);
+
+			using (FileStream stream1 = info1.OpenRead())
+			using (FileStream stream2 = info2.OpenRead())
+			{
+				// We have to check byte-by-byte.  As soon as we find a difference, we can quit.
+				int byte1, byte2;
+				byte1 = stream1.ReadByte();
+				byte2 = stream2.ReadByte();
+
+				while (byte1 >= 0 && byte2 >= 0)
+				{
+					Debug.Assert(byte1 <= 255, "Byte1 size is larger than 8 bit.");
+					Debug.Assert(byte2 <= 255, "Byte2 size is larger than 8 bit.");
+
+					if (byte1 != byte2)
+					{
+						// Advance both sequences beyond known LineFeed bytes (any LineFeed byte (eg 0x0A) is considered any other (eg 0x0D))
+						if ((byte1 == 0x0a || byte1 == 0x0d) && (byte2 == 0x0a || byte2 == 0x0d))
+						{
+							while (byte1 == 0x0a || byte1 == 0x0d)
+								byte1 = stream1.ReadByte();
+
+							while (byte2 == 0x0a || byte1 == 0x0d)
+								byte2 = stream2.ReadByte();
+						}
+						else
+						{
+							// Files are not equal
+							return true;
+						}
+					}
+					else
+					{
+						byte1 = stream1.ReadByte();
+						byte2 = stream2.ReadByte();
+					}
+				}
+
+				// The files were byte-by-byte equal.
+				return false;
+			}
+		}
+		#endregion methods
 	}
 }

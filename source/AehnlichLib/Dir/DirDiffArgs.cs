@@ -1,6 +1,6 @@
 ﻿namespace AehnlichLib.Dir
 {
-	using AehnlichLib.Enums;
+	using FsDataLib.Enums;
 
 	/// <summary>
 	/// Defines the arguments (options) that are applicable for the directory diff

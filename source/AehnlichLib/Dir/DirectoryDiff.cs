@@ -1,8 +1,8 @@
 namespace AehnlichLib.Dir
 {
 	using AehnlichLib.Dir.Merge;
-	using AehnlichLib.Enums;
 	using AehnlichLib.Interfaces;
+	using FsDataLib.Enums;
 	using FsDataLib.Interfaces.Dir;
 	using System;
 	using System.Collections.Generic;
@@ -654,7 +654,7 @@ namespace AehnlichLib.Dir
 						{
 							try
 							{
-								if (root.Source.AreBinaryFilesDifferent(item.InfoA.FullName, item.InfoB.FullName) == true)
+								if (root.Source.AreBinaryFilesDifferent(item.InfoA.FullName, item.InfoB.FullName, root.DiffMode) == true)
 									different = true;
 							}
 							catch (System.IO.IOException ex)

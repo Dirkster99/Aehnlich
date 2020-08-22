@@ -12,9 +12,7 @@ namespace FsDataLib.Dir
 		#endregion fields
 
 		#region ctors
-		/// <summary>
-		/// Class constructor
-		/// </summary>
+		/// <summary>Class constructor</summary>
 		/// <param name="path"></param>
 		public FileSystemInfoImpl(string path)
 			: this()
@@ -22,9 +20,7 @@ namespace FsDataLib.Dir
 			_path = path;
 		}
 
-		/// <summary>
-		/// Class constructor
-		/// </summary>
+		/// <summary>Class constructor</summary>
 		protected FileSystemInfoImpl()
 		{
 		}

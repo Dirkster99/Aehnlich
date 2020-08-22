@@ -1,5 +1,6 @@
 namespace FsDataLib.Interfaces.Dir
 {
+	/// <summary>Defines methods/properties of an object representing a directory.</summary>
 	public interface IDirectoryInfo : IFileSystemInfo
 	{
 		/// <summary>Gets a value indicating whether this DIRECTORY exists.</summary>

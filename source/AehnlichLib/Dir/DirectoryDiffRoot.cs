@@ -1,7 +1,7 @@
 namespace AehnlichLib.Dir
 {
-	using AehnlichLib.Enums;
 	using AehnlichLib.Interfaces;
+	using FsDataLib.Enums;
 	using FsDataLib.Interfaces.Dir;
 
 	/// <summary>

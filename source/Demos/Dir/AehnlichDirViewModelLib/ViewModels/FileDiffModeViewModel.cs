@@ -1,7 +1,7 @@
 ﻿namespace AehnlichDirViewModelLib.ViewModels
 {
 	using AehnlichDirViewModelLib.Interfaces;
-	using AehnlichLib.Enums;
+	using FsDataLib.Enums;
 	using System.Collections.Generic;
 
 	/// <summary>
@@ -93,13 +93,18 @@
 				"Compare each file by their length, last modification time, and byte-by-byte sequence",
 				DiffDirFileMode.ByteLength_LastUpdate_AllBytes));
 
-			diffFileModes.Add(new DiffFileModeItemViewModel("Byte Length + All Bytes",
-				"Compare each file by their length and byte-by-byte sequence",
-				DiffDirFileMode.ByteLength_AllBytes));
+//// This is technically a duplicate with AllBytes
+////			diffFileModes.Add(new DiffFileModeItemViewModel("Byte Length + All Bytes",
+////				"Compare each file by their length and byte-by-byte sequence",
+////				DiffDirFileMode.ByteLength_AllBytes));
 
 			diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes",
-				"Compare each file by their Byte-by-byte sequence only",
+				"Compare each file by their length and byte-by-byte sequence",
 				DiffDirFileMode.AllBytes));
+
+			diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes without LineFeeds",
+				"Compare each file by their byte-by-byte sequence but ignoring different LineFeeds in text files.",
+				DiffDirFileMode.ByteLength_AllBytes_IgnoreLf));
 
 			return defaultItem;
 		}

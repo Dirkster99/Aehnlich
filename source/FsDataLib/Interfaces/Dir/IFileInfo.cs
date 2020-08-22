@@ -1,14 +1,8 @@
+using FsDataLib.Enums;
+
 namespace FsDataLib.Interfaces.Dir
 {
-	public enum FileType
-	{
-		Unknown,
-		NotExisting,
-		Binary,
-		Text,
-		Xml
-	}
-
+	/// <summary>Defines methods/properties of an object representing a file.</summary>
 	public interface IFileInfo : IFileSystemInfo
 	{
 		#region properties
@@ -17,6 +11,7 @@ namespace FsDataLib.Interfaces.Dir
 		/// </summary>
 		long Length { get; }
 
+		/// <summary>Gets the type of file (binary, text, xml, not existing)</summary>
 		FileType Is { get; }
 
 		/// <summary>Gets a value indicating whether this FILE exists.</summary>

@@ -1,9 +1,11 @@
 namespace FsDataLib.Dir
 {
+	using FsDataLib.Enums;
 	using FsDataLib.Interfaces.Dir;
 	using System.IO;
 	using System.Text;
 
+	/// <summary>Implements methods/properties of an object representing a file.</summary>
 	internal class FileInfoImpl : FileSystemInfoImpl, IFileInfo
 	{
 		#region fields
@@ -12,18 +14,15 @@ namespace FsDataLib.Dir
 		#endregion fields
 
 		#region ctors
-		/// <summary>
-		/// Class constructor
-		/// </summary>
+		/// <summary>Class constructor</summary>
 		public FileInfoImpl(string path)
 			: base(path)
 		{
 		}
 
-		/// <summary>
-		/// Hidden class constructor
-		/// </summary>
-		private FileInfoImpl()
+		/// <summary>Hidden class constructor</summary>
+		protected FileInfoImpl()
+			: base()
 		{
 		}
 		#endregion ctors
@@ -63,6 +62,7 @@ namespace FsDataLib.Dir
 			}
 		}
 
+		/// <summary>Gets the type of file (binary, text, xml, not existing)</summary>
 		public FileType Is
 		{
 			get
