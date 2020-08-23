@@ -141,9 +141,14 @@
 		/// <returns>false if both files are equal and true if they differ</returns>
 		public bool AreBinaryFilesDifferent(IFileInfo ifo1, IFileInfo ifo2, DiffDirFileMode diffMode)
 		{
-			if (ifo1.Is == FileType.Text && ifo1.Is == FileType.Text && (diffMode & DiffDirFileMode.IgnoreLf) != 0)
+			// Should we ignore different linefeeds on text files and is this type of matching applicable here?
+			if ((diffMode & DiffDirFileMode.IgnoreLf) != 0)
 			{
-				return AreTextFilesIgnoringLF_Different(ifo1, ifo2);
+				bool IsIfo1Text = ifo1.Is == FileType.Text | ifo1.Is == FileType.Xml;
+				bool IsIfo2Text = ifo2.Is == FileType.Text | ifo2.Is == FileType.Xml;
+
+				if (IsIfo1Text && IsIfo2Text)
+					return AreTextFilesIgnoringLF_Different(ifo1, ifo2);
 			}
 
 			// Before we open the files, compare the sizes.  If they are different,
@@ -172,20 +177,17 @@
 
 					if (byte1 != byte2)
 					{
-						return true;
+						return true;  // The files are different
 					}
 				}
 				while (byte1 >= 0 && byte2 >= 0);
 
-				// The files were byte-by-byte equal.
-				return false;
+				return false; // The files are byte-by-byte equal.
 			}
 		}
 
-		/// <summary>
-		/// Compares two text files with a byte-by-byte sequence strategy.
-		/// Based on a: byte-by-byte comparison ignoring different line feed styles on text files.
-		/// </summary>
+		/// <summary>Compares two text files with a byte-by-byte sequence strategy.
+		/// Based on a: byte-by-byte comparison ignoring different line feed styles on text files.</summary>
 		/// <param name="ifo1"></param>
 		/// <param name="ifo2"></param>
 		/// <returns></returns>
@@ -197,7 +199,7 @@
 			using (FileStream stream1 = info1.OpenRead())
 			using (FileStream stream2 = info2.OpenRead())
 			{
-				// We have to check byte-by-byte.  As soon as we find a difference, we can quit.
+				// We have to check byte-by-byte.  As soon as we find a significant difference, we can quit.
 				int byte1, byte2;
 				byte1 = stream1.ReadByte();
 				byte2 = stream2.ReadByte();
@@ -209,7 +211,7 @@
 
 					if (byte1 != byte2)
 					{
-						// Advance both sequences beyond known LineFeed bytes (any LineFeed byte (eg 0x0A) is considered any other (eg 0x0D))
+						// Advance both sequences beyond known LineFeed bytes (any LineFeed byte (eg 0x0A) is considered equal any other (eg 0x0D))
 						if ((byte1 == 0x0a || byte1 == 0x0d) && (byte2 == 0x0a || byte2 == 0x0d))
 						{
 							while (byte1 == 0x0a || byte1 == 0x0d)
@@ -220,8 +222,7 @@
 						}
 						else
 						{
-							// Files are not equal
-							return true;
+							return true;  // Files are not equal
 						}
 					}
 					else
@@ -230,9 +231,8 @@
 						byte2 = stream2.ReadByte();
 					}
 				}
-
-				// The files were byte-by-byte equal.
-				return false;
+				
+				return false; // The files are considered equal.
 			}
 		}
 		#endregion methods
