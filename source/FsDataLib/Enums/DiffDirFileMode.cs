@@ -62,6 +62,8 @@ namespace FsDataLib.Enums
 		/// <summary>Text file matching treads Cr, Lf and LfCr bytes as equal sequences.</summary>
 		IgnoreLf = 0x08,
 
+		IgnoreWSP = 0x10,
+
 		/// <summary>
 		/// Two files in the same relative location A (left dir tree) and B (right dir tree)
 		/// are considered equal if:
@@ -75,6 +77,8 @@ namespace FsDataLib.Enums
 		///         matching Cr, Lf and LfCr bytes as equal sequences
 		/// </summary>
 		ByteLength_AllBytes_IgnoreLf = (AllBytes | IgnoreLf),
+
+		ByteLength_AllBytes_IgnoreLf_WSP = (AllBytes | IgnoreLf | IgnoreWSP),
 
 		/// <summary>
 		/// Two files in the same relative location A (left dir tree) and B (right dir tree)

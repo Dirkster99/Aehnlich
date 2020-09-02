@@ -142,13 +142,21 @@
 		public bool AreBinaryFilesDifferent(IFileInfo ifo1, IFileInfo ifo2, DiffDirFileMode diffMode)
 		{
 			// Should we ignore different linefeeds on text files and is this type of matching applicable here?
-			if ((diffMode & DiffDirFileMode.IgnoreLf) != 0)
+			if (diffMode == DiffDirFileMode.ByteLength_AllBytes_IgnoreLf)
 			{
 				bool IsIfo1Text = ifo1.Is == FileType.Text | ifo1.Is == FileType.Xml;
 				bool IsIfo2Text = ifo2.Is == FileType.Text | ifo2.Is == FileType.Xml;
 
 				if (IsIfo1Text && IsIfo2Text)
-					return AreTextFilesIgnoringLF_Different(ifo1, ifo2);
+					return AreTextFiles_IgnoringLF_Different(ifo1, ifo2);
+			}
+			else if (diffMode == DiffDirFileMode.ByteLength_AllBytes_IgnoreLf_WSP)
+			{
+				bool IsIfo1Text = ifo1.Is == FileType.Text | ifo1.Is == FileType.Xml;
+				bool IsIfo2Text = ifo2.Is == FileType.Text | ifo2.Is == FileType.Xml;
+
+				if (IsIfo1Text && IsIfo2Text)
+					return AreTextFiles_IgnoringLF_WSP_Different(ifo1, ifo2);
 			}
 
 			// Before we open the files, compare the sizes.  If they are different,
@@ -191,7 +199,7 @@
 		/// <param name="ifo1"></param>
 		/// <param name="ifo2"></param>
 		/// <returns></returns>
-		internal bool AreTextFilesIgnoringLF_Different(IFileInfo ifo1, IFileInfo ifo2)
+		internal bool AreTextFiles_IgnoringLF_Different(IFileInfo ifo1, IFileInfo ifo2)
 		{
 			var info1 = new FileInfo(ifo1.FullName);
 			var info2 = new FileInfo(ifo2.FullName);
@@ -232,6 +240,63 @@
 					}
 				}
 				
+				return false; // The files are considered equal.
+			}
+		}
+
+		/// <summary>Compares two text files with a byte-by-byte sequence strategy.
+		/// Based on a: byte-by-byte comparison ignoring different line feed styles on text files.</summary>
+		/// <param name="ifo1"></param>
+		/// <param name="ifo2"></param>
+		/// <returns></returns>
+		internal bool AreTextFiles_IgnoringLF_WSP_Different(IFileInfo ifo1, IFileInfo ifo2)
+		{
+			var info1 = new FileInfo(ifo1.FullName);
+			var info2 = new FileInfo(ifo2.FullName);
+
+			using (FileStream stream1 = info1.OpenRead())
+			using (FileStream stream2 = info2.OpenRead())
+			{
+				// We have to check byte-by-byte.  As soon as we find a significant difference, we can quit.
+				int byte1, byte2;
+				byte1 = stream1.ReadByte();
+				byte2 = stream2.ReadByte();
+
+				while (byte1 >= 0 && byte2 >= 0)
+				{
+					Debug.Assert(byte1 <= 255, "Byte1 size is larger than 8 bit.");
+					Debug.Assert(byte2 <= 255, "Byte2 size is larger than 8 bit.");
+
+					// Skip any white spaces since these are not meant to be relevant for this comparison strategy
+					while (byte1 == 0x20 || byte1 == 0x09)
+						byte1 = stream1.ReadByte();
+
+					while (byte2 == 0x20 || byte2 == 0x09)
+						byte2 = stream2.ReadByte();
+
+					if (byte1 != byte2)
+					{
+						// Advance both sequences beyond known LineFeed bytes (any LineFeed byte (eg 0x0A) is considered equal any other (eg 0x0D))
+						if ((byte1 == 0x0a || byte1 == 0x0d) && (byte2 == 0x0a || byte2 == 0x0d))
+						{
+							while (byte1 == 0x0a || byte1 == 0x0d)
+								byte1 = stream1.ReadByte();
+
+							while (byte2 == 0x0a || byte1 == 0x0d)
+								byte2 = stream2.ReadByte();
+						}
+						else
+						{
+							return true;  // Files are not equal
+						}
+					}
+					else
+					{
+						byte1 = stream1.ReadByte();
+						byte2 = stream2.ReadByte();
+					}
+				}
+
 				return false; // The files are considered equal.
 			}
 		}

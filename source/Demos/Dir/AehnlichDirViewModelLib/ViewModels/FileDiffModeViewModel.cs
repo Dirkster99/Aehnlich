@@ -102,9 +102,13 @@
 				"Compare each file by their length and byte-by-byte sequence",
 				DiffDirFileMode.AllBytes));
 
-			diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes without LineFeeds",
+			diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes without LineFeeds (experimental)",
 				"Compare each file by their byte-by-byte sequence but ignoring different LineFeeds in text files.",
 				DiffDirFileMode.ByteLength_AllBytes_IgnoreLf));
+
+			diffFileModes.Add(new DiffFileModeItemViewModel("All Bytes without LineFeeds and White-Spaces (experimental)",
+				"Compare each file by their byte-by-byte sequence but ignoring different LineFeeds and usage of space and tabs in text files.",
+				DiffDirFileMode.ByteLength_AllBytes_IgnoreLf_WSP));
 
 			return defaultItem;
 		}
