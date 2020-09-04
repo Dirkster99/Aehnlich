@@ -131,26 +131,8 @@
 											Grid.Column="0"
 											Background="Transparent">
 											<Grid.ColumnDefinitions>
-												<!--  ColumnDefinition Width="Auto" /  -->
 												<ColumnDefinition Width="*" />
 											</Grid.ColumnDefinitions>
-
-											<!--unit:UnitCombobox DataContext="{Binding SizeUnitLabel}"
-                                                                   FontSize="10"
-                                                                   Height="{Binding ElementName=PART_HorizontalScrollBar, Path=ActualHeight}"
-                                                                   ItemsSource="{Binding SelectedItem.DefaultValues}"
-                                                                   ToolTip="{Binding ValueTip}"
-                                                                   HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                                                   Grid.Column="0"
-                                                                   Margin="3,0"
-                                                                   Padding="0"
-                                                                   BorderThickness="1"
-                                                                   BorderBrush="Transparent"
-                                                                   IsEditable="True">
-                                                    <unit:UnitCombobox.Text>
-                                                        <Binding Path="StringValue" Mode="TwoWay" ValidatesOnDataErrors="True"/>
-                                                    </unit:UnitCombobox.Text>
-                                                </unit:UnitCombobox-->
 
 											<ScrollBar
 												Name="PART_HorizontalScrollBar"
@@ -162,13 +144,6 @@
 												Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
 												Value="{TemplateBinding HorizontalOffset}" />
 										</Grid>
-										<!--  Using DialogBackgroundBrush since Editor can use a WPF Theme independent background color  -->
-										<!--DockPanel Grid.Column="1" Grid.Row="1"
-                                                       LastChildFill="false"
-                                                       Background="White">
-                                                <Rectangle Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Width="1" Fill="White" DockPanel.Dock="Left" />
-                                                <Rectangle Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Height="1" Fill="White" DockPanel.Dock="Top" />
-                                            </DockPanel-->
 									</Grid>
 								</Border>
 							</ControlTemplate>
@@ -186,6 +161,10 @@
 		<Setter Property="ContextMenu">
 			<Setter.Value>
 				<ContextMenu>
+
+					<MenuItem Header="View">
+						<MenuItem Command="{Binding PlacementTarget.DataContext.DiffCtrl.ToggleShowLineNumbersCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" Header="Show Line Numbers" />
+					</MenuItem>
 
 					<MenuItem Command="Cut" Header="Cut">
 						<MenuItem.Icon>

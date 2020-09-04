@@ -27,9 +27,7 @@
 	using System.Windows.Media;
 	using Utils;
 
-	/// <summary>
-	/// Margin showing line numbers.
-	/// </summary>
+	/// <summary>Margin showing line numbers.</summary>
 	internal class CustomLineNumberMargin : LineNumberMargin, IWeakEventListener
 	{
 		#region fields

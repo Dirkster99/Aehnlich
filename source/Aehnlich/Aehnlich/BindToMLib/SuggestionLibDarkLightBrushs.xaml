@@ -16,25 +16,25 @@
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=ControlAccentBrushKey}"
+		                             ResourceId=ControlAccentBrushKey}"
 		options:Freeze="true"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=ControlPopupBackgroundBrushKey}"
+		                             ResourceId=ControlPopupBackgroundBrushKey}"
 		options:Freeze="true"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlPopupBackgroundKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=ControlItemBackgroundSelectedKey}"
+		                             ResourceId=ControlItemBackgroundSelectedKey}"
 		options:Freeze="true"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=ControlItemBorderSelectedKey}"
+		                             ResourceId=ControlItemBorderSelectedKey}"
 		options:Freeze="true"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
 

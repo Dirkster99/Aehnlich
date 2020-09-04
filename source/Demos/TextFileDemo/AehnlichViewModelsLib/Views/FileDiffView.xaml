@@ -718,7 +718,7 @@
 					ItemsSource="{Binding DocLineDiffs}"
 					Line="{Binding Line, Mode=OneWayToSource}"
 					Options="{Binding ElementName=DiffCtrl, Path=DiffViewOptions, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-					ShowLineNumbers="True"
+					ShowCustomLineNumbers="True"
 					TextBoxController="{Binding TxtControl}" />
 			</Grid>
 		</Grid>

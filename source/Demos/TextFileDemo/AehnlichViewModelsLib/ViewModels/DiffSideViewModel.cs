@@ -67,6 +67,7 @@ namespace AehnlichViewModelsLib.ViewModels
 
 		private ViewSource _thisDataSource;
 		private IDiffSideViewModelParent _diffSideViewModelParent;
+		private bool _ShowLineNumbers = false;
 		#endregion fields
 
 		#region ctors
@@ -363,7 +364,18 @@ namespace AehnlichViewModelsLib.ViewModels
 		public bool IsEnabled { get { return true; } }
 
 		/// <summary>Gets whether line numbers should be shown in the diff view control or not.</summary>
-		public bool ShowLineNumbers { get { return true; } }
+		public bool ShowLineNumbers
+		{
+			get { return _ShowLineNumbers; }
+			internal set
+			{
+				if (_ShowLineNumbers != value)
+				{
+					_ShowLineNumbers = value;
+					NotifyPropertyChanged(nameof(ShowLineNumbers));
+				}
+			}
+		}
 
 		/// <summary>Gets whether the text displayed in the diff should be editable or not.</summary>
 		public bool IsReadOnly

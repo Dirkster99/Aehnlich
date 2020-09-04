@@ -47,12 +47,14 @@ namespace AehnlichViewModelsLib.ViewModels.Dialogs
 
 			_DiffDisplayOptions = new TextEditorOptions()
 			{
-				ShowTabs = false,
-				ConvertTabsToSpaces = true,
+				ConvertTabsToSpaces = false,
 				IndentationSize = 4,
 				HighlightCurrentLine = false,
 				EnableVirtualSpace = true,
-				AllowScrollBelowDocument = false
+				AllowScrollBelowDocument = false,
+				ShowTabs = true,
+				ShowEndOfLine = true,
+				ShowSpaces = true
 			};
 		}
 		#endregion ctors

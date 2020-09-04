@@ -58,6 +58,7 @@
 
 		private IDiffSideViewModelParent _diffSideViewModelParent;
 		private CompareType _ShouldBeComparedAs;
+		private ICommand _ToggleShowLineNumbersCommand;
 		#endregion fields
 
 		#region ctors
@@ -671,6 +672,26 @@
 				}
 			}
 		}
+
+		/// <summary>Gets a command that toggles the the custom line numbers (including gaps) on left & right view</summary>
+		public ICommand ToggleShowLineNumbersCommand
+		{
+			get
+			{
+				if (_ToggleShowLineNumbersCommand == null)
+				{
+					_ToggleShowLineNumbersCommand = new RelayCommand<object>((p) =>
+					{
+						bool showLineNumbers = _ViewA.ShowLineNumbers;
+						showLineNumbers = !showLineNumbers;
+						_ViewB.ShowLineNumbers = _ViewA.ShowLineNumbers = showLineNumbers;
+					});
+				}
+
+				return _ToggleShowLineNumbersCommand;
+			}
+		}
+
 		#endregion properties
 
 		#region methods

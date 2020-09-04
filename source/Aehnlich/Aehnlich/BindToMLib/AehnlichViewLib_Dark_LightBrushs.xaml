@@ -12,55 +12,55 @@
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=VerticalSLideThumbForegroundBrushKey}"
+		                             ResourceId=VerticalSLideThumbForegroundBrushKey}"
 		Opacity="0.25"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=EditorSelectionBrush}"
+		                             ResourceId=EditorSelectionBrush}"
 		options:Freeze="true"
 		Opacity="0.45"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=EditorSelectionBorder}"
+		                             ResourceId=EditorSelectionBorder}"
 		options:Freeze="true"
 		Opacity="0.45"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=SelectedFocusedCellBackgroundBrushKey}"
+		                             ResourceId=SelectedFocusedCellBackgroundBrushKey}"
 		options:Freeze="true"
 		Opacity="0.55"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=SelectedCellBackgroundBrushKey}"
+		                             ResourceId=SelectedCellBackgroundBrushKey}"
 		options:Freeze="true"
 		Opacity="0.30"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=SelectedFocusedCellBorderBrushKey}"
+		                             ResourceId=SelectedFocusedCellBorderBrushKey}"
 		options:Freeze="true"
 		Opacity="0.55"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=SelectedCellBorderBrushKey}"
+		                             ResourceId=SelectedCellBorderBrushKey}"
 		options:Freeze="true"
 		Opacity="0.30"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=EditorCurrentLineBorderBrushKey}"
+		                             ResourceId=EditorCurrentLineBorderBrushKey}"
 		options:Freeze="true"
 		Opacity=".6"
 		Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />

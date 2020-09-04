@@ -7,7 +7,7 @@
 	<!--  DATAGRID  -->
 	<Style
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=DefaultDataGridStyleKey}"
+		                             ResourceId=DefaultDataGridStyleKey}"
 		BasedOn="{StaticResource {x:Type DataGrid}}"
 		TargetType="{x:Type DataGrid}">
 
@@ -39,7 +39,7 @@
 
 	<Style
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=DefaultColumnHeaderGripperStyleKey}"
+		                             ResourceId=DefaultColumnHeaderGripperStyleKey}"
 		BasedOn="{StaticResource {x:Type Thumb}}"
 		TargetType="{x:Type Thumb}">
 		<Setter Property="Background" Value="Transparent" />
@@ -62,7 +62,7 @@
 
 	<Style
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=DefaultDataGridHeaderStyleKey}"
+		                             ResourceId=DefaultDataGridHeaderStyleKey}"
 		BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
 		TargetType="DataGridColumnHeader">
 		<Setter Property="VerticalContentAlignment" Value="Center" />

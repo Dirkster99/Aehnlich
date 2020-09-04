@@ -11,25 +11,25 @@
 	<!--  Begin DataGrid Header Keys  -->
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=DataGridHeaderBorderBrushKey}"
+		                             ResourceId=DataGridHeaderBorderBrushKey}"
 		options:Freeze="true"
 		Color="Transparent" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=DataGridHeaderBackgroundBrushKey}"
+		                             ResourceId=DataGridHeaderBackgroundBrushKey}"
 		options:Freeze="true"
 		Color="#dddddd" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=DataGridHeaderForegroundBrushKey}"
+		                             ResourceId=DataGridHeaderForegroundBrushKey}"
 		options:Freeze="true"
 		Color="Black" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=DataGridHeaderSortArrowForegroundBrushKey}"
+		                             ResourceId=DataGridHeaderSortArrowForegroundBrushKey}"
 		options:Freeze="true"
 		Color="Black" />
 
@@ -49,25 +49,25 @@
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=DataGridBorderBrushKey}"
+		                             ResourceId=DataGridBorderBrushKey}"
 		options:Freeze="true"
 		Color="#33101010" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=VerticalGridLinesBrush}"
+		                             ResourceId=VerticalGridLinesBrush}"
 		options:Freeze="true"
 		Color="Black" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=HorizontalGridLinesBrush}"
+		                             ResourceId=HorizontalGridLinesBrush}"
 		options:Freeze="true"
 		Color="Black" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=ControlBorderBrushKey}"
+		                             ResourceId=ControlBorderBrushKey}"
 		options:Freeze="true"
 		Color="Black" />
 
@@ -76,58 +76,58 @@
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=CellForegroundBrushKey}"
+		                             ResourceId=CellForegroundBrushKey}"
 		options:Freeze="true"
 		Color="Black" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=CellBackgroundBrushKey}"
+		                             ResourceId=CellBackgroundBrushKey}"
 		options:Freeze="true"
 		Color="Transparent" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=SelectedFocusedCellForegroundBrushKey}"
+		                             ResourceId=SelectedFocusedCellForegroundBrushKey}"
 		options:Freeze="true"
 		Color="#A0000000" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=SelectedFocusedCellBackgroundBrushKey}"
+		                             ResourceId=SelectedFocusedCellBackgroundBrushKey}"
 		options:Freeze="true"
 		Opacity="0.55"
 		Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=SelectedCellForegroundBrushKey}"
+		                             ResourceId=SelectedCellForegroundBrushKey}"
 		options:Freeze="true"
 		Color="Black" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=SelectedCellBackgroundBrushKey}"
+		                             ResourceId=SelectedCellBackgroundBrushKey}"
 		options:Freeze="true"
 		Opacity="0.30"
 		Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=CellBorderBrushKey}"
+		                             ResourceId=CellBorderBrushKey}"
 		options:Freeze="true"
 		Color="Transparent" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=SelectedFocusedCellBorderBrushKey}"
+		                             ResourceId=SelectedFocusedCellBorderBrushKey}"
 		options:Freeze="true"
 		Opacity="0.55"
 		Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}" />
 
 	<SolidColorBrush
 		x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
-									 ResourceId=SelectedCellBorderBrushKey}"
+		                             ResourceId=SelectedCellBorderBrushKey}"
 		options:Freeze="true"
 		Opacity="0.30"
 		Color="{DynamicResource {x:Static reskeys:ResourceKeys.ControlAccentColorKey}}" />

@@ -209,13 +209,13 @@
 															Mode="OneWay"
 															Path="ViewportSize"
 															RelativeSource="{RelativeSource Mode=FindAncestor,
-																							AncestorType={x:Type local:RangeScrollbar}}"
+															                                AncestorType={x:Type local:RangeScrollbar}}"
 															UpdateSourceTrigger="PropertyChanged" />
 														<Binding
 															Mode="OneWay"
 															Path="DocumentSize"
 															RelativeSource="{RelativeSource Mode=FindAncestor,
-																							AncestorType={x:Type local:RangeScrollbar}}"
+															                                AncestorType={x:Type local:RangeScrollbar}}"
 															UpdateSourceTrigger="PropertyChanged" />
 													</MultiBinding>
 												</Thumb.Visibility>
@@ -531,13 +531,13 @@
 															Mode="OneWay"
 															Path="ViewportSize"
 															RelativeSource="{RelativeSource Mode=FindAncestor,
-																							AncestorType={x:Type local:RangeScrollbar}}"
+															                                AncestorType={x:Type local:RangeScrollbar}}"
 															UpdateSourceTrigger="PropertyChanged" />
 														<Binding
 															Mode="OneWay"
 															Path="DocumentSize"
 															RelativeSource="{RelativeSource Mode=FindAncestor,
-																							AncestorType={x:Type local:RangeScrollbar}}"
+															                                AncestorType={x:Type local:RangeScrollbar}}"
 															UpdateSourceTrigger="PropertyChanged" />
 													</MultiBinding>
 												</Thumb.Visibility>

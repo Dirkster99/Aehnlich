@@ -26,16 +26,12 @@
 	public partial class DiffView : TextEditor
 	{
 		#region fields
-		/// <summary>
-		/// Implements the backing store of the <see cref="ItemsSource"/> dependency property.
-		/// </summary>
+		/// <summary>Implements the backing store of the <see cref="ItemsSource"/> dependency property.</summary>
 		public static readonly DependencyProperty ItemsSourceProperty =
 			DependencyProperty.Register("ItemsSource", typeof(IEnumerable),
 				typeof(DiffView), new PropertyMetadata(new PropertyChangedCallback(ItemsSourceChanged)));
 
-		/// <summary>
-		/// Implements the backing store of the <see cref="LineDiffDataProvider"/> dependency property.
-		/// </summary>
+		/// <summary>Implements the backing store of the <see cref="LineDiffDataProvider"/> dependency property.</summary>
 		public static readonly DependencyProperty LineDiffDataProviderProperty =
 			DependencyProperty.Register("LineDiffDataProvider", typeof(ILineDiffProvider),
 				typeof(DiffView), new PropertyMetadata(null, OnLineDiffDataProviderChanged));
@@ -116,9 +112,7 @@
 				typeof(DiffView), new UIPropertyMetadata(1));
 		#endregion CaretPosition
 
-		/// <summary>
-		/// Implements the backing store of the <see cref="ActivationTimeStamp"/> dependency property.
-		/// </summary>
+		/// <summary>Implements the backing store of the <see cref="ActivationTimeStamp"/> dependency property.</summary>
 		public static readonly DependencyProperty ActivationTimeStampProperty =
 			DependencyProperty.Register("ActivationTimeStamp", typeof(DateTime),
 				typeof(DiffView), new PropertyMetadata(default(DateTime)));
@@ -142,20 +136,43 @@
 				typeof(DiffView), new PropertyMetadata(2.0d));
 		#endregion EditorCurrentLine Highlighting Colors
 
-		public DisplayMode ViewMode
-		{
-			get { return (DisplayMode)GetValue(ViewModeProperty); }
-			set { SetValue(ViewModeProperty, value); }
-		}
-
-		// Using a DependencyProperty as the backing store for ViewMode.  This enables animation, styling, binding, etc...
+		/// <summary>Implements the backing store of the <see cref="ViewMode"/> dependency property.</summary>
 		public static readonly DependencyProperty ViewModeProperty =
 			DependencyProperty.Register("ViewMode", typeof(DisplayMode)
 				, typeof(DiffView), new PropertyMetadata(DisplayMode.Comparing));
 
+		/// <summary>Gets/sets whether the control should show custom line numbers (including gaps) via binding with <see cref="ItemsSource"/> and <see cref="IDiffLineInfo"/> or not.</summary>
+		public bool ShowCustomLineNumbers
+		{
+			get { return (bool)GetValue(ShowCustomLineNumbersProperty); }
+			set { SetValue(ShowCustomLineNumbersProperty, value); }
+		}
+
+		/// <summary>Implements the backing store of the <see cref="ShowCustomLineNumbers"/> dependency property.</summary>
+		public static readonly DependencyProperty ShowCustomLineNumbersProperty =
+			DependencyProperty.Register("ShowCustomLineNumbers",
+				typeof(bool),
+				typeof(DiffView), new PropertyMetadata(true, OnShowCustomLineNumbers));
+
+		private static void OnShowCustomLineNumbers(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var ctrl = d as DiffView;
+
+			ctrl.OnShowCustomLineNumbers(e);
+		}
+
+		private void OnShowCustomLineNumbers(DependencyPropertyChangedEventArgs e)
+		{
+			if ((bool)e.OldValue != (bool)e.NewValue)
+			{
+				DisplayCustomLineNumbers((bool)e.NewValue);
+			}
+		}
+
 		private INotifyCollectionChanged _observeableDiffContext;
 		private DiffLineBackgroundRenderer _DiffBackgroundRenderer;
 		private IVisualLineTransformer _Colorizer;
+		private bool? _currentShowCustomLineNumbers = null;
 		#endregion fields
 
 		#region ctors
@@ -366,6 +383,14 @@
 			set { SetValue(EditorCurrentLineBorderThicknessProperty, value); }
 		}
 		#endregion EditorCurrentLine Highlighting Colors
+
+		/// <summary>Gets/sets whether the current view supports editing or comparing.</summary>
+		public DisplayMode ViewMode
+		{
+			get { return (DisplayMode)GetValue(ViewModeProperty); }
+			set { SetValue(ViewModeProperty, value); }
+		}
+
 		#endregion properties
 
 		#region methods
@@ -492,21 +517,7 @@
 				_DiffBackgroundRenderer = new DiffLineBackgroundRenderer(this);
 				this.TextArea.TextView.BackgroundRenderers.Add(_DiffBackgroundRenderer);
 
-				// Customize display of line numbers using real lines (shown with a number)
-				// and imaginary lines (shown without a number)
-				// Switch off default line handler in AvalonEdit
-				ShowLineNumbers = false;
-				this.TextArea.LeftMargins.Clear();
-				var leftMargins = this.TextArea.LeftMargins;
-
-				// Configure and insert custom line number margin indicator
-				LineNumberMargin lineNumbers = new CustomLineNumberMargin(this);
-				Line line = (Line)DottedLineMargin.Create();
-				leftMargins.Insert(0, lineNumbers);
-				leftMargins.Insert(1, line);
-				var lineNumbersForeground = new Binding("LineNumbersForeground") { Source = this };
-				line.SetBinding(Shape.StrokeProperty, lineNumbersForeground);
-				lineNumbers.SetBinding(Control.ForegroundProperty, lineNumbersForeground);
+				DisplayCustomLineNumbers(ShowCustomLineNumbers);
 
 				// Attach more event handlers
 				this.GotFocus += DiffView_GotFocus;
@@ -526,6 +537,40 @@
 			{
 				// catch this to make sure initialization can continue...
 			}
+		}
+
+		/// <summary>Updates the Custom Display of LineNumbers (inlcuding gaps) via binding through <see cref="ItemsSource"/></summary>
+		/// <param name="showCustomLineNumbers"></param>
+		private void DisplayCustomLineNumbers(bool showCustomLineNumbers)
+		{
+			// Check if current setup is different from request and return if this is already set
+			if (_currentShowCustomLineNumbers != null)
+			{
+				if (_currentShowCustomLineNumbers == showCustomLineNumbers)
+					return;
+			}
+
+			// Customize display of line numbers using real lines (shown with a number)
+			// and imaginary lines (shown without a number)
+			// Switch off default line handler in AvalonEdit
+			ShowLineNumbers = false;
+			this.TextArea.LeftMargins.Clear();
+
+			if (showCustomLineNumbers)
+			{
+				var leftMargins = this.TextArea.LeftMargins;
+
+				// Configure and insert custom line number margin indicator
+				LineNumberMargin lineNumbers = new CustomLineNumberMargin(this);
+				Line line = (Line)DottedLineMargin.Create();
+				leftMargins.Insert(0, lineNumbers);
+				leftMargins.Insert(1, line);
+				var lineNumbersForeground = new Binding("LineNumbersForeground") { Source = this };
+				line.SetBinding(Shape.StrokeProperty, lineNumbersForeground);
+				lineNumbers.SetBinding(Control.ForegroundProperty, lineNumbersForeground);
+			}
+
+			_currentShowCustomLineNumbers = showCustomLineNumbers;
 		}
 
 		/// <summary>
