@@ -1,5 +1,5 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/g3el3ao3rdf6kvp1?svg=true)](https://ci.appveyor.com/project/Dirkster99/aehnlich)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4150b6ac353a47abae679c1f29827d13)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Dirkster99/Diff&amp;utm_campaign=Badge_Grade) [Continues Integration](https://ci.appveyor.com/project/Dirkster99/aehnlich/build/artifacts)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4150b6ac353a47abae679c1f29827d13)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Dirkster99/Diff&amp;utm_campaign=Badge_Grade) [Continuous Integration](https://ci.appveyor.com/project/Dirkster99/aehnlich/build/artifacts)
 
 # Ähnlich
 
